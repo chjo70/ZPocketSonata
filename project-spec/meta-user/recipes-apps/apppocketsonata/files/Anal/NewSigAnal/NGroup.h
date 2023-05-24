@@ -18,12 +18,11 @@ class CNewSigAnal;
 class CNGroup : public CGroup
 {
 protected:
-    //##ModelId=452B0C5500B7
     CNewSigAnal *m_pNewSigAnal;
 
 public:
     void Init();
-    
+
 	unsigned int GetColPdw();
 
     CNGroup( void *pParent, unsigned int uiCoMaxPdw );

@@ -13,7 +13,7 @@
 #include "../Include/system.h"
 
 #include "../Utils/cthread.h"
-
+#include "../Utils/clog.h"
 #include "../Thread/coperationconsole.h"
 
 // 클라이언트로 서버를 연결 횟수
@@ -54,6 +54,7 @@ public:
 
 	void Init();																							///< 메모리를 할당하고 변수를 초기화한다.
 	int SendLan(UINT uiOpCode, void *pData, UINT uiLength);													///< 연결된 서버에 데이터를 송신한다.
+    int SendLan( UINT uiOpCode, char *pstring );                                                            ///< 연결된 서버에 데이터를 송신한다.
 	void CloseSocket(struct sockaddr_in *pAddress, int *pClientSocket);										///< 소켓을 닫을 때 이 함수를 호출한다.
 	void CloseSocket();																						///< 소켓을 닫을 때 이 함수를 호출한다.
 

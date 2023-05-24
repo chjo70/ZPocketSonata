@@ -196,7 +196,7 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 	if (true == ReadDataFile((char*)(LPCTSTR) m_strPathname, (char*)(LPCTSTR)strFilename)) {
 		pstPDWData = m_theDataFile.GetPDWData();
 
-		RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData, true);
+		RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData, false );
 
 		int nCoLOB = RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
 

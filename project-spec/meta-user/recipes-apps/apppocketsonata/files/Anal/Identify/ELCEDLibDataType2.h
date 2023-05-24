@@ -30,7 +30,9 @@ enum EnumNullValueType
 };
 
 
+#ifdef __VXWORKS__
 
+#else
 template <typename T> void DeletePointers(std::list<T*> &i_listContainer)	//#FA_Q_2502_T5
 {
 	for ( auto iter = i_listContainer.begin() ; iter != i_listContainer.end(); iter++) //#FA_C_PotentialUnboundedLoop_T3
@@ -84,6 +86,7 @@ template <typename T> void DeleteRangePointers( std::list<T> *pListContainer, ty
 	}
 	pListContainer->erase( itStart, itEnd );
 }
+#endif
 
 enum EnumLibraryWndType
 {
@@ -540,10 +543,10 @@ namespace RadarModeFreqType
 {
 	enum EnumRadarModeFreqType
 	{
-        enumFIXED = 0,
-        enumHOPPING,
+        enumFIXED = 1,
         enumAGILE,
         enumPATTERN,
+        enumHOPPING,
 
         enumFreqUnknown
 	};
@@ -2065,9 +2068,9 @@ struct SRadarInfo
     unsigned int uiRadarPriority;								//*우선순위: SRadar에서 읽어와서 채워줘야 함.
     EnumRadarStatus eStatus;						//*상태 enum값
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
-    char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
-    char szWeaponSys[_MAX_WEAPON_STRING_SIZE_];
-    char szPlatform[_MAX_PLATFORM_STRING_SIZE_];
+    //char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
+    //char szWeaponSys[_MAX_WEAPON_STRING_SIZE_];
+    //char szPlatform[_MAX_PLATFORM_STRING_SIZE_];
 
     int nUnknownEmitterTime_ForGUI;					//방사체 미활동판단시간(sec) (INVALID_INT_VALUE 이면 미표시)
 
@@ -2083,8 +2086,9 @@ struct SRadarInfo
         szDeviceELNOT[0] = 0;
         szELNOT[0] = 0;
         szNickName[0] = 0;
-        szWeaponSys[0] = 0;
-        szPlatform[0] = 0;
+        //szPlaceNameKor[0] = 0;
+        //szWeaponSys[0] = 0;
+        //szPlatform[0] = 0;
         //szModeCode[0] = NULL;
 
         uiRadarPriority=0;

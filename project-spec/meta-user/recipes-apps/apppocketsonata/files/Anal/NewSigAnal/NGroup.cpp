@@ -87,3 +87,4 @@ void CNGroup::Init()
     */
     CGroup::Init();
 }
+

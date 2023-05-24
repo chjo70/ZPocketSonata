@@ -36,8 +36,9 @@
 #include "Midas.h"
 
 #include "../../Utils/ccommonutils.h"
+#include "../../Utils/clog.h"
 #include "../../Include/global.h"
-//#include "../../Include/globals.h"
+#include "../../Include/globals.h"
 
 #include "../../Utils/MulDiv64.h"
 
@@ -70,6 +71,8 @@ ENUM_ENDIAN_MODE g_enEndian;
 CMIDASBlueFileFormat::CMIDASBlueFileFormat(void)
 {
     m_pExtendOfHeader = NULL;
+
+    m_szRawDataFilename[0] = 0;
 
     // m_pHCB = ( SELMIDAS_HCB * ) new byte[sizeof( SELMIDAS_HCB ) ];
     m_pHCB = ( SELMIDAS_HCB * ) malloc( HEADER_CONTROL_BLOCK_SIZE );
@@ -470,7 +473,7 @@ bool CMIDASBlueFileFormat::WritePDWData( int destFileId, unsigned int uiNumberof
  * @date      2014-12-03, 오후 2:19
  * @warning
  */
-bool CMIDASBlueFileFormat::WriteData( int destFileId, int iSkipByte, bool bMultiIFData )
+bool CMIDASBlueFileFormat::WriteData( int destFileId, bool bMultiIFData )
 {
     bool bRet=true;
 
@@ -686,7 +689,7 @@ void CMIDASBlueFileFormat::TransferPDW2Record( SRxPDWDataRGroup *pS_EL_PDW_DATA,
  */
 void CMIDASBlueFileFormat::TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecords )
 {
-    _TOA pre_TOA=0; //, dtoa=0;
+    //_TOA pre_TOA=0; //, dtoa=0;
 
     S_EL_PDW_RECORDS *pPDWRecords;
 
@@ -700,7 +703,7 @@ void CMIDASBlueFileFormat::TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecord
 #ifdef _POCKETSONATA_
         pPDWRecords->ddoa = (double) CPOCKETSONATAPDW::DecodeDOA( (int) pS_EL_PDW_DATA->uiAOA );
 
-        pPDWRecords->dfreq = (double) ( CPOCKETSONATAPDW::DecodeFREQMHz( (int) pS_EL_PDW_DATA->uiFreq ) * 1000000. );		// [Hz]
+        pPDWRecords->dfreq = (double) ( CPOCKETSONATAPDW::DecodeFREQMHz( pS_EL_PDW_DATA->uiFreq ) * 1000000. );		// [Hz]
 
         pPDWRecords->dpa = (double) CPOCKETSONATAPDW::DecodePA( (int) pS_EL_PDW_DATA->uiPA );										// [dBm]
 
@@ -741,7 +744,7 @@ void CMIDASBlueFileFormat::TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecord
         MakeMinMaxValue( & m_MinMaxOfSubrecords[enPAOfSub], pPDWRecords->dpa );
         MakeMinMaxValue( & m_MinMaxOfSubrecords[enPWOfSub], pPDWRecords->dpw );
 
-        pre_TOA = pS_EL_PDW_DATA->ullTOA;
+        //pre_TOA = pS_EL_PDW_DATA->ullTOA;
 
         ++ pPDWRecords;
         ++ pS_EL_PDW_DATA;
@@ -2077,11 +2080,12 @@ void CMIDASBlueFileFormat::InitIFMidas()
  */
 bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
 {
-    int iFile;
     bool bRet=true;
-    unsigned int i, nSize;
+
 
 #ifndef __VXWORKS__
+    int iFile;
+    unsigned int i, nSize;
 
     vector<SELIFMIDAS>::pointer pConvertIFList;
 
@@ -2116,7 +2120,7 @@ bool CMIDASBlueFileFormat::SaveAllIFMIDASFormat()
 #endif
 
 				//_sopen_s( & iFile, (char*)(LPCSTR) (*pConvertIFList).strInputFilename, _O_RDONLY | _O_BINARY, _SH_DENYNO, _S_IWRITE );
-				bRet = WriteData(iFile, 0, nSize >= 2);
+				bRet = WriteData(iFile, nSize >= 2);
 				if (bRet == false) { //DTEC_Else
 					break;
 				}
@@ -2171,7 +2175,6 @@ void CMIDASBlueFileFormat::MIDASClose()
 void CMIDASBlueFileFormat::SaveRawDataFile( const char *pRawdataFileName, EnumSCDataType enDataType, _PDW *pPDWData, UNION_HEADER *pUNIHeader, unsigned int uiCoPDW )
 {
 
-    //printf( "\n m_szRawDataFilename[%s]" , m_szRawDataFilename );
     strcpy( m_szRawDataFilename, pRawdataFileName );
 
     switch( g_enUnitType ) {
@@ -2181,28 +2184,61 @@ void CMIDASBlueFileFormat::SaveRawDataFile( const char *pRawdataFileName, EnumSC
         case en_ELINT :
         case en_XBAND :
             if( true == RawOpenFile( pRawdataFileName, O_RDWR | O_BINARY | /* O_TRUNC | */ O_CREAT ) ) {
+#ifdef __VXWORKS__
+                CCommonUtils::AllSwapData32( pUNIHeader, sizeof( UNION_HEADER ) );
                 Write( pUNIHeader, sizeof( UNION_HEADER ) );
+                CCommonUtils::AllSwapData32( pUNIHeader, sizeof( UNION_HEADER ) );
+#else
+                Write( pUNIHeader, sizeof( UNION_HEADER ) );
+#endif
 
                 Write( pPDWData, uiCoPDW * sizeof( _PDW ) );
 
                 CloseFile();
             }
             else {
-                //Log( enError, "파일명[%s]을 생성하지 못했습니다 !!", pRawdataFileName );
+                Log( enError, "파일[%s]을 생성하지 못했습니다 !!", pRawdataFileName );
             }
             break;
 
         case en_ZPOCKETSONATA:
             if( true == RawOpenFile( pRawdataFileName, O_RDWR | O_BINARY | O_TRUNC | O_CREAT ) ) {
-
+#ifdef __VXWORKS__
+				CCommonUtils::AllSwapData32( pUNIHeader, sizeof( STR_POCKETSONATA_HEADER ) );
+                Write( pUNIHeader, sizeof( STR_POCKETSONATA_HEADER ) );
+                CCommonUtils::AllSwapData32( pUNIHeader, sizeof( STR_POCKETSONATA_HEADER ) );
+#else
                 Write( pUNIHeader, sizeof( STR_POCKETSONATA_HEADER ) );
 
+#endif
+
+#ifdef __VXWORKS__
+                unsigned int ui, uiSize = uiCoPDW * ( sizeof( _PDW ) - sizeof( _TOA ) );
+                _PDW *pTempPDWData;
+
+                pTempPDWData = pPDWData;
+                for( ui = 0; ui < uiCoPDW; ++ui ) {
+                    CCommonUtils::AllSwapData32( pTempPDWData, ( sizeof( _PDW ) - sizeof( _TOA ) ) );
+                    CCommonUtils::swapByteOrder( pTempPDWData->ullTOA );
+
+                    ++ pTempPDWData;
+                }
                 Write( pPDWData, uiCoPDW * sizeof( _PDW ) );
+                pTempPDWData = pPDWData;
+                for( ui = 0; ui < uiCoPDW; ++ui ) {
+                    CCommonUtils::AllSwapData32( pTempPDWData, ( sizeof( _PDW ) - sizeof( _TOA ) ) );
+                    CCommonUtils::swapByteOrder( pTempPDWData->ullTOA );
+
+                    ++ pTempPDWData;
+                }
+#else
+                Write( pPDWData, uiCoPDW * sizeof( _PDW ) );
+#endif
 
                 CloseFile();
             }
             else {
-                //Log(enError, "파일명[%s]을 생성하지 못했습니다 !!", pRawdataFileName);
+                Log(enError, "파일명[%s]을 생성하지 못했습니다 !!", pRawdataFileName);
             }
             break;
 

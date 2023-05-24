@@ -90,8 +90,8 @@ namespace ELDecoder
 	double DecodeWideBandToa(const long long int i_llilToa);
 	int DecodeAltitude(const int i_nAltitude);
 
-	void MakeTimeString( char *pString, time_t ti, unsigned int millisec );
-	void MakeTextTimeString( char *pString, time_t ti, unsigned int millisec );
+	//void MakeTimeString( char *pString, time_t ti, unsigned int millisec );
+	//void MakeTextTimeString( char *pString, time_t ti, unsigned int millisec );
 	void DecodeStringTime( unsigned int *pTime_t, unsigned int *pMillisec, char *pszTime );
 
 	double DecodeGeoPosition(const int& i_nPosLatLong);

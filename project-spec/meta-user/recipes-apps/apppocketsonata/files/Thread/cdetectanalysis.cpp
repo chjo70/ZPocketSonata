@@ -11,9 +11,6 @@
 
 #include "stdafx.h"
 
-#include "stdafx.h"
-
-
 #include "cdetectanalysis.h"
 #include "cemittermerge.h"
 #include "csignalcollect.h"
@@ -38,7 +35,7 @@
  * @date      2023-03-15 10:46:11
  * @warning
  */
-CDetectAnalysis::CDetectAnalysis( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CDetectAnalysis::CDetectAnalysis( int iThreadPriority, const char *pClassName, bool bArrayLanData ) : CThread( iThreadPriority, pClassName, bArrayLanData )
 {
 #ifdef _SQLITE_
     // SQLITE 파일명 생성하기
@@ -114,11 +111,7 @@ void CDetectAnalysis::_routine()
 {
     LOGENTRY;
 
-    UNI_LAN_DATA *pLanData;
-
     m_pMsg = GetRecvDataMessage();
-
-    pLanData = ( UNI_LAN_DATA * ) & m_pMsg->x.szData[0];
 
     while( m_bThreadLoop ) {
         if( QMsgRcv() == -1 ) {
@@ -150,19 +143,18 @@ void CDetectAnalysis::_routine()
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
-                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
+                    Log( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
                     break;
 
                 case enTHREAD_REQ_SET_TRACKWINDOWCELL :
-                    LOGMSG( enDebug, "윈도우 셀을 설정합니다." );
+                    Log( enDebug, "윈도우 셀을 설정합니다." );
                     break;
 
                 default:
-                    LOGMSG2( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                    Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
                     break;
             }
 
-            SendEchoMessage();
         }
     }
 
@@ -195,13 +187,10 @@ void CDetectAnalysis::AnalysisStart()
 {
     LOGENTRY;
 
-    LOGMSG2( enDebug, "탐지 : %d[Ch]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiTotalPDW );
-
-    //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
+    Log( enDebug, "탐지 : 채널[%d]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.uiReqStatus, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
     // 1. 탐지 신호 분석을 호출한다.
     m_pTheNewSigAnal->Start( & m_PDWData );
-    //SIGCOL->QMsgSnd( enTHREAD_DETECTANAL_END );
 
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
     unsigned int uiTotalLOB=(unsigned int) m_pTheNewSigAnal->GetCoLOB();
@@ -212,17 +201,19 @@ void CDetectAnalysis::AnalysisStart()
         // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
         uiTotalLOB = min( ( _MAX_LANDATA / sizeof(SRxLOBData)-1), uiTotalLOB);
 
-        GetDetectAnalInfo()->Set( g_enBoardId, uiTotalLOB, m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.enCollectBank, 0, 0, 0 );
+        GetDetectAnalInfo()->Set( m_pMsg->x.strCollectInfo.enPCIDriver, uiTotalLOB, m_pMsg->x.strCollectInfo.uiReqStatus, m_pMsg->x.strCollectInfo.enCollectBank, 0, 0, 0 );
 
-        // PDW 헤더 정보 저장
-        // memcpy(&strAnalInfo.uniPDWHeader, & m_PDWData.x, sizeof(UNION_HEADER) );
-
-        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_RESULT, NO_ECHO, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData), uiTotalLOB, GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_RESULT, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData), uiTotalLOB, GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
 
     }
-
-    //memcpy( &strCollectInfo, &m_pMsg->x.strCollectInfo, sizeof( STR_COLLECTINFO ) );
+#ifdef _SERIAL_DETECT_FLOW_
+    else {
+        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, & m_pMsg->x.strCollectInfo, sizeof( STR_COLLECT_INFO ), GetThreadName() );
+    }
+#else
     g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, & m_pMsg->x.strCollectInfo, sizeof( STR_COLLECT_INFO ), GetThreadName() );
+
+#endif
 
 }
 
@@ -262,7 +253,9 @@ void CDetectAnalysis::MakePDWData()
         pPDWDest->uiPA = pPDWSrc->uiPA;
         pPDWDest->uiPW = pPDWSrc->uiPW;
 
-        pPDWDest->iPFTag = pPDWSrc->iPFTag;
+        pPDWDest->uiIndex = pPDWSrc->uiIndex;
+
+        //pPDWDest->iPFTag = pPDWSrc->iPFTag;
 
         memcpy( &pPDWDest->x, &pPDWSrc->x, sizeof( UNI_PDW_ETC ) );
 

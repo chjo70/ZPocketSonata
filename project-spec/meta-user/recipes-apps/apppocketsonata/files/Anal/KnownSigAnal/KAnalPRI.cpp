@@ -64,7 +64,6 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 14:09:52
 //
-//##ModelId=42E98F300153
 CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw ) : CAnalPRI(uiCoMaxPdw)
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
@@ -165,14 +164,14 @@ void CKAnalPRI::Analysis()
 
 /**
  * @brief     추적용 PRI 분석을 처리한다. 알고 있는 제원으로 분석한다.
- * @return    BOOL
+ * @return    bool
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2005-07-28 18:06:05
  * @warning
  */
-BOOL CKAnalPRI::KnownAnalysis()
+bool CKAnalPRI::KnownAnalysis()
 {
     //STR_PRI *pPri;
 
@@ -250,14 +249,14 @@ unsigned int CKAnalPRI::ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, S
  * @brief     펄스열 간의 하모닉 체크를 수행한다.
  * @param     STR_PULSE_TRAIN_SEG * pSeg1
  * @param     STR_PULSE_TRAIN_SEG * pSeg2
- * @return    BOOL
+ * @return    bool
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2006-01-23 10:14:24
  * @warning
  */
-BOOL CKAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
+bool CKAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
 {
 	return m_pKnownSigAnal->CheckPriInterval( pSeg1, pSeg2 );
 }
@@ -295,14 +294,14 @@ void CKAnalPRI::ExtractRefStable()
  * @brief     드웰 기준 펄스열을 추출한다.
  * @param     STR_PULSE_TRAIN_SEG * pDwlSewg
  * @param     STR_PRI_RANGE_TABLE * pExtRange
- * @return    BOOL
+ * @return    bool
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2006-01-23 16:59:52
  * @warning
  */
-BOOL CKAnalPRI::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange )
+bool CKAnalPRI::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange )
 {
     return m_pKnownSigAnal->ExtractDwellRefPT( pDwlSewg, pExtRange );
 }

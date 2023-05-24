@@ -45,7 +45,7 @@ public:
 		m_hEnv = NULL;
 		m_lConnectionTimeout = 0;
 		m_lLoginTimeout = 5;
-		m_bIsConnected = FALSE;
+		m_bIsConnected = false;
 		m_nRowsAffected = 0;
 		SQLAlloc();
 	};
@@ -55,7 +55,7 @@ public:
 		Close();
 		m_lConnectionTimeout = 0;
 		m_lLoginTimeout = 0;
-		m_bIsConnected = FALSE;
+		m_bIsConnected = false;
 		m_nRowsAffected = 0;
 	};
 
@@ -64,24 +64,24 @@ public:
 protected:
 	LONG m_lLoginTimeout;
 	LONG m_lConnectionTimeout;
-	BOOL m_bIsConnected;
+	bool m_bIsConnected;
 	SQLHENV m_hEnv;
     SQLINTEGER m_nRowsAffected;
 
 public:
-	BOOL Open(CHAR* lpstrDSN, CHAR* lpstrUser = NULL, CHAR* lpstrPass = NULL);
-	BOOL DriverConnect(CHAR* szConnStr, CHAR* szConnStrOut = NULL, HWND hWnd = NULL, enum drvCompletion drvConn = sqlNoPrompt);
+	bool Open(CHAR* lpstrDSN, CHAR* lpstrUser = NULL, CHAR* lpstrPass = NULL);
+	bool DriverConnect(CHAR* szConnStr, CHAR* szConnStrOut = NULL, HWND hWnd = NULL, enum drvCompletion drvConn = sqlNoPrompt);
     void show_error( SQLSMALLINT handletype );
-	void SetReadOnly(BOOL bReadOnly = TRUE);
+	void SetReadOnly(bool bReadOnly = true);
 	void SetConnectionTimeout(LONG nSeconds);
 	LONG GetConnectionTimeout();
 	void SetLoginTimeout(LONG nSeconds)
 	{m_lLoginTimeout = nSeconds;};
-	BOOL Execute(CHAR* szSqlStr);
+	bool Execute(CHAR* szSqlStr);
 	int GetRowsAffected()
 	{return m_nRowsAffected;};
-	BOOL Browse(UCHAR* lpstrConnStrIn, UCHAR* lpstrConnStrOut);
-	BOOL IsConnected()
+	bool Browse(UCHAR* lpstrConnStrIn, UCHAR* lpstrConnStrOut);
+	bool IsConnected()
 	{return m_bIsConnected;};
 	void Close();
 
@@ -134,8 +134,8 @@ public:
 	{
 		m_hDbc = pDb->m_hDbc;
 		m_hStmt = NULL;
-		m_bIsEOF = FALSE;
-		m_bIsBOF = FALSE;
+		m_bIsEOF = false;
+		m_bIsBOF = false;
 		AllocStmt();
 	};
 
@@ -143,48 +143,48 @@ public:
 	{
 		Close();
 		m_hStmt = NULL;
-		m_bIsEOF = FALSE;
-		m_bIsBOF = FALSE;
+		m_bIsEOF = false;
+		m_bIsBOF = false;
 	};
 
-	BOOL Open(CHAR* szSqlStr);
+	bool Open(CHAR* szSqlStr);
 
 	LONG GetFieldLength(SQLSMALLINT nField);
 	int GetFieldIndex(CHAR* szFieldName);
-	BOOL GetFieldName(SQLSMALLINT nField, CHAR* szFieldName);
-	BOOL GetFieldAttributes(int nField, CHAR* szFieldName, int& nType, int& nLength);
+	bool GetFieldName(SQLSMALLINT nField, CHAR* szFieldName);
+	bool GetFieldAttributes(int nField, CHAR* szFieldName, int& nType, int& nLength);
 	int GetFieldCount();
-	BOOL GetFieldValue(SQLSMALLINT nField, CHAR* szData);
-	BOOL GetFieldValue(CHAR* szFieldName, CHAR *szData);
-	BOOL GetFieldValue(SQLSMALLINT nField, int* szData);
-    BOOL GetFieldValue( SQLSMALLINT nField, unsigned int *lData );
-	BOOL GetFieldValue(CHAR* szFieldName, int *szData);
-	BOOL GetFieldValue(SQLSMALLINT nField, LONG *lData);
-	BOOL GetFieldValue(CHAR* szFieldName, LONG *lData);
-	BOOL GetFieldValue(SQLSMALLINT nField, DOUBLE *dblData);
-	BOOL GetFieldValue(CHAR* szFieldName, DOUBLE *dblData);	
-	BOOL GetFieldValue(SQLSMALLINT nField, float *dblData);
-	BOOL GetFieldValue(CHAR* szFieldName, float *dblData);	
-	BOOL GetFieldValue(SQLSMALLINT nField, struct tm* pTime);
-	BOOL GetFieldValue(CHAR* szFieldName, struct tm* pTime);
-	//BOOL GetFieldTimeValue(SQLSMALLINT nField, time_t * pTime);
-	BOOL GetFieldTimeValue(SQLSMALLINT nField, time_t *pTime);
-	BOOL GetFieldTimeValue(CHAR *szFieldName, time_t* time);
+	bool GetFieldValue(SQLSMALLINT nField, CHAR* szData);
+	bool GetFieldValue(CHAR* szFieldName, CHAR *szData);
+	bool GetFieldValue(SQLSMALLINT nField, int* szData);
+    bool GetFieldValue( SQLSMALLINT nField, unsigned int *lData );
+	bool GetFieldValue(CHAR* szFieldName, int *szData);
+	bool GetFieldValue(SQLSMALLINT nField, LONG *lData);
+	bool GetFieldValue(CHAR* szFieldName, LONG *lData);
+	bool GetFieldValue(SQLSMALLINT nField, DOUBLE *dblData);
+	bool GetFieldValue(CHAR* szFieldName, DOUBLE *dblData);	
+	bool GetFieldValue(SQLSMALLINT nField, float *dblData);
+	bool GetFieldValue(CHAR* szFieldName, float *dblData);	
+	bool GetFieldValue(SQLSMALLINT nField, struct tm* pTime);
+	bool GetFieldValue(CHAR* szFieldName, struct tm* pTime);
+	//bool GetFieldTimeValue(SQLSMALLINT nField, time_t * pTime);
+	bool GetFieldTimeValue(SQLSMALLINT nField, time_t *pTime);
+	bool GetFieldTimeValue(CHAR *szFieldName, time_t* time);
 
-	BOOL MoveFirst();
-	BOOL MoveNext();
-	BOOL MovePrevious();
-	BOOL MoveLast();
-	BOOL IsEof() 
+	bool MoveFirst();
+	bool MoveNext();
+	bool MovePrevious();
+	bool MoveLast();
+	bool IsEof() 
 	{return m_bIsEOF;};
-	BOOL IsBof()
+	bool IsBof()
 	{return m_bIsBOF;};
 
 	void Close();
 
 protected:
-	BOOL m_bIsEOF;
-	BOOL m_bIsBOF;
+	bool m_bIsEOF;
+	bool m_bIsBOF;
 	SQLHDBC m_hDbc;
 	SQLHSTMT m_hStmt;
 	void AllocStmt();

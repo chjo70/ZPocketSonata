@@ -30,6 +30,14 @@
 #include <sys/utime.h>
 
 #include <fcntl.h>
+
+
+#elif __VXWORKS__
+#include <taskLib.h>
+#include <ioLib.h>
+#include <usrFsLib.h>
+
+
 #else
 #include <unistd.h>
 #include <sys/time.h>
@@ -49,12 +57,13 @@
 
 #include "../Include/globals.h"
 
-//extern CMultiServer *g_pTheZYNQSocket;
+#ifdef _LOG_
 extern CSingleClient *g_pTheCCUSocket;
-//extern CSingleClient *g_pThePMCSocket;
+
+#endif
 
 #else
-#include "../Include/globals.h"
+
 
 #endif
 
@@ -90,13 +99,24 @@ void CCommonUtils::GetCollectTime( time_t *ptiContactTime, unsigned short *ptiCo
     *ptiContactTime = tsNow.tv_sec;
 
 #ifdef _MSC_VER
-    *ptiContactTimems = ( unsigned short ) tsNow.tv_usec / ( unsigned int ) 1000;
+    *ptiContactTimems = ( unsigned int ) tsNow.tv_usec / ( unsigned int ) 1000;
 #else
     *ptiContactTimems = tsNow.tv_nsec;
 #endif
 
 }
 
+/**
+ * @brief     GetCollectTime
+ * @param     time_t * ptiContactTime
+ * @param     unsigned int * ptiContactTimems
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-10 20:03:06
+ * @warning
+ */
 void CCommonUtils::GetCollectTime( time_t *ptiContactTime, unsigned int *ptiContactTimems )
 {
     struct timespec tsNow;
@@ -194,6 +214,16 @@ void CCommonUtils::CloseSocket()
 
 
 #ifdef _MSC_VER
+
+/**
+ * @brief     getFILETIMEoffset
+ * @return    LARGE_INTEGER
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-23 15:14:49
+ * @warning
+ */
 LARGE_INTEGER getFILETIMEoffset()
 {
     SYSTEMTIME s;
@@ -265,7 +295,47 @@ int clock_gettime(int X, struct timeval *tv)
     return (0);
 }
 
+/**
+ * @brief     Random
+ * @param     float fMin
+ * @param     float fMax
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-23 15:15:07
+ * @warning
+ */
+float CCommonUtils::Random( float fMin, float fMax )
+{
+    float fRet;
+    // std::uniform_int_distribution<float> dist( fMin, fMax );
 
+    fRet = fMin + ( ( ( float ) rand() / ( float ) RAND_MAX ) * ( fMax - fMin + (float) 1.0 ) );
+    return fRet;
+
+}
+
+/**
+ * @brief     Random
+ * @param     int iMin
+ * @param     int iMax
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-23 15:30:15
+ * @warning
+ */
+int CCommonUtils::Random( int iMin, int iMax )
+{
+    int iRet;
+
+    //iRet = ( rand() % ( iMax - iMin ) ) + iMin + 1;
+    iRet = iMin + (int) ( ( ( float ) rand() / ( float ) RAND_MAX ) * (float) ( iMax - iMin + 1 ) );
+    return iRet;
+
+}
 
 
 #endif
@@ -453,28 +523,55 @@ void CCommonUtils::GetCollectTime( struct timespec *pTimeSpec )
 
 }
 
-
 /**
- * @brief     GetTickCount
- * @return    DWORD
+ * @brief     GetDiffTime
+ * @param     struct timespec * pTimeSpec
+ * @return    void
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
- * @date      2023-02-03 11:49:19
+ * @date      2023-05-20 17:33:38
  * @warning
  */
-DWORD CCommonUtils::GetTickCounts()
+DWORD CCommonUtils::GetDiffTime( struct timespec *pTimeSpec )
 {
+    struct timespec tsNow, tsDiff;
+    DWORD ret = 0;
+
+    clock_gettime( CLOCK_REALTIME, & tsNow );
+
 #ifdef _MSC_VER
-    return ::GetTickCount();
+    tsDiff.tv_sec = tsNow.tv_sec - pTimeSpec->tv_sec;
+    if( tsNow.tv_usec >= pTimeSpec->tv_usec ) {
+        tsDiff.tv_usec = tsNow.tv_usec - pTimeSpec->tv_usec;
+    }
+    else {
+        tsDiff.tv_sec = tsDiff.tv_sec - 1;
+        tsDiff.tv_usec = 1000000000 + tsNow.tv_usec - pTimeSpec->tv_usec;
+    }
+
+    printf( "\n tsDiff.tv_sec[%u]", tsDiff.tv_sec );
+    printf( "\n tsDiff.tv_nsec[%u]", tsDiff.tv_usec );
+
+    ret = ( 1000000000 ) * tsDiff.tv_sec + tsDiff.tv_usec;
 
 #else
-    return 0;
+    tsDiff.tv_sec = tsNow.tv_sec - pTimeSpec->tv_sec;
+    if( tsNow.tv_nsec >= pTimeSpec->tv_nsec ) {
+        tsDiff.tv_nsec = tsNow.tv_nsec - pTimeSpec->tv_nsec;
+    }
+    else {
+        tsDiff.tv_sec = tsDiff.tv_sec - 1;
+        tsDiff.tv_nsec = 1000000000 + tsNow.tv_nsec - pTimeSpec->tv_nsec;
+    }
+
+    ret = ( 1000000000 ) * tsDiff.tv_sec + tsDiff.tv_nsec;
 
 #endif
 
-}
+    return ret;
 
+}
 
 /**
  * @brief     CopyFile
@@ -674,7 +771,7 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
         printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
                 pPDW->ullTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA ), \
                 CPOCKETSONATAPDW::DecodeDOA( (int) pPDW->uiAOA), \
-                CPOCKETSONATAPDW::DecodeFREQMHz( (int) pPDW->uiFreq), pPDW->uiFreq,
+                CPOCKETSONATAPDW::DecodeFREQMHz( pPDW->uiFreq), pPDW->uiFreq,
                 CPOCKETSONATAPDW::DecodePW( (int) pPDW->uiPW), pPDW->uiPW );
         ++ pPDW;
     }
@@ -1236,7 +1333,18 @@ unsigned int CCommonUtils::Parsing(vector<string> *pValues, const char *pData )
 //
 // }
 
-int CCommonUtils::DeleteAllFile(const char *pszDir, int iForce)
+/**
+ * @brief     DeleteAllFile
+ * @param     const char * pszDir
+ * @param     int iForce
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-20 12:02:13
+ * @warning
+ */
+int CCommonUtils::DeleteAllFile(const char *pszDir )
 {
 #ifdef __linux__
 	DIR *  dir_ptr = NULL;
@@ -1289,7 +1397,7 @@ int CCommonUtils::DeleteAllFile(const char *pszDir, int iForce)
 
 		CFileFind ff;
 
-		BOOL bFind = ff.FindFile(strName);
+		bool bFind = ff.FindFile(strName);
 
 		while (bFind) {
 			bFind = ff.FindNextFile();
@@ -1306,6 +1414,17 @@ int CCommonUtils::DeleteAllFile(const char *pszDir, int iForce)
 	return 0;
 
 #else
+    STATUS status;
+
+    status = xdelete( pszDir );
+    if( OK == status ) {
+    }
+    else {
+        //printf( "\n pszDir[%s]", pszDir );
+        //WhereIs;
+
+    }
+
 	return 0;
 
 #endif
@@ -1448,6 +1567,11 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
             *pszString = "방사체/빔/LOB 데이터";
             break;
 
+        case enTHREAD_LOG:
+            *pszString = "로그";
+            break;
+
+
         default:
             *pszString = "이름 없음";
             break;
@@ -1480,8 +1604,6 @@ void CCommonUtils::PrintAllPDWs( STR_UZPOCKETPDW *i_pstPDW )
 {
     unsigned int ui, uiTotalPDW;
 
-    unsigned int uiFreq, uiAOA;
-
     char szBuffer[300];
 
     _TOA prellTOA=0;
@@ -1495,13 +1617,11 @@ void CCommonUtils::PrintAllPDWs( STR_UZPOCKETPDW *i_pstPDW )
 #ifdef _GRAPH_
     TRACE( "PDW [%d]개를 출력 합니다. -------------------------------------------------", uiTotalPDW );
 #else
-    LOGMSG1( enDebug, "PDW [%d]개를 출력 합니다. -------------------------------------------------", uiTotalPDW );
+    //LOGMSG1( enDebug, "PDW [%d]개를 출력 합니다. -------------------------------------------------", uiTotalPDW );
 #endif
 
-    for( ui = 0; ui < uiTotalPDW; ++ui ) {
-        uiFreq = pstPDW->stHwPdwDataRf.uiFreq;
-        uiAOA = pstPDW->stHwPdwDataRf.uiAOA;
-        sprintf( szBuffer, "[%3d] %2d %4d[%4d] %8dMHz[%8d] %8d %8d 0x%016llx", (unsigned int) pstPDW->stHwPdwDataRf.Index, ( unsigned int ) pstPDW->stHwPdwDataRf.CwPulse, uiAOA, ( unsigned int ) pstPDW->stHwPdwDataRf.uiAOA, uiFreq, ( unsigned int ) pstPDW->stHwPdwDataRf.uiFreq, ( unsigned int ) pstPDW->stHwPdwDataRf.uiPW, ( unsigned int ) pstPDW->stHwPdwDataRf.uiPA, pstPDW->stHwPdwDataRf.ullTOA );
+    for( ui = 0; ui < uiTotalPDW && ui < 10 ; ++ui ) {
+        MakeOnePDW( szBuffer, pstPDW );
 
 #ifdef _GRAPH_
         if( ui == 0 || prellTOA < pstPDW->stHwPdwDataRf.ullTOA ) {
@@ -1512,10 +1632,10 @@ void CCommonUtils::PrintAllPDWs( STR_UZPOCKETPDW *i_pstPDW )
         }
 #else
         if( ui == 0 || prellTOA < pstPDW->stHwPdwDataRf.ullTOA ) {
-            LOGMSG1( enDebug, " %s", szBuffer );
+            //LOGMSG1( enDebug, " %s", szBuffer );
         }
         else {
-            LOGMSG1( enDebug, "!%s", szBuffer );
+            //LOGMSG1( enDebug, "!%s", szBuffer );
         }
 #endif
 
@@ -1537,19 +1657,113 @@ void CCommonUtils::PrintAllPDWs( STR_UZPOCKETPDW *i_pstPDW )
  */
 void CCommonUtils::PrintOnePDW( UZPOCKETPDW *pstPDW )
 {
-    unsigned int uiFreq, uiAOA;
-
     char szBuffer[300];
 
-    uiFreq = pstPDW->stHwPdwDataRf.uiFreq;
-    uiAOA = pstPDW->stHwPdwDataRf.uiAOA;
-    sprintf( szBuffer, "[%3d] %2d %4d[%4d] %8dMHz[%8d] %8d %8d 0x%016llx", ( unsigned int ) pstPDW->stHwPdwDataRf.Index, ( unsigned int ) pstPDW->stHwPdwDataRf.CwPulse, uiAOA, ( unsigned int ) pstPDW->stHwPdwDataRf.uiAOA, uiFreq, ( unsigned int ) pstPDW->stHwPdwDataRf.uiFreq, ( unsigned int ) pstPDW->stHwPdwDataRf.uiPW, ( unsigned int ) pstPDW->stHwPdwDataRf.uiPA, pstPDW->stHwPdwDataRf.ullTOA );
+    MakeOnePDW( szBuffer, pstPDW );
 
 #ifdef _GRAPH_
     TRACE( " %s", szBuffer );
 #else
-    LOGMSG1( enDebug, " %s", szBuffer );
+    // LOGMSG1( enDebug, " %s", szBuffer );
 #endif
 
 }
+
+/**
+ * @brief     MakeOnePDW
+ * @param     char * pszBuffer
+ * @param     UZPOCKETPDW * pstPDW
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-20 11:13:59
+ * @warning
+ */
+void CCommonUtils::MakeOnePDW( char *pszBuffer, UZPOCKETPDW *pstPDW )
+{
+#ifdef _GRAPH_
+    pszBuffer[0] = NULL;
+
+#else
+
+#ifdef FFRQMhzCNV
+    unsigned int uiFreq, uiAOA, uiPW;
+    int iPA;
+
+    char o_x[2] = { 'O', 'X' };
+
+    uiFreq = UMUL( FFRQMhzCNV( 0, pstPDW->stHwPdwDataRf.uiFreq ), 1 );
+    uiAOA = pstPDW->stHwPdwDataRf.uiAOA;
+    uiPW = IPWCNV( pstPDW->stHwPdwDataRf.uiPW );
+    iPA = (int) IMUL( PACNV( pstPDW->stHwPdwDataRf.uiPA ), 1 );
+    sprintf( pszBuffer, "[%3d] %1d[%1d%1d/%2d %4d[%4d] %4d[MHz] %8d[us] %8d[dBm] 0x%016llx %1c", ( unsigned int ) pstPDW->stHwPdwDataRf.Index, ( unsigned int ) pstPDW->stHwPdwDataRf.CwPulse, \
+        ( unsigned int ) pstPDW->stHwPdwDataRf.Pmop, ( unsigned int ) pstPDW->stHwPdwDataRf.Fmop, ( unsigned int ) pstPDW->stHwPdwDataRf.FmopDir, \
+        uiAOA, ( unsigned int ) pstPDW->stHwPdwDataRf.uiAOA, uiFreq, uiPW, iPA, pstPDW->stHwPdwDataRf.ullTOA, o_x[pstPDW->stHwPdwDataRf.FalsePdw] );
+#else
+    pszBuffer[0] = NULL;
+
+#endif
+
+#endif
+
+}
+
+/**
+ * @brief     WallMakePrint
+ * @param     char * buffer
+ * @param     char delimeter
+ * @param     int iColumns
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-10 15:52:49
+ * @warning
+ */
+void CCommonUtils::WallMakePrint( char *buffer, char delimeter, int iColumns )
+{
+    int i, iCnt;
+
+    iCnt = ( int ) strlen( buffer );
+    for( i = iCnt; i < iColumns ; ++i ) {
+        // iCnt += sprintf( & buffer[iCnt], "%c", delimeter );
+        buffer[i] = delimeter;
+    }
+    buffer[i] = 0;
+
+}
+
+/**
+ * @brief     WallMakePrint
+ * @param     char delimeter
+ * @param     int iColumns
+ * @param     char * buffer
+ * @param     ...
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-14 15:02:41
+ * @warning
+ */
+void CCommonUtils::WallMakePrint( char delimeter, int iColumns, char *fmt, ... )
+{
+    int i, iCnt;
+    char buffer[200] = { 0 };
+
+    va_list args;
+
+    va_start( args, fmt );
+    vsprintf( buffer, fmt, args );
+    va_end( args );
+
+    iCnt = ( int ) strlen( buffer );
+    for( i = iCnt; i < iColumns; ++i ) {
+        buffer[i] = delimeter;
+    }
+    buffer[i] = 0;
+
+}
+
 

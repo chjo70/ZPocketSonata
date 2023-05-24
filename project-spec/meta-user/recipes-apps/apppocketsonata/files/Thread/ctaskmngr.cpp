@@ -38,15 +38,20 @@
 
 
 
+#ifdef __VXWORKS__
+extern bool g_bSNTP;
+
+#endif
+
 #define _DEBUG_
 
 /**
  * @brief CTaskMngr::CTaskMngr
  */
 #ifdef _MSSQL_
-CTaskMngr::CTaskMngr( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
+CTaskMngr::CTaskMngr( int iThreadPriority, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
 #else
-CTaskMngr::CTaskMngr( int iKeyId, const char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iKeyId, pClassName, bArrayLanData )
+CTaskMngr::CTaskMngr( int iThreadPriority, const char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iThreadPriority, pClassName, bArrayLanData )
 #endif
 {
     LOGENTRY;
@@ -95,7 +100,13 @@ CTaskMngr::~CTaskMngr(void)
 }
 
 /**
- * @brief 초기화를 수행합니다.
+ * @brief     초기화를 수행합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-09 15:05:01
+ * @warning
  */
 void CTaskMngr::Init()
 {
@@ -217,7 +228,8 @@ void CTaskMngr::_routine()
                     break;
 
                 case enSYSERROR :
-                    printf( "****************************************************************" );
+                    printf( "\n[%d]", m_pMsg->uiOpCode );
+                    WhereIs;
                     break;
 
                 ///////////////////////////////////////////////////////////////////////////////////
@@ -227,13 +239,13 @@ void CTaskMngr::_routine()
                     break;
 
                 default:
-                    LOGMSG2( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                    Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
                     break;
             }
         }
 //         else {
 //             // 아래 메시지는 랜이 끊어진 경우에 에러 메시지를 보여준다.
-//                  LOGMSG1( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->uiOpCode );
+//                  Log( enError, "메시지 흐름[0x%X]이 잘못 됐습니다. !!", m_pMsg->uiOpCode );
 //             }
 //         }
     }
@@ -251,7 +263,7 @@ void CTaskMngr::_routine()
  */
 void CTaskMngr::Start()
 {
-    LOGMSG( enDebug, "[운용제어/시작 요청]" );
+    Log( enDebug, "[운용제어/시작 요청]" );
 
     g_pTheCCUSocket->StopThread();
 
@@ -266,7 +278,7 @@ void CTaskMngr::Start()
     CCommonUtils::CloseSocket();
 
     //g_pTheCCUSocket->Run( _MSG_CCU_KEY );
-    LOGMSG( enDebug, "================================================================" );
+    Log( enDebug, "================================================================" );
 
 }
 
@@ -284,7 +296,7 @@ void CTaskMngr::Start()
 //
 //     _EQUALS3( enMode2, enMode, (ENUM_MODE) m_pMsg->x.uiData )
 //
-//     LOGMSG1( enDebug, "Set Mode[%d]", enMode );
+//     Log( enDebug, "Set Mode[%d]", enMode );
 //
 //     g_pTheSysConfig->SetMode( enMode );
 //
@@ -308,7 +320,7 @@ void CTaskMngr::Start()
 //             CCommonUtils::CloseSocket();
 //
 //             //g_pTheCCUSocket->Run( _MSG_CCU_KEY );
-//             LOGMSG( enDebug, "================================================================" );
+//             Log( enDebug, "================================================================" );
 //             break;
 //
 //         default :
@@ -328,7 +340,11 @@ void CTaskMngr::Start()
  */
 void CTaskMngr::AnalysisStart( bool bOut )
 {
-    LOGMSG( enDebug, "[운용제어/시작 요청]-시작====================================" );
+    char buffer[200];
+
+    sprintf( buffer, "[운용제어/시작 요청]-시작====================================" );
+    CCommonUtils::WallMakePrint( buffer, '=', MAX_SCREEN_COLUMNS );
+    Log( enNormal, buffer );
 
     SetMode( enOP_Mode );
 
@@ -348,12 +364,19 @@ void CTaskMngr::AnalysisStart( bool bOut )
 #ifdef _MSC_VER
 
 #elif defined(__VXWORKS__)
-    // time_t tiNow = (time_t) m_pMsg->x.tiNow;
-
     struct timespec time_spec;
 
-    time_spec.tv_sec = m_pMsg->x.tiNow;
-    clock_settime( CLOCK_REALTIME, &time_spec );
+    if( m_pMsg->x.tiNow != 0 ) {
+        time_spec.tv_sec = m_pMsg->x.tiNow;
+        time_spec.tv_nsec = 0;
+        clock_settime( CLOCK_REALTIME, &time_spec );
+    }
+    else {
+        if( g_bSNTP == false ) {
+            Log( enError, "SBC 시간을 부팅시에 설정하지 못했습니다 ! 네트워크 망을 확인하거나 SNTP 서비스가 서버에 실행되는지를 확인하세요." );
+            g_pTheCCUSocket->SendLan( enSYSERROR, "SBC 시간을 설정하지 못했습니다 !" );
+        }
+    }
 
 #elif defined(__linux__)
     // tiNow = (time_t) m_pMsg->x.tiNow;
@@ -394,11 +417,13 @@ void CTaskMngr::AnalysisStart( bool bOut )
 #endif
 
     if( bOut == true ) {
-        BOOL bResult=true;
+        bool bResult=true;
         g_pTheCCUSocket->SendLan( enRES_OP_START, & bResult, sizeof( bResult ) );
     }
 
-    LOGMSG( enDebug, "[운용제어/시작 요청]-종료==================================" );
+    sprintf( buffer, "[운용제어/시작 요청]-종료" );
+    CCommonUtils::WallMakePrint( buffer, '=', MAX_SCREEN_COLUMNS );
+    Log( enNormal, buffer );
 
 }
 
@@ -453,10 +478,10 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
 {
     // 로그 출력
     if( bAbnormalEvent ) {
-        LOGMSG( enDebug, "[비정상 처리]-시작====================================================" );
+        Log( enDebug, "[비정상 처리]-시작====================================================" );
     }
     else {
-        LOGMSG( enDebug, "[운용제어/운용 종료]-시작===============================================" );
+        Log( enDebug, "[운용제어/운용 종료]-시작===============================================" );
     }
 
     SetMode( enREADY_MODE );
@@ -466,9 +491,7 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
     QMsgSnd( PULTRK->GetKeyId(), enTHREAD_REQ_SHUTDOWN );
 #endif
 
-#ifdef __VXWORKS__
-    TRACE( "\n 타스크 우선순위를 낮게 설정합니다." );
-#endif
+    Log( enDebug, "타스크 우선순위를 낮게 설정합니다." );
 
     // 모든 쓰레드에세 SHUTDOWN 메시지를 전송한다.
     SendThreadMessage( g_pTheSignalCollect );
@@ -500,27 +523,28 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
     }
 
     Init();
-    g_pTheSignalCollect->Init();
-    g_pTheDetectAnalysis->Init();
-    g_pTheTrackAnalysis->Init();
-    g_pTheScanAnalysis->Init();
+    g_pTheSignalCollect->CSignalCollect::CThread::Init();
+    g_pTheDetectAnalysis->CDetectAnalysis::CThread::Init();
+    g_pTheTrackAnalysis->CTrackAnalysis::CThread::Init();
+    g_pTheScanAnalysis->CScanAnalysis::CThread::Init();
     g_pTheEmitterMerge->Init();
 
-    //TRACE( "\n 타스크 우선순위를 높게 설정합니다." );
+    Log( enDebug, "타스크 우선순위를 높게 설정합니다." );
+
     Sleep( REQ_OP_STOP_DELAY );
 
     SetSendEnable();
 
     if( bAbnormalEvent == false && bOut == true ) {
-        BOOL bResult = TRUE;
+        bool bResult = TRUE;
         g_pTheCCUSocket->SendLan( enRES_OP_SHUTDOWN, &bResult, sizeof( bResult ) );
     }
 
     if( bAbnormalEvent ) {
-        LOGMSG( enDebug, "[비정상 처리]-종료=======================================================" );
+        Log( enDebug, "[비정상 처리]-종료=======================================================" );
     }
     else {
-        LOGMSG( enDebug, "[운용제어/운용 종료]-종료================================================" );
+        Log( enDebug, "[운용제어/운용 종료]-종료================================================" );
     }
 
 }
@@ -536,20 +560,20 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
  */
 void CTaskMngr::TaskSummary()
 {
-    LOGMSG( enNormal, "--------------------------------------------------------" );
+    Log( enNormal, "--------------------------------------------------------" );
 
-    LOGMSG1( enNormal, "타스크(쓰레드) 총 개수\t\t: %d [개]" , GetCoThread() );
+    Log( enNormal, "타스크(쓰레드) 총 개수\t\t: %d [개]" , GetCoThread() );
     for( const auto &cThread : g_vecThread ) {
         cThread->ShowTaskMessae();
     }
 
-    LOGMSG1( enNormal, "메시지 큐 총 개수\t\t : %d [개]", GetCoMsgQueue() );
+    Log( enNormal, "메시지 큐 총 개수\t\t : %d [개]", GetCoMsgQueue() );
 
     for( const auto &cThread : g_vecThread ) {
         cThread->ShowQueueMessae();
     }
 
-    LOGMSG( enNormal, "--------------------------------------------------------" );
+    Log( enNormal, "--------------------------------------------------------" );
 
 }
 
@@ -603,7 +627,7 @@ int CTaskMngr::IsThrereELNOT( char *pszELNOT )
  */
 void CTaskMngr::StopUserCollecting()
 {
-    LOGMSG( enDebug, " 수집 설정을 종료합니다." );
+    Log( enDebug, " 수집 설정을 종료합니다." );
 
 #ifdef __ZYNQ_BOARD__
     CHWIO::StopCollecting( REG_UIO_DMA_1 );

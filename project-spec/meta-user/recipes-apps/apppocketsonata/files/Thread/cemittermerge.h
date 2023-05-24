@@ -17,7 +17,7 @@
 
 #include "../Anal/EmitterMerge/ELEmitterMergeMngr.h"
 
-
+#include "../Utils/clog.h"
 
 /**
 *
@@ -69,7 +69,7 @@ private:
 
     void InitOfMessageData();
 
-#ifdef _SCAN_ENABLED_
+#if CO_SCAN_CHANNEL > 0
     void UpdateScanResult();
     void UpdateScanFail();
     void UpdateScanError();
@@ -92,7 +92,7 @@ private:
     void MakeLOBData( SRxLOBData *pLOBData );
 
 public:
-    CEmitterMerge( int iKeyId, const char *pClassName, bool bArrayLanData );
+    CEmitterMerge( int iThreadPriority, const char *pClassName, bool bArrayLanData );
     virtual ~CEmitterMerge(void);
 
     void Init();
@@ -114,7 +114,6 @@ public:
 
         return pABTData;
     }
-
 
 };
 

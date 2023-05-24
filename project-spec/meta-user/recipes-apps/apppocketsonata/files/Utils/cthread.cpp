@@ -39,6 +39,9 @@
 #define S_DEFFILEMODE   (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
 #endif
 
+// 타스크 및 쓰레드 포인터
+vector<CThread *> g_vecThread;
+
 // 클래스 내의 정적 멤버변수 값 정의
 int CThread::m_iCoThread = 0;
 int CThread::m_iCoMsgQueue = 0;
@@ -47,15 +50,37 @@ bool CThread::m_bSendEnable = false;
 
 
 /**
+ * @brief     CThread
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 15:16:25
+ * @warning
+ */
+CThread::CThread() : CArrayMsgData( false )
+{
+#ifdef _MFC_VER
+    m_hEvent = NULL;
+    m_hSleepEvent = NULL;
+#endif
+
+    m_bLog = false;
+
+}
+
+/**
  * @brief CThread::CThread
  * @param iMsgKey
  * @param pClassName
  * @param bArrayLanData
  */
-CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bool bCreateOnlyThread ) : CArrayMsgData( bArrayLanData )
+CThread::CThread( int iThreadPriority, const char *pThreadName, bool bArrayLanData, bool bCreateOnlyThread ) : CArrayMsgData( bArrayLanData )
 {
 
-    m_iThreadID = iThreadID;
+    m_bLog = false;
+
+    g_iKeyId++;
 
     m_bThreadLoop = true;
 
@@ -79,7 +104,7 @@ CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bo
     // 메시지 큐
 	m_hEvent = CreateEvent( NULL, FALSE, FALSE, pThreadName );
     if( m_hEvent == NULL ) {
-        LOGMSG1( enError, "Warning: CreateEvent failed in CThread::CThread..." , m_szThreadName );
+        //Log( enError, "Warning: CreateEvent failed in CThread::CThread..." , m_szThreadName );
     }
     else {
         ++ m_iCoMsgQueue;
@@ -88,13 +113,13 @@ CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bo
     // Sleep 큐
     m_hSleepEvent = CreateEvent( NULL, FALSE, FALSE, pThreadName );
     if( m_hSleepEvent == NULL ) {
-        LOGMSG1( enError, "Warning: CreateEvent failed in CThread::CThread::Sleep..." , m_szThreadName );
+        //Log( enError, "Warning: CreateEvent failed in CThread::CThread::Sleep..." , m_szThreadName );
     }
 
-    LOGMSG2( enDebug, "Create the task[%s] & queue ID[%d] ..." , m_szThreadName, m_hEvent );
+    //Log( enDebug, "Create the task[%s] & queue ID[%d] ..." , m_szThreadName, m_hEvent );
 
 #elif defined(__VXWORKS__)
-    m_iPriority = -1;
+    m_iPriority = iThreadPriority;
     m_MsgKeyID = 0;
     m_bTaskRunStat = false;
 
@@ -105,14 +130,14 @@ CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bo
     // 메시지 큐 생성
     m_MsgKeyID = msgQCreate( SIZE_OF_MSGDATA_ARRAY, sizeof(STR_MessageData), MSG_Q_PRIORITY );
     if( m_MsgKeyID == NULL ) {
-        LOGMSG1( enError, "큐 ID[%d]를 생성 실패했습니다 !" , m_MsgKeyID );
+        printf( "\n큐 ID[%d]를 생성 실패했습니다 !" , m_MsgKeyID );
     }
     else {
-        // LOGMSG1( enDebug, "큐 ID[%d]를 생성합니다." , m_MsgKeyID );
+        printf( "\n큐 ID[%d]를 생성합니다." , m_MsgKeyID );
         // msgQShow( m_MsgKeyID, 1 );
         ++ m_iCoMsgQueue;
     }
-    LOGMSG2( enDebug, "Create the task[%s] & queue ID[%d] ..." , m_szThreadName, m_MsgKeyID );
+    printf( "\nCreate the task[%s] & queue ID[%d] ..." , m_szThreadName, m_MsgKeyID );
 
 #elif defined(__linux__)
     m_MsgKeyID = 0;
@@ -133,12 +158,12 @@ CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bo
         exit(0);
     }
     else {
-        // LOGMSG1( enDebug, "큐 ID[%d]를 생성합니다." , m_MsgKeyID );
+        // Log( enDebug, "큐 ID[%d]를 생성합니다." , m_MsgKeyID );
         ++ m_iCoMsgQueue;
     }
     while( QMsgRcv( enNO_WAIT ) != -1 );
 
-    LOGMSG2( enDebug, "Create the task[%s] & queue ID[%d] ..." , m_szThreadName, m_MsgKeyID );
+    Log( enDebug, "Create the task[%s] & queue ID[%d] ..." , m_szThreadName, m_MsgKeyID );
 
 #else
 #error 이 소스는 현재 플레폼에 지원하지 않습니다. 개발자에게 문의하세요..
@@ -154,7 +179,13 @@ CThread::CThread( int iThreadID, const char *pThreadName, bool bArrayLanData, bo
 }
 
 /**
- * @brief CThread::~CThread
+ * @brief     ~CThread
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 16:11:37
+ * @warning
  */
 CThread::~CThread()
 {
@@ -168,7 +199,7 @@ CThread::~CThread()
         }
         else {
             -- m_iCoMsgQueue;
-            LOGMSG1( enDebug, "\t 큐 ID[%d]를 종료 처리합니다." , m_MsgKeyID );
+            Log( enDebug, "\t 큐 ID[%d]를 종료 처리합니다." , m_MsgKeyID );
         }
     }
 
@@ -188,6 +219,9 @@ CThread::~CThread()
 
 #elif defined(__VXWORKS__)
 
+    sem_destroy( & m_mutex );
+
+
 #else
 
 #endif
@@ -197,11 +231,11 @@ CThread::~CThread()
     if ( m_MainThread.m_hThread ) {
         CThread::StopThread();
 
-        LOGMSG1( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
+        //Log( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
     }
 
 #elif defined(__VXWORKS__)
-    LOGMSG1( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
+    Log( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
 
 #else
     if( m_MainThread != 0 ) {
@@ -209,7 +243,7 @@ CThread::~CThread()
 
         pthread_cancel( m_MainThread );
         //Pend();
-        LOGMSG1( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
+        Log( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
 
         //Stop();
     }
@@ -223,7 +257,7 @@ CThread::~CThread()
     //
     // g_vecThis.erase( this );
 
-    LOGMSG2( enDebug, "\t 쓰레드 [%d개], 큐 [%d개] 가 남아 있습니다." , m_iCoThread, m_iCoMsgQueue );
+    //Log( enDebug, "\t 쓰레드 [%d개], 큐 [%d개] 가 남아 있습니다." , m_iCoThread, m_iCoMsgQueue );
 
 }
 
@@ -249,16 +283,21 @@ void CThread::Init()
 }
 
 /**
- * @brief CThread::CallBack
- * @param pArg
- * @return
+ * @brief     CallBack
+ * @param     void * pArg
+ * @return    void *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 16:11:26
+ * @warning
  */
 void *CThread::CallBack( void *pArg )
 {
     CThread *pThread = reinterpret_cast<CThread*> (pArg);
 
     if( pThread == NULL ) {
-        LOGMSG( enError, "함수 인자 포인터가 널 값 입니다. 인자를 객체 포인터로 입력해줘야 합니다." );
+        // LOGMSG( enError, "함수 인자 포인터가 널 값 입니다. 인자를 객체 포인터로 입력해줘야 합니다." );
     }
     else {
 #ifdef __linux__
@@ -275,7 +314,7 @@ void *CThread::CallBack( void *pArg )
 
 #endif
 
-		LOGMSG1( enNormal, "The [%s] is stopped the the main loop...", pThread->m_szThreadName );
+		//Log( enNormal, "The [%s] is stopped the the main loop...", pThread->m_szThreadName );
     }
 
     return NULL;
@@ -304,21 +343,19 @@ void CThread::Run( void *(*pFunc)(void*) )
     LOGMSG4( enDebug, "Create the task[%s] ID[%d/%d] & queue ID[%d] ..." , m_szThreadName, m_TaskID, m_iPriority, m_hEvent );
 
 #elif defined(_MSC_VER)
-
     // 쓰레드 생성
     Attach( (LPTHREAD_START_ROUTINE) pFunc );
     Start();
 
 #elif defined(__VXWORKS__)
-
     // 타스크 큐 생성
-    m_iPriority = GetPriorityByThreadName();
+    // m_iPriority = GetPriorityByThreadName();
     m_TaskID = taskSpawn( m_szThreadName, GetPriority(), VX_STDIO|VX_SUPERVISOR_MODE|VX_FP_TASK|VX_ALTIVEC_TASK, GetStackSize(), (FUNCPTR) *pFunc, (int) this, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     if( m_TaskID != TASK_ID_ERROR ) {
         m_bTaskRunStat = true;
     }
 
-    LOGMSG4( enDebug, "Create the task[%s] ID[%d/%d] & queue ID[%d] ..." , m_szThreadName, m_TaskID, m_iPriority, m_MsgKeyID );
+    Log( enDebug, "Create the task[%s] ID[%d/%d] & queue ID[%d] ..." , m_szThreadName, m_TaskID, m_iPriority, m_MsgKeyID );
 
     // printErrno( errnoGet() );
 	LOG_LINEFEED;
@@ -347,7 +384,6 @@ DWORD CThread::Start( void *pArg )
     m_MainThread.m_hThread = CreateThread(NULL, 0, m_pThreadFunc, this, 0, & m_MainThread.m_dwTID );
     m_MainThread.m_dwExitCode = (DWORD)-1;
 #else
-
 #endif
 
 #ifdef _MSC_VER
@@ -513,10 +549,16 @@ void CThread::QMsgClear()
     return;
 }
 
-
 /**
- * @brief CThread::QMsgRcv
- * @return
+ * @brief     QMsgRcv
+ * @param     ENUM_RCVMSG enFlag
+ * @param     DWORD dwMilliSec
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-14 14:17:51
+ * @warning
  */
 int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
 {
@@ -570,12 +612,22 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
 
                 m_queue.pop();
             }
+            UnLock();
+
         }
     }
     else {
+        int iSize;
+
         Lock();
-        if( m_queue.size() == 0 ) {
-            UnLock();
+        iSize = m_queue.size();
+        UnLock();
+
+        if( iSize >= 10 /* SIZE_OF_MSGDATA_ARRAY */ ) {
+            TRACE( "\n 큐 사이즈가 초과 되고 있습니다."  );
+        }
+
+        if( iSize == 0 ) {
             if (enFlag == enTIMER) {
                 dwRes = ::WaitForSingleObject(m_hEvent, dwMilliSec);
             }
@@ -594,14 +646,14 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
 
 				m_RcvMsg.uiOpCode = enTHREAD_TIMER;
 				m_RcvMsg.uiSocket = 0;
-                m_RcvMsg.uiEchoBit = 0;
 
                 m_pszRecvData = NULL;
 
             }
             else if( dwRes == WAIT_OBJECT_0 ) {
                 Lock();
-                if( m_queue.size() != 0 ) {
+                iSize = m_queue.size();
+                if( iSize != 0 ) {
                     iMsgRcv = 1;
 
                     m_RcvMsg = m_queue.front();
@@ -619,16 +671,20 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
                     ResetEvent( m_hEvent );
                 }
                 else {
-                    TRACE( "Invalid the receive message..." );
+                    // TRACE( "Invalid the receive message..." );
                 }
+                UnLock();
             }
 			ELSE
 
         }
         else {
-            iMsgRcv = 1;
-
+            Lock();
             m_RcvMsg = m_queue.front();
+            m_queue.pop();
+            UnLock();
+
+            iMsgRcv = 1;
 
             if (m_RcvMsg.iArrayIndex != -1) {
                 m_pszRecvData = (char *) m_szRecvData;
@@ -637,13 +693,9 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
             else {
                 m_pszRecvData = NULL;
             }
-
-            m_queue.pop();
         }
 
     }
-
-    UnLock();
 
 #elif defined(__VXWORKS__)
     _Vx_ticks_t option;
@@ -664,7 +716,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
 
             m_RcvMsg.uiOpCode = enTHREAD_TIMER;
             m_RcvMsg.uiSocket = 0;
-            m_RcvMsg.uiEchoBit = 0;
+            //m_RcvMsg.uiEchoBit = 0;
         }
         else if( noError == S_objLib_OBJ_UNAVAILABLE && enFlag == enNO_WAIT ) {
 
@@ -701,7 +753,6 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
             m_pszRecvData = NULL;
         }
 
-
         //DisplayMsg( false );
     }
 
@@ -731,7 +782,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
  */
 void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength, const char *pszClassName )
 {
-    QMsgSnd( uiOpCode, NO_ECHO, NULL, 0, 0, pData, uiDataLength, pszClassName );
+    QMsgSnd( uiOpCode, NULL, 0, 0, pData, uiDataLength, pszClassName );
 }
 
 /**
@@ -747,7 +798,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLe
  */
 void CThread::QMsgSnd( unsigned int uiOpCode, const char *pszClassName )
 {
-    QMsgSnd( uiOpCode, NO_ECHO, NULL, 0, 0, NULL, 0, pszClassName );
+    QMsgSnd( uiOpCode, NULL, 0, 0, NULL, 0, pszClassName );
 }
 
 /**
@@ -761,30 +812,10 @@ void CThread::QMsgSnd( unsigned int uiOpCode, const char *pszClassName )
  * @date      2023-03-24 17:43:21
  * @warning
  */
-void CThread::QMsgEchoSnd( unsigned int uiOpCode, const char *pszClassName )
-{
-    QMsgSnd( uiOpCode, ECHO, NULL, 0, 0, NULL, 0, pszClassName );
-}
-
-/**
- * @brief     QMsgSnd
- * @param     unsigned int uiOpCode
- * @param     void * pArrayMsgData
- * @param     unsigned int uiArrayLength
- * @param     void * pData
- * @param     unsigned int uiDataLength
- * @param     const char * pszClassName
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-04-21, 18:06
- * @warning
- */
-void CThread::QMsgSnd(unsigned int uiOpCode, unsigned int uiEchoBit, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName)
-{
-    QMsgSnd(uiOpCode, uiEchoBit, pArrayMsgData, uiArrayLength, _spOne, pData, uiDataLength, pszClassName );
-}
+// void CThread::QMsgEchoSnd( unsigned int uiOpCode, const char *pszClassName )
+// {
+//     QMsgSnd( uiOpCode, NULL, 0, 0, NULL, 0, pszClassName );
+// }
 
 /**
  * @brief     QMsgSnd
@@ -803,48 +834,7 @@ void CThread::QMsgSnd(unsigned int uiOpCode, unsigned int uiEchoBit, void *pArra
  */
 void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName )
 {
-    QMsgSnd( uiOpCode, NO_ECHO, pArrayMsgData, uiArrayLength, _spOne, pData, uiDataLength, pszClassName );
-}
-
-/**
- * @brief     QMsgSnd
- * @param     unsigned int uiOpCode
- * @param     void * pArrayMsgData
- * @param     unsigned int uiArrayLength
- * @param     void * pData
- * @param     unsigned int uiDataLength
- * @return    void
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-03-07 15:36:17
- * @warning
- */
-// void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName )
-// {
-//     QMsgSnd( uiOpCode, NO_ECHO, pArrayMsgData, uiArrayLength, _spOne, pData, uiDataLength, pszClassName );
-//
-// }
-
-/**
- * @brief     QMsgSnd
- * @param     unsigned int uiOpCode
- * @param     void * pArrayMsgData
- * @param     unsigned int uiArrayElement
- * @param     unsigned int uiArraySize
- * @param     void * pData
- * @param     unsigned int uiDataLength
- * @param     const char * pszClassName
- * @return    void
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-03-07 15:46:03
- * @warning
- */
-void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData, unsigned int uiDataLength, const char *pszClassName )
-{
-    QMsgSnd( uiOpCode, NO_ECHO, pArrayMsgData, uiArrayElement, uiArraySize, pData, uiDataLength, pszClassName );
+    QMsgSnd( uiOpCode, pArrayMsgData, uiArrayLength, _spOne, pData, uiDataLength, pszClassName );
 }
 
 /**
@@ -864,9 +854,9 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
  * @date      2023-03-07 15:36:22
  * @warning
  */
-void CThread::QMsgSnd( unsigned int uiOpCode, unsigned int uiEchoBit, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData, unsigned int uiDataLength, const char *pszClassName )
+void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData, unsigned int uiDataLength, const char *pszClassName )
 {
-    if( IsSendEnabled() == true ) {
+    if( IsSendEnabled() == true || m_bLog == true ) {
         STR_MessageData sndMsg;
 
 #ifdef __linux__
@@ -876,7 +866,6 @@ void CThread::QMsgSnd( unsigned int uiOpCode, unsigned int uiEchoBit, void *pArr
         // 1. OPCODE 저장
         sndMsg.uiOpCode = uiOpCode;
         sndMsg.uiSocket = 0;
-        sndMsg.uiEchoBit = uiEchoBit;
 
         // 2. 데이터 저장
         if( pData != NULL ) {
@@ -947,18 +936,12 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 
     if( IsSendEnabled() == true ) {
         // DisplayMsg( true, pszThreadName, m_szThreadName, pMessageData );
-
-        if( pMessageData->uiEchoBit == 1 ) {
-            // LOGMSG4( enDebug, "[%s] ==> [%s]...[%d:%d]", pszThreadName, m_szThreadName, pMessageData->uiOpCode, pMessageData->uiArrayLength );
-        }
-        else {
-            LOGMSG4( enDebug, "@[%s] ==> [%s]...[%d:%d]", pszThreadName, m_szThreadName, pMessageData->uiOpCode, pMessageData->uiArrayLength );
-        }
+        // printf( "@[%s] ==> [%s]...[%d:%d]", pszThreadName, m_szThreadName, pMessageData->uiOpCode, pMessageData->uiArrayLength );
 
 #ifdef __linux__
         if( msgsnd( m_MsgKeyID, (void *) pMessageData, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
             perror( "msgsnd 실패" );
-
+            WhereIs;
             SendTaskMngr( enERROR_OF_SENDMSG );
         }
         else {
@@ -967,8 +950,6 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
         }
 
 #elif defined(_MSC_VER)
-        DisplayMsg( true, pszThreadName, m_szThreadName, pMessageData );
-
         Lock();
 	    m_queue.push(*pMessageData);
         UnLock();
@@ -977,13 +958,12 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 
 	    ::SetEvent(m_hEvent);
 
-        // DisplayMsg( true, pszThreadName, m_szThreadName, pMessageData );
-
 #elif defined(__VXWORKS__)
         STATUS stat=msgQSend( GetKeyId(), (char *) pMessageData, sizeof(STR_MessageData), NO_WAIT, MSG_PRI_NORMAL );
         if( stat == ERROR ) {
             // 메시지 송신 에러시 타스크 관리자에게 메시지 전달하여 긴급 복구하도록 메시지 전달함.
-
+            _func_kprintf( "GetThreadName()=%s", GetThreadName() );
+            WhereIs;
             SendTaskMngr( enERROR_OF_SENDMSG, pszThreadName );
         }
         else {
@@ -994,7 +974,7 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName 
 #endif
     }
     else {
-        LOGMSG( enDebug, "송신할 메시지를 무시합니다." );
+        printf( "송신할 메시지를 무시합니다." );
     }
 
 }
@@ -1102,44 +1082,49 @@ void CThread::DisplayMsg( bool bSend, const char *pszFromClassName, const char *
 {
     char buffer[200];
 
-    std::string strMessage;
-
     STR_MessageData *pMsg;
 
-    if( bSend == true ) {
-        if( pInMsg != NULL ) {
-            pMsg = pInMsg;
+    if( pszFromClassName != NULL && strcmp( pszFromClassName, PCIISR_NAME ) != 0 ) {
+        std::string strMessage;
+
+        if( bSend == true ) {
+            if( pInMsg != NULL ) {
+                pMsg = pInMsg;
+            }
+            else {
+                pMsg = & m_SndMsg;
+            }
         }
         else {
-            pMsg = & m_SndMsg;
+            pMsg = & m_RcvMsg;
         }
+
+        // opcode 에 따른 명령어 파싱
+        CCommonUtils::MakeStringMessage( &strMessage, pMsg->uiOpCode, bSend );
+
+        if( bSend == false ) {
+            if( pMsg->uiDataLength == sizeof(int) ) {
+                sprintf( buffer, ">>수신: [%15s]에서 [%15s]로 Op[%s:0x%04X], Len[%d], Idx[%d], D[%d]" , pszFromClassName, pszToClassName, strMessage.c_str(), pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex, pMsg->x.uiData );
+            }
+            else {
+                sprintf( buffer, ">>수신: [%15s]에서 [%15s]로 Op[%s:0x%04X], Len[%d], Idx[%d]" , pszFromClassName, pszToClassName, strMessage.c_str(), pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
+            }
+
+        }
+        else {
+            if( pMsg->uiDataLength == sizeof(int) ) {
+                sprintf( buffer, "<<송신: [%15s]에서 [%15s]로 Op[%s:0x%04X], Len[%d], Idx[%d], D[%d]" , pszFromClassName, pszToClassName, strMessage.c_str(), pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex, pMsg->x.uiData );
+            }
+            else {
+                sprintf( buffer, "<<송신: [%15s]에서 [%15s]로 Op[%s:0x%04X], Len[%d], Idx[%d]" , pszFromClassName, pszToClassName, strMessage.c_str(), pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
+            }
+        }
+
+        Log( enNormal, buffer );
+
     }
     else {
-        pMsg = & m_RcvMsg;
     }
-
-    // opcode 에 따른 명령어 파싱
-    CCommonUtils::MakeStringMessage( &strMessage, pMsg->uiOpCode, bSend );
-
-    if( bSend == false ) {
-        if( pMsg->uiDataLength == sizeof(int) ) {
-            sprintf( buffer, ">>수신: [%15s]에서 [%15s]로 Op[%s:0x%04X], Len[%d], Idx[%d], D[%d]" , pszFromClassName, pszToClassName, strMessage.c_str(), pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex, pMsg->x.uiData );
-        }
-        else {
-            sprintf( buffer, ">>수신: [%15s]에서 [%15s]로 Op[%s:0x%04X], Len[%d], Idx[%d]" , pszFromClassName, pszToClassName, strMessage.c_str(), pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
-        }
-
-    }
-    else {
-        if( pMsg->uiDataLength == sizeof(int) ) {
-            sprintf( buffer, "<<송신: [%15s]에서 [%15s]로 Op[%s:0x%04X], Len[%d], Idx[%d], D[%d]" , pszFromClassName, pszToClassName, strMessage.c_str(), pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex, pMsg->x.uiData );
-        }
-        else {
-            sprintf( buffer, "<<송신: [%15s]에서 [%15s]로 Op[%s:0x%04X], Len[%d], Idx[%d]" , pszFromClassName, pszToClassName, strMessage.c_str(), pMsg->uiOpCode, pMsg->uiDataLength, pMsg->iArrayIndex );
-        }
-    }
-
-    LOGMSG1( enNormal, "%s" , buffer );
 
 }
 
@@ -1156,7 +1141,7 @@ void CThread::DisplayMsg( bool bSend, const char *pszFromClassName, const char *
  */
 void CThread::ShowTaskMessae( int iLevel )
 {
-    LOGMSG1( enNormal, "[%s]", m_szThreadName );
+    //Log( enNormal, "[%s]", m_szThreadName );
 
 #ifdef _MSC_VER
 
@@ -1213,11 +1198,11 @@ int CThread::QMsgRcvSize()
  */
 void CThread::ShowQueueMessae( int iLevel )
 {
-    LOGMSG1( enNormal, "[%s]", m_szThreadName );
+    //Log( enNormal, "[%s]", m_szThreadName );
 
 #ifdef _MSC_VER
     Lock();
-    LOGMSG1( enNormal, "\t처리할 메시지 큐 개수: %d", m_queue.size() );
+    //Log( enNormal, "\t처리할 메시지 큐 개수: %d", m_queue.size() );
     UnLock();
 
 #elif defined(__VXWORKS__)
@@ -1257,26 +1242,6 @@ void CThread::SendThreadMessage( CThread *pThread, bool bWait )
 }
 
 /**
- * @brief     SendEchoMessage
- * @return    void
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-03-07 16:03:05
- * @warning
- */
-void CThread::SendEchoMessage()
-{
-
-    if( GetParentMessage()->uiEchoBit == ECHO ) {
-        TRACE( " Send Echo Message..." );
-        SendThreadMessage( g_pTheTaskMngr, false );
-
-    }
-
-}
-
-/**
  * @brief		ChangeTaskPriority
  * @param		int iPriority
  * @return		void
@@ -1294,16 +1259,16 @@ void CThread::ChangeTaskPriority( int iPriority )
     // m_iPriority
     status = taskPrioritySet( m_TaskID, iPriority );
     if( status == OK ) {
-        LOGMSG3( enDebug, "[%s]타스크의 우선순위[%d]를 [%d]로 변경합니다.", GetThreadName(), m_iPriority, iPriority );
+        Log( enDebug, "[%s]타스크의 우선순위[%d]를 [%d]로 변경합니다.", GetThreadName(), m_iPriority, iPriority );
 
         m_iPriority = iPriority;
     }
     else {
-        LOGMSG3( enError, "[%s]타스크의 우선순위[%d]를 [%d]로 변경 실패했습니다.", GetThreadName(), m_iPriority, iPriority );
+        Log( enError, "[%s]타스크의 우선순위[%d]를 [%d]로 변경 실패했습니다.", GetThreadName(), m_iPriority, iPriority );
     }
 
 #else
-    LOGMSG2( enDebug, "[%s]타스크의 우선순위를 [%d]로 변경합니다.", GetThreadName(), iPriority );
+    //Log( enDebug, "[%s]타스크의 우선순위를 [%d]로 변경합니다.", GetThreadName(), iPriority );
 
 #endif
 

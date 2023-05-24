@@ -156,6 +156,8 @@ enum enRES_MESSAGE {
     enRES_CBIT = Mbit_ResultEsCbit,
     enRES_SBIT = Mbit_ResultEsSbit,
 
+    enRES_RELOAD_LIBRARY = _START_OPCODE_OF_LIBRARY_,
+
     // 위협 정보
     enNUP_THREAT_DATA = _START_OPCODE_OF_THREAT_,
     enDEL_THREAT_DATA,

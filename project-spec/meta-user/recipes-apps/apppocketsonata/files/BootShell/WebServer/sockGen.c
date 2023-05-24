@@ -1,4 +1,4 @@
-
+﻿
 /*
  *	sockGen.c -- Posix Socket support module for general posix use
  *
@@ -957,8 +957,12 @@ static int socketDoEvent(socket_t *sp)
 int socketSetBlock(int sid, int on)
 {
 	socket_t		*sp;
-	//unsigned long	flag;
-	int				iflag;
+#if (defined (CE) || defined (WIN))
+	unsigned long	flag;
+#else
+    int				iflag;
+#endif
+
 	int				oldBlock;
 
 	//flag = iflag = !on;

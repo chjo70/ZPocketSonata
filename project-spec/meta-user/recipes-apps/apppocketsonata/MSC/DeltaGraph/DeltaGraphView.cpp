@@ -72,12 +72,12 @@ BOOL CDeltaGraphView::PreCreateWindow(CREATESTRUCT& cs)
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/10 10:05:12
- * @warning   
+ * @warning
  */
  void CDeltaGraphView::OnInitialUpdate()
 {
@@ -155,12 +155,12 @@ void CDeltaGraphView::InitSpinCtrl()
 
 #define TEXT_WIDTH			(10)
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/09 9:19:02
- * @warning   
+ * @warning
  */
 void CDeltaGraphView::InitListCtrl( bool bInit )
 {
@@ -172,14 +172,14 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 			//m_CListPDW.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT );
 
 			m_CListRawData.InsertColumn( j++, _T("순서"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("순서  ")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("신호 형태"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호 형태")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("TOA[s]/TOA"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("              TOA[s]/TOA[s]")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("DTOA[us]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("     DTOA[s]")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("DV"), LVCFMT_CENTER, TEXT_WIDTH*strlen(_T("  DV")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("방위[도]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("방위[도]")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("주파수[MHz]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("주파수[MHz]")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("신호세기[dBm]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호세기[dBm]")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("펄스폭[ns]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("펄스폭[ns]")), -1 ); 
+			m_CListRawData.InsertColumn( j++, _T("신호 형태"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호 형태")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("TOA[s]/TOA"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("              TOA[s]/TOA[s]")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("DTOA[us]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("     DTOA[s]")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("DV"), LVCFMT_CENTER, TEXT_WIDTH*strlen(_T("  DV")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("방위[도]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("방위[도]")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("주파수[MHz]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("주파수[MHz]")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("신호세기[dBm]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호세기[dBm]")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("펄스폭[ns]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("펄스폭[ns]")), -1 );
 
 			//m_CListPDW.SetGridLines(TRUE);
 			//m_CListPDW.SetCheckboxeStyle(RC_CHKBOX_NORMAL); // Enable checkboxes
@@ -203,10 +203,10 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 
 			m_CListRawData.InsertColumn( j++, _T("순서"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("순서  ")), -1 );
 			m_CListRawData.InsertColumn( j++, _T("I 데이터"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("I 데이터")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("Q 데이터"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("Q 데이터")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("순시 진폭"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("순시 진폭")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("순시 위상차[도]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("순시 위상차[도]")), -1 ); 
-			m_CListRawData.InsertColumn( j++, _T("FFT"), LVCFMT_CENTER, TEXT_WIDTH*strlen(_T("FFT")), -1 ); 
+			m_CListRawData.InsertColumn( j++, _T("Q 데이터"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("Q 데이터")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("순시 진폭"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("순시 진폭")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("순시 위상차[도]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("순시 위상차[도]")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("FFT"), LVCFMT_CENTER, TEXT_WIDTH*strlen(_T("FFT")), -1 );
 
 			//m_CListPDW.SetGridLines(TRUE);
 			//m_CListPDW.SetCheckboxeStyle(RC_CHKBOX_NORMAL); // Enable checkboxes
@@ -226,7 +226,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 }
 
 /**
- * @brief     
+ * @brief
  * @param     UINT nType
  * @param     int cx
  * @param     int cy
@@ -234,7 +234,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/10 10:04:38
- * @warning   
+ * @warning
  */
  void CDeltaGraphView::OnSize(UINT nType, int cx, int cy)
 {
@@ -249,13 +249,13 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 }
 
 /**
- * @brief     
+ * @brief
  * @param     ENUM_SUB_GRAPH enSubGraph
  * @return    void
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/10 9:39:40
- * @warning   
+ * @warning
  */
  void CDeltaGraphView::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 {
@@ -269,6 +269,8 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	float *pfAOA, *pfFreq, *pfPA, *pfPW;
 	//float *pfPh1, *pfPh2, *pfPh3, *pfPh4;
 	float *pfI, *pfQ, *pfIP, *pfFFT;
+
+    unsigned int *puiIndex;
 
     double *pdTOA;
 
@@ -302,6 +304,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 				pcDV = pPDWRealData->pcDV;
 				pllTOA = pPDWRealData->pullTOA;
 				pcType = pPDWRealData->pcType;
+                puiIndex = pPDWRealData->puiIndex;
 // 				pfPh1 = pPDWData->pfPh1;
 // 				pfPh2 = pPDWData->pfPh2;
 // 				pfPh3 = pPDWData->pfPh3;
@@ -310,38 +313,39 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 				for( i=0 ; i < (int) uiPDWDataItems ; ++i ) {
 					j = 1;
 
-					strVal.Format( _T("%7d") , (m_pDoc->GetFileIndex()*PDW_ITEMS)+i );
+					//strVal.Format( _T("%7d") , (m_pDoc->GetFileIndex()*PDW_ITEMS)+i );
+                    strVal.Format( _T("%7u") , *puiIndex );
 					//m_CListPDW.InsertItem( i, strVal );
 					m_CListRawData.AddItem(strVal);
 
 					strVal.Format( _T("%d") , *pcType );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%12.6f/%llu") , *pdTOA*1., *pllTOA );
 					//strVal.Format( _T("%12.3f") , *pfTOA*1. );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
-					strVal.Format( _T("%12.3f") , *pfDTOA*1000000. );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					strVal.Format( _T("%12.3f") , FMUL( *pfDTOA, 1000000. ) );
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					if( *pcDV == _spOne ) {
-						m_CListRawData.SetItemText( i, j++, _T("O") ); 
+						m_CListRawData.SetItemText( i, j++, _T("O") );
 					}
 					else {
-						m_CListRawData.SetItemText( i, j++, _T("X") ); 
+						m_CListRawData.SetItemText( i, j++, _T("X") );
 					}
 
 					strVal.Format( _T("%4.1f") , *pfAOA );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%8.3f") , *pfFreq/1000000. );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%5.2f") , *pfPA );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%5.1f") , *pfPW*1000000000. );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					++ pdTOA;
 					++ pfDTOA;
@@ -354,6 +358,8 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 
 					++ pcDV;
 					++ pcType;
+
+                    ++puiIndex;
 
 // 					++ pfPh1;
 // 					++ pfPh2;
@@ -374,7 +380,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 				pfPA = pIQData->pfPA;
 				pfIP = pIQData->pfIP;
 				pfFFT = pIQData->pfFFT;
- 
+
  				for( i=0 ; i < (int) uiPDWDataItems && i < 1000 /* MAX_LIST_IQ */ ; ++i ) {
 					j = 1;
 
@@ -382,19 +388,19 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 					m_CListRawData.AddItem( strVal );
 
 					strVal.Format( _T("%8.0f") , *pfI );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%8.0f") , *pfQ );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%8.1f") , *pfPA );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%8.1f") , *pfIP );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%10.1f") , *pfFFT );
-					m_CListRawData.SetItemText( i, j++, strVal ); 
+					m_CListRawData.SetItemText( i, j++, strVal );
 
 					++ pfI;
 					++ pfQ;
@@ -414,19 +420,19 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 // void CDeltaGraphView::OnSizing(UINT fwSide, LPRECT pRect)
 // {
 // 	__super::OnSizing(fwSide, pRect);
-// 
+//
 // 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 // 	EASYSIZE_MINSIZE(280,250,fwSide,pRect);
 // }
 
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/12 0:45:50
- * @warning   
+ * @warning
  */
 void CDeltaGraphView::OnBnClickedButtonPrevious()
 {
@@ -441,12 +447,12 @@ void CDeltaGraphView::OnBnClickedButtonPrevious()
 
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/12 0:45:48
- * @warning   
+ * @warning
  */
 void CDeltaGraphView::OnBnClickedButtonNext()
 {
@@ -474,38 +480,20 @@ void CDeltaGraphView::OnLvnGetdispinfoListPdw(NMHDR *pNMHDR, LRESULT *pResult)
 
 	int nCol = pItem->iSubItem;
 
-
-
 	if (nRow<0 || nRow >= PDW_ITEMS/*전체 리스트 갯수*/)
-
 		return;
 
-
-
-
-
 	//m_List.GetItemText(i, 1);   //<-코드는 문제를 일으킴.
-
-
-
 	if(pItem->pszText) //이값이 널로 올 때도 당연히 있음.
-
 	{
-
 		switch(nCol)
-
 		{
-
 		case 0:
-
 			lstrcpy(pItem->pszText, _T("")/*nRow, 0번 열에 들어갈 문자열*/);
-
 			break;
 
 		case 1:
-
 			lstrcpy(pItem->pszText, _T("")/*nRow, 1번 열에 들어갈 문자열*/);
-
 			break;
 
 			//... 열 번호별로 작성

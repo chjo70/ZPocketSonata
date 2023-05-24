@@ -54,7 +54,7 @@ void CSysPara::LoadDefaultSysParameter()
     _sp.mg.aoa[5] = _spMgAoaCD;
 
 #elif defined(_POCKETSONATA_)
-    float *pfRxDOAError = g_pTheSysConfig->GetDOAError();
+    float *pfRxDOAError = g_pTheSysConfig->GetAOAGroup();
 
     _sp.mg.aoa[0] = 0;
     _sp.mg.aoa[enPRC1] = ( unsigned int ) IMUL( 2 * IAOACNV( pfRxDOAError[0] ), 1.0 );

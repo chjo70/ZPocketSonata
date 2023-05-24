@@ -27,9 +27,12 @@
 
 #include "CRWRCommonVariables.h"
 
+#include "../../../Utils/clog.h"
 #include "../../../Utils/ccommonutils.h"
 
 #include "../../Identify/ELUtil.h"
+
+//#include "../../../Include/globals.h"
 
 
 //#define         MAX_ITEMS                       (_max( PDW_ITEMS, IQ_ITEMS ) )
@@ -44,7 +47,6 @@
 static int stDataFile;
 
 int CPOCKETSONATAPDW::m_iBoardID;
-// int CSPDW::m_iBoardID;
 
 
 //#ifdef _CGI_LIST_
@@ -271,7 +273,7 @@ int CPOCKETSONATAPDW::m_iBoardID;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+#if defined(_GRAPH_) || defined(_ELINT_)
 /**
  * @brief     CData
  * @param     STR_RAWDATA * pRawData
@@ -465,6 +467,8 @@ int CEPDW::GetHeaderSize()
 {
     memcpy( & m_stHeader, m_pRawHeaderBuffer, sizeof(m_stHeader) );
 
+    // 테스트
+    m_iHeaderSize = sizeof( STR_ELINT_HEADER2 );
     m_iHeaderSize = sizeof(STR_ELINT_HEADER);
 
     m_enBandWidth = m_stHeader.enBandWidth;
@@ -515,6 +519,8 @@ void CEPDW::SetHeaderData( void *pData )
 
     return;
 }
+
+#endif
 
 #if defined(_GRAPH_) || defined(_XBAND_)
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1643,13 +1649,13 @@ void CPOCKETSONATAPDW::Init( char *pRawData, STR_FILTER_SETUP *pstFilterSetup )
     UpdateHeaderSize();
 
     // 헤더 크기 초기화
-    m_uiTotalDataItems = 0;
-    m_iBoardID = 0;
-    if( puniPDWFileHeader != NULL ) {
+    if( puniPDWFileHeader != NULL && m_pRawDataBuffer != NULL ) {
         m_uiTotalDataItems = puniPDWFileHeader->GetTotalPDW( m_enUnitType );
         m_iBoardID = puniPDWFileHeader->GetBoardID( m_enUnitType );
     }
     else {
+        m_uiTotalDataItems = 0;
+        m_iBoardID = 0;
     }
 
 }
@@ -1916,7 +1922,7 @@ void CPOCKETSONATAPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
 
         // 주파수 변환
         iCh = pDMAPDW->GetChannel();
-        uiFreq = pDMAPDW->GetFrequency( iCh );
+        uiFreq = pDMAPDW->GetFrequency();
 
         // 펄스폭 저장
         uiPW = pDMAPDW->GetPulsewidth();
@@ -1941,6 +1947,16 @@ void CPOCKETSONATAPDW::MakePDWDataByUnitToPDW( STR_PDWDATA *pPDWData )
                     pPDW->uiPA = uiPA;
 
                     pPDW->iStat = pDMAPDW->GetPulsetype();
+
+                    pPDW->uiIndex = pDMAPDW->GetIndex();
+
+                    // 상태 값 저장
+#ifdef _POCKETSONATA_
+                    pPDW->x.ps.x.stStrBitMap.CwPulse = pDMAPDW->uPDW.stHwPdwDataRf.CwPulse;
+                    pPDW->x.ps.x.stStrBitMap.Pmop = pDMAPDW->uPDW.stHwPdwDataRf.Pmop;
+                    pPDW->x.ps.x.stStrBitMap.Fmop = pDMAPDW->uPDW.stHwPdwDataRf.Fmop;
+                    pPDW->x.ps.x.stStrBitMap.FmopDir = pDMAPDW->uPDW.stHwPdwDataRf.FmopDir;
+#endif
 
                     pPDW->SetChannel( iCh );
 
@@ -1977,6 +1993,7 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
 
     _TOA ullTOA, ullFirstTOA, ullPreTOA = 0;
     int iPulseType;
+    unsigned int uiIndex;
     UINT uiFreq, uiPW, uiPA, uiAOA;
 
     _TOA *pullTOA = pPDWRealData->pullTOA;
@@ -1992,61 +2009,69 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
     char *pcType = pPDWRealData->pcType;
     char *pcDV = pPDWRealData->pcDV;
 
+    unsigned int *puiIndex = pPDWRealData->puiIndex;
+
     _PDW *pPDW = ( _PDW * ) & m_pRawDataBuffer[0];
 
     uiDataItems = 0;
 
-    for( i=0 ; i < m_uiTotalDataItems ; ++i ) {
-        // 시간 정보
-        ullTOA = pPDW->GetTOA();
+    if( pPDW != NULL ) {
+        for( i=0 ; i < m_uiTotalDataItems ; ++i ) {
+            // 시간 정보
+            ullTOA = pPDW->GetTOA();
 
-        // 방위 저장
-        uiAOA = pPDW->GetAOA();
+            // 방위 저장
+            uiAOA = pPDW->GetAOA();
 
-        // 주파수 변환
-        uiFreq = pPDW->GetFrequency();
+            // 주파수 변환
+            uiFreq = pPDW->GetFrequency();
 
-        // 펄스폭 저장
-        uiPW = pPDW->GetPulsewidth();
+            // 펄스폭 저장
+            uiPW = pPDW->GetPulsewidth();
 
-        // 신호 세기 저장
-        uiPA = pPDW->GetPulseamplitude();
+            // 신호 세기 저장
+            uiPA = pPDW->GetPulseamplitude();
 
-		iPulseType = pPDW->GetPulsetype();
+		    iPulseType = pPDW->GetPulsetype();
 
-        // 필터링 조건
-        if( (m_strFilterSetup.ullToaMin <= ullTOA && m_strFilterSetup.ullToaMax >= ullTOA) &&
-            (m_strFilterSetup.uiAoaMin <= uiAOA && m_strFilterSetup.uiAoaMax >= uiAOA) &&
-            (m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA) &&
-            (m_strFilterSetup.uiPWMin <= uiPW && m_strFilterSetup.uiPWMax >= uiPW) &&
-            (m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq) ) {
-            iCh = pPDW->GetChannel();
+            uiIndex = pPDW->GetIndex();
 
-            if( bFirstTOA == true ) {
-                _EQUALS3( ullPreTOA, ullFirstTOA, ullTOA )
+            // 필터링 조건
+            if( (m_strFilterSetup.ullToaMin <= ullTOA && m_strFilterSetup.ullToaMax >= ullTOA) &&
+                (m_strFilterSetup.uiAoaMin <= uiAOA && m_strFilterSetup.uiAoaMax >= uiAOA) &&
+                (m_strFilterSetup.uiPAMin <= uiPA && m_strFilterSetup.uiPAMax >= uiPA) &&
+                (m_strFilterSetup.uiPWMin <= uiPW && m_strFilterSetup.uiPWMax >= uiPW) &&
+                (m_strFilterSetup.uiFrqMin <= uiFreq && m_strFilterSetup.uiFrqMax >= uiFreq) ) {
+                iCh = pPDW->GetChannel();
 
-                bFirstTOA = false;
+                if( bFirstTOA == true ) {
+                    _EQUALS3( ullPreTOA, ullFirstTOA, ullTOA )
+
+                    bFirstTOA = false;
+                }
+                *pfDTOA++ = (float) CPOCKETSONATAPDW::DecodeTOAs( ullTOA - ullPreTOA);
+                ullPreTOA = ullTOA;
+
+                // 시간 저장
+                *pullTOA++ = ullTOA;
+
+                *pdTOA++ = CPOCKETSONATAPDW::DecodeTOAs( ullTOA );
+                *pfAOA++ = CPOCKETSONATAPDW::DecodeDOA( (int) uiAOA );
+                *pfFreq++ = CPOCKETSONATAPDW::DecodeFREQ( (int) uiFreq );
+                *pfPA++ = CPOCKETSONATAPDW::DecodePA( (int) uiPA );
+                *pfPW++ = CPOCKETSONATAPDW::DecodePW((int) uiPW );
+
+                *pcType++ = iPulseType;
+                *pcDV++ = 1;
+
+                *puiIndex++ = uiIndex;
+
+                ++uiDataItems;
             }
-            *pfDTOA++ = CPOCKETSONATAPDW::DecodeTOA( ullTOA - ullPreTOA);
-            ullPreTOA = ullTOA;
 
-            // 시간 저장
-            *pullTOA++ = ullTOA;
+            ++pPDW;
 
-            *pdTOA++ = CPOCKETSONATAPDW::DecodeTOA( ullTOA );
-            *pfAOA++ = CPOCKETSONATAPDW::DecodeDOA( (int) uiAOA );
-            *pfFreq++ = CPOCKETSONATAPDW::DecodeFREQ( (int) uiFreq, iCh, 3, 0 );
-            *pfPA++ = CPOCKETSONATAPDW::DecodePA( (int) uiPA );
-            *pfPW++ = CPOCKETSONATAPDW::DecodePW((int) uiPW );
-
-            *pcType++ = iPulseType;
-            *pcDV++ = 1;
-
-            ++uiDataItems;
         }
-
-        ++pPDW;
-
     }
 
     m_PDWRealData.SetTotalPDW( uiDataItems );
@@ -2055,7 +2080,6 @@ void CPOCKETSONATAPDW::MakePDWDataToReal( STR_PDWREALDATA *pPDWRealData )
 
 
 #if defined(_GRAPH_) || defined(_701_)
-
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -3712,12 +3736,16 @@ void CData::AllocRealData( int iItems )
 
 	_FORCED_MALLOC(m_PDWRealData.pdTOA, double, szdSize)
 
+    _FORCED_MALLOC( m_PDWRealData.puiIndex, unsigned int, szSize )
+
     szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(_TOA), iItems );
 	_FORCED_MALLOC( m_PDWRealData.pullTOA, _TOA, szSize )
 
     szSize = CCommonUtils::CheckMultiplyOverflow( (int) sizeof(char), iItems );
 	_FORCED_MALLOC( m_PDWRealData.pcType, char, szSize )
 	_FORCED_MALLOC( m_PDWRealData.pcDV, char, szSize )
+
+
 
 }
 
@@ -3737,6 +3765,8 @@ void CData::FreeRealData()
     _SAFE_FREE( m_PDWRealData.pfPA )
     _SAFE_FREE( m_PDWRealData.pdTOA )
     _SAFE_FREE( m_PDWRealData.pfDTOA )
+
+    _SAFE_FREE( m_PDWRealData.puiIndex )
 
     _SAFE_FREE( m_PDWRealData.pullTOA )
 
@@ -4098,7 +4128,7 @@ void CDataFile::SaveDataFile( char *pstPathname, void *pData, int iNumData, ENUM
         }
         else if( enDataType == en_IQ_DATA ) {
             if( ! m_RawDataFile.RawOpenFile( pstPathname, O_CREAT | O_BINARY ) ) {
-                //Log( enError, _T("IQ 데이터 파일[%s]을 생성하지 못합니다 !") , strPathname );
+                //Log( enError, _T("IQ 데이터 파일[%s]을 생성하지 못합니다 !") , pstPathname );
             }
             else {
                 // IQ 헤더 정보 저장

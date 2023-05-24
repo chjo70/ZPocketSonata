@@ -20,7 +20,7 @@
  *  Version: $Id: minIni.c 53 2015-01-18 13:35:11Z thiadmer.riemersma@gmail.com $
  */
 
-#include "stdafx.h"
+//#include "stdafx.h"
 
 
 #if (defined _UNICODE || defined __UNICODE__ || defined UNICODE) && !defined INI_ANSIONLY
@@ -226,6 +226,7 @@ static TCHAR *cleanstring(TCHAR *string, enum quote_option *quotes)
     } else if (*ep == '\\' && *(ep + 1) == '"') {
       ep++;                   /* skip \" (both quotes */
     } /* if */
+    else { }
   } /* for */
   assert(ep != NULL && (*ep == '\0' || *ep == ';' || *ep == '#'));
   *ep = '\0';                 /* terminate at a comment */
@@ -268,14 +269,14 @@ static int getkeystring(INI_FILETYPE *fp, const TCHAR *Section, const TCHAR *Key
             ep = _tcsrchr(sp, ']');
             ++ idx;
     } 
-    while (*sp != '[' || ep == NULL || (((int)(ep-sp-1) != len || Section == NULL || _tcsnicmp(sp+1,Section,len) != 0) && idx != idxSection));
+    while (*sp != '[' || ep == NULL || (((int)(ep-sp-1) != len || Section == NULL || _tcsnicmp(sp+1,Section,(unsigned int) len) != 0) && idx != idxSection));
 
     if (idxSection >= 0) {
         if (idx == idxSection) {
             assert(ep != NULL);
             assert(*ep == ']');
             *ep = '\0';
-            ini_strncpy(Buffer, sp + 1, BufferSize, QUOTE_NONE);
+            ini_strncpy(Buffer, sp + 1, (size_t) BufferSize, QUOTE_NONE);
             return 1;
         } /* if */
 
@@ -309,7 +310,7 @@ static int getkeystring(INI_FILETYPE *fp, const TCHAR *Section, const TCHAR *Key
       assert(*ep == '=' || *ep == ':');
       *ep = '\0';
       striptrailing(sp);
-      ini_strncpy(Buffer, sp, BufferSize, QUOTE_NONE);
+      ini_strncpy(Buffer, sp, ( size_t ) BufferSize, QUOTE_NONE);
       return 1;
     } /* if */
     return 0;   /* no more key found (in this section) */
@@ -320,7 +321,7 @@ static int getkeystring(INI_FILETYPE *fp, const TCHAR *Section, const TCHAR *Key
   assert(*ep == '=' || *ep == ':');
   sp = skipleading(ep + 1);
   sp = cleanstring(sp, &quotes);  /* Remove a trailing comment */
-  ini_strncpy(Buffer, sp, BufferSize, quotes);
+  ini_strncpy(Buffer, sp, ( size_t ) BufferSize, quotes);
   return 1;
 
 }
@@ -561,9 +562,9 @@ int ini_browse(INI_CALLBACK Callback, void *UserData, const TCHAR *Filename)
     /* clean up the value */
     sp = skipleading(ep);
     sp = cleanstring(sp, &quotes);  /* Remove a trailing comment */
-    ini_strncpy(LocalBuffer + lenSec + lenKey, sp, INI_BUFFERSIZE - lenSec - lenKey, quotes);
+    ini_strncpy(& LocalBuffer[lenSec + lenKey], sp, INI_BUFFERSIZE - lenSec - lenKey, quotes);
     /* call the callback */
-    if (!Callback(LocalBuffer, LocalBuffer + lenSec, LocalBuffer + lenSec + lenKey, UserData))
+    if (!Callback(LocalBuffer, & LocalBuffer[lenSec], LocalBuffer + lenSec + lenKey, UserData))
       break;
   } /* for */
 
@@ -629,11 +630,15 @@ static void writekey(TCHAR *LocalBuffer, const TCHAR *Key, const TCHAR *Value, I
 
 static int cache_accum(const TCHAR *string, int *size, int max)
 {
+  int iret=1;
   int len = (int)_tcslen(string);
-  if (*size + len >= max)
-    return 0;
+  if (*size + len >= max) {
+    iret = 0;
+  }
+  else {
   *size += len;
-  return 1;
+  }
+  return iret;
 }
 
 static int cache_flush(TCHAR *buffer, int *size,

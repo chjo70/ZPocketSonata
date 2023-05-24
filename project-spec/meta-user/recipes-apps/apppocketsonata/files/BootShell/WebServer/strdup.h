@@ -9,7 +9,12 @@
 extern "C" {
 #endif
 
+#ifdef _MSC_VER
+
+#else
 char *strdup(const char *string);
+
+#endif
 
 #ifdef __cplusplus
 }

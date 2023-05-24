@@ -20,6 +20,8 @@
 #include "../../../Include/struct.h"
 #include "../../EmitterMerge/IsNumber.h"
 
+#include "../../../Utils/clog.h"
+
 
 // RAW 데이터 개수 정의 : 왜 필요하지 ?
 #define			PDW_ITEMS						(1024*128)			// 9437164
@@ -128,7 +130,9 @@ struct STR_PDWREALDATA {
 	char *pcType;			// [신호형태]
 	char *pcDV;				// [DV]
 
-	STR_PDWREALDATA() : uiDataItems(0), pullTOA(NULL), pfAOA(NULL), pfFreq(NULL), pfPA(NULL), pfPW(NULL), pdTOA(NULL), pfDTOA(NULL), pcType(NULL), pcDV(NULL) {
+    unsigned int *puiIndex;
+
+	STR_PDWREALDATA() : uiDataItems(0), pullTOA(NULL), pfAOA(NULL), pfFreq(NULL), pfPA(NULL), pfPW(NULL), pdTOA(NULL), pfDTOA(NULL), pcType(NULL), pcDV(NULL), puiIndex(NULL) {
 
 	}
 
@@ -611,6 +615,7 @@ public:
 };
 #endif
 
+#if defined(_GRAPH_) || defined(_ELINT_)
 namespace ELINT {
 	const unsigned int uiPDW_CW=0;
 	const unsigned int uiPDW_NORMAL=1;
@@ -861,6 +866,7 @@ public:
 
 
 };
+#endif
 
 #if defined(_GRAPH_) || defined(_XBAND_)
 namespace XBAND {
@@ -1580,8 +1586,8 @@ namespace POCKETSONATA {
 											   { 15072000., 17072000. } };
 
 
-    const float _toaRes = (float) 7.8125;
-    const float _fFreqRes = ( float ) 1000.; // 1.953125;
+    const float _toaRes = (float) 6.48824007;
+    const float _fFreqRes = ( float ) 1000.;
     const float _fDOARes = (float) ( 360. / (float) ( 4 * 1024 ) );		// = 0.087890625
     const float _fPARes = (float) ( ( float ) PDW_PA_RANGE / (float) ( 64 * 1024 - 1 ) );		// = ?
 
@@ -1718,13 +1724,14 @@ public:
      * @date      2022/02/21 23:09:23
      * @warning
      */
-    static float DecodeFREQ( int iFreq, int iCh, int iBoardID, int iNo )
-    {
-        float fFreq;
-
-        fFreq = DecodeRealFREQMHz( iFreq, iCh, iBoardID, iNo );
-        return fFreq;
-    } ;
+//     static float DecodeFREQ( int iFreq )
+//     {
+//         float fFreq;
+// 
+//         // fFreq = DecodeRealFREQMHz( iFreq, iCh, iBoardID, iNo );
+//         fFreq = DecodeFREQ( iFreq );
+//         return fFreq;
+//     } ;
 
     /**
      * @brief     DecodeFREQ
@@ -1753,11 +1760,11 @@ public:
      * @param iFreqHz
      * @return
      */
-    static float DecodeFREQMHz( int iFreq )
+    static float DecodeFREQMHz( unsigned int uiFreq )
     {
         float fRetFreq;
 
-        fRetFreq = ( (float) iFreq * POCKETSONATA::_fFreqRes / (float) 1000000. );
+        fRetFreq = ( (float) uiFreq * POCKETSONATA::_fFreqRes / (float) 1000000. );
         return fRetFreq;	/* [MHz] */
     } ;
 
@@ -1774,7 +1781,7 @@ public:
      * @date      2021-07-24, 10:47
      * @warning
      */
-    static bool EncodeRealFREQMHz( int *piFreq, int *piCh, int iBoardID, float fFreq )
+    static bool EncodeRealFREQMHz( int *piFreq, float fFreq )
     {
         bool bRet=true;
 
@@ -1835,6 +1842,7 @@ public:
      * @date      2022/02/21 23:09:10
      * @warning
      */
+#if 0
     static bool EncodeRealFREQMHz( int *piFreq, int *piCh, float fFreq, int iBoardID=m_iBoardID, int iNo=0 )
     {
         bool bRet=true;
@@ -1869,18 +1877,19 @@ public:
 
         return bRet;
     } ;
+#endif
 
     /**
      * @brief EncodeFREQMHz
      * @param iFreqHz
      * @return
      */
-    static float EncodeFREQMHz( float fFreq )
+    static unsigned int EncodeFREQMHz( float fFreq )
     {
         float fRetFreq;
 
         fRetFreq = ( ( fFreq * (float) 1000000. ) / POCKETSONATA::_fFreqRes);
-        return fRetFreq;	/* [MHz] */
+        return ( unsigned int ) ( fRetFreq + 0.5 );	/* [MHz] */
     } ;
 
     /**
@@ -1911,7 +1920,7 @@ public:
         float fRetFreq;
 
         fRetFreq = ( ( (float) fFreq * (float) 1000000. ) / POCKETSONATA::_fFreqRes);
-        return (int) fRetFreq;	/* [MHz] */
+        return (int) ( fRetFreq + 0.5 );	/* [MHz] */
     } ;
 
     /**
@@ -2042,19 +2051,27 @@ public:
         return (int) ( fretPW + 0.5 );
     } ;
 
+//     static float DecodeTOA( _TOA iTOA  )
+//     {
+//         long double dTOA;
+// 
+//         //iTOA = iTOA & 0xFFFFFFFFFFF;
+// 
+//         dTOA = (long double) ( (long double) iTOA * POCKETSONATA::_toaRes / (long double) 1000000000.0 );
+//         return (float) dTOA;	/* [s] */
+//     } ;
+
     /**
      * @brief DecodeTOA
-     * @param iTOA
+     * @param ffTOA
      * @return
      */
-    static float DecodeTOA( _TOA iTOA  )
+    static float DecodeTOA( _TOA tTOA )
     {
-        long double dTOA;
+        float fTOA;
 
-        //iTOA = iTOA & 0xFFFFFFFFFFF;
-
-        dTOA = (long double) ( (long double) iTOA * POCKETSONATA::_toaRes / (long double) 1000000000.0 );
-        return (float) dTOA;	/* [s] */
+        fTOA = ( float ) ( ( float ) tTOA * ( float ) POCKETSONATA::_toaRes / ( float ) 1000.0 );
+        return fTOA;	/* [ns] */
     } ;
 
     /**
@@ -2122,11 +2139,11 @@ public:
      * @param iTOA
      * @return
      */
-    static _TOA EncodeTOAus( _TOA iTOA  )
+    static _TOA EncodeTOAus( float fTOA  )
     {
         _TOA iretTOA;
 
-        iretTOA = (_TOA) ( ( ( (float) iTOA * (float) 1000.0 ) / POCKETSONATA::_toaRes) + 0.5 );
+        iretTOA = (_TOA) ( ( ( fTOA * (float) 1000.0 ) / POCKETSONATA::_toaRes) + 0.5 );
         return iretTOA;	/* [ns] */
     } ;
 
@@ -2148,37 +2165,11 @@ public:
         return iretTOA;	/* [ns] */
     };
 
-    /**
-     * @brief
-     * @param     float fTOA
-     * @return    _TOA
-     * @author    조철희(churlhee.jo@lignex1.com)
-     * @version   0.0.1
-     * @date      2022/01/09 12:59:01
-     * @warning
-     */
-    static _TOA EncodeTOAus( float fTOA  )
-    {
-        _TOA iretTOA;
-
-        iretTOA = (_TOA) ( ( ( fTOA * (float) 1000.0 ) / POCKETSONATA::_toaRes) + 0.5 );
-        return iretTOA;	/* [ns] */
-    } ;
 
 
 
-    /**
-     * @brief DecodeTOA
-     * @param ffTOA
-     * @return
-     */
-    static float DecodeTOA( float ffTOA )
-    {
-        float fTOA;
 
-        fTOA = (float) ( (float) ffTOA * (float) POCKETSONATA::_toaRes / (float) 1000.0 );
-        return fTOA;	/* [ns] */
-    } ;
+
 
     /**
      * @brief     EncodePA
@@ -2213,53 +2204,6 @@ public:
         return fPA;		/* [dBm] */
     } ;
 
-    static bool Test()
-    {
-        bool bRet=true;
-
-        int i, j, k;
-        int iFreq, iCh;
-        int iDFreq, iDCh;
-        float fFreq;
-
-        for( k = 0 ; k <= 1 ; ++k ) {
-            for( i = 0 ; i < 15 ; ++i ) {
-                for( j = 0 ; j < 0xFFFF ; ++j ) {
-                    iDFreq = j;
-                    iDCh = i;
-                    fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3, k );
-                    CPOCKETSONATAPDW::EncodeRealFREQMHz( &iFreq, &iCh, 3, fFreq );
-                    if( iDFreq == iFreq && iDCh == iCh ) {
-                        TRACE( "\n Freq[%dMHz],Ch[%d]", iFreq, iCh );
-//                         if( iCh > 17 ) {
-//                             TRACE( "AAAAA" );
-//                         }
-                    }
-                    else {
-                        fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3, 0 );
-                        CPOCKETSONATAPDW::EncodeRealFREQMHz( &iFreq, &iCh, 3, fFreq );
-                        bRet = false;
-                    }
-
-                    //                 iDFreq = j;
-                    //                 iDCh = i;
-                    //                 fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                    //                 CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                    //                 if( iDFreq == iFreq && iDCh == iCh ) {
-                    //                 }
-                    //                 else {
-                    //                     fFreq = CPOCKETSONATAPDW::DecodeRealFREQMHz( iDFreq, iDCh, 3 );
-                    //                     CPOCKETSONATAPDW::EncodeRealFREQMHz( & iFreq, & iCh, 3, fFreq );
-                    //                     bRet = false;
-                    //                 }
-                }
-            }
-        }
-
-        return bRet;
-    }
-
-
 };
 
 class CIQ : public CData
@@ -2282,8 +2226,8 @@ public:
 	inline unsigned int GetOffsetSize() { return 0; }
 	inline int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
-	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
-    inline void SetHeaderData( void *pData ) { return; }
+	//inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
+    //inline void SetHeaderData( void *pData ) { return; }
 
 };
 
@@ -2307,9 +2251,8 @@ public:
 	inline unsigned int GetOffsetSize() { return 0; }
 	inline int GetHeaderSize() { return 0; }
     inline unsigned int GetOneDataSize() { return 0; }
-	inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
-
-    inline void SetHeaderData( void *pData ) { return; }
+	//inline unsigned int GetDataItems( unsigned long long ullFileSize ) { return 0; }
+    //inline void SetHeaderData( void *pData ) { return; }
 };
 
 class CEIQ : public CData
@@ -2525,7 +2468,7 @@ public:
     {
 #ifdef __linux__
 #elif defined(_MSC_VER)
-        //Log( enNormal, _T("\n MapData()에 경로명[%s]을 추가했습니다.") , *pStrPathName );
+        Log( enNormal, _T("\n MapData()에 경로명[%s]을 추가했습니다.") , *pStrPathName );
 #else
 
 #endif
@@ -2616,7 +2559,9 @@ public:
 
         }
         else if( g_enUnitType == en_ELINT ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
             uiPulseType = CEPDW::EncodePulseType( iPulseType );
+#endif
 
         }
         else {
@@ -2652,7 +2597,9 @@ public:
 
         }
         else if( g_enUnitType == en_ELINT ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
             uiDOA = CEPDW::EncodeDOA( fDOA );
+#endif
 
         }
 		else if (g_enUnitType == en_701 ) {
@@ -2692,7 +2639,9 @@ public:
 
         }
         else if( g_enUnitType == en_ELINT ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
             uiPA = CEPDW::EncodePA( fPA );
+#endif
 
         }
 		else if (g_enUnitType == en_701) {
@@ -2721,6 +2670,7 @@ public:
      * @date      2022-05-02, 19:30
      * @warning
      */
+#if defined(_GRAPH_) || defined(_XBAND_) || defined(_ELINT_)
     static _TOA EncodeTOAus( float fTOA, int iBandWidth ) {
         _TOA tTOA=0;
 
@@ -2735,7 +2685,9 @@ public:
 
         }
         else if( g_enUnitType == en_ELINT ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
             tTOA = CEPDW::EncodeTOAus( fTOA, (ELINT::ENUM_BANDWIDTH) iBandWidth );
+#endif
 
         }
 		else if (g_enUnitType == en_701) {
@@ -2748,7 +2700,7 @@ public:
         }
         return tTOA;
     }
-
+#endif
 
 	static _TOA EncodeTOAs(float fTOA, int iBandWidth) {
 		_TOA tTOA=0;
@@ -2789,6 +2741,7 @@ public:
      * @date      2022-05-02, 19:24
      * @warning
      */
+#if defined(_GRAPH_) || defined(_XBAND_) || defined(_ELINT_)
     static unsigned int EncodePWns( float fPWns, int iBandWidth ) {
         unsigned uiPW=0;
 
@@ -2803,7 +2756,9 @@ public:
 
         }
         else if( g_enUnitType == en_ELINT ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
             uiPW = CEPDW::EncodePWns( fPWns, (ELINT::ENUM_BANDWIDTH) iBandWidth );
+#endif
 
         }
         else {
@@ -2812,6 +2767,7 @@ public:
 
         return uiPW;
     } ;
+#endif
 
 	/**
 	 * @brief     EncodePWs
@@ -2838,7 +2794,9 @@ public:
 
 		}
 		else if (g_enUnitType == en_ELINT) {
+#if defined(_GRAPH_) || defined(_ELINT_)
 			uiPW = CEPDW::EncodePWns(fPWns, (ELINT::ENUM_BANDWIDTH) iBandWidth);
+#endif
 
 		}
 		else if (g_enUnitType == en_701) {
@@ -2875,13 +2833,15 @@ public:
 
         }
         else if( g_enUnitType == en_ZPOCKETSONATA ) {
-            int iBoardID = 3; // GetBandOfFreq( fFrequency );
+            //int iBoardID = 3; // GetBandOfFreq( fFrequency );
 
-            CPOCKETSONATAPDW::EncodeRealFREQMHz( ( int * ) & uiFrequency, piCh, ( int ) iBoardID, fFrequency );
+            CPOCKETSONATAPDW::EncodeRealFREQMHz( ( int * ) & uiFrequency, fFrequency );
         }
         else if( g_enUnitType == en_ELINT ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
             *piCh = 0;
             uiFrequency = CEPDW::EncodeRealFREQMHz( fFrequency );
+#endif
 
         }
 		else if (g_enUnitType == en_701) {
@@ -2929,7 +2889,9 @@ public:
             fFrequency = 0;
         }
         else if( g_enUnitType == en_ELINT ) {
+#if defined(_GRAPH_) || defined(_ELINT_)
             fFrequency = CEPDW::DecodeRealFREQMHz( uiFrequency );
+#endif
 
         }
         else {

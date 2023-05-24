@@ -58,9 +58,6 @@
     <Filter Include="소스 파일\Anal\EmitterMerge\InverseMethod">
       <UniqueIdentifier>{ba56ccaa-f3cf-45df-a116-15c45d310358}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Anal\IntraSigAnal">
-      <UniqueIdentifier>{1e7fca0b-565c-4453-b25f-424234e5be9e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -88,9 +85,6 @@
       <Filter>소스 파일\ODBC</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
-      <Filter>소스 파일\Anal\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Utils\clog.cpp">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\programrev.cpp">
@@ -168,8 +162,8 @@
     <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.cpp">
-      <Filter>소스 파일\Anal\IntraSigAnal</Filter>
+    <ClCompile Include="..\..\files\Utils\clog.cpp">
+      <Filter>소스 파일\Anal\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -222,9 +216,6 @@
       <Filter>소스 파일\INCLUDE\SONATAPIP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\ccommonutils.h">
-      <Filter>소스 파일\Anal\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Utils\clog.h">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\System\csharedmemory.h">
@@ -392,8 +383,8 @@
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.h">
-      <Filter>소스 파일\Anal\IntraSigAnal</Filter>
+    <ClInclude Include="..\..\files\Utils\clog.h">
+      <Filter>소스 파일\Anal\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

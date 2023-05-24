@@ -114,7 +114,7 @@ void CNewSigAnal::AallocMemory()
 	m_theAnalPRI = new CNAnalPRI(this, m_uiMaxPdw);
 	m_theMakeAET = new CNMakeAET(this, m_uiMaxPdw);
 
-	m_pTheIntraSigAnal = new CIntraSigAnal();
+	//m_pTheIntraSigAnal = new CIntraSigAnal();
 
 }
 
@@ -138,7 +138,7 @@ CNewSigAnal::~CNewSigAnal()
     _SAFE_DELETE( m_theAnalPRI )
     _SAFE_DELETE( m_theMakeAET )
 
-	_SAFE_DELETE( m_pTheIntraSigAnal )
+	//_SAFE_DELETE( m_pTheIntraSigAnal )
 
 }
 
@@ -176,11 +176,7 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
-        MakeAnalDirectory( &pPDWData->x );
-
-#ifdef _MSC_VER
-        CCommonUtils::DeleteAllFile( GetAnalDirectory(), 0 );
-#endif
+        MakeAnalDirectory( &pPDWData->x, false );
 
         memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof(UNION_HEADER) );
 
@@ -247,9 +243,10 @@ void CNewSigAnal::InitOfNewSigAnal()
 */
 void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 {
-    DWORD dwTime = CCommonUtils::GetTickCounts();
+    struct timespec nowTime;
+    CCommonUtils::GetCollectTime( &nowTime );
 
-    Log( enLineFeed, "" );
+    char buffer[200];
 
     PrintFunction
 
@@ -258,7 +255,9 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
-    Log( enNormal, "==== 탐지 분석 시작[%dth, Co:%d] ============================" , GetStep(), m_uiCoPdw );
+    sprintf( buffer, "==== 탐지 분석 시작[%dth, Co:%d]" , GetStep(), m_uiCoPdw );
+    CCommonUtils::WallMakePrint( buffer, '=' );
+    Log( enNormal, buffer );
 
     if( m_uiCoPdw <= RPC /* || m_uiCoPdw > MAX_PDW */ ) {
         Log( enNormal, "PDW(%d/%d) 데이터 개수가 부족합니다 !!" , m_uiCoPdw, RPC );
@@ -267,7 +266,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
         CheckValidData( m_pPDWData );
 
         // 수집한 PDW 파일 저장하기...
-        InsertRAWData(m_pPDWData, _spZero );
+        InsertRAWData(m_pPDWData, _spZero, bDBInsert );
 
         // PDW 수집 상태 체크를 함.
 		_PDW *pPDW = m_pPDWData->pstPDW;
@@ -285,12 +284,12 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 #endif
         }
         else {
-            // 그룹화가 생성되지 않으면 바로 리턴한다.
-            if( TRUE == m_theGroup->MakeGroup() ) {
+            // 그룹화가 생성되지 않으면 분석을 수행하지 않는다.
+            if( true == m_theGroup->MakeGroup() ) {
 
                 // 그룹화 만들기
                 while( ! m_theGroup->IsLastGroup() ) {
-					StartOfSignalAnalysis();
+					StartOfSignalAnalysis( bDBInsert );
 
                     // 그룹화 생성 개수 증가
                     ++ m_CoGroup;
@@ -307,7 +306,9 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 
     InsertToDB_LOB( GetLOBData(0), GetCoLOB(), bDBInsert );
 
-    Log(enNormal, "================ 탐지 분석 종료[%s] : %d[ms] =================" , CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCounts() - dwTime)) );
+    sprintf( buffer, "================ 탐지 분석 종료[%s] : %d[ns]", CSigAnal::GetRawDataFilename(), ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
+    CCommonUtils::WallMakePrint( buffer, '=' );
+    Log( enNormal, buffer );
 
 }
 
@@ -320,13 +321,14 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
  * @date      2023-02-02 15:58:39
  * @warning
  */
-void CNewSigAnal::StartOfSignalAnalysis()
+void CNewSigAnal::StartOfSignalAnalysis( bool bDBInsert )
 {
 	// 협대역 주파수 그룹화
 	// 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
+
 	m_theGroup->MakeGrIndex();
 
-	SaveGroupPDWFile(m_pGrPdwIndex, m_pPDWData, GetPLOBIndex(), true);
+	SaveGroupPDWFile(m_pGrPdwIndex, m_pPDWData, GetPLOBIndex(), bDBInsert );
 
 	// 위협 라이브러리 기반 펄스열 추출하기 위한 라이브러리 검색
 	CheckKnownByAnalysis();
@@ -338,48 +340,18 @@ void CNewSigAnal::StartOfSignalAnalysis()
 	// m_thePulExt->UnknownExtract();
 
 	// 하나의 그룹화에서 분석이 끝나면 다시 초기화를 한다.
-	ClearAllMark();
+    m_thePulExt->ClearAllMark();
 
 	// PRI 분석
 	m_theAnalPRI->Analysis();
 
 	// 에미터 분석
-	m_theMakeAET->MakeAET();
-
-}
-
-
-/**
- * @brief     펄스열 추출 정보를 클리어 한다 (CED 라이브러리 기반으로 추출된 펄스열 제외).
- * @param     bool bClear
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-05-30, 15:19
- * @warning
- */
-void CNewSigAnal::ClearAllMark()
-{
-    unsigned int i;
-
-    USHORT *pMark;
-
-    pMark = & MARK[0];
-    for (i = 0; i < m_uiCoPdw; ++i) {
-        if (*pMark != enLIBRARY_MARK) {
-            *pMark = enUnMark;
-        }
-
-        ++pMark;
-
-    }
-    // memset( & MARK[0], 0, sizeof( MARK ) );
+	m_theMakeAET->MakeAET( bDBInsert );
 
 }
 
 /**
- * @brief     PDW 헤더 정보를 근거로 잘못 입력된 것이 있으면 FALSE 로 리턴한다.
+ * @brief     PDW 헤더 정보를 근거로 잘못 입력된 것이 있으면 false 로 리턴한다.
  * @param     STR_PDWDATA * pPDWData
  * @return    bool
  * @exception
@@ -518,7 +490,7 @@ bool CNewSigAnal::CheckKnownByAnalysis()
 
         }
 
-        bRet = m_pIdentifyAlg->CheckThereFreqRange( & m_VecMatchRadarMode, uiFreqMin, uiFreqMax );
+        bRet = m_pIdentifyAlg->CheckThereFreqRange( & m_VecMatchRadarMode, I_FRQMhzCNV( 0, uiFreqMin ), I_FRQMhzCNV( 0, uiFreqMax ) );
     }
 
     return bRet;
@@ -536,7 +508,7 @@ bool CNewSigAnal::CheckKnownByAnalysis()
 int CNewSigAnal::GetPLOBIndex()
 {
     int iPLOBIndex;
-    int iCoFrqAoaPwIdx = m_theGroup->GetCoFrqAoaPwIdx();
+    int iCoFrqAoaPwIdx = (int) m_theGroup->GetCoFrqAoaPwIdx();
 
     iPLOBIndex = - ( int ) iCoFrqAoaPwIdx;
     return iPLOBIndex;

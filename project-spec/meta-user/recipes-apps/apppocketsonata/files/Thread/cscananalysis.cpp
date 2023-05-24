@@ -29,7 +29,7 @@
  * @date      2023-01-04 16:44:46
  * @warning
  */
-CScanAnalysis::CScanAnalysis( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CScanAnalysis::CScanAnalysis( int iThreadPriority, const char *pClassName, bool bArrayLanData ) : CThread( iThreadPriority, pClassName, bArrayLanData )
 {
 
 #ifdef _SQLITE_
@@ -116,16 +116,15 @@ void CScanAnalysis::_routine()
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
-                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
+                    Log( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
                     //bWhile = false;
                     break;
 
                  default:
-                    LOGMSG1( enError, "=================================== 잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                    Log( enError, "=================================== 잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                     break;
             }
 
-            SendEchoMessage();
         }
     }
 
@@ -145,16 +144,13 @@ void CScanAnalysis::AnalysisStart()
     LOGENTRY;
 
     STR_SCANRESULT *pScanResult;
-    STR_TRKSCNPDWDATA *pScnPDWData;
 
-    pScnPDWData = ( STR_TRKSCNPDWDATA * ) GetRecvData();
-
-    LOGMSG4( enDebug, "스캔 : 위협[%d/%d] 에 대해서 %d[Ch]에서, PDW[%d] 를 수집했습니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiCh, pScnPDWData->strPDW.GetTotalPDW() );
+    Log( enDebug, "스캔 : 위협[%d/%d] 에 대해서 %d[Ch]에서, PDW[%d] 를 수집했습니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiCh, m_pScnPDWData->strPDW.GetTotalPDW() );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
     // 1. 스캔 신호 분석을 호출한다.
-    m_pTheScanSigAnal->Start( & pScnPDWData->strPDW, & pScnPDWData->strABTData );
+    m_pTheScanSigAnal->Start( & m_pScnPDWData->strPDW, & m_pScnPDWData->strABTData );
 
     // 2. 분석 결과를 병합/식별 쓰레드에 전달한다.
     m_pstrScanAnalInfo->Set( g_enBoardId, m_pRecvScanAnalInfo->uiCh, m_pRecvScanAnalInfo->enCollectBank, m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiABTIndex, 0 );

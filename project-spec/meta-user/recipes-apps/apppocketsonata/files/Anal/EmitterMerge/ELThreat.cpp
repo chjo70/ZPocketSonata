@@ -17,6 +17,8 @@ int CELThreat::m_CoInstance=0;
 int CELThreat::m_iCoABT = 0;
 int CELThreat::m_iCoAET = 0;
 
+CELThreat *CELThreat::m_pRootThreat = NULL;
+
 
 /**
  * @brief     생성자에 AET, ABT 저장소 인덱스를 얻고 초기 생성자에 인덱스를 초기화 한다.
@@ -198,7 +200,7 @@ bool CELThreat::RemoveABT( int nAET, int nABT )	//#FA_Q_4020_T1 (Msg(6:4020) Mul
  */
 // bool CELThreat::Remove( SELINDEX *pIndex, CELThreat *pPrevThreat ) {
 // 	bool bRet = false;
-// 
+//
 // 	if( m_pLeftChild != NULL ) {
 // 		m_pLeftChild->Remove( pIndex, this );
 // 		m_pLeftChild = NULL;
@@ -207,14 +209,14 @@ bool CELThreat::RemoveABT( int nAET, int nABT )	//#FA_Q_4020_T1 (Msg(6:4020) Mul
 // 		m_pRightChild->Remove( pIndex, this );
 // 		m_pRightChild = NULL;
 // 	}
-// 
+//
 // 	if( pIndex->nAET == m_Idx.nAET && m_Idx.nAET != INVALID_INDEX ) {
 // 		delete this;
 // 		bRet = true;
 // 	}
-// 
+//
 // 	return false;
-// 
+//
 // }
 
 /**
@@ -227,7 +229,7 @@ bool CELThreat::RemoveABT( int nAET, int nABT )	//#FA_Q_4020_T1 (Msg(6:4020) Mul
  * @date      2017-03-08, 오후 9:16
  * @warning
  */
-void CELThreat::RemoveAll() 
+void CELThreat::RemoveAll()
 {
 
 	if( m_pLeftChild != NULL ) {
@@ -313,7 +315,7 @@ void CELThreat::Link( CELThreat *pDeleteABT, CELThreat *pDeleteAET )
 			pDeleteABT->m_Idx.uiAET = m_Idx.uiAET;
 		}
 		else {
-			// 
+			//
 			pLinkThreat = GetLastThreat( this );
 			if( pLinkThreat != NULL ) {
 				// 1. 현재 빔 노드 마지막에 링크할 노드를 연결한다.

@@ -1,4 +1,4 @@
-// ManSbc.h: interface for the CManSbc class.
+﻿// ManSbc.h: interface for the CManSbc class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -10,6 +10,10 @@
 #endif // _MSC_VER > 1000
 
 #include "Macros.h"
+
+#include "BootShell.h"
+
+#include "../System/csysconfig.h"
 
 //#include "../OFP/COMMON/common.h"
 #define DRAM_SIZE			(0)
@@ -48,7 +52,7 @@ enum enWhatDrvAPP {
 //////////////////////////////////////////////////////////////////////
 // TFTP 프로토콜 정의
 
-#define TFTP_SERVER_IP				    SNTP_SERVER_IP  // "150.150.49.228"
+#define TFTP_SERVER_IP				    DEFAULT_SNTP_SERVER_IP  // "150.150.49.228"
 #define TFTP_MODE						((char*) "binary" )
 #define	DOWNLOAD_FILENAME				"vxworks"
 
@@ -56,20 +60,35 @@ enum enWhatDrvAPP {
 // 서울 기준
 #define SEOUL_LOCAL_TIME				(9)
 
+#ifdef _NETMEM_	
+#include "../NetMem/client/NetworkMemory.h"
+
+#endif
 
 
-
-class CManSbc  
+class CManSbc
 {
 private :
-  // BOOT_PARAMS m_params;
+	unsigned int m_uiBoardID;
+
 	STR_PRG_INFO m_ProgInfo;
+
+    CSysConfig *g_pTheSysConfig;
+
+
+#ifdef _NETMEM_	
+    STR_NETMEM m_strMemory;
+
+    NetworkMemory *m_pTheNetMem;
+    NetMemCommand m_netCommand;
+
+#endif    
 
 private:
 	void Time2DateTime( UINT *pDate, UINT *pTime, time_t now_sec );
 	time_t GetLastAccessTime( char *pFileName );
 	int IsFile( char *pFileName );
-	
+
 	void VMEBusSystemReset();
 
 	UINT GetTime( char *pTime );
@@ -84,17 +103,18 @@ private:
 
 
     //////////////////////////////////////////////////////////////////////////
-    // 
-	BOOL CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks );
+    //
+	bool CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks );
     BOOL CreateTffsDisk( char *szDiskName );
+	BOOL CreateAtaDisk( char *szDiskName );
 	UCHAR Getche( int sec );
 	UCHAR Getche2( int sec );
 
-    BOOL DownloadfromTftp(char *tftpfilename, char *ramfilename );
+    bool DownloadfromTftp(char *tftpfilename, char *ramfilename );
     int CopyFile( const char *src_file, const char *dest_file );
-	
-public:	
-	UCHAR GetCommand();	
+
+public:
+	UCHAR GetCommand();
     void InstallWeb();
     void DownloadApp();
     void DownloadAndROMWriteApp();
@@ -103,7 +123,9 @@ public:
     void InitDataBase();
     void PCIConfigSetting();
     void MountDrive();
-	
+
+    void ShowNetMemory();
+
 	CManSbc();
 	virtual ~CManSbc();
 

@@ -296,7 +296,7 @@ char_t *getcwduser( char_t *buffer, int size )
 	strcpy( buffer, BASEPATH );
 	return BASEPATH;
 #else
-	return getcwd( buffer, size );
+	return ggetcwd( buffer, size );
 
 #endif
 

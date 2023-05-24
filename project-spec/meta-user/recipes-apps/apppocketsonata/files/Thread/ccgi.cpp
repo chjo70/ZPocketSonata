@@ -54,7 +54,7 @@ void CCGI::_routine()
     LOGENTRY;
     bool bWhile=true;
 
-    bool bCGIRunning;
+    // bool bCGIRunning;
 
     m_pMsg = GetParentMessage();
 
@@ -68,24 +68,24 @@ void CCGI::_routine()
 
         // CGI 실행 플레그 설정
         if( m_pMsg->uiOpCode == enCGI_REQ_IBIT || m_pMsg->uiOpCode == enCGI_REQ_UBIT || m_pMsg->uiOpCode == enCGI_REQ_CBIT || m_pMsg->uiOpCode == enCGI_REQ_SBIT ) {
-            bCGIRunning = true;
+            //bCGIRunning = true;
         }
         else {
-            bCGIRunning = false;
+            //bCGIRunning = false;
         }
 
         switch( m_pMsg->uiOpCode ) {
             //////////////////////////////////////////////////////////////////////////////////////
             // 메인 운용 소프트웨어에서 수신 처리 부분
             case enCGI_REQ_IBIT :
-                LOGMSG1( enNormal, "IBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
+                Log( enNormal, "IBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
 #ifndef _CGI_LIST_
                 g_pTheUrBit->QMsgSnd( m_pMsg );
 #endif
                 break;
 
             case enCGI_REQ_CBIT :
-                LOGMSG1( enNormal, "CRBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
+            	Log( enNormal, "CRBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
 #ifndef _CGI_LIST_
                 g_pTheUrBit->QMsgSnd( m_pMsg );
 #endif
@@ -93,7 +93,7 @@ void CCGI::_routine()
 
             case enCGI_REQ_UBIT :
             case enCGI_REQ_SBIT :
-                LOGMSG1( enNormal, "URBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
+            	Log( enNormal, "URBIT[%d]를 수행합니다 !!" , m_pMsg->x.uiData );
 #ifndef _CGI_LIST_
                 g_pTheUrBit->QMsgSnd( m_pMsg );
 #endif
@@ -115,7 +115,7 @@ void CCGI::_routine()
                 break;
 
             default:
-                LOGMSG1( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                Log( enError, "잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
                 break;
         }
     }

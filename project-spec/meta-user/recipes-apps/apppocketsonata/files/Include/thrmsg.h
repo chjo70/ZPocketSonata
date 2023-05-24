@@ -88,6 +88,9 @@ enum enTHREAD_REQ_MESSAGE {
     enTHREAD_REQ_COLEND = enREQ_STOP,
     enTHREAD_REQ_RAWDATA = enREQ_RAWDATA,
 
+    // 로그 관련 메시지
+    enTHREAD_LOG,
+
     // CGI 명령 관련 메시지
     enCGI_REQ_IBIT = 0xF000,
     enCGI_REQ_UBIT,

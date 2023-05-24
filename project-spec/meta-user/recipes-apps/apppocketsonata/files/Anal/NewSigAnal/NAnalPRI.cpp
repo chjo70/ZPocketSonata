@@ -5,8 +5,6 @@
 
 #include "stdafx.h"
 
-
-
 #if defined(_ELINT_) || defined(_XBAND_)
 
 #include "../OFP_Main.h"
@@ -131,7 +129,7 @@ void CNAnalPRI::Analysis()
     // 고정펄스열들에 대하여 스태거 그룹핑 수행하여 스태거 신호인지 분석한다.
     GroupingStagger();
     StaggerAnalysis();
-    PrintAllEmitter( m_uiStepEmitter, "[1/6] Stable PRI 기반 스태거 분석" );
+    PrintAllEmitter( m_uiStepEmitter, "[1/6] 그룹핑 Stable PRI 기반 스태거 분석" );
 
     // 고정펄스열 그룹핑은 스태거 그룹핑 후 검증하여 해제된 펄스열들에 대해 한다.
     GroupingStable();
@@ -140,9 +138,11 @@ void CNAnalPRI::Analysis()
     GroupingJitter();
     PrintAllEmitter( m_uiStepEmitter, "[3/6] 지터 PRI 분석", _JITTER_RANDOM );
 
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 기존 에미터 분석한 결과에서 세부 분석을 수행 합니다.
     // 지터 그룹핑된 이후 스태거 분석을 한번 더 수행한다.(Jitter 펄스열들에 대해 Auto-Correlation Function으로 스태거 분석 수행)
     StaggerAnalysis();
-    PrintAllEmitter( m_uiStepEmitter, "[4/6] 스태거 PRI 분석", _JITTER_STAGGER );
+    PrintAllEmitter( m_uiAnalEmitter, "[4/6] 스태거 PRI 분석", _JITTER_STAGGER );
 
     // PRI 고정으로 분석된 에미터들에 대해 D&S 분석을 수행한다.
     //DNSAnalysis();
@@ -152,7 +152,7 @@ void CNAnalPRI::Analysis()
     //HoppingAnalysis();
     //PrintAllEmitter( 0, "[6/8] 호핑 PRI 분석" );
 
-    // 패턴 분석을 수행한다.
+    // 주파수/PRI 패턴 분석을 수행한다.
     PatternAnalysis();
     PrintAllEmitter( m_uiAnalEmitter, "[5/6] 패턴 PRI 분석", _JITTER_PATTERN );
 
@@ -186,14 +186,14 @@ unsigned int CNAnalPRI::ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, S
  * @brief     CheckPriInterval
  * @param     STR_PULSE_TRAIN_SEG * pSeg1
  * @param     STR_PULSE_TRAIN_SEG * pSeg2
- * @return    BOOL
+ * @return    bool
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2006-01-23 10:10:06
  * @warning
  */
-BOOL CNAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
+bool CNAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
 {
     return m_pNewSigAnal->CheckPriInterval( pSeg1, pSeg2 );
 }
@@ -243,14 +243,14 @@ void CNAnalPRI::ExtractRefStable()
  * @brief     드웰 펄스열을 추출한다.
  * @param     STR_PULSE_TRAIN_SEG * pDwlSeg
  * @param     STR_PRI_RANGE_TABLE * pExtRange
- * @return    BOOL
+ * @return    bool
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2006-01-23 10:10:18
  * @warning
  */
-BOOL CNAnalPRI::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange )
+bool CNAnalPRI::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange )
 {
     return m_pNewSigAnal->ExtractDwellRefPT( pDwlSeg, pExtRange );
 }

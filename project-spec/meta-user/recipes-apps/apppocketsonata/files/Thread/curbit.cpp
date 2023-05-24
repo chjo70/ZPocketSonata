@@ -14,10 +14,28 @@
 #include "curbit.h"
 #include "ccgi.h"
 
+#ifdef __VXWORKS__
+#include <hwif/vxBus.h>
+#include <hwif/vxbus/vxbLib.h>
+
+#include "vxbM85xxI2c.h"
+#include "vxbAdt7481Temp.h"
+
+extern "C" {
+
+    // BSP 수록... 변수명이 global 하게 안 보입니다.
+    // extern VXB_DEV_ID pAdt7481Inst;
+}
+
+#endif
+
 
 //#include "../Utils/chwio.h"
 #include "../Utils/ccommonutils.h"
 #include "../Include/globals.h"
+
+
+
 
 #define _DEBUG_
 
@@ -92,7 +110,7 @@ void CUrBit::_routine()
     m_pLanData = GeLanData();
 
     while( m_bThreadLoop ) {
-        if( QMsgRcv( enTIMER, OS_SEC( 1000 ) ) == -1 ) {
+        if( QMsgRcv( enTIMER, OS_SEC( 100 ) ) == -1 ) {
             // if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv(CUrBit)" );
         }
@@ -119,12 +137,14 @@ void CUrBit::_routine()
                 break;
 
             case enTHREAD_TIMER:
-                LOGMSG1( enNormal, "주기적으로 자체점검을 수행합니다. !!", m_pLanData->uiUnit );
+                Log( enNormal, "주기적으로 자체점검을 수행합니다. !!", m_pLanData->uiUnit );
+                RunTimer();
                 break;
 
             case enCGI_REQ_SBIT:
             case enTHREAD_REQ_SBIT:
-                LOGMSG1( enNormal, "SRBIT[%d]를 수행합니다 !!", m_pLanData->uiUnit );
+                RunTimer();
+                Log( enNormal, "SRBIT[%d]를 수행합니다 !!", m_pLanData->uiUnit );
                 break;
 
             case enCGI_REQ_UBIT:
@@ -133,11 +153,11 @@ void CUrBit::_routine()
                 break;
 
             case enTHREAD_REQ_SHUTDOWN:
-                LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
+                Log( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
                 break;
 
             default:
-                LOGMSG2( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
                 break;
         }
     }
@@ -145,7 +165,54 @@ void CUrBit::_routine()
 }
 
 /**
- * @brief CUrBit::Init
+ * @brief     RunTimer
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 12:01:12
+ * @warning
+ */
+void CUrBit::RunTimer()
+{
+    // 보드 온도를 체크 합니다.
+    CheckSBCTemp();
+
+
+}
+
+/**
+ * @brief     CheckSBCTemp
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 13:04:20
+ * @warning
+ */
+void CUrBit::CheckSBCTemp()
+{
+#ifdef __VXWORKS__
+    // VXB_ADT7481_TEMP_DRV *pDrvCtrl = ( VXB_ADT7481_TEMP_DRV * ) vxbDevSoftcGet( pAdt7481Inst );
+
+    unsigned int uiBoardTemp, uiCPUTemp;
+
+    GetTemperature( & uiBoardTemp, & uiCPUTemp );
+
+    Log( enNormal, "보드 온도 [%d]도, CPU 온도 [%d]도 체크 합니다." , uiBoardTemp, uiCPUTemp );
+
+
+#endif
+}
+
+/**
+ * @brief     Init
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 12:01:06
+ * @warning
  */
 void CUrBit::Init()
 {
@@ -249,7 +316,7 @@ void CUrBit::InitIBit()
  */
 void CUrBit::RunIBit( bool bCGIRunning )
 {
-    LOGMSG( enNormal, "IBIT를 수행합니다 !!" );
+    Log( enNormal, "IBIT를 수행합니다 !!" );
 
     sleep( 1 );
 
@@ -281,7 +348,7 @@ void CUrBit::RunIBit( bool bCGIRunning )
  */
 void CUrBit::RunCBit( bool bCGIRunning )
 {
-    LOGMSG1( enNormal, "CRBIT[%d]를 수행합니다 !!", m_pLanData->uiUnit );
+    Log( enNormal, "CRBIT[%d]를 수행합니다 !!", m_pLanData->uiUnit );
     //     sleep( 2 );
     //
     //     //
@@ -311,7 +378,7 @@ void CUrBit::RunCBit( bool bCGIRunning )
  */
 void CUrBit::RunUBit( bool bCGIRunning )
 {
-    LOGMSG1( enNormal, "URBIT[%d]를 수행합니다 !!", m_pLanData->uiUnit );
+    Log( enNormal, "URBIT[%d]를 수행합니다 !!", m_pLanData->uiUnit );
     //
 //     sleep( 10 );
 //
@@ -341,7 +408,7 @@ bool CUrBit::RunAXIBusBIT()
         temp = CHWIO::ReadReg( BRAM_CTRL_0, TEST_DATA_READ );
 
         if( temp != _AXI_DATATEST_ ) {
-            LOGMSG1( enError, "Error AXI BUS TEST : 0x%08X", temp );
+            Log( enError, "Error AXI BUS TEST : 0x%08X", temp );
             bRet = false;
         }
         else {

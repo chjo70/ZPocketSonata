@@ -74,7 +74,7 @@ protected:
 
 	void Init()
 	{
-        BOOL bRet;
+        bool bRet;
 		char szConnect[100];
 
 		if( m_bTryConnect == false && m_pMyODBC->IsConnected() == false ) {
@@ -91,7 +91,7 @@ protected:
             sprintf( szConnect, "DRIVER={SQL Server};SERVER=%s, 1433;UID=sa;PWD=devrms;DATABASE=ELINT;" , DB_SERVER_IP_ADDRESS );
 #endif
 			bRet = m_pMyODBC->DriverConnect( szConnect, szOut ); 
-			if( bRet == FALSE ) {
+			if( bRet == false ) {
 				sprintf_s( szConnect, sizeof(szConnect), "SQL 서버(%s)에 연결이 안 됩니다. DB 서버 IP를 확인하거나 Firewall을 확인해주세요..." , DB_SERVER_IP_ADDRESS );
 				AfxMessageBox( szConnect );
 
@@ -101,7 +101,7 @@ protected:
 // 			if( enPos == enBuiltIn ) {
 // 				//if( ! m_pMyODBC->DriverConnect("DRIVER={SQL Server};SERVER=192.168.0.41, 1433;UID=netcususer;PWD=netcusgood;DATABASE=ELINT;", szOut) ) {
 //                 bRet = m_pMyODBC->DriverConnect("DRIVER={SQL Server};SERVER=127.0.0.1, 1433;UID=sa;PWD=devrms;DATABASE=ELINT;", szOut ); 
-//                 if( bRet == FALSE ) {
+//                 if( bRet == false ) {
 // 					AfxMessageBox( "SQL 서버에 연결이 안 됩니다. DB 서버와 연결할 수 없습니다. DB 서버를 확인하거나 랜 선을 확인해주세요..." );
 // 					//Log( enError, "SQL 서버에 연결이 안 됩니다. DB 서버와 연결할 수 없습니다. DB 서버를 확인하거나 랜 선을 확인해주세요..." );
 // 				}
@@ -109,20 +109,20 @@ protected:
 // 			}
 // 			else if( enPos == enMyHome ) {
 //                 bRet = m_pMyODBC->DriverConnect("DRIVER={SQL Server};SERVER=192.168.0.156, 1433;UID=sa;PWD=fractal;DATABASE=ELINT;Trusted_Connection=yes;", szOut ); 
-//                 if( bRet == FALSE ) {
+//                 if( bRet == false ) {
 // 					AfxMessageBox( "SQL 서버에 연결이 안 됩니다. 개인용 컴퓨터에 SQL 서버를 설치하고 포트를 확인해주세요..." );
 // 					//Log( enError, "SQL 서버에 연결이 안 됩니다. 개인용 컴퓨터에 SQL 서버를 설치하고 포트를 확인해주세요..." );
 // 				}
 // 			}
 // 			else {
 //                 bRet = m_pMyODBC->DriverConnect("DRIVER={SQL Server};SERVER=127.0.0.1, 1433;UID=sa;PWD=devrms;DATABASE=ELINT;", szOut ); 
-//                 if( bRet == FALSE ) {
+//                 if( bRet == false ) {
 // 					AfxMessageBox( "SQL 서버에 연결이 안 됩니다. 사무용 컴퓨터에 SQL 서버를 설치하고 포트를 확인해주세요..." );
 // 					//Log( enError, "SQL 서버에 연결이 안 됩니다. 사무용 컴퓨터에 SQL 서버를 설치하고 포트를 확인해주세요..." );
 // 				}
 // 			}
 // 
-            if( bRet == TRUE ) {
+            if( bRet == true ) {
                 //Log( enNormal, "SQL 서버[0x%p]에 정상 연결됐습니다..." , m_pMyODBC );
             }
 

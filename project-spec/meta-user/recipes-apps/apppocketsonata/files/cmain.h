@@ -1,12 +1,26 @@
-#ifndef CMAIN_H
-#define CMAIN_H
+﻿/**
+
+    @file      cmain.h
+    @brief
+    @details   ~
+    @author    조철희
+    @date      2.05.2023
+    @copyright ? Cool Guy, 2023. All right reserved.
+
+**/
+#pragma once
+
 
 #include "./Anal/OFP_Main.h"
 
 using namespace std;
 
+
+
+
 #include "./Include/system.h"
 #include "./Utils/cthread.h"
+#include "./Utils/clog.h"
 
 
 #ifdef _SQLITE_
@@ -26,8 +40,26 @@ using namespace std;
 #endif
 
 
-void ParsingArgument( int iArgc, char *iArgv[] );
+//void ParsingArgument( int iArgc, char *iArgv[] );
 void UpdateCPUMode();
 
 
-#endif // CMAIN_H
+class CMain {
+
+private:
+public:
+    CMain();
+    virtual ~CMain();
+
+    void Run( int iArgc, char *iArgv[] );
+
+private:
+    void ParsingArgument( int iArgc, char *iArgv[] );
+    void InitDatabase();
+    void CreateMngrThread();
+    void CreateAnalThread();
+
+
+};
+
+

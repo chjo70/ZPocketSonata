@@ -90,12 +90,12 @@ void CNMakeAET::Init()
 //! \date     2006-08-29 10:10:16
 //! \warning
 //
-void CNMakeAET::MakeAET()
+void CNMakeAET::MakeAET( bool bDBInsert )
 {
 
     PrintFunction
 
-    CMakeAET::MakeAET();
+    CMakeAET::MakeAET( bDBInsert );
 
     CMakeAET::PrintAllAET();
 

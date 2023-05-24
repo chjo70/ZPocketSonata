@@ -1,7 +1,7 @@
 ﻿/**
 
     @file      clog.cpp
-    @brief     
+    @brief
     @details   ~
     @author    조철희
     @date      10.04.2023
@@ -9,7 +9,7 @@
 
 **/
 
-#include "pch.h"
+#include "stdafx.h"
 
 
 #ifdef _MSC_VER
@@ -47,9 +47,10 @@ bool CLog::m_bcs=false;
 
 unsigned int CLog::m_uiCoLog = 0;
 
+
 /**
  * @brief     로그 책체를 생성합니다.
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -71,16 +72,63 @@ CLog::CLog()
 
 #endif
 
-    memset( m_szPresentDirectory, 0, sizeof(m_szPresentDirectory) );
-    getcwd( m_szPresentDirectory, sizeof(m_szPresentDirectory) );
+    m_bLogThread = false;
 
     Init();
 
 }
 
 /**
+ * @brief     CLog
+ * @param     int iThreadPriority
+ * @param     const char * pClassName
+ * @param     bool bArrayLanData
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 15:32:48
+ * @warning
+ */
+#ifdef _LOG_
+CLog::CLog( int iThreadPriority, const char *pClassName, bool bArrayLanData ) : CThread( iThreadPriority, pClassName, bArrayLanData )
+#else
+CLog::CLog( int iThreadPriority, const char *pClassName, bool bArrayLanData )
+#endif
+{
+    char szDate[LOG_DIR_SIZE];
+
+    m_bLogThread = false;
+
+    Init();
+
+    // 로그 파일 생성 합니다.
+#ifdef _MSC_VER
+    SYSTEMTIME tmSystem;
+
+    ::GetLocalTime( & tmSystem );
+    sprintf( szDate, "/%d_%d_%d.log", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay );
+#else
+    struct timeval tv;
+    time_t timer;
+    struct tm *t;
+
+    gettimeofday( &tv, NULL );
+    timer = time( ( time_t * ) & tv.tv_sec );
+    t = localtime( &timer );
+
+    sprintf( szDate, "/%d_%d_%d.log", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday );
+#endif
+
+    strcpy( m_szLogFullName, m_szLogDir );
+    strcat( m_szLogFullName, szDate );
+
+
+}
+
+/**
  * @brief     ~CLog
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -104,7 +152,159 @@ CLog::~CLog()
 void CLog::Init()
 {
     m_uiCoLog = 0;
+
+#ifdef _LOG_
+    m_pMsg = NULL;
+#endif
+
+    memset( m_szPresentDirectory, 0, sizeof( m_szPresentDirectory ) );
+    getcwd( m_szPresentDirectory, sizeof( m_szPresentDirectory ) );
+
+#ifdef _LOG_RELATIVE_PATH_
+    strcpy( m_szLogDir, m_szPresentDirectory );
+    strcat( m_szLogDir, LOG_DIRECTORY );
+#else
+    strcpy( m_szLogDir, LOG_DIRECTORY );
+
+#endif
+
+#ifdef __linux__
+    if( 0 == mkdir( m_szLogDir, 0766 ) || errno == EEXIST ) {
+#else
+    if( 0 == mkdir( m_szLogDir ) || errno == EEXIST ) {
+#endif
+
+    }
+
+#ifdef _LOG_
+    m_pMsg = GetRecvDataMessage();
+#endif
+
 }
+
+#ifdef _LOG_
+/**
+ * @brief     Run
+ * @param     key_t key
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 15:34:21
+ * @warning
+ */
+void CLog::Run( key_t key )
+{
+
+    CThread::Run();
+
+}
+
+/**
+ * @brief     _routine
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 16:03:14
+ * @warning
+ */
+void CLog::_routine()
+{
+    m_pMsg = GetRecvDataMessage();
+
+    while( m_bThreadLoop ) {
+        if( QMsgRcv() == -1 ) {
+            perror( "QMsgRcv(CLog)" );
+        }
+        else {
+            switch( m_pMsg->uiOpCode ) {
+                case enTHREAD_LOG:
+                    WriteAndPrint();
+                    break;
+
+                default:
+                    Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                    break;
+            }
+
+        }
+    }
+}
+#else
+#endif
+
+/**
+ * @brief     WriteAndPrint
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-14 11:09:21
+ * @warning
+ */
+void  CLog::WriteAndPrint()
+{
+#ifdef _LOG_
+    char *pszLog;
+
+    pszLog = ( char * ) GetRecvData();
+    pszLog[m_pMsg->uiArrayLength] = 0;
+
+    // 1. 화면에 출력 합니다.
+#ifdef _MSC_VER
+    OutputDebugString( pszLog );
+#else
+    //puts( & pszLog[1] );
+    printf( pszLog );
+    // puts 로 대체...
+#endif
+
+    // 2. 로그 파일을 생성합니다.
+#ifdef _MSC_VER
+//     fopen_s( & m_fp, m_szLogFullName, "a+" );
+//
+//     if( m_fp == NULL ) {
+//         char buffer[200];
+//
+//         sprintf( buffer, "\n 로그 파일[%s] 생성 에러 입니다. 담당자에게 문의하세요 !", m_szLogFullName );
+//         OutputDebugString( buffer );
+//     }
+//     else {
+//         fprintf( m_fp, "%s", pszLog );
+//         // fflush( m_fp );
+//         fclose( m_fp );
+//     }
+
+#else
+    m_fid = open( m_szLogFullName, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
+
+    if( m_fid == 0 ) {
+        printf( "\n 로그 파일[%s] 생성 에러 입니다. 담당자에게 문의하세요 !", m_szLogFullName );
+    }
+    else {
+        write( m_fid, pszLog, m_pMsg->uiArrayLength );
+        close( m_fid );
+    }
+#endif
+
+    ++m_uiCoLog;
+
+    // 3. 로그 파일 삭제
+    // vxworks 인 경우에 저장 공간이 없으면 로그 파일을 삭제한다.
+#if defined(__VXWORKS__) || defined(__linux__)
+    if( m_uiCoLog > MAX_LINES_LOGS ) {
+        remove( m_szLogFullName );
+        printf( "\n[W] 로그 파일의 라인 수[%d]가 초과되어 로그 파일을 삭제합니다 !\n" , MAX_LINES_LOGS );
+
+        m_uiCoLog = 0;
+    }
+#endif
+
+#endif
+
+}
+
 
 /**
  * @brief CLog::LogMsg
@@ -116,16 +316,7 @@ void CLog::Init()
  */
 void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... )
 {
-#ifndef _CGI_LIST_
-#ifdef _MSC_VER
-    FILE *fp=NULL;
-#else
-    int fid;
-#endif
-
-    char szLogDir[LOG_DIR_SIZE*2];
-    char szLogFullName[LOG_DIR_SIZE*2];
-    char szDate[LOG_DIR_SIZE];
+    char szLog[LOG_DIR_SIZE * 5];
 
 #ifdef _LOG_WHERE
     char szFileLine[LOG_DIR_SIZE];
@@ -133,191 +324,115 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
     va_list args;
 
-    size_t nLength, nLengthTime;
+    size_t nLength; // nLengthTime;
 
 	Lock();
 
-#ifdef _LOG_RELATIVE_PATH_
-    strcpy( szLogDir, m_szPresentDirectory );
-    strcat( szLogDir, LOG_DIRECTORY );
-#else
-    strcpy( szLogDir, LOG_DIRECTORY );
-
-#endif
-
-#ifdef __linux__
-    if( 0 == mkdir( szLogDir, 0766 ) || errno == EEXIST ) {
-#else
-    if( 0 == mkdir( szLogDir ) || errno == EEXIST ) {
-#endif
-
+    szLog[0] = 0;
 #ifdef _MSC_VER
-        SYSTEMTIME tmSystem;
-
-        ::GetLocalTime( & tmSystem );
-        sprintf( szDate, "/%d_%d_%d.log", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay );
-#else
-        struct timeval tv;
-        time_t timer;
-        struct tm* t;
-
-        gettimeofday( &tv,NULL);
-        timer = time( (time_t *) & tv.tv_sec );
-        t = localtime(&timer);
-
-        sprintf( szDate, "/%d_%d_%d.log", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday );
-#endif
-
-        strcpy( szLogFullName, szLogDir );
-        strcat( szLogFullName, szDate );
-        //strcat( szLogDir, szDate );
-
-#ifdef _MSC_VER
-        fopen_s( & fp, szLogFullName, "a+" );
-        //fid = open(szLogFullName, O_APPEND | O_WRONLY | O_BINARY );
-#else
-        fid = open(szLogFullName, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
-#endif
-
-        m_szLog[0] = NULL;
-#ifdef _MSC_VER
-        if( fp != NULL ) {
-            if( enNoLineFeed != nType ) {
+    if( enNoLineFeed != nType ) {
 #ifdef _LOG_DATA_ENABLED_
-                sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay, tmSystem.wHour, tmSystem.wMinute, tmSystem.wSecond, tmSystem.wMilliseconds );
+        sprintf( szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay, tmSystem.wHour, tmSystem.wMinute, tmSystem.wSecond, tmSystem.wMilliseconds );
 #else
-                sprintf( m_szLog, "\n" );
+        sprintf( szLog, "\n" );
 #endif
-            }
-
-#else
-        if( fid != 0 ) {
-            if( enNoLineFeed != nType ) {
-#ifdef _LOG_DATA_ENABLED_
-                sprintf( m_szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
-#else
-                sprintf( m_szLog, "\n" );
-#endif
-            }
-#endif
-
-            nLengthTime = strlen(m_szLog);
-
-            switch( nType ) {
-            case enNormal :
-                strcat( m_szLog, "[NORMAL]\t" );
-                break;
-            case enDebug :
-                strcat( m_szLog, "[DEBUG ]\t" );
-                break;
-            case enEnd :
-                strcat( m_szLog, "[END   ]\t" );
-                break;
-
-            case enLineFeed :
-                break;
-
-            case enError :
-                strcat( m_szLog, "[ERROR ]\t" );
-                break;
-
-            default :
-                break;
-            }
-
-            if(fmt != NULL ) {
-                nLength = strlen(m_szLog);
-                va_start( args, fmt);
-                vsprintf( & m_szLog[nLength], fmt, args );
-                va_end( args );
-
-#ifdef __VXWORKS__
-                // fflush( stdout );
-
-#endif
-                //strcat( & m_szLog[nLength], fmt );
-
-#ifdef _LOG_WHERE
-                sprintf( szFileLine, "\t\tat [%s:%d{%s}]" , pszFile, iLine, pszFunction );
-#endif
-            }
-            else {
-#ifdef _LOG_WHERE
-                sprintf( szFileLine, "[%s:%d{%s}]" , pszFile, iLine, pszFunction );
-#endif
-            }
-
-#ifdef _LOG_WHERE
-            if( szFileLine[0] != 0 ) {
-                strcat( m_szLog, szFileLine );
-            }
-#endif
-
-            //sprintf( szExtra, "[%2d]" , int iThreadID );
-            //strcat( m_szLog, szExtra );
-
-            nLength = strlen(m_szLog);
-            if( nLength > 10 || nType == enLineFeed ) {
-                ++m_uiCoLog;
-#ifdef _MSC_VER
-                fprintf( fp, "%s" , m_szLog );
-                fflush( fp );
-
-#else
-                write( fid, m_szLog, nLength );
-                
-                
-#endif
-
-                if( nType == enDebug || nType == enLineFeed ) {
-#if defined(__VXWORKS__)
-                    _func_kprintf( m_szLog );
-#else
-                    TRACE0( m_szLog );
-#endif
-            }
-                else if( nType == enNormal ) {
-#if defined(__VXWORKS__)
-                    _func_kprintf( m_szLog );
-#else
-                    TRACE0( m_szLog );
-#endif
-                }
-                else if( nType == enError ) {
-#if defined(__VXWORKS__)
-                    _func_kprintf( m_szLog );
-#else
-                    TRACE0( m_szLog );
-#endif
-                }
-                else {
-
-                }
-
-            }
-#ifdef _MSC_VER
-            fclose( fp );
-#else
-            close( fid );
-#endif
-
-            // 로그 파일 삭제
-            // vxworks 인 경우에 저장 공간이 없으면 로그 파일을 삭제한다.
-#if defined(__VXWORKS__) || defined(__linux__)
-            if( m_uiCoLog > MAX_LINES_LOGS ) {
-                remove( szLogFullName );
-                _func_kprintf( "로그 파일을 삭제합니다!!!" );
-
-                m_uiCoLog = 0;
-            }
-#endif
-
-        }
     }
- 
-	UnLock();
 
+#else
+    if( enNoLineFeed != nType ) {
+#ifdef _LOG_DATA_ENABLED_
+        sprintf( szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
+#else
+        sprintf( szLog, "\n" );
 #endif
+    }
+#endif
+
+    //nLengthTime = strlen(m_szLog);
+
+    switch( nType ) {
+    case enNormal :
+        strcat( szLog, "[NORMAL]\t" );
+        break;
+    case enDebug :
+        strcat( szLog, "[DEBUG ]\t" );
+        break;
+    case enEnd :
+        strcat( szLog, "[END   ]\t" );
+        break;
+
+    case enLineFeed :
+        break;
+
+    case enError :
+        strcat( szLog, "[ERROR ]\t" );
+        break;
+
+    default :
+        break;
+    }
+
+    if(fmt != NULL ) {
+        nLength = strlen(szLog);
+        va_start( args, fmt);
+        vsprintf( & szLog[nLength], fmt, args );
+        va_end( args );
+
+        //strcat( & m_szLog[nLength], fmt );
+
+#ifdef _LOG_WHERE
+        sprintf( szFileLine, "\t\tat [%s:%d{%s}]" , pszFile, iLine, pszFunction );
+#endif
+    }
+    else {
+#ifdef _LOG_WHERE
+        sprintf( szFileLine, "[%s:%d{%s}]" , pszFile, iLine, pszFunction );
+#endif
+    }
+
+#ifdef _LOG_WHERE
+    if( szFileLine[0] != 0 ) {
+        strcat( m_szLog, szFileLine );
+    }
+#endif
+
+    //sprintf( szExtra, "[%2d]" , int iThreadID );
+    //strcat( m_szLog, szExtra );
+
+    nLength = strlen(szLog);
+    if( nLength > 4 ) {
+#if defined(__VXWORKS__)
+        if( m_bLogThread == true ) {
+            //_func_kprintf( szLog );
+            QMsgSnd( enTHREAD_LOG, szLog, strlen(szLog), _spOne, & m_pMsg->x, sizeof( UNI_MSG_DATA ), NULL );
+        }
+        else {
+            printf( szLog );
+        }
+
+#else
+        if( m_bLogThread == true ) {
+#ifdef _LOG_
+            QMsgSnd( enTHREAD_LOG, szLog, strlen(szLog), _spOne, & m_pMsg->x, sizeof( UNI_MSG_DATA ), NULL );
+#endif
+        }
+        else {
+            TRACE0( szLog );
+        }
+#endif
+
+    }
+    else if( nType == enLineFeed ) {
+#ifdef _MFC_VER
+        TRACE0( "\n" );
+#endif
+    }
+    else {
+        // printf( "AAA" );
+    }
+
+    UnLock();
+
 
 }
 
@@ -330,19 +445,25 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
  * @date      2021-08-23, 10:23
  * @warning
  */
-void CLog::Lock() 
+void CLog::Lock()
 {
 
+    if( m_bLogThread == false ) {
 #ifdef _MSC_VER
-    //TRACE( "\nLock()" );
-    m_cs.Lock();
+        //TRACE( "\nLock()" );
+        m_cs.Lock();
 #elif defined(__VXWORKS__)
-    sem_wait( & m_mutex );
+        sem_wait( & m_mutex );
 #else
     // std::unique_lock<std::mutex> lk(m_mutex);
 #endif
-    m_bcs = true;
 
+    }
+    else {
+        WhereIs;
+    }
+
+    m_bcs = true;
 
 }
 
@@ -355,115 +476,22 @@ void CLog::Lock()
  * @date      2021-08-23, 10:23
  * @warning
  */
-void CLog::UnLock() 
+void CLog::UnLock()
 {
-    //TRACE( "\nUnLock()" );
 
+    if( m_bLogThread == false ) {
 #ifdef _MSC_VER
-    m_cs.Unlock();
+        m_cs.Unlock();
 #elif defined(__VXWORKS__)
-    sem_post( & m_mutex );    
+        sem_post( & m_mutex );
 #else
 
 #endif
+    }
+    else {
+        WhereIs;
+    }
+
     m_bcs = false;
 
 }
-
-/**
- * @brief CLog::LogMsg
- * @param nType
- * @param fmt
- */
-void CLog::LogMsg( int nType, const char *fmt, ... )
-{
-    va_list args;
-    char szLogString[LOG_DIR_SIZE*5];
-
-    va_start( args, fmt );
-#ifdef _MSC_VER
-    vsprintf_s( szLogString, sizeof(szLogString), fmt, args );
-#else
-    vsprintf( szLogString, fmt, args );
-#endif
-    va_end( args );
-
-    //char *pTemp = UTF8ToANSI( szLogString );
-    LOGMSG( nType, (const char *) szLogString );
-    //delete pTemp;
-
-}
-
-/**
- * @brief     ANSIToUTF8
- * @param     const char * pszCode
- * @return    char *
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2021-10-27, 13:16
- * @warning
- */
-// char *CLog::ANSIToUTF8( const char * pszCode )
-// {
-// #ifdef _MFC_VER
-//     int iLength, nLength2;
-//     BSTR	bstrCode; 
-//     char*	pszUTFCode = NULL;
-// 
-//     iLength = MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), NULL, NULL); 
-//     bstrCode = SysAllocStringLen(NULL, (unsigned int) iLength ); 
-//     MultiByteToWideChar(CP_ACP, 0, pszCode, lstrlen(pszCode), bstrCode, iLength);
-// 
-//     nLength2 = WideCharToMultiByte(CP_UTF8, 0, bstrCode, -1, pszUTFCode, 0, NULL, NULL); 
-//     pszUTFCode = (char*) malloc( nLength2+1); 
-//     WideCharToMultiByte(CP_UTF8, 0, bstrCode, -1, pszUTFCode, nLength2, NULL, NULL); 
-// 
-//     return pszUTFCode;
-// #else
-//     return NULL;
-// 
-// #endif
-// 
-// }
-
-/**
- * @brief     UTF8ToANSI
- * @param     const char * pszCode
- * @return    char*
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2021-10-27, 13:16
- * @warning
- */
-// int CLog::UTF8ToANSI( char *pszDest, int iDestSize, const char *pszSrc )
-// {
-// #ifdef _MSC_VER
-//     WCHAR szUnicode[255];
-//     char szAnsi[255];
-// 
-//     BSTR    bstrWide;
-//     char*   pszAnsi;
-//     int     nSize;
-// 
-//     nSize = MultiByteToWideChar( CP_UTF8, 0, pszSrc, -1, NULL, NULL);
-//     //bstrWide = SysAllocStringLen(NULL, nLength);
-// 
-//     int iUnicodeSize = MultiByteToWideChar(CP_UTF8, 0, pszSrc, -1, szUnicode, nSize );
-// 
-//     int nAnsiSize = WideCharToMultiByte(CP_ACP, 0, szUnicode, iUnicodeSize, szAnsi, sizeof(szAnsi), NULL, NULL);
-// 
-//     //WideCharToMultiByte(CP_ACP, 0, bstrWide, -1, pszAnsi, nLength, NULL, NULL);
-//     //SysFreeString(bstrWide);
-// 
-//     memcpy(pszDest, szAnsi, nAnsiSize);
-// 
-//     pszDest[nAnsiSize] = 0;
-// 
-//     return nAnsiSize;
-// #else
-//     return 0;
-// #endif
-// 
-// }

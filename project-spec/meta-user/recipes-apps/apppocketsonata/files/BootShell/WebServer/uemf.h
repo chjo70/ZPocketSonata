@@ -13,7 +13,7 @@
 
 /******************************** Description *********************************/
 
-/* 
+/*
  *	GoAhead Web Server header. This defines the Web public APIs
  */
 
@@ -33,6 +33,9 @@
 	#include	<stdlib.h>
 	#include	<fcntl.h>
 	#include	<errno.h>
+    #include	<signal.h>
+
+    #define SIGKILL (99)
 #endif /* WIN */
 
 #ifdef CE
@@ -71,7 +74,7 @@
 	#include	<netinet/in.h>
 #endif /* NW */
 
-#ifdef SCOV5 
+#ifdef SCOV5
 	#include	<sys/types.h>
 	#include	<stdio.h>
 	#include	"sys/socket.h"
@@ -279,8 +282,8 @@ struct timeval
 #endif /* NW */
 
 /********************************** Unicode ***********************************/
-/* 
- *	Constants and limits. Also FNAMESIZE and PATHSIZE are currently defined 
+/*
+ *	Constants and limits. Also FNAMESIZE and PATHSIZE are currently defined
  *	in param.h to be 128 and 512
  */
 #define TRACE_MAX			(4096 - 48)
@@ -315,8 +318,8 @@ typedef unsigned short		uchar_t;
 #endif
 
 /*
- *	Text size of buffer macro. A buffer bytes will hold (size / char size) 
- *	characters. 
+ *	Text size of buffer macro. A buffer bytes will hold (size / char size)
+ *	characters.
  */
 #define	TSZ(x)				(sizeof(x) / sizeof(char_t))
 
@@ -469,18 +472,7 @@ typedef struct _stat gstat_t;
 
 #define BASEPATH	"PRGDISK:"
 
-#elif (defined (LYNX) || defined (LINUX) || defined (MACOSX) || defined (SOLARIS))
-#define gchdir		chdir
-#define gmkdir(s)	mkdir(s,0755)
-#define grmdir		rmdir
-#define ggetcwd		getcwd
-#else
-#define gchdir		chdir
-#define gmkdir		mkdir
-#define grmdir		rmdir
-#define ggetcwd		getcwd
-
-#endif /* __VXWORKS__ #elif LYNX || LINUX || MACOSX || SOLARIS*/
+#define gopen		open
 
 #define gclose		close
 #define gclosedir	closedir
@@ -496,6 +488,62 @@ typedef struct _stat gstat_t;
 #define gstat		stat
 #define gunlink		unlink
 #define gwrite		write
+
+#define create      creat
+//#define close       _close
+
+#elif (defined (LYNX) || defined (LINUX) || defined (MACOSX) || defined (SOLARIS))
+#define gchdir		chdir
+#define gmkdir(s)	mkdir(s,0755)
+#define grmdir		rmdir
+#define ggetcwd		getcwd
+
+#define gclose		_close
+#define gclosedir	closedir
+#define gchmod		chmod
+// #define ggetcwd		getcwd
+#define glseek		_lseek
+#define gloadModule	loadModule
+#define gopen		_open
+#define gopendir	opendir
+#define gread		_read
+#define greaddir	readdir
+#define grename		rename
+#define gstat		stat
+#define gunlink		_unlink
+#define gwrite		_write
+
+#define create      _creat
+#define close       _close
+
+#else
+#define gchdir		_chdir
+#define gmkdir		mkdir
+#define grmdir		rmdir
+#define ggetcwd		_getcwd
+
+#define gclose		_close
+#define gclosedir	closedir
+#define gchmod		chmod
+// #define ggetcwd		getcwd
+#define glseek		_lseek
+#define gloadModule	loadModule
+#define gopen		_open
+#define gopendir	opendir
+#define gread		_read
+#define greaddir	readdir
+#define grename		rename
+#define gstat		stat
+#define gunlink		_unlink
+#define gwrite		_write
+
+#define create      _creat
+#define close       _close
+
+#endif /* __VXWORKS__ #elif LYNX || LINUX || MACOSX || SOLARIS*/
+
+
+
 
 #define gasctime	asctime
 #define gsprintf	sprintf
@@ -523,7 +571,7 @@ typedef struct _stat gstat_t;
 #define gstrtol		strtol
 
 #define gfopen		fopen
-#define gcreat		creat
+#define gcreat		_creat
 #define gfgets		fgets
 #define gfputs		fputs
 #define	gfwrite		fwrite
@@ -656,7 +704,7 @@ typedef struct {
 #endif /* __NO_PACK */
 
 /*
- *	Allocation flags 
+ *	Allocation flags
  */
 #define VALUE_ALLOCATE		0x1
 
@@ -694,7 +742,7 @@ typedef struct {
  *    ^                           ^                       ^               ^
  *    |                           |                       |               |
  *  rq->buf                    rq->servp               rq->endp      rq->enduf
- *     
+ *
  *	The queue is empty when servp == endp.  This means that the queue will hold
  *	at most rq->buflen -1 bytes.  It is the fillers responsibility to ensure
  *	the ringq is never filled such that servp == endp.
@@ -730,8 +778,8 @@ typedef struct {
 #endif /* B_STATS */
 
 /*
- *	Block classes are: 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 
- *					   16384, 32768, 65536 
+ *	Block classes are: 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192,
+ *					   16384, 32768, 65536
  */
 typedef struct {
 	union {
@@ -780,7 +828,12 @@ typedef int sym_fd_t;						/* Returned by symOpen */
 #define EMF_SCRIPT_EJSCRIPT 		2		/* Ejscript */
 #define EMF_SCRIPT_MAX	 			3
 
+#ifndef MAXINT
 #define	MAXINT		INT_MAX
+#endif
+
+
+
 #define BITSPERBYTE 8
 #define BITS(type)	(BITSPERBYTE * (int) sizeof(type))
 #define	STRSPACE	T("\t \n\r\t")
@@ -813,13 +866,21 @@ extern int		cronFree(cron_t *cp);
 /*                                 SOCKET                                     */
 /******************************************************************************/
 /*
- *	Socket flags 
+ *	Socket flags
  */
 
 #if ((defined (WIN) || defined (CE)) && defined (WEBS))
+#ifndef EWOULDBLOCK
 #define EWOULDBLOCK             WSAEWOULDBLOCK
+#endif
+
+#ifndef ENETDOWN
 #define ENETDOWN                WSAENETDOWN
+#endif
+
+#ifndef ECONNRESET
 #define ECONNRESET              WSAECONNRESET
+#endif
 #endif /* (WIN || CE) && WEBS) */
 
 #define SOCKET_EOF				0x1		/* Seen end of file */
@@ -849,7 +910,7 @@ extern int		cronFree(cron_t *cp);
 /*
  *	Handler event masks
  */
-#define SOCKET_READABLE			0x2		/* Make socket readable */ 
+#define SOCKET_READABLE			0x2		/* Make socket readable */
 #define SOCKET_WRITABLE			0x4		/* Make socket writable */
 #define SOCKET_EXCEPTION		0x8		/* Interested in exceptions */
 #define EMF_SOCKET_MESSAGE		(WM_USER+13)
@@ -861,7 +922,7 @@ extern int		cronFree(cron_t *cp);
 #endif /* LITTLEFOOT */
 
 typedef void 	(*socketHandler_t)(int sid, int mask, int data);
-typedef int		(*socketAccept_t)(int sid, char *ipaddr, int port, 
+typedef int		(*socketAccept_t)(int sid, char *ipaddr, int port,
 					int listenSid);
 typedef struct {
 	char			host[64];				/* Host name */
@@ -1031,7 +1092,7 @@ extern int		scriptEval(int engine, char_t *cmd, char_t **rslt, int chan);
 
 extern void		socketClose();
 extern void		socketCloseConnection(int sid);
-extern void		socketCreateHandler(int sid, int mask, socketHandler_t 
+extern void		socketCreateHandler(int sid, int mask, socketHandler_t
 					handler, int arg);
 extern void		socketDeleteHandler(int sid);
 extern int		socketEof(int sid);
@@ -1042,7 +1103,7 @@ extern int		socketGets(int sid, char_t **buf);
 extern int		socketGetPort(int sid);
 extern int		socketInputBuffered(int sid);
 extern int		socketOpen();
-extern int 		socketOpenConnection(char *host, int port, 
+extern int 		socketOpenConnection(char *host, int port,
 					socketAccept_t accept, int flags);
 extern void 	socketProcess(int hid);
 extern int		socketRead(int sid, char *buf, int len);
@@ -1053,7 +1114,7 @@ extern int 		socketSelect(int hid, int timeout);
 extern int 		socketGetHandle(int sid);
 extern int 		socketSetBlock(int sid, int flags);
 extern int 		socketGetBlock(int sid);
-extern int 		socketAlloc(char *host, int port, socketAccept_t accept, 
+extern int 		socketAlloc(char *host, int port, socketAccept_t accept,
 					int flags);
 extern void 	socketFree(int sid);
 extern int		socketGetError();
@@ -1080,9 +1141,9 @@ extern void 	symSubClose();
 
 extern void		trace(int lev, char_t *fmt, ...);
 extern void		traceRaw(char_t *buf);
-extern void		(*traceSetHandler(void (*function)(int level, char_t *buf))) 
+extern void		(*traceSetHandler(void (*function)(int level, char_t *buf)))
 					(int level, char_t *buf);
- 
+
 extern value_t 	valueInteger(long value);
 extern value_t	valueString(char_t *value, int flags);
 extern value_t	valueErrmsg(char_t *value);

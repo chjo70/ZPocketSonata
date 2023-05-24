@@ -29,7 +29,7 @@ bool CMSSQL::m_bTryConnect=false;
 void CMSSQL::CheckConnection()
 {
 	m_bRet = true;
-	if( m_pMyODBC->IsConnected() != TRUE ) {
+	if( m_pMyODBC->IsConnected() != true ) {
 		m_iErrorException = SQL_ERROR_DISCONNECTION;
 		throw m_iErrorException;
 	}

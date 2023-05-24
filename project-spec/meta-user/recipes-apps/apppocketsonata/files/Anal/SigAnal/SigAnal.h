@@ -33,7 +33,6 @@ private:
 
     std::string m_strAnalDirectory;
 
-
 #if defined(_MSSQL_) || defined(_SQLITE_)
     char *m_pszSQLString;
 #endif
@@ -86,7 +85,10 @@ protected:
 
 private:
 
+
 protected:
+    void DeleteAllFiles();
+
 #ifdef _MSSQL_
     CODBCDatabase *GetCODBCDatabase();
 #endif
@@ -94,7 +96,7 @@ protected:
     void SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_STATIC_PDWDATA *pPDWData, int iPLOBID, bool bSaveFile );
     void SaveRemainedPdwFile();
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
-    void InsertToDB_LOB( SRxLOBData *pLOBData );
+    bool InsertToDB_LOB( SRxLOBData *pLOBData );
 
 public:
     CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName );
@@ -126,7 +128,7 @@ public:
     void DISP_FineLOB(SRxLOBData *pLOB);
 
 	unsigned int GetOpInitID();
-    void MakeAnalDirectory( UNION_HEADER* pUniHeader );
+    void MakeAnalDirectory( UNION_HEADER* pUniHeader, bool bLog=true );
 
     inline const char* GetAnalDirectory() {
         return m_strAnalDirectory.c_str();
@@ -371,6 +373,8 @@ public:
 
 
     virtual int GetCoGroup() = 0;
+
+    // _DEFINE_LOG_VIRTUAL_FUNCTION
 
 };
 

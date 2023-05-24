@@ -56,13 +56,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_LOG_;_RESET_PDWID_;_MSSQL_;_POCKETSONATA_1;_XBAND_1;_701_1;_SONATA_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_RESET_PDWID_;_MSSQL_;_POCKETSONATA_;_XBAND_1;_701_1;_SONATA1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>
       </AdditionalOptions>
       <DisableSpecificWarnings>4828; 4819</DisableSpecificWarnings>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
@@ -220,7 +220,6 @@ REM :END</Command>
     <ClCompile Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.cpp" />
     <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp" />
     <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp" />
-    <ClCompile Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\ELDecoder.cpp" />
     <ClCompile Include="..\..\files\Anal\MIDAS\Midas.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
@@ -251,10 +250,7 @@ REM :END</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\..\files\Utils\clog.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
-    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clog.cpp" />
     <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -290,7 +286,6 @@ REM :END</Command>
     <ClInclude Include="..\..\files\Anal\INC\structs.h" />
     <ClInclude Include="..\..\files\Anal\INC\system.h" />
     <ClInclude Include="..\..\files\Anal\INC\TaskMsg.h" />
-    <ClInclude Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\ELDecoder.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\PDW2SP370.h" />

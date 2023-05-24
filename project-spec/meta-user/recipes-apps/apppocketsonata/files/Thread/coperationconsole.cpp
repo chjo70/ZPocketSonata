@@ -43,7 +43,7 @@ COperationConsole* COperationConsole::m_pInstance[2] = { nullptr, nullptr } ;
  */
 COperationConsole::COperationConsole( int iKeyId, int iIndex, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData, true )
 {
-   LOGENTRY;
+   //LOGENTRY;
 
    m_iIndex = iIndex;
 }
@@ -77,7 +77,7 @@ void COperationConsole::ReleaseInstance()
     {
         int iIndex;
 
-        LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
+        //LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
 
         iIndex = m_iIndex;
         delete m_pInstance[iIndex];
@@ -91,7 +91,7 @@ void COperationConsole::ReleaseInstance()
  */
 void COperationConsole::Run()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     CThread::Run();
 
@@ -108,7 +108,7 @@ void COperationConsole::Run()
  */
 void COperationConsole::_routine()
 {
-    LOGENTRY;
+    //LOGENTRY;
     m_pMsg = GetRecvDataMessage();
 
     while( true ) {
@@ -188,12 +188,12 @@ void COperationConsole::_routine()
                         break;
 
                     default:
-                        LOGMSG2( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                        //LOGMSG2( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
                         break;
                 }
             }
             else {
-                LOGMSG1( enError, "메시지 흐름에 잘못된 명령[0x%X] 입니다 !", m_pMsg->uiOpCode );
+                //LOGMSG1( enError, "메시지 흐름에 잘못된 명령[0x%X] 입니다 !", m_pMsg->uiOpCode );
             }
         }
     }
@@ -259,7 +259,7 @@ bool COperationConsole::IsValidLanData( STR_MessageData *pMsg )
     bool bRet = true;
 
 #ifndef _CGI_LIST_
-    ENUM_MODE enMode, enModeOfMessage;
+    ENUM_MODE enMode; //, enModeOfMessage;
 
     enMode = g_pTheTaskMngr->GetMode();
     switch( pMsg->uiOpCode ) {

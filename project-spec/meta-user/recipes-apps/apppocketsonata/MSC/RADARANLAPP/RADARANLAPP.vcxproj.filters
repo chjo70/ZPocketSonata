@@ -163,11 +163,11 @@
     <ClInclude Include="..\..\files\ODBC\odbccore.h">
       <Filter>소스 파일\ODBC</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Utils\clog.h">
-      <Filter>소스 파일\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\RADARANL\_CED_Define.h">
       <Filter>소스 파일\DLL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clog.h">
+      <Filter>소스 파일\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

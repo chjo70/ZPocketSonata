@@ -129,12 +129,12 @@ bool CHWIO::WriteReg(uint8_t sel, uint32_t offset, uint32_t value)
     bool bRet = true;
 
     if( sel >= XMEM_COUNT || xmem[sel].ullogical == 0) {
-        LOGMSG3( enError, "Error of WriteReg(%d, %d) = 0x%X !!!" , sel, offset, value );
+        Log( enError, "Error of WriteReg(%d, %d) = 0x%X !!!" , sel, offset, value );
         bRet = false;
     }
     else {
         *(volatile uint32_t *)(xmem[sel].ullogical + (offset)) = value;
-        LOGMSG3( enNormal, "WriteReg(%d, %d) = 0x%X !!!" , sel, offset, value );
+        Log( enNormal, "WriteReg(%d, %d) = 0x%X !!!" , sel, offset, value );
 
     }
 
@@ -224,7 +224,7 @@ bool CHWIO::PendingFromInterrupt(xuio_t *uio)
 {
     bool bRet=true;
 
-    int pending = 0;
+    //int pending = 0;
     
     //printf( "\n uio->fd[%d]\n", uio->fd );
     if( uio->iFd != -1 ) {

@@ -21,7 +21,7 @@
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
 #ifndef MAX_PDW
-#define MAX_PDW							(4096)
+//#define MAX_PDW						(4096)
 #endif
 
 
@@ -63,30 +63,29 @@ typedef enum {
 #ifndef _MAIN_GLOBALS_
 #ifndef _ENUNIT_TYPE
 #define _ENUNIT_TYPE
-//extern __declspec(dllimport) ENUM_UnitType g_enUnitType;
+extern __declspec(dllimport) ENUM_UnitType g_enUnitType;
 #endif
 #endif
-
-
-
-// #if TOOL==diab
-// #pragma pack( 1 )
-// #else
-// #pragma pack( push, 1 )
-// #endif
 
 #pragma pack( push, 1 )
 
+#ifndef _STR_STAT_BITMAP
+#define _STR_STAT_BITMAP
+struct STR_STAT_BITMAP {
+    unsigned int CwPulse : 1;
+    unsigned int Pmop : 1;
+    unsigned int Fmop : 1;
+    unsigned int FalsePdw : 1;
+    unsigned int FmopDir : 2;
+};
+#endif
+
 #ifndef _UNI_PDW_ETC
 #define _UNI_PDW_ETC
-typedef union {
-    struct {
-        float fPh1;
-        float fPh2;
-        float fPh3;
-        float fPh4;
-    } el;
+union UNI_PDW_ETC {
+    unsigned int uiCh[5];
 
+#if defined(_GRAPH_) || defined(_XBAND_)
     struct {
         float fPh1;
         float fPh2;
@@ -94,15 +93,40 @@ typedef union {
         float fPh4;
         float fPh5;
     } xb;
+#endif
 
+#if defined(_GRAPH_) || defined(_ELINT_)
     struct {
-        int iPMOP;
-        int iFMOP;
+        float fPh1;
+        float fPh2;
+        float fPh3;
+        float fPh4;
 
+    } el;
+#endif
+
+#if defined(_GRAPH_) || defined(_POCKETSONATA_)
+    struct {
         int iChannel;
-    } ps;
 
-} UNI_PDW_ETC ;
+        union UNI_STAT {
+            // unsigned int uixWord;
+
+            STR_STAT_BITMAP stStrBitMap;
+
+        } x;
+
+    } ps;
+#endif
+
+#if defined(_GRAPH_) || defined(_701_)
+    struct {
+        int iChannel;
+        int iDirectionValid;
+
+    } _701;
+#endif
+};
 
 #endif
 

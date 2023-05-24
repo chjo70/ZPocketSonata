@@ -67,8 +67,6 @@ CSingleClient::CSingleClient( int iKeyId, const char *pClassName, unsigned short
 
     m_usPort = usPort;
 
-    //char *pszString;
-
     if( pServerAddress == NULL ) {
         m_bServer = true;
         m_szServerAddress[i][0] = 0;
@@ -194,7 +192,7 @@ void CSingleClient::_routine()
 {
 
     if( m_bServer == true ) {
-        LOGMSG( enDebug, "[서버] 소켓을 설정 합니다." );
+        Log( enDebug, "[서버] 소켓을 설정 합니다." );
         RunServer();
     }
     else {
@@ -206,7 +204,7 @@ void CSingleClient::_routine()
         }
         sprintf( & buffer[iIndex], "%s" , m_szServerAddress[i] );
 
-        //LOGMSG3( enDebug, "[클라이언트:%s] [%s,%d] 연결하려 합니다.", GetThreadName(), buffer, m_iPort );
+        //Log( enDebug, "[클라이언트:%s] [%s,%d] 연결하려 합니다.", GetThreadName(), buffer, m_iPort );
         RunClient();
     }
 
@@ -256,7 +254,7 @@ void CSingleClient::RunClient()
             ++ iServerSwitch;
         }
 
-        LOGMSG3( enDebug, "[클라이언트:%s] [%s/%d] 연결하려 합니다.", GetThreadName(), m_szServerAddress[iServerSwitch], m_usPort );
+        Log( enDebug, "[클라이언트:%s] [%s/%d] 연결하려 합니다.", GetThreadName(), m_szServerAddress[iServerSwitch], m_usPort );
 
         //type of socket created
 #ifdef _MSC_VER
@@ -282,7 +280,7 @@ void CSingleClient::RunClient()
             sleep( 1 );
         }
         else {
-            LOGMSG3( enDebug, "[%s/%d/%d]으로 연결 성공했습니다.", m_szServerAddress[iServerSwitch], m_usPort, m_uiSocket );
+            Log( enDebug, "[%s/%d/%d]으로 연결 성공했습니다.", m_szServerAddress[iServerSwitch], m_usPort, m_uiSocket );
             bHeader = true;
             iTotalRead = 0;
 
@@ -345,7 +343,7 @@ void CSingleClient::RunClient()
                                         Log( enError, "msgsnd 실패" );
                                     }
 #else
-                                    LOGMSG( enError, "타스크/쓰레드간 메시지 통신방안을 구성해야 합니다." );
+                                    Log( enError, "타스크/쓰레드간 메시지 통신방안을 구성해야 합니다." );
 #endif
                                 }
                                 else {
@@ -423,7 +421,7 @@ void CSingleClient::RunClient()
                                 }
                                 else {
                                     if( sndMsg.uiOpCode == enREQ_MODE && sndMsg.x.uiData == enREADY_MODE ) {
-                                       // LOGMSG( enError, "대기 명령으로 소켓을 닫습니다." );
+                                       // Log( enError, "대기 명령으로 소켓을 닫습니다." );
                                        // break;
                                     }
                                     // DisplayMsg( & sndMsg );
@@ -521,7 +519,7 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
 {
     STR_MessageData sndMsg;
 
-    LOGMSG1( enError, "서버(%s)가 끊겼습니다.", pServerIPAddress );
+    Log( enError, "서버(%s)가 끊겼습니다.", pServerIPAddress );
 
     CloseSocket();
 
@@ -536,7 +534,6 @@ void CSingleClient::OnDisconnected( char *pServerIPAddress )
     sndMsg.iArrayIndex = -1;
     sndMsg.uiArrayLength = 0;
     sndMsg.uiDataLength = sizeof(int);
-    sndMsg.uiEchoBit = 0;
 
 #ifdef _MSC_VER
     m_ptheRecLan->QMsgSnd( & sndMsg, (void *) NULL, GetThreadName() );
@@ -977,6 +974,26 @@ void CSingleClient::CloseSocket( struct sockaddr_in *pAddress, int *pClientSocke
 }
 
 /**
+ * @brief     SendLan
+ * @param     UINT uiOpCode
+ * @param     char * pData
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-09 15:18:43
+ * @warning
+ */
+int CSingleClient::SendLan( UINT uiOpCode, char *pData )
+{
+    UINT uiLength;
+
+    uiLength = strlen( pData );
+    return SendLan( uiOpCode, ( void * ) pData, uiLength );
+
+}
+
+/**
  * @brief     연결된 서버에 데이터를 송신한다.
  * @param     UINT uiOpCode
  * @param     void * pData
@@ -1063,7 +1080,7 @@ void CSingleClient::DisplayMsg(STR_LAN_HEADER *pHeader, void *pData, bool bSend 
     CCommonUtils::MakeStringMessage( &strMessage , pHeader->uiOpCode, ! bSend );
 
     //LOGMSG4( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d], Data32[0x%x]" , szOpcode, pHeader->uiOpCode, pHeader->uiLength, (UINT) *pData);
-	LOGMSG3(enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", strMessage.c_str(), pHeader->uiOpCode, pHeader->uiLength );
+	Log(enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", strMessage.c_str(), pHeader->uiOpCode, pHeader->uiLength );
 
 }
 
@@ -1084,7 +1101,7 @@ void CSingleClient::CloseSocket()
         unsigned int uiSocket = m_uiSocket;
         m_uiSocket = 0;
 
-        LOGMSG( enNormal, "소켓을 정상적으로 닫습니다." );
+        Log( enNormal, "소켓을 정상적으로 닫습니다." );
 #ifdef _MSC_VER
         shutdown( uiSocket, SD_BOTH );
         closesocket( uiSocket );
@@ -1094,7 +1111,7 @@ void CSingleClient::CloseSocket()
 #endif
     }
     else {
-        LOGMSG( enError, "두번 이상 소켓을 닫았습니다." );
+        Log( enError, "두번 이상 소켓을 닫았습니다." );
     }
 
     // m_uiSocket = 0;

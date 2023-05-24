@@ -227,7 +227,7 @@ typedef struct {
 
 #ifdef _MSC_VER
 #else
-static pthread_t 	g_pThread_ID_ISR[XUIO_INTR_COUNT];
+// static pthread_t 	g_pThread_ID_ISR[XUIO_INTR_COUNT];
 #endif
 
 //void reg_write_64(ui64 *logical, ui32 offset, ui32 value);

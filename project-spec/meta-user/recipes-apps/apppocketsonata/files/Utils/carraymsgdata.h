@@ -10,6 +10,8 @@
 // 랜 데이터 비교 횟수 이후 에러 통보
 #define MAX_TRY_MARK                    (20)
 
+//#include "cthread.h"
+
 class CArrayMsgData
 {
 private:
@@ -40,6 +42,7 @@ private:
 public:
     void Init();
 
+    //_DEFINE_LOG_VIRTUAL_FUNCTION
 
 };
 

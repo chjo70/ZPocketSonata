@@ -32,7 +32,7 @@ void SetUnitType();
 
 
 void UTF8ToMultibyte(char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t *p);
-int MultiByteToUTF8(wchar_t *pszUniCode, int iMaxSizeOfUnicode, char *pszMultiByte);
+int MultiByteToUTF8(wchar_t *pszUniCode, char *pszMultiByte);
 
 UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold);
 
@@ -45,7 +45,7 @@ UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold);
  * @param     T x
  * @param     T y
  * @param     T thresh_value
- * @return    BOOL
+ * @return    bool
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -53,18 +53,37 @@ UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold);
  * @warning
  */
 template <typename T>
-BOOL CompDOADiff(T x, T y, T thresh_value )
+bool CompDOADiff(T x, T y, T thresh_value )
 {
     T tdiff;
-    BOOL bRet;
+    bool bRet;
 
     tdiff = abs(x - y);
 
     if( tdiff <= thresh_value || ( 360 - tdiff ) <= thresh_value ) {
-        bRet = TRUE;
+        bRet = true;
     }
     else {
-        bRet = FALSE;
+        bRet = false;
+    }
+
+    return bRet;
+
+}
+
+template <typename T>
+bool CompEncodeDOADiff( T x, T y, T thresh_value )
+{
+    T tdiff;
+    bool bRet;
+
+    tdiff = abs( x - y );
+
+    if( tdiff <= thresh_value || ( PDW_DOA_MAX - tdiff ) <= thresh_value ) {
+        bRet = true;
+    }
+    else {
+        bRet = false;
     }
 
     return bRet;
@@ -77,7 +96,7 @@ BOOL CompDOADiff(T x, T y, T thresh_value )
  * @param     T y1
  * @param     T y2
  * @param     T thresh_value
- * @return    BOOL
+ * @return    bool
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -85,19 +104,19 @@ BOOL CompDOADiff(T x, T y, T thresh_value )
  * @warning
  */
 template <typename T>
-BOOL CompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
+bool CompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
 {
     //T tDiff; // , tY1, tY2;
-    BOOL bRet;
+    bool bRet;
 
     //tY1 = ( ( y1 - thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
     //tY2 = ( ( y2 + thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
 
     if( ( tx >= ty1 && tx <= ty2 ) || ( ( tx >= ty1 && tx <= (PDW_DOA_MAX-1) ) || ( tx >= 0 && tx <= ty2 ) ) ) {
-        bRet = TRUE;
+        bRet = true;
     }
     else {
-        bRet = FALSE;
+        bRet = false;
     }
 
     return bRet;
@@ -105,19 +124,19 @@ BOOL CompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
 }
 
 template <typename T>
-BOOL CompDOAMarginDiff( T x, T y1, T y2 )
+bool CompDOAMarginDiff( T x, T y1, T y2 )
 {
     //T tDiff; // , tY1, tY2;
-    BOOL bRet;
+    bool bRet;
 
     //tY1 = ( ( y1 - thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
     //tY2 = ( ( y2 + thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
 
     if( ( x >= y1 && x <= y2 ) || ( ( x >= y1 && x <= 0xFFFFFF ) || ( x >= 0 && x <= y2 ) ) ) {
-        bRet = TRUE;
+        bRet = true;
     }
     else {
-        bRet = FALSE;
+        bRet = false;
     }
 
     return bRet;
@@ -130,7 +149,7 @@ BOOL CompDOAMarginDiff( T x, T y1, T y2 )
  * @param     T x2
  * @param     T priMean
  * @param     T margin
- * @return    BOOL
+ * @return    bool
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -138,19 +157,19 @@ BOOL CompDOAMarginDiff( T x, T y1, T y2 )
  * @warning
  */
 template <typename T>
-BOOL IsSamePulse( T x1, T x2, T priMean, T margin )
+bool IsSamePulse( T x1, T x2, T priMean, T margin )
 {
     T diffToa;
-    BOOL bRet=TRUE;
+    bool bRet=true;
 
     if( priMean > margin && x2 > x1 ) {
         diffToa = ( x2 - x1 ) % priMean;
         if( diffToa > margin && diffToa < ( priMean - margin ) ) {
-            bRet = FALSE;
+            bRet = false;
         }
     }
     else {
-        bRet = FALSE;
+        bRet = false;
     }
 
     return bRet;
@@ -161,7 +180,7 @@ BOOL IsSamePulse( T x1, T x2, T priMean, T margin )
  * @param     T x
  * @param     T y
  * @param     T thresh
- * @return    BOOL
+ * @return    bool
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -169,18 +188,18 @@ BOOL IsSamePulse( T x1, T x2, T priMean, T margin )
  * @warning
  */
 template <typename T>
-BOOL CompMeanDiff( T x, T y, T thresh )
+bool CompMeanDiff( T x, T y, T thresh )
 {
     T diff;
-    BOOL bRet;
+    bool bRet;
 
     diff = _diffabs<T>( x, y );
 
     if( diff <= thresh ) {
-        bRet = TRUE;
+        bRet = true;
     }
     else {
-        bRet = FALSE;
+        bRet = false;
     }
 
     return bRet;
@@ -256,7 +275,7 @@ float SDevInArray(T *series, UINT co, float mean)
  * @param     T * pSeries2
  * @param     int coSeries
  * @param     T margin
- * @return    BOOL
+ * @return    bool
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -264,7 +283,7 @@ float SDevInArray(T *series, UINT co, float mean)
  * @warning
  */
 template <typename T>
-BOOL ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
+bool ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
 {
     int j, k;
     T iDiff;
@@ -272,28 +291,28 @@ BOOL ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
 
     T *pSeries;
 
-    BOOL bRet=FALSE;
+    bool bRet=false;
 
     if( coSeries == 0 ) {
-        // bRet = FALSE;
+        // bRet = false;
     }
     else {
         for( j=0 ; j < coSeries ; ++j ) {
             pSeries = pSeries2;
-            bRet = TRUE;
+            bRet = true;
             iDiff = 0;
             for( k=j ; k < coSeries+j ; ++k ) {
                 index1 = k % coSeries;
                 bRet = CompMeanDiff<T>( pSeries1[index1], *pSeries, margin );
-                if( FALSE == bRet ) {
+                if( false == bRet ) {
                     break;
                 }
                 iDiff += _diffabs<T>( pSeries1[index1], *pSeries );
                 ++ pSeries;
             }
 
-            if( TRUE == bRet ) {
-                // bRet = TRUE;
+            if( true == bRet ) {
+                // bRet = true;
                 break;
             }
 
@@ -312,7 +331,7 @@ BOOL ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
  * @param     int coSeries1
  * @param     int coSeries2
  * @param     T margin
- * @return    BOOL
+ * @return    bool
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -320,17 +339,17 @@ BOOL ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
  * @warning
  */
 template <typename T>
-BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T margin )
+bool CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T margin )
 {
     int i, j;
     int index1;
 
     T *pSeries;
 
-    BOOL bRet=FALSE;
+    bool bRet=false;
 
     if( coSeries1 == 0 || coSeries2 == 0 ) {
-        // bRet = FALSE;
+        // bRet = false;
     }
 
     else {
@@ -343,14 +362,14 @@ BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
                 index1 = i;
                 for( j=0 ; j < coSeries1 ; ++j ) {
                     bRet = CompMeanDiff( pSeries1[index1], *pSeries, margin );
-                    if( bRet == FALSE ) {
+                    if( bRet == false ) {
                         break;
                     }
                     ++ pSeries;
                     ++ index1;
                 }
 
-                if( bRet == TRUE ) {
+                if( bRet == true ) {
                     break;
                 }
             }
@@ -361,14 +380,14 @@ BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
                 index1 = i;
                 for( j=0 ; j < coSeries2 ; ++j ) {
                     bRet = CompMeanDiff( pSeries1[index1], *pSeries, margin );
-                    if( bRet == FALSE ) {
+                    if( bRet == false ) {
                         break;
                     }
                     ++ pSeries;
                     ++ index1;
                 }
 
-                if( bRet == TRUE ) {
+                if( bRet == true ) {
                     break;
                 }
             }
@@ -381,27 +400,27 @@ BOOL CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
 }
 
 //////////////////////////////////////////////////////////////////////////
-/*! \brief    입력 값 범위에 임계값을 고려한 입력 값이 이내이면 TRUE, 그렇지 않으면 FALSE를 리턴한다.
+/*! \brief    입력 값 범위에 임계값을 고려한 입력 값이 이내이면 true, 그렇지 않으면 false를 리턴한다.
     \author   조철희
     \param    x 인자형태 int
     \param    iy1 인자형태 int
     \param    iy2 인자형태 int
     \param    thresh 인자형태 int
-    \return   BOOL
+    \return   bool
     \version  0.0.1
     \date     2008-02-19 17:44:30
     \warning
 */
 template <typename T>
-BOOL CompMarginDiff( T x, T iy1, T iy2, T thresh )
+bool CompMarginDiff( T x, T iy1, T iy2, T thresh )
 {
-    BOOL bRet;
+    bool bRet;
 
     if( ( x >= iy1- thresh) && ( x <= iy2+ thresh) ) {
-        bRet = TRUE;
+        bRet = true;
     }
     else {
-        bRet = FALSE;
+        bRet = false;
     }
     return bRet;
 }

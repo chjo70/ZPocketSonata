@@ -1,4 +1,4 @@
-//Author :- Nish [nishforever@vsnl.com]
+﻿//Author :- Nish [nishforever@vsnl.com]
 
 #ifdef _WIN32
 #include <io.h>
@@ -23,7 +23,7 @@
 #define DWORD ULONG 
 
 #define _write write
-#define _open(A,B) open(A,B,0666)
+//#define _open(A,B) open(A,B,0666)
 #define _read read
 #define _close close
 #define _utime utime
@@ -46,12 +46,15 @@
 #define _O_TRUNC 0
 #define _S_IWRITE 0
 
+#elif _MFC_VER
+#define open _open
+
+#endif
+
 #ifdef _WIN32
 #define	FOLDER_DELIMETER	(\)
 #else
 #define	FOLDER_DELIMETER	/
-#endif
-
 #endif
 
 
@@ -64,7 +67,10 @@
 #define TAR_MAX_FILES 1024
 #define NBUFFSIZE 8092
 
-#define _MAX_PATH   260 /* max. length of full pathname */
+#ifndef _MAX_PATH
+#define _MAX_PATH   1024 /* max. length of full pathname */
+#endif
+
 #define _MAX_DRIVE  3   /* max. length of drive component */
 #define _MAX_DIR    256 /* max. length of path component */
 #define _MAX_FNAME  256 /* max. length of file name component */

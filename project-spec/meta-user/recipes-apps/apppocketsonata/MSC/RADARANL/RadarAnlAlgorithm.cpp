@@ -6,6 +6,7 @@
 #define _MAIN_
 #define _MAIN_GLOBALS_
 
+
 #include "../../files/Anal/OFP_Main.h"
 
 #include "../../files/Anal/SigAnal/SysPara.h"
@@ -14,6 +15,8 @@
 #include "../../files/Anal/EmitterMerge/ELEmitterMergeMngr.h"
 
 #include "../../files/Include/globals.h"
+
+#include "../../files/Anal/INC/PDW.h"
 
 #include "RadarAnlAlgorithm.h"
 
@@ -60,8 +63,10 @@ namespace RadarAnlAlgotirhm
             //SetLocal( bLocal );
 		}
 		else {
-            //SetLocal( true );
+            SetLocal( true );
 		}
+
+        SetLocal( true );
 
         if( g_pTheLog == NULL ) {
             g_pTheLog = new CLog();
@@ -78,7 +83,7 @@ namespace RadarAnlAlgotirhm
 #else
 			gpEmitterMergeMngr = new CELEmitterMergeMngr( bDBThread, NULL );
 #endif
-			
+
 		}
 
 		return;
@@ -304,7 +309,7 @@ namespace RadarAnlAlgotirhm
 #ifdef _POCKETSONATA_
 
 	/**
-     * @brief     위협 관리/식별 함수에 대한 위협 결과를 얻을때 사용한다. Start() 후에 
+     * @brief     위협 관리/식별 함수에 대한 위협 결과를 얻을때 사용한다. Start() 후에
      * @param     std::vector<SRxLOBData> * pVecLOBData
      * @param     std::vector<SRxABTData> * pVecABTData
      * @param     std::vector<SRxAETData> * pVecAETData
@@ -315,7 +320,7 @@ namespace RadarAnlAlgotirhm
      * @date      2022-10-19 16:23:39
 	 * @warning
 	 */
-    bool RadarAnlAlgotirhm::GetResult(std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxABTData> *pVecABTData, std::vector<SRxAETData> *pVecAETData) 
+    bool RadarAnlAlgotirhm::GetResult(std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxABTData> *pVecABTData, std::vector<SRxAETData> *pVecAETData)
 	{
         return false;
 	}

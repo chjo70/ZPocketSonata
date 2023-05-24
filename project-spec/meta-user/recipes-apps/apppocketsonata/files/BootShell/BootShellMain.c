@@ -1,11 +1,13 @@
-/*
+﻿/*
  * BootShellMain.c
  *
  *  Created on: Apr 13, 2021
  *      Author: ELS
  */
 
+//#include "pch.h"
 
+#ifdef __VXWORKS__
 #include <bootLib.h>
 #include <private/adrSpaceLibP.h>
 
@@ -22,7 +24,6 @@
 
 
 #include <ioLib.h>
-#include <vxWorks.h>
 #include <vxLib.h>
 #include <sysLib.h>
 #include <taskLib.h>
@@ -32,38 +33,72 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "BootShellMain.h"
-
 #include "nfs/nfsCommon.h"
 
+#endif
+
+#include "BootShellMain.h"
+
+void _TRACE( char *format, ... );
+
+
+#ifdef __VXWORKS__
 STATUS usrBootLineCrack (char * bootString, BOOT_PARAMS *pParams);
 
-extern BOOT_PARAMS stBootParams;
+extern BOOT_PARAMS g_stBootParams;
+
+#elif defined(_MSC_VER)
+#define printf _TRACE
+
+
+#endif
 
 // GoAhead 시작 함수 정의
 int websvxmain(int argc, char **argv);
 
 void Main()
-{   
+{
 
     printf("\n");
     // NFS 서버 호출
     //nfsExport( "/tffs0", 100, FALSE, 0 );
     //nfsExportShow( "localhost" );
-    
+
     //////////////////////////////////////////////////////////////////////////
     LoadBootParameter();
-	
+
     printf( "\n 소형 전자전장비(APECS-II) 자체개발, 부트 쉘 프로그램, %s, 전자전 연구소, 2021., 2022., 2023." , VERSION );
-    printf( "\n 컴파일 날짜 : %s" , creationDate );   
-    
+
+#ifdef __VXWORKS
+    printf( "\n 컴파일 날짜 : %s" , creationDate );
+
+#endif
+
+#ifdef __VXWORKS__
 	taskSpawn( "tBootShell", tPRI_BOOTSHEL, VX_STDIO|VX_SUPERVISOR_MODE, 64000, (FUNCPTR) BootShellMain, 0,0,0,0,0,0,0,0,0,0 );
-    
+
 #ifdef WEBS
 	taskSpawn( "tHttpd", tPRI_HTTPDAEMON, VX_STDIO|VX_SUPERVISOR_MODE, 64000, (FUNCPTR) websvxmain, 0,0,0,0,0,0,0,0,0,0 );
-#endif    
-	
+#endif
+
+#elif WIN
+    BootShellMain();
+
+#endif
+
 }
+
+#ifdef WIN
+int main()
+{
+
+    Main();
+    return 0;
+
+}
+#endif
+
+
 
 /**
  * @brief		부투 페라미터 값을 출력 합니다.
@@ -71,10 +106,11 @@ void Main()
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2009-07-29 16:02:14
- * @warning		
+ * @warning
  */
 void LoadBootParameter()
 {
+#ifdef __VXWORKS__
 	// boot parameter 를 읽어온다.
 	char *bootString=(char *) BOOT_LINE_ADRS;
 
@@ -84,16 +120,18 @@ void LoadBootParameter()
     }
 
     /* interpret boot command */
-	if( usrBootLineCrack( BOOT_LINE_ADRS, & stBootParams ) != OK ) {
+	if( usrBootLineCrack( BOOT_LINE_ADRS, & g_stBootParams ) != OK ) {
 		printf( "\n [W] 부트 페라미터값이 잘못 설정되었습니다 !" );
 	}
     else {
         //printf( "Host IP Address : [%s]" , stBootParams.had );
 
-        if( strcmp( SNTP_SERVER_IP, stBootParams.had) != 0 ) {
+        if( strcmp( DEFAULT_SNTP_SERVER_IP, g_stBootParams.had) != 0 ) {
             printf( "\n 배터리 DRAM이 장착이 안 되어서, uBoot 쉘에서 bootParameter 설정 값을 아래와 같이 직접 작업을 해야 합니다 !!!" );
             printf( "\n setenv bootargs \"memac(0,0)host:vxWorks h=$serverip e=$ipaddr:ffffff00 g=$gatewayip u=t2080 pw=1234 f=0x408 tn=t2080 tn=t2080\" ");
         }
-        
+
     }
+#endif
+
 }

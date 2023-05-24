@@ -65,14 +65,14 @@ void CKGroup::Init()
 
 /**
  * @brief     추적 신호를 그룹화하기 위해 초기화를 수행한다.
- * @return    BOOL
+ * @return    bool
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2005-07-28 17:25:17
  * @warning
  */
-BOOL CKGroup::MakeKnownGroup()
+bool CKGroup::MakeKnownGroup()
 {
 	// 방위 및 주파수 그룹화 초기화
     m_AoaGroups.uiCount = 0;

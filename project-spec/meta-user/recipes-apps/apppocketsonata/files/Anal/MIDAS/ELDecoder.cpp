@@ -512,16 +512,16 @@ double ELDecoder::DecodeToa(unsigned long long int i_llilToa)
  * @date      2023-02-02 17:49:10
  * @warning
  */
-void ELDecoder::MakeTextTimeString( char *pString, time_t ti, unsigned int millisec )
-{
-	struct tm *pToday;
-
-	pToday = localtime( & ti );
-
-	if( pToday != NULL ) {
-		sprintf( pString, "%04d_%02d_%02d %02d_%02d_%02d_%03d", pToday->tm_year+1900, pToday->tm_mon+1, pToday->tm_mday, pToday->tm_hour, pToday->tm_min, pToday->tm_sec, millisec );
-	}
-}
+// void ELDecoder::MakeTextTimeString( char *pString, time_t ti, unsigned int millisec )
+// {
+// 	struct tm *pToday;
+// 
+// 	pToday = localtime( & ti );
+// 
+// 	if( pToday != NULL ) {
+// 		sprintf( pString, "%04d_%02d_%02d %02d_%02d_%02d_%03d", pToday->tm_year+1900, pToday->tm_mon+1, pToday->tm_mday, pToday->tm_hour, pToday->tm_min, pToday->tm_sec, millisec );
+// 	}
+// }
 
 /**
  * @brief     MakeTimeString
@@ -535,16 +535,16 @@ void ELDecoder::MakeTextTimeString( char *pString, time_t ti, unsigned int milli
  * @date      2017-12-31, 오전 12:45 
  * @warning   
  */
-void ELDecoder::MakeTimeString( char *pString, time_t ti, unsigned int millisec )
-{
-	struct tm *pToday=nullptr;
-
-	pToday = localtime( & ti );
-
-	if( pToday != NULL) {
-		sprintf( pString, "%04d/%02d/%02d %02d:%02d:%02d.%03d", pToday->tm_year+1900, pToday->tm_mon+1, pToday->tm_mday, pToday->tm_hour, pToday->tm_min, pToday->tm_sec, millisec );
-	}
-}
+// void ELDecoder::MakeTimeString( char *pString, time_t ti, unsigned int millisec )
+// {
+// 	struct tm *pToday=nullptr;
+// 
+// 	pToday = localtime( & ti );
+// 
+// 	if( pToday != NULL) {
+// 		sprintf( pString, "%04d/%02d/%02d %02d:%02d:%02d.%03d", pToday->tm_year+1900, pToday->tm_mon+1, pToday->tm_mday, pToday->tm_hour, pToday->tm_min, pToday->tm_sec, millisec );
+// 	}
+// }
 
 // double ELDecoder::DecodeGeoPosition(const int& i_nPosLatLong)
 // {

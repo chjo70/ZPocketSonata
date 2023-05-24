@@ -22,8 +22,8 @@ namespace RadarDirAlgotirhm
 
 	void RadarDirAlgotirhm::Init( HWND hWnd, bool bLocal )
 	{
-		
-		if( bLocal == false /*&& CheckPing() == TRUE*/ ) {
+
+		if( bLocal == false /*&& CheckPing() == true*/ ) {
 			SetLocal( bLocal );
 		}
 		else {
@@ -33,13 +33,12 @@ namespace RadarDirAlgotirhm
         if( g_pTheLog == NULL ) {
             g_pTheLog = new CLog();
 
-		
 		    ::Log( enNormal, "+---------------------------------------------------+" );
 		    ::Log( enNormal,  "레이더 방탐 라이브러리를 구동합니다...." );
         }
 
 		SetWindowHandler( hWnd );
-		
+
 		if( gpNewSigAnal == NULL ) {
 			g_pTheSysConfig = new CSysConfig();
 
@@ -94,8 +93,12 @@ namespace RadarDirAlgotirhm
 	 */
 	void RadarDirAlgotirhm::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 	{
-		
+
 		if( gpNewSigAnal != NULL ) {
+            ENUM_BoardID enBoardID;
+
+            enBoardID = ( ENUM_BoardID ) pPDWData->GetBand();
+            gpNewSigAnal->SetGlobalBoardID( enBoardID );
 			gpNewSigAnal->Start( pPDWData, bDBInsert );
 		}
 		else {

@@ -118,7 +118,7 @@ int websPageReadData(webs_t wp, char *buf, int nBytes)
 	return websRomPageReadData(wp, buf, nBytes);
 #else
 	a_assert(websValid(wp));
-	return read(wp->docfd, buf, nBytes);
+	return gread(wp->docfd, buf, nBytes);
 #endif
 }
 
@@ -134,7 +134,7 @@ void websPageSeek(webs_t wp, long offset)
 #ifdef WEBS_PAGE_ROM
 	websRomPageSeek(wp, offset, SEEK_CUR);
 #else
-	lseek(wp->docfd, offset, SEEK_CUR);
+	glseek(wp->docfd, offset, SEEK_CUR);
 #endif
 }
 

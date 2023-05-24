@@ -1,7 +1,7 @@
 ﻿//////////////////////////////////////////////////////////////////////////
 // CPCIDriver.cpp 소스 파일
 
-#include "stdafx.h"
+#include "pch.h"
 
 #include "PCIDriver.h"
 
@@ -11,7 +11,7 @@
 
 #include "./ccommonutils.h"
 
-bool CPCIDriver::m_bConfigSetting = false;
+bool CPCIDriver::m_bPCIMemInit = false;
 
 std::string g_strPCIDrverDirection[en_ELEMENT_PCI_DRIVER] = { "LEFT", "RGHT" };
 
@@ -97,19 +97,31 @@ void CPCIDriver::ISRRoutine()
 
 	uiReqStatus = PCICtrlRead32( ANZ_IRQ_STATUS, false );
 
-    _func_kprintf( "\nDriver[%d/0x%x]...", m_enPCIDriver, uiReqStatus );
+    _func_kprintf( "\nISR[%d/0x%x]...\n", m_enPCIDriver, uiReqStatus );
 
     m_bIsr = true;
 
     // 1. 채널별로 수집 중지 요청 설정하기
     uiReqStatusBit = uiReqStatus;
+
+    // unsigned int inputParams = PCICtrlRead32( PARAM_IDX_R, false );
+
     while( uiReqStatusBit && uiCh < TOTAL_CHANNELS ) {
         if( ( unsigned int ) ( uiReqStatusBit & ( unsigned int ) 1 ) ) {
-            PCICtrlWrite32( ANZ_STOP, uiCh+1, false );
-
+            // 1. 채널 번호 설정
             PCICtrlWrite32( PARAM_IDX_R, uiCh + 1, false );
+
+            // 2. 수집 개수 읽기
             pStrCollectInfo->uiCh2TotalPDW[uiCh] = PCICtrlRead32( ANZ_ACQ_CNT, false );
-            //_func_kprintf( "\n ISR::uiReqStatusBit[0x%x], uiCh[%d], uiTodalPDW[%d]", uiReqStatusBit, uiCh, pStrCollectInfo->uiCh2TotalPDW[uiCh] );
+            if( pStrCollectInfo->uiCh2TotalPDW[uiCh] != 0 ) {
+                // _func_kprintf( "\nuiReqStatusBit[0x%x], #uiCh[%d], uiTodalPDW[%d]", uiReqStatusBit, uiCh, pStrCollectInfo->uiCh2TotalPDW[uiCh] );
+            }
+            else {
+                //_func_kprintf( "\n#채널[%d]에 수집 개수가 없습니다." , uiCh );
+            }
+
+            // 3. 중지 요청
+            PCICtrlWrite32( ANZ_STOP, uiCh + 1, false );
 
         }
         uiReqStatusBit >>= 1;
@@ -118,18 +130,17 @@ void CPCIDriver::ISRRoutine()
 
     // 2. 수집 관련 타스크에 메시지 전송합니다.
     if( CCommonUtils::CountSetBits( uiReqStatus ) >= _spOne ) {
-
-        pStrCollectInfo->Set( ( int ) uiReqStatus, 0, 0, 0, m_enPCIDriver, enDetectCollectBank, 0);
+        pStrCollectInfo->Set( uiReqStatus, 0, 0, 0, m_enPCIDriver, enDetectCollectBank, 0);
 
 #ifdef __VXWORKS__
-        if( pStrCollectInfo->uiCh <= TOTAL_CHANNELS ) {
-            // _func_kprintf( "\n[%s]에서 iCh[0x%x], TotalPDW[%d]...[%d]", m_strHeader.c_str(), pStrCollectInfo->uiCh, pStrCollectInfo->uiTotalPDW, uiReqStatus );
+        if( pStrCollectInfo->uiReqStatus < ( 1 << TOTAL_CHANNELS ) ) {
+            //_func_kprintf( "\n[%s]에서 iCh[0x%x], TotalPDW[%d]...[%d]", m_strHeader.c_str(), pStrCollectInfo->uiReqStatus, pStrCollectInfo->uiTotalPDW, uiReqStatus );
             if( g_pTheTaskMngr->GetMode() == enOP_Mode ) {
-            g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_COMPLETECOL, & uniMsgData, sizeof( UNI_MSG_DATA ), "PCIISR" );
-        }
+                g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_COMPLETECOL, & uniMsgData, sizeof( UNI_MSG_DATA ), PCIISR_NAME );
+            }
         }
         else {
-            _func_kprintf( "\n채널 값[%d]이 잘못 됐습니다 !", pStrCollectInfo->uiCh );
+            _func_kprintf( "\n채널 값[%d]이 잘못 됐습니다 !", pStrCollectInfo->uiReqStatus );
         }
 
 #endif
@@ -155,39 +166,6 @@ void CPCIDriver::ISRRoutine()
  */
 CPCIDriver::CPCIDriver( ENUM_PCI_DRIVER enPCIDriver ) : m_enPCIDriver( enPCIDriver )
 {
-//     int i;
-//     UZPOCKETPDW x[2];
-//
-//     LOGMSG1( enNormal, "%d", sizeof( x[0] ) );
-//     LOGMSG1( enNormal, "%d", sizeof( x[0].dwData ) );
-//
-//     x[0].dwData[0] = 0x3018ca01bf000045;
-//     x[0].dwData[1] = 0x100300424b4c0000;
-//     x[0].dwData[2] = 0x362dd5e13e009167;
-//     x[0].dwData[3] = 0x0000000000000000;
-//
-//     x[1].dwData[0] = 0x30182803bf006633;
-//     x[1].dwData[1] = 0x100300384b4c0000;
-//     x[1].dwData[2] = 0x86af6d4205001067;
-//     x[1].dwData[3] = 0x2000000000000000;
-//
-//     for( i = 0; i < 4; ++i ) {
-//         CCommonUtils::swapByteOrder( x[0].dwData[i] );
-//     }
-//     for( i = 0; i < 4; ++i ) {
-//         CCommonUtils::swapByteOrder( x[1].dwData[i] );
-//     }
-//
-//     LOGMSG4( enDebug, "0x%016llx%016llx%016llx%016llx", x[0].dwData[3], x[0].dwData[2], x[0].dwData[1], x[0].dwData[0] );
-//     LOGMSG4( enDebug, "0x%016llx%016llx%016llx%016llx", x[1].dwData[3], x[1].dwData[2], x[1].dwData[1], x[1].dwData[0] );
-//
-//     CCommonUtils::PrintOnePDW( & x[0] );
-//     CCommonUtils::PrintOnePDW( & x[1] );
-
-    //0x4dc0e000:  3018ca01bf000045 100300424b4c0000 * 0......E...BKL..*
-    //0x4dc0e010 : 362dd5e13e009167 0000000000000000 * 6 - .. > ..g........*
-    //0x4dc0e020:  3018de01bf00fc44 100300424b4c0000 * 0......D...BKL..*
-    //0x4dc0e030 : 3e6ad5e13e009267 2000000000000000 * > j.. > ..g .......*
 
     // 메시지 헤더 추가
     m_strHeader = string_format( "[%s]PCI", g_strPCIDrverDirection[m_enPCIDriver].c_str() );
@@ -199,12 +177,10 @@ CPCIDriver::CPCIDriver( ENUM_PCI_DRIVER enPCIDriver ) : m_enPCIDriver( enPCIDriv
     PCIConfigSetting();
 
     // 비트를 수행합니다.
-    BIT();
+    RunBit();
 
     // 소프트웨어 초기화를 수행합니다.
     Init();
-
-
 
 }
 
@@ -219,23 +195,10 @@ CPCIDriver::CPCIDriver( ENUM_PCI_DRIVER enPCIDriver ) : m_enPCIDriver( enPCIDriv
 void CPCIDriver::PCIConfigSetting() const
 {
 
-    if( m_bConfigSetting == false ) {
+    if( m_bPCIMemInit == false ) {
 #if defined(__VXWORKS__)
         if( PCIeMemInit() == ERROR ) {
             printf( "\n ERROR! PCIe BAR Initialize !" );
-        }
-
-        // 클래스 객체 함수로는 안됨... 왜 안 될까 ?
-        //pciIsrStart( IRQ_PCI_LEFT, ( VOIDFUNCPTR ) CPCIDriver::LeftISRRoutine );
-        //pciIsrStart( IRQ_PCI_RIGHT, ( VOIDFUNCPTR ) CPCIDriver::RightISRRoutine );
-
-        if( m_enPCIDriver == enLEFT_PCI_DRIVER ) {
-            pciIsrSetting( IRQ_PCI_LEFT, ( VOIDFUNCPTR ) ISRPCIeRoutine, ( void* ) this );
-        }
-        else if( m_enPCIDriver == enRIGHT_PCI_DRIVER ) {
-            pciIsrSetting( IRQ_PCI_RIGHT, ( VOIDFUNCPTR ) ISRPCIeRoutine, ( void* ) this );
-        }
-        else {
         }
 
         // pciIstDisable();
@@ -243,9 +206,24 @@ void CPCIDriver::PCIConfigSetting() const
         TRACE( "\n PCIeMemInit()" );
 
 #endif
-        m_bConfigSetting = true;
+        m_bPCIMemInit = true;
 
     }
+
+    // 클래스 객체 함수로는 안됨... 왜 안 될까 ?
+    //pciIsrStart( IRQ_PCI_LEFT, ( VOIDFUNCPTR ) CPCIDriver::LeftISRRoutine );
+    //pciIsrStart( IRQ_PCI_RIGHT, ( VOIDFUNCPTR ) CPCIDriver::RightISRRoutine );
+
+#if defined(__VXWORKS__)
+    if( m_enPCIDriver == enLEFT_PCI_DRIVER ) {
+        pciIsrSetting( IRQ_PCI_LEFT, ( VOIDFUNCPTR ) ISRPCIeRoutine, ( void * ) this );
+    }
+    else if( m_enPCIDriver == enRIGHT_PCI_DRIVER ) {
+        pciIsrSetting( IRQ_PCI_RIGHT, ( VOIDFUNCPTR ) ISRPCIeRoutine, ( void * ) this );
+    }
+    else {
+    }
+#endif
 
 }
 
@@ -261,26 +239,24 @@ void CPCIDriver::PCIConfigSetting() const
 void CPCIDriver::PCIInterruptEnable() const
 {
     if( m_enPCIDriver == enLEFT_PCI_DRIVER ) {
-        LOGMSG2( enNormal, "%s 인터럽트[%d] Enable 을 설정합니다.", m_strHeader.c_str(), IRQ_PCI_LEFT );
+        Log( enDebug, "%s 인터럽트[%d] Enable 을 설정합니다.", m_strHeader.c_str(), IRQ_PCI_LEFT );
 
 #ifdef __VXWORKS__
 		vxbGpioIntEnable( IRQ_PCI_LEFT, ( VOIDFUNCPTR ) ISRPCIeRoutine, ( void * ) this );
-        //pciIsrStart( IRQ_PCI_LEFT, ( VOIDFUNCPTR ) ISRLeftPCIeRoutine, ( void * ) this );
 #endif
 
 
     }
     else if( m_enPCIDriver == enRIGHT_PCI_DRIVER ) {
-        LOGMSG2( enNormal, "%s 인터럽트[%d] Enable 을 설정합니다.", m_strHeader.c_str(), IRQ_PCI_RIGHT );
+        Log( enDebug, "%s 인터럽트[%d] Enable 을 설정합니다.", m_strHeader.c_str(), IRQ_PCI_RIGHT );
 
 #ifdef __VXWORKS__
 		vxbGpioIntEnable( IRQ_PCI_RIGHT, ( VOIDFUNCPTR ) ISRPCIeRoutine, ( void * ) this );
-        //pciIsrStart( IRQ_PCI_RIGHT, ( VOIDFUNCPTR ) ISRLeftPCIeRoutine, ( void * ) this );
 #endif
 
     }
     else {
-        LOGMSG( enError, "ISR 인터럽트 Enable 잘못된 설정 입니다 !" );
+        Log( enError, "ISR 인터럽트 Enable 잘못된 설정 입니다 !" );
     }
 
 }
@@ -297,28 +273,27 @@ void CPCIDriver::PCIInterruptEnable() const
 void CPCIDriver::PCIInterruptDisable() const
 {
     if( m_enPCIDriver == enLEFT_PCI_DRIVER ) {
-        LOGMSG2( enNormal, "%s 인터럽트[%d] Disable 을 설정합니다.", m_strHeader.c_str(), IRQ_PCI_LEFT );
+        Log( enNormal, "%s 인터럽트[%d] Disable 을 설정합니다.", m_strHeader.c_str(), IRQ_PCI_LEFT );
 
 #ifdef __VXWORKS__
     	vxbGpioIntDisable( IRQ_PCI_LEFT, ( VOIDFUNCPTR ) ISRPCIeRoutine, ( void * ) this );
-        //pciIsrStop( IRQ_PCI_LEFT, ( VOIDFUNCPTR ) ISRLeftPCIeRoutine, ( void * ) this );
 #endif
 
 
     }
     else if( m_enPCIDriver == enRIGHT_PCI_DRIVER ) {
-        LOGMSG2( enNormal, "%s 인터럽트[%d] Disable 을 설정합니다.", m_strHeader.c_str(), IRQ_PCI_RIGHT );
+        Log( enNormal, "%s 인터럽트[%d] Disable 을 설정합니다.", m_strHeader.c_str(), IRQ_PCI_RIGHT );
 
 #ifdef __VXWORKS__
     	vxbGpioIntDisable( IRQ_PCI_RIGHT, ( VOIDFUNCPTR ) ISRPCIeRoutine, ( void * ) this );
-        //pciIsrStop( IRQ_PCI_RIGHT, ( VOIDFUNCPTR ) ISRRightPCIeRoutine, ( void * ) this );
 #endif
 
 
     }
     else {
-        LOGMSG( enError, "ISR 인터럽트 Disable 잘못된 설정 입니다 !" );
+        Log( enError, "ISR 인터럽트 Enable 잘못된 설정 입니다 !" );
     }
+
 }
 
 /**
@@ -346,7 +321,7 @@ void CPCIDriver::Init()
 {
     //int i;
 
-    LOGMSG1( enNormal, "%s 초기화를 수행합니다.", m_strHeader.c_str() );
+    //LOGMSG1( enNormal, "%s 초기화를 수행합니다.", m_strHeader.c_str() );
 
     // 멤버 변수 들 초기화
     m_bIsr = false;
@@ -355,11 +330,11 @@ void CPCIDriver::Init()
     PCIInterruptDisable();
 
     // PCI를 초기화 합니다.
-    PCICtrlWrite32( ANZ_REQ, 0 );
-    PCICtrlWrite32( PARAM_INIT, 0 );
+    //PCICtrlWrite32( ANZ_REQ, 0, false );
+    PCICtrlWrite32( PARAM_INIT, 0, false );
 
     // PDW 선택용 제어 비트
-    PCICtrlWrite32( OP_MODE, NOT_APPLY );
+    PCICtrlWrite32( OP_MODE, NOT_APPLY, false );
 
 #ifdef _SELF_GEN_PDW
     // PDW 선택용 제어 비트
@@ -385,7 +360,7 @@ void CPCIDriver::Init()
  * @date		2023/02/16 17:25:07
  * @warning
  */
-void CPCIDriver::BIT()
+void CPCIDriver::RunBit()
 {
     //unsigned int ui, value32;
 
@@ -402,7 +377,7 @@ void CPCIDriver::BIT()
 //         }
 //     }
 
-    LOGMSG3( enNormal, "%s 관련 점검 결과는 %s[%d] 입니다.", m_strHeader.c_str(), g_szBitResult[(unsigned int) m_bBIT], m_bBIT );
+    //LOGMSG3( enNormal, "%s 관련 점검 결과는 %s[%d] 입니다.", m_strHeader.c_str(), g_szBitResult[(unsigned int) m_bBIT], m_bBIT );
     // printf("\n PCI 관련 점검 결과는 %s[%d] 입니다.", g_szBitResult[m_bBIT], m_bBIT );
 
 }
@@ -418,22 +393,6 @@ void CPCIDriver::BIT()
  */
 void CPCIDriver::StartCollecting()
 {
-    // PCI를 초기화 합니다.
-//     PCICtrlWrite32( ANZ_REQ, 0 );
-//     PCICtrlWrite32( PARAM_INIT, 0 );
-//
-// #ifdef _SELF_GEN_PDW
-//     // PDW 선택용 제어 비트
-//     PCICtrlWrite32( OP_MODE, APPLY );
-//
-//     // Test PDW 패턴 주기
-//     // PCICtrlWrite32( PATN_INTERVAL, 0x605f41 /* 156249 */ );
-//     PCICtrlWrite32( PATN_INTERVAL, (unsigned int) 2 * PATN_INTERVAL_MS );
-// #else
-//     // PDW 선택용 제어 비트
-//     PCICtrlWrite32( OP_MODE, NOT_APPLY );
-//
-// #endif
 
     // 인터럽트 Enable
     PCIInterruptEnable();
@@ -467,7 +426,13 @@ void CPCIDriver::EndCollecting()
 void CPCIDriver::StartCollecting( STR_WINDOWCELL* pWindowCell, STR_COLLECT_PCIADDRESS *pstrCollectPCIAddress )
 {
 
-    LOGMSG2( enNormal, "%s 채널[%d]을 수집 설정 합니다.", m_strHeader.c_str(), pWindowCell->uiCh );
+    union STR_DOUBLE_WORD {
+        unsigned long long int dw;
+        unsigned int word[2];
+    } tTime;
+
+    // Log( enDebug, "%s 채널[%d]을 수집 설정 합니다.", m_strHeader.c_str(), pWindowCell->uiCh );
+
 
 #ifdef _SELF_GEN_PDW
     PCICtrlWrite32( PATN_INTERVAL, ( unsigned int ) 2 * PATN_INTERVAL_MS );
@@ -493,17 +458,24 @@ void CPCIDriver::StartCollecting( STR_WINDOWCELL* pWindowCell, STR_COLLECT_PCIAD
 	PCICtrlWrite32( FILT_PA_MAX, ( unsigned int ) pWindowCell->strPA.iHigh, false );
 
     // 수집 메모리 설정
-    PCICtrlWrite32( ANZ_M_OFFSET, pstrCollectPCIAddress->uiPCIAddressOffset, true );
-    PCICtrlWrite32( ANZ_M_SIZE, pstrCollectPCIAddress->uiPCIAddressSize, true );
+    PCICtrlWrite32( ANZ_M_OFFSET, pstrCollectPCIAddress->uiPCIAddressOffset, false );
+    PCICtrlWrite32( ANZ_M_SIZE, pstrCollectPCIAddress->uiPCIAddressSize, false );
 
+    //PCICtrlWrite32( FILT_MOP, pWindowCell->uiStat, false );
     PCICtrlWrite32( FILT_MOP, FILTER_NO_MOP, false );
 
 	// 2. PDW 필터 적용
 	PCICtrlWrite32( FILT_ADAPT, NOT_APPLY, false );
-    PCICtrlWrite32( ANZ_CNT, pWindowCell->uiCoCollectingPDW, true );
-    //PCICtrlWrite32( ANZ_TIME, ANZ_TIME_MS( 100 ), false );   // pWindowCell->uiMaxCollectTimeMssec ) );
-    PCICtrlWrite32( ANZ_TIME_L, ANZ_TIME_MS( pWindowCell->uiMaxCollectTimeMssec ), true );
-    PCICtrlWrite32( ANZ_TIME_H, 0, true );   // pWindowCell->uiMaxCollectTimeMssec ) );
+    PCICtrlWrite32( ANZ_CNT, pWindowCell->uiCoCollectingPDW, false );
+
+    tTime.dw = ANZ_TIME_MS( pWindowCell->uiMaxCollectTimeMssec );
+#ifdef __VXWORKS__
+    PCICtrlWrite32( ANZ_TIME_L, tTime.word[1], false );
+    PCICtrlWrite32( ANZ_TIME_H, tTime.word[0], false );
+#else
+    PCICtrlWrite32( ANZ_TIME_L, tTime.word[0], false );
+    PCICtrlWrite32( ANZ_TIME_H, tTime.word[1], false );
+#endif
 
 #ifdef _SELF_GEN_PDW
     PCICtrlWrite32( PATN_INTERVAL, ( unsigned int ) ( pWindowCell->uiMaxCollectTimeMssec * PATN_INTERVAL_MS ) );
@@ -515,21 +487,7 @@ void CPCIDriver::StartCollecting( STR_WINDOWCELL* pWindowCell, STR_COLLECT_PCIAD
     // 4. 수집 시작
     PCICtrlWrite32( ANZ_START, ( unsigned int ) ( pWindowCell->uiCh + 1 ), false );
 
-    // 5. 수집 시작
-
-#ifdef __VXWORKS__
-//     while( 1 ) {
-//         val32 = PCICtrlRead32( ANZ_IRQ_STATUS );
-//         Sleep( 1L );
-//
-//         if( val32 != 0 ) {
-//             break;
-//         }
-//     }
-#endif
-
 }
-
 
 /**
  * @brief		PCICtrlWrite32
@@ -545,8 +503,8 @@ void CPCIDriver::PCICtrlWrite32( unsigned int uiOffset, unsigned int uiValue, bo
 {
 
     if( bLog == true ) {
-        //_func_kprintf( "\n@%sCtrlWrite32(%s[0x %04X], 0x%08x)", m_strHeader.c_str(), GetRegisterName( uiOffset ), uiOffset, uiValue );
-        LOGMSG5( enDebug, "@%sCtrlWrite32(%-10s[0x%04X], %d(0x%08x))", m_strHeader.c_str(), GetRegisterName( uiOffset ), uiOffset, uiValue, uiValue );
+        _func_kprintf( "\n@%sCtrlWrite32(%s[0x %04X], 0x%08x)", m_strHeader.c_str(), GetRegisterName( uiOffset ), uiOffset, uiValue );
+        //Log( enDebug, "@%sCtrlWrite32(%-12s[0x%04X], %d(0x%08x))", m_strHeader.c_str(), GetRegisterName( uiOffset ), uiOffset, uiValue, uiValue );
     }
 
     CCommonUtils::swapByteOrder( uiValue );
@@ -566,7 +524,7 @@ void CPCIDriver::PCICtrlWrite32( unsigned int uiOffset, unsigned int uiValue, bo
 
     }
 
-    taskDelay( 1L );
+    // taskDelay( 1L );
 
 #else
 
@@ -610,8 +568,8 @@ UINT CPCIDriver::PCICtrlRead32(unsigned int uiOffset, bool bLog) const
 #endif
 
     if( bLog == true ) {
-        //_func_kprintf( "\n@[0x%08X] = %sCtrlRead32( %s[0x%04X] )", uiValue32, m_strHeader.c_str(), GetRegisterName( uiOffset ), uiOffset );
-        LOGMSG4( enDebug, "@[0x%08X] = %sCtrlRead32( %s[0x%04X] )", uiValue32, m_strHeader.c_str(), GetRegisterName( uiOffset ), uiOffset );
+        _func_kprintf( "\n@[0x%08X] = %sCtrlRead32( %s[0x%04X] )", uiValue32, m_strHeader.c_str(), GetRegisterName( uiOffset ), uiOffset );
+        //Log( enNormal, "@[0x%08X] = %sCtrlRead32( %-12s[0x%04X] )", uiValue32, m_strHeader.c_str(), GetRegisterName( uiOffset ), uiOffset );
     }
 
     return uiValue32;
@@ -653,8 +611,8 @@ const char* CPCIDriver::GetRegisterName(unsigned int uiOffset) const
         break;
 
     case ANZ_START :
-        pChar = g_strPCIRegisterName[5].c_str();
-        break;
+		pChar = g_strPCIRegisterName[5].c_str();
+		break;
 
     case ANZ_STOP:
         pChar = g_strPCIRegisterName[6].c_str();
@@ -662,7 +620,7 @@ const char* CPCIDriver::GetRegisterName(unsigned int uiOffset) const
 
     case ANZ_ID:
         pChar = g_strPCIRegisterName[7].c_str();
-		break;
+        break;
 
 	case ANZ_LOST_DEL_ON:
 		pChar = g_strPCIRegisterName[8].c_str();
@@ -685,8 +643,8 @@ const char* CPCIDriver::GetRegisterName(unsigned int uiOffset) const
 		break;
 
     case ANZ_TIME_H:
-		pChar = g_strPCIRegisterName[13].c_str();
-		break;
+        pChar = g_strPCIRegisterName[13].c_str();
+        break;
 
 	case ANZ_M_OFFSET:
 		pChar = g_strPCIRegisterName[14].c_str();
@@ -729,8 +687,8 @@ const char* CPCIDriver::GetRegisterName(unsigned int uiOffset) const
 		break;
 
 	case FILT_PA_MIN:
-        pChar = g_strPCIRegisterName[24].c_str();
-        break;
+		pChar = g_strPCIRegisterName[24].c_str();
+		break;
 
     case FILT_MOP:
         pChar = g_strPCIRegisterName[25].c_str();
@@ -764,9 +722,9 @@ const char* CPCIDriver::GetRegisterName(unsigned int uiOffset) const
         pChar = g_strPCIRegisterName[32].c_str();
         break;
 
-    case ANZ_REQ:
-        pChar = g_strPCIRegisterName[33].c_str();
-        break;
+//     case ANZ_REQ:
+//         pChar = g_strPCIRegisterName[33].c_str();
+//         break;
 
     case IBRDID:
         pChar = g_strPCIRegisterName[34].c_str();
@@ -792,13 +750,7 @@ const char* CPCIDriver::GetRegisterName(unsigned int uiOffset) const
 void CPCIDriver::CloseChannel( unsigned int uiCh )
 {
 
-    // _func_kprintf( "\n 채널[%d] 닫기", uiCh );
-
-    // 3. 채널 번호 설정
-    // PCICtrlWrite32( PARAM_IDX_W, ( unsigned int ) ( 1 ) << uiCh );
-
-    // 4. 수집 시작
-    PCICtrlWrite32( ANZ_REQ, ( unsigned int ) FILTER_REQ_START << uiCh, false );
+    _func_kprintf( "\n 채널[%d] 닫기", uiCh );
 
 }
 
@@ -816,9 +768,10 @@ void CPCIDriver::CloseChannel( unsigned int uiCh )
  */
 void CPCIDriver::GetPDWData( STR_UZPOCKETPDW *pPDWData, unsigned int uiCh, unsigned int uiTotalPDW, unsigned int uiPCIAddressOffset )
 {
-    unsigned char *pPCIAddress=0;
 
 #ifdef __VXWORKS__
+    unsigned char *pPCIAddress = 0;
+
     pPCIAddress = PCIeCtrlMemory( (unsigned int) m_enPCIDriver );
 
     pPCIAddress += uiPCIAddressOffset;
@@ -826,10 +779,10 @@ void CPCIDriver::GetPDWData( STR_UZPOCKETPDW *pPDWData, unsigned int uiCh, unsig
     memcpy( pPDWData->pstPDW, pPCIAddress, sizeof( UZPOCKETPDW ) * uiTotalPDW );
     CCommonUtils::AllSwapData64( pPDWData->pstPDW, sizeof( UZPOCKETPDW ) * uiTotalPDW );
 
-    LOGMSG4( enNormal, "%s [%d] 개의 PDW 데이터를 [0x%08x] 에서부터 복사합니다.", m_strHeader.c_str(), uiTotalPDW, pPCIAddress, uiPCIAddressOffset );
+    Log( enNormal, "%s [%d] 개의 PDW 데이터를 [0x%08x(0x%08x)] 에서부터 복사합니다.", m_strHeader.c_str(), uiTotalPDW, pPCIAddress, uiPCIAddressOffset );
 
 #else
-    LOGMSG3( enNormal, "%s [%d] 개의 PDW 데이터를 [0x%08x] 에서부터 복사합니다.", m_strHeader.c_str(), uiTotalPDW, pPCIAddress );
+    //LOGMSG3( enNormal, "%s [%d] 개의 PDW 데이터를 [0x%08x] 에서부터 복사합니다.", m_strHeader.c_str(), uiTotalPDW, pPCIAddress );
 
 #endif
 

@@ -111,9 +111,10 @@ struct STR_WINDOWCELL {
     * @brief 최대 수집 개수 및 수집 시간
     */
     unsigned int uiCoCollectingPDW;
-    unsigned int uiMaxCollectTimesec;         // 최대 수집 시간 [s]
-    unsigned int uiMaxCollectTimeMssec;          // 최대 수집 시간 [ms]
+    unsigned int uiMaxCollectTimeMssec;             // 최대 수집 시간 [ms]
 
+    //!<     펄스 상태
+    unsigned int uiStat;
 
     /**
     * @brief 주파수 범위
@@ -158,7 +159,6 @@ struct STR_WINDOWCELL {
     unsigned int uiScanStep;                ///< 스캔 수집 단계 정보
     unsigned int uiABTIndex;                ///< 위협 관리의 빔 데이터 인덱스
 
-    //STR_PDWDATA strPDW;
     STR_UZPOCKETPDW strPDW;
 
     void Init( unsigned int uiValueCh ) {

@@ -33,34 +33,23 @@ public:
 
     unsigned int GetCoPdw();
 
-    //##ModelId=452B0C5201DE
     void DiscardStablePT();
-    //##ModelId=452B0C5201DF
     void Init();
-    //##ModelId=452B0C5201E7
     void PulseExtract();
 
     void ExtractPulseTrainByLibrary(vector<SRadarMode *> *pVecMatchRadarMode);
     void PulseExtract(vector<SRadarMode *> *pVecMatchRadarMode);
 
-
-    //##ModelId=452B0C5201E8
     STR_DTOA_HISTOGRAM *GetDtoaHist();
-    //##ModelId=452B0C5201E9
     void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange );
-    //##ModelId=452B0C5201FE
     void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
 
-    //##ModelId=452B0C520211
     STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
     UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );
-    void ClearAllMark();
+    //void ClearAllMark();
 
-    //##ModelId=452B0C520212
     void KnownPulseExtract();
-    //##ModelId=452B0C520213
     CKPulExt( void *pParent, unsigned int uiCoMaxPdw );
-    //##ModelId=452B0C520223
     virtual ~CKPulExt();
 
 };

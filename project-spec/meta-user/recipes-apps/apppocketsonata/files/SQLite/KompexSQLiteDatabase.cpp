@@ -131,7 +131,7 @@ void CSQLiteDatabase::Close()
 	{
 		if(sqlite3_exec(m_pDatabaseHandle, "DETACH DATABASE origin", 0, NULL, 0) != SQLITE_OK) {
 			KOMPEX_EXCEPT(sqlite3_errmsg(m_pDatabaseHandle), sqlite3_errcode(m_pDatabaseHandle));
-		}
+	}
 	}
 
 	// close the database

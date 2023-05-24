@@ -31,6 +31,8 @@
 
 #include "./InverseMethod/CInverseMethod.h"
 
+#include "../../Utils/clog.h"
+
 #ifdef _MSC_VER
 //#include "../TASK/Task.h"
 #else
@@ -109,13 +111,13 @@ enum ENUM_SCANPROCESS_ERROR {
 * - 해당사항 없음
 */
 #ifdef _MSSQL_
-class CELEmitterMergeMngr : public CLOBClustering, public CMSSQL
+class CELEmitterMergeMngr : public CMSSQL
 #else
-class CELEmitterMergeMngr : public CLOBClustering
+class CELEmitterMergeMngr
 #endif
 {
 private:
-    bool m_bDBThread;
+    bool m_bDBEnable;
 
     bool m_bMerge;
     bool m_bReqDetect;
@@ -198,10 +200,10 @@ private:
     int *m_piCandidate;													///< 식별 후보 데이터 포인터
     int m_nLoadCEDEOBLibrary;										///< CEDEOB 로드 여부 플레그(카운트로 0이 아닐때 로드한다.)
 
-    //bool m_bScanProcess;
-
     SEnvironVariable *m_pSEnvironVariable;
 
+    float m_fFixedFreqMargin;
+    float m_fStableMargin;
 
 public:
     UINT m_nGetSeqNum;												///< 슬레이브 연동기에서 갖고 올 DB 테이블 번호
@@ -269,7 +271,9 @@ private:
 //
     bool CompMergeLOB( SELLOBDATA_EXT *pThreatDataExt, bool bLinkComp );
     bool CompEmitterInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-    CELThreat *UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bLOBCluster=false, vector<SELMERGE_CANDIDATE> *pIVecCanOfMergeLOB=NULL, bool bDBInsert=true, UINT nSeqNum=m_uiSeqNum, CELThreat *pSourceThreatAET=NULL, CELThreat *pSourceThreatABT=NULL, bool bRunCluster=true, bool bRunPE=true, bool bGenNewEmitter=false );
+    //CELThreat *UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bLOBCluster=false, vector<SELMERGE_CANDIDATE> *pIVecCanOfMergeLOB=NULL, bool bDBInsert=true, UINT nSeqNum=m_uiSeqNum, CELThreat *pSourceThreatAET=NULL, CELThreat *pSourceThreatABT=NULL, bool bRunCluster=true, bool bRunPE=true, bool bGenNewEmitter=false );
+    //CELThreat *UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bLOBCluster = false, bool bDBInsert = true, UINT nSeqNum = m_uiSeqNum, CELThreat *pSourceThreatAET = NULL, CELThreat *pSourceThreatABT = NULL, bool bRunCluster = true, bool bRunPE = true, bool bGenNewEmitter = false );
+    CELThreat *UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bDBInsert = true, UINT nSeqNum = m_uiSeqNum, CELThreat *pSourceThreatAET = NULL, CELThreat *pSourceThreatABT = NULL, bool bRunCluster = true, bool bRunPE = true, bool bGenNewEmitter = false );
     E_BEAM_EMITTER_STAT IsDeleteThreat( CELThreat *pTheThreat );
     int SelectTheDeletedABT( CELThreat *pTheThreat );
     bool WhichOfOldThreat( CELThreat *pTheThreat1, CELThreat *pTheThreat2 );
@@ -399,6 +403,8 @@ private:
     int CompValid( SRxABTData *pABTData );
     bool CompValueRange( SELMERGE_CANDIDATE *pMergeCandidate, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     bool CompIDELNOTInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    bool CompFreqMargin( SRxABTData *pABTData );
+    bool CompPRIMargin( SRxABTData *pABTData );
 //
 // 	//////////////////////////////////////////////////////////////////////////
 // 	// ABT 간 병합
@@ -449,10 +455,16 @@ private:
 //
 // 	// LOB 클러스터링을 위한 함수
 // 	//void AddLOBPool( CELThreat *pMovedThreatABT, CELThreat *pDestThreatABT );
-    bool CreateThreatFromLOBClustering( UINT uiABTID );
+
     void UpdateLOB();
-    void ProcessTheLOBClustering( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
-    void RunLOBClusteringResult();
+
+#ifdef _LOB_CLUSTERING_
+    //bool CreateThreatFromLOBClustering( UINT uiABTID );
+    //void ProcessTheLOBClustering( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    //void RunLOBClusteringResult();
+
+#endif
+
 // 	void UpdatePolization( SELABTDATA_EXT *pABTExtData );
 //
     bool IsValidLOB();
@@ -496,12 +508,11 @@ private:
 
 public:
 #ifdef _MSSQL_
-    CELEmitterMergeMngr(bool bDBThread, CODBCDatabase *pMyODBC );
+    CELEmitterMergeMngr(bool bDBEnable, CODBCDatabase *pMyODBC );
 #else
-    CELEmitterMergeMngr(bool bDBThread, const char *pFileName );
+    CELEmitterMergeMngr(bool bDBEnable, const char *pFileName );
 #endif
 
-    //CELEmitterMergeMngr(void);
     virtual ~CELEmitterMergeMngr(void);
     void Init();
     void InitOfThreat();
@@ -604,13 +615,14 @@ public:
     void GetGlobalSequenceNum();
     void PrintAllABTData();
 
-#ifdef _TRACK_ENABLED_
+#if CO_TRACK_CHANNEL > 0
     void ManageTrack( STR_DETANAL_INFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
 #endif
 
     void ABTPreSetting( unsigned int uiAETID, unsigned int uiABTID );
+    void AETPreSetting( unsigned int uiAETID );
 
-#ifdef _SCAN_ENABLED_
+#if CO_SCAN_CHANNEL > 0
     void ManageScan( ENUM_COLLECTBANK enCollectBank, SRxLOBData *pLOBData, SLOBOtherInfo *pLOBOtherInfo );
     void ScanProcess( ENUM_SCAN_PROCESS enScanProcess );
 
@@ -658,12 +670,21 @@ public:
     inline ENUM_SCAN_PROCESS EnScanProcess() const {
 		ENUM_SCAN_PROCESS enScanProcess=enSCAN_CANTProcessing;
 
-        if( CO_SCAN_CHANNEL == 0 ) {
+#if CO_SCAN_CHANNEL == 0
+        11
+#else
+
+        if( m_pABTExtData != NULL ) {
+            enScanProcess = m_pABTExtData->enScanProcess;
         }
-        else if (m_pABTExtData != NULL) {
-            enScanProcess=m_pABTExtData->enScanProcess;
-        }
-        else { }
+#endif
+
+//         if( CO_SCAN_CHANNEL == 0 ) {
+//         }
+//         else if (m_pABTExtData != NULL) {
+//             enScanProcess=m_pABTExtData->enScanProcess;
+//         }
+//         else { }
 
 		return enScanProcess;
 

@@ -87,6 +87,10 @@ void CNPulExt::Init()
 */
 void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 {
+    char buffer[200];
+    struct timespec nowTime;
+
+    CCommonUtils::GetCollectTime( &nowTime );
     PrintFunction
 
     /*! \todo	하나의 그룹화에서는 펄스열 인덱스를 최기화해서 펄스열 자원을 활용할수 있게 한다.*/
@@ -143,7 +147,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
     // 규칙성 펄스열을 찾은 펄스열 인덱스
     m_uiRefEndSeg = m_uiCoSeg;
 
-    m_pNewSigAnal->ClearAllMark( true );
+    CPulExt::ClearAllMark( true );
 
     //////////////////////////////////////////////////////////////////////////
     // 불규칙성 펄스열 찾기
@@ -165,7 +169,6 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
     DiscardPulseTrain( nRefSeg, nExtSeg );
 
 #elif defined( _EXTRACT_PULSE_METHOD5_ )
-	SetRefStartSeg();
 
     //////////////////////////////////////////////////////////////////////////
     // 1차 펄스열 추출
@@ -188,7 +191,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
     // 펄스열 저장소를 정리한다.
     CleanPulseTrains();
 
-    // 규칙성 펄스열을 찾은 펄스열 인덱스
+    // 규칙성 펄스열을 찾은 펄스열 인덱스 저장
     SetRefEndSeg();
 
     ClearAllMark();
@@ -204,12 +207,17 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
     // 펄스열의 인덱스를 조사해서 겹쳐져 있으면 그 중 한개를 버린다.
     DiscardPulseTrain();
 
+    sprintf( buffer, "================ 기준 펄스열 추출 : %d[ns]", ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
+    CCommonUtils::WallMakePrint( buffer, '=' );
+    Log( enDebug, buffer );
+
+
     //////////////////////////////////////////////////////////////////////////
     // 2차 펄스열 추출
     //  [7/2/2007 조철희]
     //-
-    if( MustDo2ndPulseExtract() == TRUE ) {
-        Log( enNormal, "2-차 펄스열 추출" );
+    if( MustDo2ndPulseExtract() == true ) {
+        // Log( enNormal, "2-차 펄스열 추출" );
 //             m_pNewSigAnal->ClearAllMark();
 //
 //             MarkStablePulseTrain();
@@ -242,7 +250,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
  */
 void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarMode )
 {
-    UINT i;
+    UINT i, uiCoSeg=0;
 
     STR_PRI_RANGE_TABLE extRange;
 
@@ -250,43 +258,44 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
 
     vector <SRadarMode_Sequence_Values>::iterator iter;
 
+
+    STR_PULSE_TRAIN_SEG *pSeg=GetPulseSeg();
+
     // 위협 라이브러리의 주파수 범위로 필터링...
 
-    if( pVecMatchRadarMode->size() > 0 ) {
+    if( pVecMatchRadarMode->size() > 0 && false ) {
         pRadarMode = pVecMatchRadarMode->at(0);
 
         // 시작 펄스열 추출 얻기
         for( i=0 ; i < pVecMatchRadarMode->size() ; ++i ) {
             switch( pRadarMode->ePRI_Type ) {
-            case RadarModePRIType::enumStable :
-                extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
-                extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
-                ExtractStablePT( & extRange, 0, FALSE, enLIBRARY_MARK, LIBRARY_SEG );
-                break;
+                case RadarModePRIType::enumStable :
+                    //extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
+                    //extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
+                    //ExtractStablePT( & extRange, 0, false, enLIBRARY_MARK, LIBRARY_SEG );
+                    break;
 
-            case RadarModePRIType::enumDwellSWITCH :
-//                 for( iter=pRadarMode->vecRadarMode_PRISequenceValues.begin() ; iter != pRadarMode->vecRadarMode_PRISequenceValues.end() ; ++iter ) {
-//                     extRange.tMinPRI = ITOAusCNV( (*iter).f_Min );
-//                     extRange.tMaxPRI = ITOAusCNV( (*iter).f_Max );
-//                     if( TRUE == ExtractDwellRefPT( pSeg, & extRange ) ) {
-//                         ++ m_uiCoSeg;
-//
-//                         ++ pSeg;
-//                     }
-//
-//                 }
-                break;
+                case RadarModePRIType::enumDwellSWITCH :
+                    break;
 
-            case RadarModePRIType::enumJITTER :
-            case RadarModePRIType::enumSTAGGER :
-            case RadarModePRIType::enumPATTERN :
-                extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
-                extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
-                ExtractJitterPT( & extRange, UINT32_MAX, _sp.cm.Rpc, TRUE , enLIBRARY_MARK, TRUE, LIBRARY_SEG);
-                break;
+                case RadarModePRIType::enumSTAGGER:
+                case RadarModePRIType::enumPATTERN:
+                    break;
 
-            default :
-                break;
+                case RadarModePRIType::enumJITTER :
+                    extRange.tMinPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMin );
+                    extRange.tMaxPRI = ITOAusCNV( pRadarMode->fPRI_TypicalMax );
+                    ExtractJitterPT( & extRange, UINT32_MAX, _sp.cm.Rpc, true , enLIBRARY_MARK, true, LIBRARY_SEG);
+
+                    if( m_uiCoSeg != uiCoSeg ) {
+                        Log( enDebug, "#[%05d] F%d[%5.1f~%5.1f] P%d[%5.1f~%5.1f]", pRadarMode->uiRadarModeIndex, pRadarMode->eRF_Type, pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax, pRadarMode->ePRI_Type, pRadarMode->fPRI_TypicalMin, pRadarMode->fPRI_TypicalMax );
+                        PrintSeg( (int) uiCoSeg, & pSeg[uiCoSeg] );
+                        uiCoSeg = m_uiCoSeg;
+                    }
+                    break;
+
+                default :
+                    break;
             }
 
             ++ pRadarMode;
@@ -441,5 +450,6 @@ unsigned int CNPulExt::GetCoPdw()
  */
 void CNPulExt::ClearAllMark()
 {
-    m_pNewSigAnal->ClearAllMark();
+    CPulExt::ClearAllMark();
+
 }

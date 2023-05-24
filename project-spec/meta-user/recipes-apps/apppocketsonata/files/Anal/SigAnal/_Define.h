@@ -104,13 +104,24 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define SCN_COLLECT_PDW				(1024*2)		// 스캔 분석용 최대 수집 개수
 
 #elif defined(_POCKETSONATA_)
+
 #define NEW_COLLECT_PDW				(256)			// 탐지 분석용 최대 수집 개수
-#define KWN_COLLECT_PDW				(256)			// 추적 분석용 최대 수집 개수
-#define SCN_COLLECT_PDW				(1024*2)		// 스캔 분석용 최대 수집 개수
+
+#ifdef _MSC_VER
+#define KWN_COLLECT_PDW				(200)			// 추적 분석용 최대 수집 개수
+#define SCN_COLLECT_PDW				(1024)          // 스캔 분석용 최대 수집 개수
+
+#else
+#define KWN_COLLECT_PDW				(100)			// 추적 분석용 최대 수집 개수
+#define SCN_COLLECT_PDW				(1010)          // 스캔 분석용 최대 수집 개수
+
+#endif
+
+#define USR_COLLECT_PDW				(1024*2)		// 사용자 분석용 최대 수집 개수
 
 
 #else
-#define   _spPAoffset               (-70)       // amplitude initial value */
+#define   _spPAoffset               (-70)           // amplitude initial value */
 
 #define NEW_COLLECT_PDW				(256)			// 탐지 분석용 최대 수집 개수
 #define KWN_COLLECT_PDW				(256)			// 추적 분석용 최대 수집 개수
@@ -167,12 +178,11 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _spRxdfFrq				    (4)                 // about 5(=4*1.25)MHz,
 
 #define KHARM_AOA_MAR				(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
-#define KHARM_FRQ_MAR				14			// 하모닉 주파수 마진 (Band1)
 
 #define TOTAL_FRQAOAPWBIN			(91000)			//(1024*4)											// 전체 히스토그램 BIN수
 
 // DTOA 히스트그램 최대 개수
-#define	DTOA_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+#define	DTOA_HISTOGRAM_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
 #define MAX_AOA_BIT       			    (36000)			// 최대 방위값 2^10 (360도/1023)
 #define MAX_FREQ_BIT      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
@@ -192,12 +202,11 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _spRxdfFrq				    (4)                 // about 5(=4*1.25)MHz,
 
 #define KHARM_AOA_MAR				(_spRxdfAoa)		// 하모닉 방위 마진 (Band1)
-#define KHARM_FRQ_MAR				14			// 하모닉 주파수 마진 (Band1)
 
 #define TOTAL_FRQAOAPWBIN			(91000)			//(1024*4)											// 전체 히스토그램 BIN수
 
 // DTOA 히스트그램 최대 개수
-#define	DTOA_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+#define	DTOA_HISTOGRAM_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
 
 #define MAX_AOA_BIT       			    (3600)			// 최대 방위값 2^10 (360도/1023)
 #define MAX_FREQ_BIT      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
@@ -213,29 +222,24 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define	MAX_PW_BIT						(1024*16)
 
 #elif defined(_POCKETSONATA_)
-#define KHARM_AOA_MAR               (int) ( (float) 8. / (float) POCKETSONATA::_fDOARes + (float) 0.5 )			// 8도
-#define KHARM_FRQ_MAR               (int) ( ((10.*1000.)/1.953125)+0.5)                  // 하모닉 주파수 마진 (Band1)
+//#define KHARM_AOA_MAR               (int) ( (float) 8. / (float) POCKETSONATA::_fDOARes + (float) 0.5 )			// 8도
 
-#define TOTAL_FRQAOAPWBIN           (91000)				//(1024*4), 전체 히스토그램 BIN수
+#define TOTAL_FRQAOAPWBIN               (91000)				//(1024*4), 전체 히스토그램 BIN수
 
-// DTOA 히스트그램 최대 개수
-#define	DTOA_RES                    UTOAusCNV((_TOA) 10)								// ( 10 * _spOneMicrosec )
+#define	DTOA_HISTOGRAM_RES              UTOAusCNV((_TOA) 10)
 
-#define	FREQ_NARR_MHZ               IFRQMhz(0,20)           // ((20.*1000.)/1.953125)		// 20 MHz
-#define	FREQ_WIDE_MHZ               IFRQMhz(0,100)           // ((100*1000.)/1.953125)		// 100 MHz
+#define	FREQ_NARR_MHZ                   IFRQMhz(0,20)            // 20 MHz
+#define	FREQ_WIDE_MHZ                   IFRQMhz(0,100)           // 100 MHz
 
-#define	MAX_FREQ_DEVIATION		    (float) ((500.*1000.)/1.953125)	// MHz, 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
+#define	MAX_FREQ_DEVIATION		        IFRQMhz(0, 1000)         // 1000 MHz, [MHz], 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
-#define AOA_SHIFT_360				(3.498250)		// (logf((float)1./POCKETSONATA::_fDOARes)/logf(2) ), 360도 기준으로 SHIFT 값
-#define AOA_SHIFT_COUNT             ((int) AOA_SHIFT_360)     // +1 할때마다 2배 씩 증가함. 2도 마진으로 AOA 값을 SHIFT * log2( 1. / POCKETSONATA::_fDOARes )
-
-#define STABLE_MARGIN			    ITOAusCNV( (_TOA) 1)
 
 // 아래는 PDW의 해당 항목의 비트 수를 고려해서 값을 설정해야 한다.
 // 이 값으로 그룹화 최대 BIN 수를 결정합니다.
-#define MAX_FREQ_BIT                    (0x10000000)
-#define MAX_AOA_BIT       			    (0x1000)
-#define	MAX_PW_BIT					    (0x1000000)
+#define MAX_FREQ_BIT                    (0x10000000)            // 주파수 최대 값
+#define MAX_AOA_BIT       			    (0x1000)                // 방위 최대 값
+#define	MAX_PW_BIT					    (0x1000000)             // 펄스폭 최대 값
+#define	MAX_PA_BIT					    (0x10000)               // 신호세기 최대 값
 
 
 
@@ -251,13 +255,12 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define TOTAL_FRQAOAPWBIN					(1024)
 
 #define STABLE_MARGIN				(_TOA) ( 1 * _spOneMicrosec )	// 1 us
-#define MAX_AOA_BIT       			    1024    // 최대 방위값 2^10 (360도/1023)
+#define MAX_AOA_BIT       			    1024    // 최대 방위값 2^10 (360도/1023)STABLE_MARGIN
 #define MAX_FREQ_BIT      			8192    // 최대 주파수값 2^13 (?/8191)
 
 #define KHARM_AOA_MAR				(14)		// 하모닉 방위 마진 (Band1)
-#define KHARM_FRQ_MAR				14			// 하모닉 주파수 마진 (Band1)
 
-#define	DTOA_RES					(_TOA) ( (_TOA)10 * (_TOA) _spOneMicrosec )
+#define	DTOA_HISTOGRAM_RES					(_TOA) ( (_TOA)10 * (_TOA) _spOneMicrosec )
 
 
 #define   _spRxdfAoaLow     (UDIV( 8, _spAOAres ))      // 14( 8 deg. )
@@ -298,7 +301,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define TOTAL_FRQAOAPWBIN					(1024)											// 전체 히스토그램 BIN수
 // DTOA 히스트그램 최대 개수
-#define	DTOA_RES									( 10 * _spOneMicrosec )
+#define	DTOA_HISTOGRAM_RES									( 10 * _spOneMicrosec )
 
 #define   _spRxdfAoaLow     (UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfAoaMid     (UDIV( 5., _spAOAres ))     // 9 ( 5 deg. )
@@ -419,7 +422,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define MIN_PRI							ITOAusCNV( 20 ) //( 20 * _spOneMicrosec )				// 최소 분석가능 PRI
 
-#define FIXED_TYPE_FREQ_MARGIN			        (5)    // [MHz]
+//#define FIXED_TYPE_FREQ_MARGIN			        (5)    // [MHz]
 #define FIXED_FREQ_MARGIN				5
 #define FREQ_MEAN_MARGIN_THRESHOLD		95
 

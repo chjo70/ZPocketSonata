@@ -71,8 +71,25 @@
 // VS2012 이상에서 TRACE를 변경하기 위함.
 #if _MSC_VER > 1600
 
-bool _TRACE(char *format, ...);
-bool _TRACE(CString strFormat, ...);
+
+#ifdef _MSC_VER
+#define printf  _TRACE
+
+#endif
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+void _TRACE(char *format, ...);
+
+//bool _TRACE(CString strFormat, ...);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #undef TRACE
 #define TRACE _TRACE

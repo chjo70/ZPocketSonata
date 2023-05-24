@@ -1,3 +1,16 @@
+﻿/**
+
+    @file      ClientMemoryPage.cpp
+    @brief     
+    @details   ~
+    @author    조철희
+    @date      16.04.2023
+    @copyright ? Cool Guy, 2023. All right reserved.
+
+**/
+
+// #include "pch.h"
+
 #include "../utils/PortableSocket.h"
 #include "ClientMemoryPage.h"
 

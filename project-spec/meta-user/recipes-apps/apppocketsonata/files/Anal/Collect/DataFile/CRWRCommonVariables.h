@@ -92,6 +92,7 @@ typedef enum _DynamicBandType
 * SIGPROC_DOING: 신호처리중, 허용값: 0x0111
 * UNKNOWN: 미지정, 허용값: 0xFFFF
 */
+/*
 typedef enum _EContainerState
 {
 	INIT							= 0x0000,		///< 초기상태	
@@ -104,6 +105,7 @@ typedef enum _EContainerState
 	SIGPROC_DOING					= 0x0111,		///< 신호처리중
 	UNKNOWN							= 0xFFFF,
 }EContainerState;
+*/
 
 /**
  * @brief 수집가능상태

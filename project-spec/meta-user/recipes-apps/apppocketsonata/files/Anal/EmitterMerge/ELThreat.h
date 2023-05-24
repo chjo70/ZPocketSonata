@@ -80,7 +80,7 @@ private:
     static int m_iCoAET;								            ///< 위협의 큐 포인터
 
 
-	CELThreat *m_pRootThreat;										///< 트리 구조의 좌측 포인터
+	static CELThreat *m_pRootThreat;										///< 트리 구조의 좌측 포인터
 
 	CELThreat *m_pLeftChild;										///< 트리 구조의 좌측 포인터
 	CELThreat *m_pRightChild;										///< 트리 구조의 우측 포인터

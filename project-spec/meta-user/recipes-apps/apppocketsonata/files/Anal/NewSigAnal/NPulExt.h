@@ -9,6 +9,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "../../Utils/clog.h"
+
 #include "../SigAnal/PulExt.h"
 
 #ifdef __cplusplus
@@ -16,7 +18,6 @@
 class CNewSigAnal;
 
 
-//##ModelId=452B0C55000A
 //////////////////////////////////////////////////////////////////////
 /*!	\brief	클래스명 CNPulExt
 
@@ -27,43 +28,38 @@ class CNewSigAnal;
 class CNPulExt : public CPulExt
 {
 public:
-	
+
 
 protected:
-	
 	CNewSigAnal *m_pNewSigAnal;			///< 최상위 분석 클래스의 포인터
 
 	//ENUM_BANDWIDTH m_enBandWidth;
 
 public:
+    CNPulExt( void *pParent, unsigned int uiCoMaxPdw );
+    virtual ~CNPulExt();
+
 	unsigned int GetCoPdw();
-	
-	inline void DiscardPulseTrain() { CPulExt::DiscardPulseTrain(); }	
-	inline void SetRefEndSeg() { CPulExt::SetRefEndSeg(); }	
-	inline void CleanPulseTrains() { CPulExt::CleanPulseTrains(); }	
-	inline void SetRefStartSeg() { CPulExt::SetRefStartSeg(); }	
+
+	inline void DiscardPulseTrain() { CPulExt::DiscardPulseTrain(); }
+	inline void SetRefEndSeg() { CPulExt::SetRefEndSeg(); }
+	inline void CleanPulseTrains() { CPulExt::CleanPulseTrains(); }
+	inline void SetRefStartSeg() { CPulExt::SetRefStartSeg(); }
 	inline void GetStartEndPriLevel() { CPulExt::GetStartEndPriLevel(); }
 	inline void MarkStablePulseTrain() { CPulExt::MarkStablePulseTrain(); }
 	inline void MakeCWPulseTrain() { CPulExt::MakeCWPulseTrain(); }
 
 	void Init();
-	//void PulseExtract();
     void PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode );
 	STR_DTOA_HISTOGRAM *GetDtoaHist();
 	void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange );
 	void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
 	void MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, PULSE_MARK enMarkType);
-	
+
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );
 	void ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarMode );
-    //int GetPulseStat();
     void ClearAllMark();
-
-	//##ModelId=452B0C550041
-    CNPulExt( void *pParent, unsigned int uiCoMaxPdw );
-	//##ModelId=452B0C550048
-	virtual ~CNPulExt();
 
 };
 

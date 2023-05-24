@@ -229,7 +229,7 @@ void CRawFile::GetFilename( char *pFilename )
  * @brief     입력 매개변수에 파일 옵션을 입력해서 파일 핸들러를 얻는다.
  * @param     char * filename
  * @param     char * file_mode
- * @return    BOOL
+ * @return    bool
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -268,7 +268,7 @@ bool CRawFile::RawOpenFile( const char *filename, int iMode )
 	m_fid = _open( filename , iMode );
     if( iResult == 1 && m_fid <= 0 ) { //DTEC_Else
 #endif
-        TRACE("\n[W] 이 파일[%s]이 존재하지 않습니다 !!", filename);
+        TRACE( "\n[W] 파일[%s]을 생성하지 못합니다 !", filename );
 	}
 	else {
 #if defined(__linux__) || defined(__VXWORKS__)
@@ -466,7 +466,6 @@ unsigned long long int CRawFile::GetRawFileSize( char *pPathFileName )
  */
 bool CRawFile::CreateDir( const TCHAR *pPath )
 {
-    BOOL bCreate;
 	bool bRet=true;
     TCHAR dirName[256];
     const TCHAR *p=pPath;
@@ -498,8 +497,9 @@ bool CRawFile::CreateDir( const TCHAR *pPath )
 
 #ifdef _MSC_VER
     if( ! PathFileExists( dirName ) ) {
+        bool bCreate;
         bCreate = CreateDirectory( dirName, NULL );
-        if( bCreate != TRUE ) {
+        if( bCreate != true ) {
             perror( "디렉토리 생성");
             bRet = false;
         }

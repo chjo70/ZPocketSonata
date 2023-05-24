@@ -83,6 +83,8 @@ void MemotyTest( size_t iSize );
 
 void Check64bitArithmetic();
 
+extern vector<CThread *> g_vecThread;
+
 #ifdef __cplusplus
 }
 #endif
@@ -102,17 +104,23 @@ void CreateAnalThread();
  * @date      2021-09-17, 10:48
  * @warning
  */
-void InitDatabase()
+void CMain::InitDatabase()
 {
     int iCopy=1;
     char szSQLiteFileName[100];
+
+
+#ifdef _SQLITE_
+    Log( enNormal, "CED/EOB 데이터베이스 파일 위치 및 파일명[%s, %s]", CEDEOB_SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
+    Log( enNormal, "에미터 데이터베이스 파일 위치 및 파일명[%s, %s]", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
+#endif
 
     // 1. 위협 라이브러리 존재 확인
     LOG_LINEFEED;
 
 #ifdef _SQLITE_
     try {
-        LOGMSG( enNormal, "#### SQLITE 모드 입니다. ####" );
+        Log( enNormal, "#### SQLITE 모드 입니다. ####" );
 
 #ifdef __linux__
         if( 0 == mkdir( EMITTER_SQLITE_FOLDER, 0766 ) || errno == EEXIST ) {
@@ -149,14 +157,14 @@ void InitDatabase()
 #ifdef _POCKETSONATA_
         char szSrcFilename[100], szDstFilename[100];
 
-        LOGMSG( enNormal, "위협 관리 파일을 램 드라이브에 설치 합니다." );
+        sprintf( szSrcFilename, "%s/%s/%s", TFFSDRV, SQLITE_DIRECTORY, BLK_EMITTER_SQLITE_FILENAME );
+        sprintf( szDstFilename, "%s%s/%s/%s", RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY, EMITTER_SQLITE_FILENAME );
+        Log( enNormal, "위협 관리 파일[%s]을 램 드라이브[%s]에 설치 합니다.", szSrcFilename, szDstFilename );
 #ifdef _MFC_VER
         if( OK == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
 #else
-		if( OK == mkdir( EMITTER_SQLITE_FOLDER ) ) {
+		if( OK == mkdir( EMITTER_SQLITE_FOLDER ) || errno == EEXIST ) {
 #endif
-            sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, BLK_EMITTER_SQLITE_FILENAME );
-            sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, EMITTER_SQLITE_FILENAME );
             iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
 
             if( iCopy <= 0 ) {
@@ -164,18 +172,19 @@ void InitDatabase()
             }
         }
         else {
-            LOGMSG2( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 [%d] 문의하세요.", EMITTER_SQLITE_FOLDER, errno );
+            Log( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 [%d] 문의하세요.", EMITTER_SQLITE_FOLDER, errno );
         }
 
-        LOGMSG( enLineFeed, "" );
-        LOGMSG( enNormal, "CED/EOB 파일을 램 드라이브에 설치 합니다." );
+        Log( enLineFeed, "" );
+
+        sprintf( szSrcFilename, "%s/%s/%s", TFFSDRV, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
+        sprintf( szDstFilename, "%s%s/%s/%s", RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
+        Log( enNormal, "CED/EOB 파일[%s]을 램 드라이브[%s]에 설치 합니다." , szSrcFilename, szDstFilename );
 #ifdef _MFC_VER
         if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
 #else
-		if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) ) {
+		if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
 #endif
-            sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
-            sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             iCopy = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
 
             if( iCopy <= 0 ) {
@@ -183,11 +192,12 @@ void InitDatabase()
             }
         }
         else {
-            LOGMSG2( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 [%d] 문의하세요." , EMITTER_SQLITE_FOLDER, errno );
+            printf( "\nerrno=%d", errno );
+            Log( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 [%d] 문의하세요." , CEDEOB_SQLITE_FOLDER, errno );
         }
 
 #else
-        LOGMSG( enNormal, "CED/EOB 파일을 램 드라이브에 설치 합니다." );
+        Log( enNormal, "CED/EOB 파일을 램 드라이브에 설치 합니다." );
         if( OK == mkdir( CEDEOB_SQLITE_FOLDER ) || errno == EEXIST ) {
             sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
             sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
@@ -198,7 +208,7 @@ void InitDatabase()
             }
         }
         else {
-            LOGMSG2( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 [%d] 문의하세요.", EMITTER_SQLITE_FOLDER, errno );
+            Log( enError, "[%s] 드라이브에 폴더를 생성하지 못합니다... 관리자에게 [%d] 문의하세요.", EMITTER_SQLITE_FOLDER, errno );
         }
 
 
@@ -212,7 +222,7 @@ void InitDatabase()
 
     }
     catch ( int eException ) {
-        LOGMSG2( enError, "플레쉬 드라이브에 파일[%s/%d]이 없습니다. 관리자에게 문의하세요." , szSQLiteFileName, eException );
+        Log( enError, "플레쉬 드라이브에 파일[%s/%d]이 없습니다. 관리자에게 문의하세요." , szSQLiteFileName, eException );
         WhereIs;
         while( true ) {
 
@@ -222,17 +232,27 @@ void InitDatabase()
 
 
 #elif _MSSQL_
-    LOGMSG( enNormal, "#### MSSQL 모드 입니다. ####" );
+    Log( enNormal, "#### MSSQL 모드 입니다. ####" );
 
 #else
-    LOGMSG( enNormal, "#### NO_SQLITE 모드 입니다. ####" );
+    Log( enNormal, "#### NO_SQLITE 모드 입니다. ####" );
 
 #endif
 
 
-
-
 }
+
+#if 0
+#include "./NetMem/utils/PortableSocket.h"
+#include "./NetMem/client/NetworkMemory2.h"
+#include "./NetMem/server/ServerSocket.h"
+
+NetworkMemory *pTheNetMem;
+
+#define DISTRIB_LENGTH  10
+#define NO_GENES_POOL   5
+
+#endif
 
 /**
  * @brief     Start
@@ -245,26 +265,74 @@ void InitDatabase()
  */
 void Start( int iArgc, char *iArgv[] )
 {
+    CMain theMain;
+
     //SetConsoleOutputCP(65001);
+
+#if 0
+    int port=10001;
+
+    INIT_SOCKETS_LIB;
+    int noPages = NO_GENES_POOL + 1;
+    ServerSocket *pTheServer = new ServerSocket( noPages, DISTRIB_LENGTH * 4 );
+
+    //Initialize the first page with the number to be factorized
+    unsigned long init10[10] = { 3,234,43,44,44,231,ULONG_MAX,34,2,2 };
+
+    MemoryPage *page = pTheServer->pages[0];
+    page->Lock( 0 );
+    page->Unlock( ( unsigned char * ) init10, 0 );
+    // srand( time( NULL ) );
+    for( int i = 1; i < noPages; i++ ) {
+        MemoryPage *page = pTheServer->pages[i];
+        unsigned char *mem = page->Lock( 0 );
+        for( int i = 0; i < DISTRIB_LENGTH; i++ ) {
+            unsigned long tmp = rand();
+            memcpy( mem + i * sizeof( long ), &tmp, sizeof( long ) );
+        }
+
+        page->Unlock( 0, 0 );
+    }
+    pTheServer->StartThreadSocket( port );
+
+    RELEASE_SOCKETS_LIB;
+
+    NetworkMemory netMem( "127.0.0.1", port );
+
+    NetMemCommand command;
+    command.offset = 0;
+    netMem.ReadPage( &command );
+
+#endif
 
 #ifdef __VXWORKS__
     Check64bitArithmetic();
 
 #endif
 
-    ParsingArgument( iArgc, iArgv );
+    // 로그 객체를 생성한다.
+#ifdef __VXWORKS__
+    g_pTheLog = new CLog( en_LOG_PRIORITY, ( const char * ) "LOG", true );
+    g_pTheLog->Run();
 
-    LOGENTRY;
-    _ShowProgramTitle();
+#else
+    // g_pTheLog = new CLog();
+    g_pTheLog = new CLog( en_LOG_PRIORITY, ( const char * ) "LOG", true );
+    g_pTheLog->Run();
+
+#endif
 
     signal( SIGINT, signalHandler);
     signal( SIGABRT, signalHandler);
     signal( SIGTERM, signalHandler);
 
+
 #ifdef __linux__
     signal( SIGHUP, signalHandler);
     signal( SIGSTOP, signalHandler);
 #endif
+
+
 
 #ifdef _MFC_VER
     setlocale( LC_ALL, "Korean" );
@@ -272,20 +340,122 @@ void Start( int iArgc, char *iArgv[] )
     setlocale( LC_ALL, "C" );
 #endif
 
+    theMain.Run( iArgc, iArgv );
+
+}
+
+CMain::CMain()
+{
+
+
+}
+
+
+/**
+ * @brief     ~CMain
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-02 14:31:56
+ * @warning
+ */
+CMain::~CMain()
+{
+
+
+}
+
+/**
+ * @brief     Run
+ * @param     int iArgc
+ * @param     char * iArgv[]
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-02 14:32:27
+ * @warning
+ */
+void CMain::Run( int iArgc, char *iArgv[] )
+{
+    LOGENTRY;
+
+    ParsingArgument( iArgc, iArgv );
+
+    Log( enNormal, "The INI is positioned at [%s], and the file name is [%s].", INI_FOLDER, INI_FILENAME );
+    Log( enNormal, "NFS 드라이브는 [%s] 입니다.", SHARED_DATA_DIRECTORY );
+
     InitDatabase();
 
     LOG_LINEFEED;
     LOG_LINEFEED;
 
-	g_AnalLoop = true;
+    // 관리 관련 쓰레드를 생성합니다.
+    CreateMngrThread();
 
-    g_pTheSysConfig = new CSysConfig();
+    // 분석 관련 쓰레드를 생성합니다.
+    CreateAnalThread();
 
-	// 관리 관련 쓰레드를 생성합니다.
-	CreateMngrThread();
+    // 공유 디렉토리의 수집 데이터 모두 삭제하기
+    g_pTheDetectAnalysis->DeleteAllFiles();
 
-	// 분석 관련 쓰레드를 생성합니다.
-	CreateAnalThread();
+#if 0
+    _TOA *px;
+    unsigned int *pux;
+
+    int i, j;
+    struct timespec nowTime;
+
+    char buffer[200];
+
+    px = ( _TOA * ) malloc( sizeof( _TOA ) * 10000 );
+    pux = ( unsigned int * ) px;
+
+    while( true ) {
+        CCommonUtils::GetCollectTime( &nowTime );
+
+        for( j=0 ; j < 1000 ; ++j ) {
+            for( i=0 ; i < 10000 ; ++i ) {
+                px[i] = i;
+            }
+            for( i = 0; i < 9999 ; ++i ) {
+                px[i] = px[i+1] - px[i];
+            }
+        }
+
+        sprintf( buffer, "================ 64비트 소요 시간 : %d[ns]", ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
+        CCommonUtils::WallMakePrint( buffer, '=' );
+        puts( buffer );
+
+        CCommonUtils::GetCollectTime( &nowTime );
+        for( j = 0; j < 1000; ++j ) {
+            for( i = 0; i < 10000; ++i ) {
+                pux[i] = i;
+            }
+            for( i = 0; i < 9999; ++i ) {
+                pux[i] = pux[i + 1] - pux[i];
+            }
+        }
+
+        sprintf( buffer, "================ 32비트 소요 시간 : %d[ns]", ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
+        CCommonUtils::WallMakePrint( buffer, '=' );
+        puts( buffer );
+
+
+        Sleep( 1 );
+    }
+
+    free( px );
+
+    while( 1 );
+#endif
+
+#ifdef __VXWORKS__
+    WhereIs;
+    g_pTheTaskMngr->QMsgSnd( enREQ_OP_START, "CMain()" );
+
+#endif
 
     // 9. 마지막으로 키 입력 처리를 호출한다.
 #ifndef _DAEMON_
@@ -302,28 +472,32 @@ void Start( int iArgc, char *iArgv[] )
  * @date		2023/02/13 13:40:10
  * @warning
  */
-void CreateMngrThread()
+void CMain::CreateMngrThread()
 {
+
+    g_pTheSysConfig = new CSysConfig();
+
+
 	// 1. 쓰레드 관리 쓰레드를 호출한다.
 #ifdef _SQLITE_
 	char szSQLiteFileName[100];
 	strcpy(szSQLiteFileName, CEDEOB_SQLITE_FOLDER);
 	strcat(szSQLiteFileName, "/");
 	strcat(szSQLiteFileName, CEDEOB_SQLITE_FILENAME);
-	g_pTheTaskMngr = new CTaskMngr(g_iKeyId++, (const char *) "CTaskMngr", true, (char*)szSQLiteFileName);
+	g_pTheTaskMngr = new CTaskMngr( en_TASK_MANAGER_PRIORITY, (const char *) "TASKMNGR", true, (char*)szSQLiteFileName);
 
 #elif _MSSQL_
 	// MSSQL 연결
-	g_pTheTaskMngr = new CTaskMngr(g_iKeyId++, (const char *) "CTaskMngr", true);
+	g_pTheTaskMngr = new CTaskMngr(g_iKeyId++, (const char *) "TASKMNGR", true);
 
 #else
-	g_pTheTaskMngr = new CTaskMngr(g_iKeyId++, "CTaskMngr", true, (char*)NULL);
+	g_pTheTaskMngr = new CTaskMngr(g_iKeyId++, "TASKMNGR", true, (char*)NULL);
 
 #endif
 	g_pTheTaskMngr->Run();
 
 	// 2. 운용 관련 쓰레드를 호출한다.
-	g_pTheUrBit = new CUrBit(g_iKeyId++, (const char *) "CUrBit", true);
+	g_pTheUrBit = new CUrBit( en_BIT_PRIORITY, (const char *) "CUrBit", true);
 	g_pTheUrBit->Run();
 
 	// 3. ZYNQ 보드 및 CCU 장치의 랜 처리 쓰레드를 호출한다.
@@ -344,11 +518,10 @@ void CreateMngrThread()
 	//g_pTheZYNQSocket = new CMultiServer( g_iKeyId++, (char *)"CZYNQSocket", PORT );
 	//g_pTheZYNQSocket->Run( _MSG_ZYNQ_KEY );
 	//if (g_pTheSysConfig->GetBoardID() == enMaster) {
-	g_pTheCCUSocket = new CSingleClient(g_iKeyId++, (const char *) "CCCUSocket", CCU_PORT, g_pTheSysConfig->GetPrimeServerOfNetwork());
+	g_pTheCCUSocket = new CSingleClient( en_RECLAN_PRIORITY, (const char *) "CCUSOCK", CCU_PORT, g_pTheSysConfig->GetPrimeServerOfNetwork());
 	g_pTheCCUSocket->Run(_MSG_CCU_KEY);
 
 }
-
 
 /**
  * @brief     CreateAnalThread
@@ -359,21 +532,20 @@ void CreateMngrThread()
  * @date      2023-02-05 11:01:03
  * @warning
  */
-void CreateAnalThread()
+void CMain::CreateAnalThread()
 {
 
-	g_pTheEmitterMerge = new CEmitterMerge(g_iKeyId++, (const char*) "CEmitterMerge", true);
+	g_pTheEmitterMerge = new CEmitterMerge( en_EMTMERGE_PRIORITY, (const char*) "EMTMERGE", true);
 	g_pTheEmitterMerge->Run();
-	g_pTheSignalCollect = new CSignalCollect(g_iKeyId++, (const char*) "CSignalCollect", true );
+	g_pTheSignalCollect = new CSignalCollect( en_COLLECT_PRIORITY, (const char*) "COLLECT", true );
 	g_pTheSignalCollect->Run();
 
-	g_pTheDetectAnalysis = new CDetectAnalysis(g_iKeyId++, ( const char*) "CDetectAnalysis", true);
+	g_pTheDetectAnalysis = new CDetectAnalysis( en_DETECT_ANAL_PRIORITY, ( const char*) "DETECTANAL", true);
 	g_pTheDetectAnalysis->Run();
-	g_pTheTrackAnalysis = new CTrackAnalysis(g_iKeyId++, ( const char*) "CTrackAnalysis", true);
+	g_pTheTrackAnalysis = new CTrackAnalysis( en_TRACK_ANAL_PRIORITY, ( const char*) "TRACKANAL", true);
 	g_pTheTrackAnalysis->Run();
-	g_pTheScanAnalysis = new CScanAnalysis(g_iKeyId++, ( const char*) "CScanAnalysis", true);
+	g_pTheScanAnalysis = new CScanAnalysis( en_SCAN_ANAL_PRIORITY, ( const char*) "SCANANAL", true);
 	g_pTheScanAnalysis->Run();
-
 
 }
 
@@ -398,7 +570,6 @@ void SIM_Start( bool bReqStart )
         sndMsg.iArrayIndex = -1;
         sndMsg.uiArrayLength = 0;
         sndMsg.uiDataLength = 0;
-        sndMsg.uiEchoBit = 0;
 
     }
     else {
@@ -407,7 +578,6 @@ void SIM_Start( bool bReqStart )
         sndMsg.iArrayIndex = -1;
         sndMsg.uiArrayLength = 0;
         sndMsg.uiDataLength = 0;
-        sndMsg.uiEchoBit = 0;
 
     }
 
@@ -435,7 +605,6 @@ void SIM_Library()
     sndMsg.iArrayIndex = -1;
     sndMsg.uiArrayLength = 0;
     sndMsg.uiDataLength = sizeof( int );
-    sndMsg.uiEchoBit = 0;
 
     g_pTheEmitterMerge->QMsgSnd( &sndMsg, ( void * ) NULL, "MAIN" );
 
@@ -487,7 +656,7 @@ void End()
 
     // 마지막 타스크 관리자 쓰레드를 종료 한다.
 
-    LOGMSG( enNormal, "[usrAppStart] 를 종료 처리 합니다..." );
+    //Log( enNormal, "[usrAppStart] 를 종료 처리 합니다..." );
 
 
 	_SAFE_DELETE(g_pTheELEnvironVariable)
@@ -515,14 +684,13 @@ void signalHandler( int signo )
     printf( "\n SIGNO[%d] Handler\n" , signo );
 
     if( signo == 2 ) {
-        g_Loop = false;
         exit(0);
     }
 
 }
 
 /**
- * @brief ParsingArgument
+ * @brief		ParsingArgument
  * @param		int iArgc
  * @param		char * iArgv[]
  * @return		void
@@ -531,11 +699,8 @@ void signalHandler( int signo )
  * @date		2023/04/05 16:28:15
  * @warning
  */
-void ParsingArgument( int iArgc, char *iArgv[] )
+void CMain::ParsingArgument( int iArgc, char *iArgv[] )
 {
-
-    // 로그 객체를 생성한다.
-    g_pTheLog = new CLog();
 
     SetUnitType();
 
@@ -562,7 +727,7 @@ void ParsingArgument( int iArgc, char *iArgv[] )
 #endif
                         g_enBoardId = enPRC3;
 
-                        LOGMSG1( enError, "기본값으로 마스터[%d]로 설정합니다.", g_enBoardId );
+                        Log( enError, "기본값으로 마스터[%d]로 설정합니다.", g_enBoardId );
                         break;
                     }
                     else {
@@ -571,10 +736,10 @@ void ParsingArgument( int iArgc, char *iArgv[] )
 
                     // 아큐먼트 설정 값을 전시 합니다.
 //                     if( g_enBoardId == enMaster ) {
-//                         LOGMSG1( enDebug, "마스터[%d]로 설정합니다.", g_enBoardId );
+//                         Log( enDebug, "마스터[%d]로 설정합니다.", g_enBoardId );
 //                     }
 //                     else {
-//                         LOGMSG1( enDebug, "슬레이브[%d]로 설정합니다.", g_enBoardId );
+//                         Log( enDebug, "슬레이브[%d]로 설정합니다.", g_enBoardId );
 //                     }
                     break;
 
@@ -583,11 +748,11 @@ void ParsingArgument( int iArgc, char *iArgv[] )
                     if( iArgv[0][2] == '\0' ) {
                         g_szPDWScinarioFile[0] = (char) 0;
 #else
-                    if( iArgv[0][2] == NULL ) {
-                        g_szPDWScinarioFile[0] = NULL;
+					if( iArgv[0][2] == NULL ) {
+						g_szPDWScinarioFile[0] = NULL;
 #endif
 
-                        LOGMSG1( enError, "PDW 시나리오 파일[%s]이 잘못 입력됐습니다.", iArgv[0] );
+                        Log( enError, "PDW 시나리오 파일[%s]이 잘못 입력됐습니다.", iArgv[0] );
                         break;
                     }
                     else {
@@ -595,8 +760,7 @@ void ParsingArgument( int iArgc, char *iArgv[] )
                     }
 
                     // 아큐먼트 설정 값을 전시 합니다.
-                    LOGMSG1( enDebug, "PDW 시나리오 파일[%s]을 설정합니다.", g_szPDWScinarioFile );
-
+                    Log( enDebug, "PDW 시나리오 파일[%s]을 설정합니다.", g_szPDWScinarioFile );
                     break;
 
                 default:
@@ -611,7 +775,7 @@ void ParsingArgument( int iArgc, char *iArgv[] )
 
     }
     else {
-        LOGMSG( enDebug, "The reason that no arguments inputs, it will set up the default..." );
+        Log( enDebug, "인자가 없어서 기본값으로 설정합니다..." );
         g_enBoardId = enMaster;
     }
 }
@@ -725,12 +889,16 @@ void usrAppStart( int iArgc, char *iArgv[] )
  * @param argv
  * @return
  */
-int main(int argc, char *argv[])
+int main(int iArgc, char *iArgv[])
 {
+    CMain theMain;
+
+
+    theMain.Run( iArgc, iArgv );
 
     /////////////////////////////////////////////////////////////////////////////////
     // 아규먼트를 파싱하여 프로그램을 설정합니다.
-    ParsingArgument( argc, argv );
+    // theMain.ParsingArgument( argc, argv );
 
 #ifdef _DAEMON_
     pid_t pid;
@@ -757,7 +925,7 @@ int main(int argc, char *argv[])
     setsid();
 #endif
 
-    usrAppStart( argc, argv );
+    // usrAppStart( argc, argv );
 
     /*
     pthread_t tid;
@@ -997,13 +1165,13 @@ void pcisetting( CPCIDriver *pPCIDriver )
     uiValue = pPCIDriver->PCICtrlRead32( ANZ_IRQ_STATUS, false );
     _func_kprintf( "\nPCICtrlRead32( ANZ_IRQ_STATUS )=0x%x", uiValue );
 
-    pPCIDriver->PCICtrlWrite32( ANZ_REQ, 0 );
+    // pPCIDriver->PCICtrlWrite32( ANZ_REQ, 0 );
     pPCIDriver->PCICtrlWrite32( OP_MODE, 1 );
     pPCIDriver->PCICtrlWrite32( FILT_BYPASS, 0 );
     pPCIDriver->PCICtrlWrite32( FILT_ADAPT, 0 );
     pPCIDriver->PCICtrlWrite32( ANZ_CNT, 100 );
     pPCIDriver->PCICtrlWrite32( PARAM_IDX_W, 1 );
-    pPCIDriver->PCICtrlWrite32( ANZ_REQ, 1 );
+    //pPCIDriver->PCICtrlWrite32( ANZ_REQ, 1 );
     pPCIDriver->PCICtrlRead32( ANZ_IRQ_STATUS, false );
     _func_kprintf( "\nPCICtrlRead32( ANZ_IRQ_STATUS )=0x%x\n", uiValue );
 

@@ -7,12 +7,17 @@
 
 #include "strdup.h"
 
-char *strdup(const char *string)
-{
-	char *new;
+#ifdef _MSC_VER
 
-	if (NULL != (new = malloc(strlen(string) + 1)))
-				strcpy(new, string);
-	return new;
+#else
+char *strdup( const char *string )
+{
+    char *new;
+
+    if( NULL != ( new = malloc( strlen( string ) + 1 ) ) )
+        strcpy( new, string );
+    return new;
 }
 
+
+#endif

@@ -22,20 +22,25 @@
 #include "../../../Utils/PCIDriver.h"
 
 
-#define DETECT_COLLECTION_MEMORY_SIZE          (300)
-#define TRACK_COLLECTION_MEMORY_SIZE           (300)
-#define SCAN_COLLECTION_MEMORY_SIZE            (2000)
-#define USER_COLLECTION_MEMORY_SIZE            (2000)
+#define DETECT_COLLECTION_MEMORY_SIZE          (NEW_COLLECT_PDW)
+#define TRACK_COLLECTION_MEMORY_SIZE           (KWN_COLLECT_PDW)
+#define SCAN_COLLECTION_MEMORY_SIZE            (SCN_COLLECT_PDW)        //
+#define USER_COLLECTION_MEMORY_SIZE            (USR_COLLECT_PDW)
+
+#define MAX_LOGIC_MEMORY_SIZE                   ( 8192 )
+
+// 스캔 최대 수집 단계 개수
+#define SCANCOLLECTION_STEP                     (4)
 
 class CCollectBank
 {
 private:
-    const ENUM_PCI_DRIVER m_enPCIDriver;
+    ENUM_PCI_DRIVER m_enPCIDriver;
 
-    const unsigned int m_uiTotalChannels;
-    const unsigned int m_uiDetectChannle;
-    const unsigned int m_uiTrackChannle;
-    const unsigned int m_uiScanChannle;
+    unsigned int m_uiTotalChannels;
+    unsigned int m_uiDetectChannel;
+    unsigned int m_uiTrackChannel;
+    unsigned int m_uiScanChannel;
 
     STR_WINDOWCELL **m_pstrWindowCell;
 
@@ -43,6 +48,8 @@ private:
     Queue<int> m_theQueueScanChannel;
 
     SRxABTData* m_ABTData;       // 추적/스캔 채널에 대한 대상 위협 정보
+
+    unsigned int m_uiScanCollectionTimems[SCANCOLLECTION_STEP+1];
 
 public:
     CPCIDriver *m_pThePCI;
@@ -71,7 +78,10 @@ private:
 
 
     // 스캔 신호 수집 설정
-    void CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTData *pABTData, SRadarMode *pRadarMode );
+    void CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiScanStep );
+
+    // 공통 관련 함수 설정
+    unsigned int GetStat( SRxABTData *pABTData );
 
 
 public:
@@ -99,7 +109,7 @@ public:
 
 
     // 스캔 신호 수집 설정
-    int StartScanChennel( SRxABTData *pABTData, SRadarMode *pRadarMode );
+    int StartScanChennel( SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiScanStep );
 
     void CloseTrackWindowCell();
 

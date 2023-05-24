@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 
-//#include "../Include/system.h"
+#include "../Utils/clog.h"
 #include "../Utils/cthread.h"
 
 static char gszClassName[2][10] = { "RECZYNQ", "RECCCU" };
@@ -58,6 +58,9 @@ public:
 
 public:
     int SendLan( int iSocket, UINT uiOpCode, UINT uiLength, void *pData );				///< 연결된 서버에 데이터를 송신한다.
+
+    void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... ) { }
+    void LogMsg( int nType, const char *fmt, ... ) {}
 
 };
 

@@ -10,6 +10,9 @@
 **/
 #pragma once
 
+
+#ifdef _LOG_
+
 #include "../Utils/csingleserver.h"
 #include "../Utils/csingleclient.h"
 
@@ -22,13 +25,19 @@
 #include "../Thread/ctrackanalysis.h"
 #include "../Thread/cscananalysis.h"
 
-#include "../Utils/clog.h"
+#else
+#include "../System/csysconfig.h"
+#include "../Anal/EmitterMerge/ELEnvironVariableMngr.h"
 
+#endif
+
+#include "../Utils/clog.h"
 
 
 // 전역 변수를 정의한다.
 #ifdef _MAIN_GLOBALS_
 
+#ifdef _LOG_
 // 신호 분석 관련 쓰레드
 CTaskMngr *g_pTheTaskMngr;
 CUrBit *g_pTheUrBit;
@@ -44,16 +53,30 @@ CScanAnalysis *g_pTheScanAnalysis;
 CSingleClient *g_pTheCCUSocket;
 //CSingleClient *g_pThePMCSocket;
 
+#else
+
+
+#endif
+
 // 기타 객체
 CLog *g_pTheLog;
+
 CSysConfig *g_pTheSysConfig;
 
 // 위협 관리 시스템 변수 값
 CELEnvironVariable *g_pTheELEnvironVariable;
 
 
+
+
+//unsigned int _spAnalMinPulseCount;
+
+
+
 // 타스크 및 쓰레드 포인터
-vector<CThread *> g_vecThread;
+//vector<CThread *> g_vecThread;
+
+
 
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -82,6 +105,7 @@ LONG g_lOpInitID;
 
 
 #else
+#ifdef _LOG_
 extern CTaskMngr *g_pTheTaskMngr;
 extern CUrBit *g_pTheUrBit;
 extern CUserCollect *g_pTheUserCollect;
@@ -91,18 +115,31 @@ extern CDetectAnalysis *g_pTheDetectAnalysis;
 extern CTrackAnalysis *g_pTheTrackAnalysis;
 extern CScanAnalysis *g_pTheScanAnalysis;
 
-extern CLog *g_pTheLog;
-extern CSysConfig *g_pTheSysConfig;
 
 //extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleClient *g_pTheCCUSocket;
 extern CSingleClient *g_pThePMCSocket;
 
-// 신호 분석 관련 정보
-extern CELEnvironVariable *g_pTheELEnvironVariable;
 
 // 쓰레드 관련 정보
 extern vector<CThread *> g_vecThread;
+
+#else
+
+
+#endif
+
+extern CSysConfig *g_pTheSysConfig;
+extern CELEnvironVariable *g_pTheELEnvironVariable;
+
+extern unsigned int _spAnalMinPulseCount;
+
+extern CLog *g_pTheLog;
+
+// 신호 분석 관련 정보
+
+
+
 
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -136,7 +173,7 @@ extern "C"
 #endif
 
 extern void _ShowProgramTitle( void );
-extern char *_GetProgramVersion();
+extern const char *_GetProgramVersion();
 
 #ifdef __cplusplus
 }
@@ -159,27 +196,30 @@ public:
 
 };
 
-
 #ifdef _LOG_
-#define Log                             g_pTheLog->LogMsg
+
+
+#define Log( A, ... )                   g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, ##__VA_ARGS__ )
 
 #define LOG_LINEFEED                    g_pTheLog->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, "" )
-
-#define LOGMSG( A, B )                  g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B )
-#define LOGMSG1( A, B, C )              g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C )
-#define LOGMSG2( A, B, C, D )           g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D )
-#define LOGMSG3( A, B, C, D, E )        g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E )
-#define LOGMSG4( A, B, C, D, E, F )     g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F )
-#define LOGMSG5( A, B, C, D, E, F, G )  g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, B, C, D, E, F, G )
-
 #define LOGENTRY                        g_pTheLog->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL )
 
 #else
+
+#ifdef _MSC_VER
+#define LOG_LINEFEED                    TRACE0( "\n" )
 #define LOGMSG( A, B )                  TRACE( B )
 #define LOGMSG1( A, B, C )              TRACE( B, C )
 #define LOGMSG2( A, B, C, D )           TRACE( B, C, D )
 #define LOGMSG3( A, B, C, D, E )        TRACE( B, C, D, E )
 #define LOGMSG4( A, B, C, D, E, F )     TRACE( B, C, D, E, F )
+#define LOGMSG5( A, B, C, D, E, F, G )  TRACE( B, C, D, E, F, G )
+
+#else
+
+
+#endif
+
 
 #endif
 

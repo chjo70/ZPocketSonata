@@ -1,9 +1,16 @@
-﻿// MakeAET.h: interface for the CMakeAET class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
 
-#if !defined(AFX_MAKEAET_H__D3ED692F_6704_4688_B28C_7FEB2AEACEB9__INCLUDED_)
-#define AFX_MAKEAET_H__D3ED692F_6704_4688_B28C_7FEB2AEACEB9__INCLUDED_
+    @file      MakeAET.h
+    @brief     interface for the CMakeAET class.
+    @details   ~
+    @author    조철희
+    @date      2.05.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -14,6 +21,9 @@
 //////////////////////////////////////////////////////////////////////////
 // 타 장비의 위협 구조체를 정의한다.
 #include "../EmitterMerge/ELMsgDefn.h"
+
+#include "../../Utils/clog.h"
+#include "../../Utils/ccommonutils.h"
 
 #ifdef __cplusplus
 
@@ -36,6 +46,8 @@ public:
 protected:
     DEFINE_ANAL_PVAR_
 
+    _TOA m_tStableMargin;
+
 	UINT m_uiCoMaxLOB;
 	UINT m_uiCoPdw;
 	UINT m_uiCoAnalPdw;
@@ -46,6 +58,7 @@ protected:
 	STR_PULSE_TRAIN_SEG *m_pSeg;
 
 private:
+    int SortLevel( int iSwtLev, _TOA *pSwtLev );
 
 public:
     CMakeAET( unsigned int uiCoMaxLOB );
@@ -87,7 +100,7 @@ public:
 	void MakeFreqLOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
 	void MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
 
-    void MakeAET();
+    void MakeAET( bool bDBInsert );
 
     void Init(void);
 
@@ -122,8 +135,8 @@ public:
     virtual char *GetTaskID()=0;
 #endif
 
+
 };
 
 #endif
 
-#endif // !defined(AFX_MAKEAET_H__D3ED692F_6704_4688_B28C_7FEB2AEACEB9__INCLUDED_)

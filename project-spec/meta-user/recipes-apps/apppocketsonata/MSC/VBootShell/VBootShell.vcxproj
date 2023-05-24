@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -9,9 +9,19 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BF225BB0-8384-4DFE-8AEB-E5C6A405FDC9}</ProjectGuid>
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{82B58044-78BD-424D-95B6-9EC0D13262CC}</ProjectGuid>
+    <Keyword>MFCProj</Keyword>
     <RootNamespace>VBootShell</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -19,18 +29,37 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -38,88 +67,122 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>__VXWORKS__;UEMF;WEBS;DIGEST_ACCESS_SUPPORT;USER_MANAGEMENT_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN;UEMF;WEBS;_POCKETSONATA_;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
     </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\files\BootShell\BootShell.cpp" />
-    <ClCompile Include="..\..\files\BootShell\BootShellMain.c" />
-    <ClCompile Include="..\..\files\BootShell\ManSbc.cpp" />
-    <ClCompile Include="..\..\files\BootShell\Untar\FileTar.cpp" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\asp.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\balloc.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\base64.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\cgi.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\default.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\ejlex.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\ejparse.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\emfdb.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\form.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\h.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\handler.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\main.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\md5c.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\mime.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\misc.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\mocana_ssl.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\page.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\ringq.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\rom.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\security.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\sock.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\sockGen.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\strdup.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\strncasecmp.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\sym.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\uemf.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\um.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\umui.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\url.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\value.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\webrom.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\webs.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\websda.c" />
-    <ClCompile Include="..\..\files\BootShell\WebServer\websuemf.c" />
-    <ClCompile Include="..\..\files\Utils\PCIDriver.cpp" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspDiag.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspEnv.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspFlash.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspFpga.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspUtils.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\ethernetDiag.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\i2cDiag.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\memDiag.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\pciDiag.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysFlashDrv.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysLib.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbAdt7481Temp.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbM85xxI2c.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbPciShow.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\usrAppInit.c" />
-    <ClCompile Include="..\..\VxWorksSpace\VBootShell_T2MS32\usrRtpAppInit.c" />
-  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\files\BootShell\BootShell.h" />
     <ClInclude Include="..\..\files\BootShell\BootShellMain.h" />
@@ -138,36 +201,181 @@
     <ClInclude Include="..\..\files\BootShell\WebServer\webs.h" />
     <ClInclude Include="..\..\files\BootShell\WebServer\websda.h" />
     <ClInclude Include="..\..\files\BootShell\WebServer\wsIntrn.h" />
-    <ClInclude Include="..\..\files\Utils\PCIDriver.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bsp.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspDiag.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspEnv.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspFlash.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bspUtils.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\pciDiag.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysFlashDrv.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vt100.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbAdt7481Temp.h" />
-    <ClInclude Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\vxbM85xxI2c.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-ccs.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-efsl.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-FatFs.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-ffs.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-mdd.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-stdio.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue.h" />
+    <ClInclude Include="..\..\files\MinIni\minIni.h" />
+    <ClInclude Include="..\..\files\MinIni\wxMinIni.h" />
+    <ClInclude Include="..\..\files\NetMem\client\ClientMemoryPage.h" />
+    <ClInclude Include="..\..\files\NetMem\client\NetworkMemory.h" />
+    <ClInclude Include="..\..\files\NetMem\server\ClientSocket.h" />
+    <ClInclude Include="..\..\files\NetMem\server\MemoryPage.h" />
+    <ClInclude Include="..\..\files\NetMem\server\ServerSocket.h" />
+    <ClInclude Include="..\..\files\NetMem\utils\ApiNetMem.h" />
+    <ClInclude Include="..\..\files\NetMem\utils\PortableSocket.h" />
+    <ClInclude Include="..\..\files\System\csharedmemory.h" />
+    <ClInclude Include="..\..\files\System\csysconfig.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="VBootShell.h" />
+    <ClInclude Include="VBootShellDlg.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\20bsp.cdf" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\50bspDrivers.cdf" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\50userTffs.cdf" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\50vxWorks.cdf" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bootargs.txt.bak" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bsp.cdf" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bsp.vsbl" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\Datasheet.pdf" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\defs.bsp.mk" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\pciDiag.h.bak" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\rules.bsp.mk" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\sysALib.s" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\t2ms.dts" />
-    <None Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\UserManual.pdf" />
+    <ClCompile Include="..\..\files\BootShell\BootShell.cpp" />
+    <ClCompile Include="..\..\files\BootShell\BootShellMain.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\ManSbc.cpp" />
+    <ClCompile Include="..\..\files\BootShell\Untar\FileTar.cpp" />
+    <ClCompile Include="..\..\files\BootShell\WebServer\asp.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\balloc.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\base64.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\cgi.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\default.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\ejlex.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\ejparse.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\emfdb.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\form.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\h.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\handler.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\main.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\md5c.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\mime.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\misc.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\mocana_ssl.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\page.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\ringq.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\rom.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\security.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\sock.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\sockGen.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\strdup.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\strncasecmp.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\sym.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\uemf.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\um.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\umui.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\url.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\value.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\webrom.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\webs.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\websda.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\BootShell\WebServer\websuemf.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\MinIni\minIni.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\NetMem\client\ClientMemoryPage.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\NetMem\client\NetworkMemory.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\NetMem\server\ClientSocket.cpp" />
+    <ClCompile Include="..\..\files\NetMem\server\MemoryPage.cpp" />
+    <ClCompile Include="..\..\files\NetMem\server\ServerSocket.cpp" />
+    <ClCompile Include="..\..\files\NetMem\utils\ApiNetMem.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csharedmemory.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csysconfig.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\programrev.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="VBootShell.cpp" />
+    <ClCompile Include="VBootShellDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\VxWorksSpace\VBootShell_T2MS32\hmt_t2ms_3_0_0_1\bootargs.txt" />
+    <ResourceCompile Include="VBootShell.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\VBootShell.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\VBootShell.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

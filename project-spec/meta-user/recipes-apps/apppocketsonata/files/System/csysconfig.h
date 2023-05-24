@@ -1,14 +1,28 @@
-﻿#ifndef CSYSCONFIG_H
-#define CSYSCONFIG_H
+﻿/**
+
+    @file      CSYSCONFIG.H
+    @brief
+    @details   ~
+    @author    조철희
+    @date      2.05.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
+
 
 #include <string.h>
 
 #include "../Anal/INC/system.h"
 
-#ifndef _MSC_VER
+//#ifndef _MSC_VER
 #include "../MinIni/minIni.h"
-#endif
+//#endif
 
+
+#include "../Utils/clog.h"
 
 #include "csharedmemory.h"
 
@@ -36,22 +50,38 @@ struct STR_SYSCONFIG {
 	/**
 		 * @brief 방탐 오차
 	*/
-	float fRxDOAError[enMAXPRC - 1];
+	float fAOAGroup[enMAXPRC - 1];
 
     /**
      * @brief 대역별 임계값
      */
     float fRxThreshold[enMAXPRC - 1];
 
+
+    //!<  Fixed 주파수, 규칙성 펄스열 DTOA 마진 값 정의
+    float fMargin[2];
+
+
+
     /**
      * @brief 대역별 병합 방위 오차
      */
-    float fMergeAOADiff[enMAXPRC-1];
+    float fReceiverDOAError[enMAXPRC-1];
 
     /**
      * @brief 최근 연결된 서버 IP 주소
      */
     char szPrimeServer[30];
+
+    /**
+     * @brief 장치 내의 SBC 시작 IP 주소
+     */
+    char szSBCFromIP[30];
+
+    /**
+     * @brief 장치 내의 SBC 종료 IP 주소
+     */
+    char szSBCToIP[30];
 
     /**
      * @brief 장비 모드 상태
@@ -107,6 +137,7 @@ private:
 #ifndef _MSC_VER
     minIni m_theMinIni;
 #else
+    minIni m_theMinIni;
 
 #endif
 
@@ -166,7 +197,7 @@ public:
 
 
     char *GetProgramVersion() { return m_strConfig.szProgramVersion; };
-    void SetProgramVersion(char *pProgramVersion ) {
+    void SetProgramVersion( const char *pProgramVersion ) {
         strcpy( m_strConfig.szProgramVersion, pProgramVersion );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
 
@@ -186,26 +217,34 @@ public:
 
     };
 
-    float GetMergeAOADiff(ENUM_BoardID enBoardID) {
-        float fValue= m_strConfig.fMergeAOADiff[enPRC1];
+    float* GetReceiverDOAError() { return & m_strConfig.fReceiverDOAError[0]; }
+    float GetReceiverDOAError(ENUM_BoardID enBoardID) {
+        float fValue= m_strConfig.fReceiverDOAError[enPRC1];
 
         if(enBoardID >= enPRC1 && enBoardID <= enPRC5 ) {
-            fValue = m_strConfig.fMergeAOADiff[enBoardID- enPRC1];
+            fValue = m_strConfig.fReceiverDOAError[enBoardID- enPRC1];
         }
 
         return fValue;
 
     };
-    void SetMergeAOADiff(float *fValue) {
-        memcpy(m_strConfig.fMergeAOADiff, fValue, sizeof(m_strConfig.fMergeAOADiff));
+    void SetReceiverDOAError(float *fValue) {
+        memcpy(m_strConfig.fReceiverDOAError, fValue, sizeof(m_strConfig.fReceiverDOAError ));
         m_pSharedMemory->copyToSharedMemroy(&m_strConfig);
     };
 
-    float *GetDOAError() { return & m_strConfig.fRxDOAError[0]; }
-	void SetDOAError(float *fValue) {
-		memcpy(m_strConfig.fRxDOAError, fValue, sizeof(m_strConfig.fRxDOAError));
+    float *GetAOAGroup() { return & m_strConfig.fAOAGroup[0]; }
+	void SetAOAGroup(float *fValue) {
+		memcpy(m_strConfig.fAOAGroup, fValue, sizeof(m_strConfig.fAOAGroup));
 		m_pSharedMemory->copyToSharedMemroy(&m_strConfig);
 	};
+
+    float *GetMargin() { return & m_strConfig.fMargin[0]; }
+    void SetMargin( float *fValue )
+    {
+        memcpy( m_strConfig.fMargin, fValue, sizeof( m_strConfig.fMargin ) );
+        m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
+    };
 
     float *GetRxThreshold() { return & m_strConfig.fRxThreshold[0]; };
     void SetRxThreshold( float *fValue) {
@@ -223,6 +262,18 @@ public:
             m_theMinIni.put( "NETWORK" , "PRIME_SERVER" , pPrimeServer );
 #endif
         }
+    };
+
+    char *GetSBCFromIP() { return & m_strConfig.szSBCFromIP[0]; };
+    void SetSBCFromIP( const char *pSBCIP )
+    {
+        strcpy( m_strConfig.szSBCFromIP, pSBCIP );
+    };
+
+    char *GetSBCToIP() { return & m_strConfig.szSBCToIP[0]; };
+    void SetSBCToIP( const char *pSBCIP )
+    {
+        strcpy( m_strConfig.szSBCToIP, pSBCIP );
     };
 
     //ENUM_MODE GetMode() { return m_strConfig.enMode; };
@@ -275,4 +326,4 @@ public:
 
 };
 
-#endif // CSYSCONFIG_H
+

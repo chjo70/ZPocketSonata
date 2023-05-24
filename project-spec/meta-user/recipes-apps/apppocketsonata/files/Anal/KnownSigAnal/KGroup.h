@@ -30,10 +30,9 @@ public:
 
 	unsigned int GetColPdw();
 	void MakeFreqAoaPwGroup() { CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] ); }
-	BOOL MakeKnownGroup();
+	bool MakeKnownGroup();
 
     //inline unsigned int GetFrqAoaGroupedPdwIndex() { return CGroup::m_uiCoFrqAoaPwIdx; }
-
 
 };
 

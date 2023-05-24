@@ -12,6 +12,7 @@
 #include "../../include/Defines.h"
 #include "../Identify/Identify.h"
 
+#include "../../Utils/clog.h"
 #include "../../Utils/ccommonutils.h"
 
 #include "../SigAnal/SigAnal.h"
@@ -34,16 +35,12 @@ public:
     CNAnalPRI *m_theAnalPRI;
     CNMakeAET *m_theMakeAET;
 
-	CIntraSigAnal *m_pTheIntraSigAnal;
+	//CIntraSigAnal *m_pTheIntraSigAnal;
 
     DEFINE_ANAL_VAR_
 
 private:
     unsigned int m_uiPDWID;
-
-    //enum ANALYSIS_MODE m_AnalMode;
-
-
 
     int m_CoGroup;
     UINT m_uiMaxPdw;
@@ -60,7 +57,7 @@ private:
 private:
 	void AallocMemory();
     void InitAllVar();
-	void StartOfSignalAnalysis();
+	void StartOfSignalAnalysis( bool bDBInsert );
 
     void Init(STR_PDWDATA *pPDWData = NULL);
 	void InitOfNewSigAnal();
@@ -75,6 +72,10 @@ public:
 
     //void InitVar(enum ANALYSIS_MODE analMode);
     void LoadCEDLibrary();
+
+    inline void DeleteAllFiles() {
+        CSigAnal::DeleteAllFiles();
+    }
 
     // 인라인 외부 연결 함수
     /**
@@ -170,11 +171,11 @@ public:
     inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
     inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, uiCount, pRange ); }
     inline STR_DTOA_HISTOGRAM *GetDtoaHist() { return m_theAnalPRI->GetDtoaHist(); }
-    inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
+    inline bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     inline void DeleteAllSeg( STR_EMITTER *pEmitter ) { m_thePulExt->DeleteAllSeg( pEmitter ); }
     inline void PrintAllSeg() { m_thePulExt->PrintAllSeg(); }
     inline void ExtractRefStable() { m_thePulExt->ExtractRefStable(); }
-    inline BOOL ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange ) { return m_thePulExt->ExtractDwellRefPT( pDwlSeg, pExtRange ); }
+    inline bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange ) { return m_thePulExt->ExtractDwellRefPT( pDwlSeg, pExtRange ); }
     inline int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist(uiCount, pPdwIndex ); }
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount ); }
     inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
@@ -189,8 +190,9 @@ public:
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
     inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic , pSeg1, pSeg2 ); }
-
     inline int GetCoGroup() { return m_CoGroup; }
+
+    inline void SetGlobalBoardID( ENUM_BoardID enBoardID ) { g_enBoardId = enBoardID; }
 
     //inline void NextSeqNum() { ++ m_nSeqNum; }
 
@@ -202,8 +204,6 @@ public:
     // 분석 관련 함수
     void Start(STR_PDWDATA *pPDWData, bool bDBInsert=false );
     bool CheckKnownByAnalysis();
-
-    void ClearAllMark();
 
 };
 

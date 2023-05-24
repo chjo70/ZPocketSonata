@@ -34,7 +34,6 @@
 //
 CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName)
 {
-    size_t szSize;
 
 	InitVar();
 
@@ -90,6 +89,7 @@ CScanSigAnal::~CScanSigAnal()
 void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 {
     unsigned int uiTotalPDW;
+    char buffer[200];
 
     // 추적할 에미터를 복사한다.
     m_pScnAet = pScnAet;
@@ -99,10 +99,9 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
-	Log( enNormal, "==== 스캔 분석 시작[%dth, Co:%d] ============================", GetStep(), m_uiCoPdw );
-
-    // 수집한 PDW 파일 저장하기...
-    //InsertRAWData(&m_stSavePDWData, _spZero );
+    sprintf( buffer, "==== 스캔 분석 시작[%dth, Co:%d]", GetStep(), m_uiCoPdw );
+    CCommonUtils::WallMakePrint( buffer, '=' );
+    Log( enNormal, buffer );
 
     uiTotalPDW = pPDWData->GetTotalPDW();
 
@@ -131,6 +130,10 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 
 	// 스캔 분석 결과를 저장한다.
     //SaveScanInfo( nResult, m_pScnAet );
+
+    sprintf( buffer, "================ 스캔 분석 종료 : [%s(%d)] %.2f[ms]", g_szAetScanType[m_strScnResult.uiScanType], m_strScnResult.uiScanType, m_strScnResult.fScanPeriod );
+    CCommonUtils::WallMakePrint( buffer, '=' );
+    Log( enNormal, buffer );
 
 }
 
@@ -240,7 +243,7 @@ void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USH
 {
 	for( unsigned int i=0 ; i < uiCount; ++i ) {
 		MARK[ *pPdwIndex++ ] = usMarkType;
-}
+	}
 }
 
 /**
@@ -281,11 +284,7 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
 
     // 신호 수집 개수 정의
     if (pstPDWData != NULL) {
-		MakeAnalDirectory( &pstPDWData->x );
-
-#ifdef _MSC_VER
-        CCommonUtils::DeleteAllFile( GetAnalDirectory(), 0 );
-#endif
+		MakeAnalDirectory( &pstPDWData->x, false );
 
         memcpy(&m_stSavePDWData.x, &pstPDWData->x, sizeof(UNION_HEADER));
 
@@ -449,13 +448,13 @@ void CScanSigAnal::SaveEmitterPDWFile( STR_EMITTER *pEmitter, int iPLOBID, bool 
 		\author   조철희
 		\param    nResult 인자형태 UINT
 		\param    pUpdAet 인자형태 STR_UPDAET *
-		\param    bOnlyScanThreat 인자형태 BOOL
+		\param    bOnlyScanThreat 인자형태 bool
 		\return   void
 		\version  0.0.51
 		\date     2008-10-11 15:18:42
 		\warning
 */
-void CScanSigAnal::SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlyScanThreat )
+void CScanSigAnal::SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, bool bOnlyScanThreat )
 {
 //	switch( nResult ) {
 //		case _spAnalSuc :
@@ -487,12 +486,12 @@ void CScanSigAnal::SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlySc
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CScanSigAnal::IsAnalScan
 		\author   조철희
-		\return   BOOL
+		\return   bool
 		\version  0.0.51
 		\date     2008-10-11 15:46:59
 		\warning
 */
-//BOOL CScanSigAnal::IsAnalScan()
+//bool CScanSigAnal::IsAnalScan()
 //{
 //	STR_AS *pAetAs;
 
@@ -508,12 +507,6 @@ void CScanSigAnal::SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlySc
 //	return TRUE;
 
 //}
-
-void CScanSigAnal::ClearAllMark()
-{
-
-}
-
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CScanSigAnal::SaveEmitterPDWFile

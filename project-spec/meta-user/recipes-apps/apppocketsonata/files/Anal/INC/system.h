@@ -1,25 +1,17 @@
-﻿/*!
-  \file     System.h
-  \brief    interface for the 시스템 관련 정의문
-	\version  0.0.1
-*/
-//////////////////////////////////////////////////////////////////////
+﻿/**
 
-#if !defined(AFX_SYSTEM_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_)
-#define AFX_SYSTEM_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_
+    @file      System.h
+    @brief
+    @details   ~
+    @author    조철희
+    @date      17.04.2023
+    @copyright © Cool Guy, 2023. All right reserved.
 
-#if _MSC_VER > 1000
+**/
+
 #pragma once
-#endif // _MSC_VER > 1000
 
-#ifdef __VXWORKS__
-#define	RAMDRV						(char *) "/RAMDRV"
-#define	RAMDRV_NO					(char *) ":0"
-#define	TFFSDRV						(char *) "/tffs1"
-
-#define SQLITE_FOLDER				((char *) "LIB")
-#endif
-
+#include "../../BootShell/BootShell.h"
 
 /////////////////////////////////////////////////////////////////////////
 #ifdef __ZYNQ_BOARD__
@@ -74,10 +66,10 @@
 #endif
 
 #else
-#define CEDEOB_SQLITE_FOLDER        (const char *) "c:/sqlite3"  // "\\\\192.168.0.168/ea_sjp_test/sqlite3"
-
+#define CEDEOB_SQLITE_FOLDER        (const char *) "d:/rawdata"  // "\\\\192.168.0.168/ea_sjp_test/sqlite3"
 
 #endif
+#define SQLITE_DIRECTORY			((char *) "LIB")
 #define CEDEOB_SQLITE_FILENAME      (const char *) "cedeob.sqlite3"
 
 #define BLK_CEDEOB_SQLITE_FILENAME	(const char *) "cedeob_blank.sqlite3"
@@ -90,7 +82,7 @@
 #elif defined(__VXWORKS__)
 #define EMITTER_SQLITE_FOLDER       (const char *) "/RAMDRV:0/LIB"
 #else
-#define EMITTER_SQLITE_FOLDER       (const char *) "c:/sqlite3"
+#define EMITTER_SQLITE_FOLDER       (const char *) "d:/rawdata"
 #endif
 #define EMITTER_SQLITE_FILENAME     (const char *) "emitter.sqlite3"
 
@@ -105,9 +97,10 @@
 #elif defined(__linux__)
 #define INI_FOLDER                  (const char *) "/home/chjo70"
 #else
-#define INI_FOLDER                  (const char *) "c:/sqlite3"
+#define INI_FOLDER                  (const char *) "d:/rawdata"
 #endif
-#define INI_FILENAME                (const char *) "/sysconfig.ini"
+#define INI_FILENAME                (const char *) "sysconfig.ini"
+#define INI_DIRECTORY               (const char *) "INI"
 
 // qDecoder 폴더 위치
 #define QDECODER_LOG_FOLDER         (const char *) "/tmp/LOG"
@@ -224,7 +217,7 @@
 
 
 // 식별 테이블을 위한 식별 최대 종류 개수 정의
-#define MAX_HOWTO_ID									(20)
+#define MAX_HOWTO_ID									(50)
 
 
 // Priority Mode 일때의 심벌 개수
@@ -673,4 +666,3 @@ enum EN_RADARCOLLECTORID { RADARCOL_Unknown=0, RADARCOL_1=1, RADARCOL_2, RADARCO
 #endif
 
 
-#endif // !defined(AFX_SYSTEM_H__F88C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_)

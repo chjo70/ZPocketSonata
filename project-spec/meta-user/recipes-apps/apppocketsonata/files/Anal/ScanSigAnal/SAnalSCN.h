@@ -1,9 +1,15 @@
-﻿// SAnalScan.h: interface for the CSAnalScan class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
 
-#if !defined(AFX_SANALSCAN_H__649D0457_9E49_4DE3_ACF7_3D07257B7545__INCLUDED_)
-#define AFX_SANALSCAN_H__649D0457_9E49_4DE3_ACF7_3D07257B7545__INCLUDED_
+    @file      SAnalSCN.h
+    @brief     interface for the CSAnalScan class.
+    @details   ~
+    @author    조철희
+    @date      2.05.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
 
 #if _MSC_VER > 1000
 #pragma once
@@ -16,9 +22,7 @@
 
 #include "../SigAnal/_SigAnal.h"
 
-//##ModelId=452B0C450116
 enum LowHighThreatType { LOWTHREAT=0, HIGHTHREAT, OBSCURITY } ;
-//##ModelId=452B0C45012A
 enum PseudoScanType { TrackUnknown=10, DetectUnknown, LowIllustrationTest } ;
 
 
@@ -26,7 +30,6 @@ enum PseudoScanType { TrackUnknown=10, DetectUnknown, LowIllustrationTest } ;
 
 class CScanSigAnal;
 
-//##ModelId=452B0C45013E
 class CSAnalScan : public CAnalPRI, public CMakeAET
 {
 private:
@@ -50,47 +53,35 @@ protected:
 	/*! \bug  스캔 주기를 int 에서 unsigned integer로 형 변경함.
 	    \date 2009-10-08 12:39:49, 조철희
 	*/
-	//##ModelId=452B0C450152
     UINT m_uiScnPrd;										//! 스캔 주기값
-	//##ModelId=452B0C450153
 	unsigned char m_ucScnTyp;										//! 스캔 형태
 
-	//##ModelId=452B0C45015D
 	STR_AUTOCOR m_nAutoCor;
-	//##ModelId=452B0C450166
 	UINT m_uiCoCanPeak;
 
-	//##ModelId=452B0C450167
 	UINT m_nSampleTime;
-	//##ModelId=452B0C450170
 	int m_noCh;
-	//##ModelId=452B0C450171
 	unsigned int m_uinoEMT;
 
-	//##ModelId=452B0C450185
 	STR_SCANPT *m_pScanPt;
-	//##ModelId=452B0C45018E
 	STR_SAMPLE m_nSample;
-	//##ModelId=452B0C450192
     UINT m_nCoModWc[256+1];
 
     UINT stOffPdw;
 
-
-    //SRxLOBData m_stLOBData;
-
 public:
+    CSAnalScan( void *pParent, unsigned int uicoMaxPdw );
+    virtual ~CSAnalScan();
+
     STR_EMITTER *WhichTheMainEmitter();
 
     void SaveScanPulse( STR_PDWINDEX *pPdwIndex );
 
     STR_PULSE_TRAIN_SEG *GetPulseSeg();
 
-	//BOOL CompMeanDiff(int x, int y, int thresh);
+	//bool CompMeanDiff(int x, int y, int thresh);
 	//float MeanInArray( UINT *series, UINT co );
-	//##ModelId=452B0C450198
     inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_ucScnTyp, *pScanPrd= m_uiScnPrd; }
-	//##ModelId=452B0C45019B
 	// inline STR_SCANPT *GetScanPulseTrain( int noCh ) { return & stScanPt[m_noCh]; }
 
 	//bool CheckControlWc( UINT noEMT );
@@ -120,31 +111,22 @@ public:
 	void Init( unsigned int uinoEMT=0, int noCh=0 );
     void MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int idxEmitter );
 
-    BOOL KnownAnalysis();
+    bool KnownAnalysis();
 
     int FindPeakInHist(unsigned int uiCount, PDWINDEX *pPdwIndex );
-    //##ModelId=452B0C57019E
-    BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return 0; }
-    //##ModelId=452B0C5701A8
+    bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return 0; }
     void DeleteAllSeg( STR_EMITTER *pEmitter )  { }
-    //##ModelId=452B0C5701AB
     void ExtractRefStable() { }
 
-    //##ModelId=452B0C5701B4
-    BOOL ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) { return 0; }
-    //##ModelId=452B0C5701BC
+    bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) { return 0; }
     UINT ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri ) { return 0; }
 
     void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof ) { }
 
-    //##ModelId=452B0C5701C8
     void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { }
-    //##ModelId=452B0C5701DA
     unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter) { return 0; }
-    //##ModelId=452B0C5701E4
     UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
 
-    //##ModelId=452B0C5701F8
     _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount );
 
     int GetBand();
@@ -154,23 +136,15 @@ public:
 
     unsigned int GetCoSeg();
 
-
     //////////////////////////////////////////////////////////////////////////////////////
     int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex );
-    //##ModelId=452B0C56000C
     unsigned int GetColPdw() { return 0; }
-    //##ModelId=452B0C56000E
     int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount );
-    //##ModelId=452B0C560012
     int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount);
-    //##ModelId=452B0C560019
     void MarkToPdwIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType) { }
 
-    //##ModelId=452B0C56002C
     unsigned int GetCoEmitter() { return 0; }
-    //##ModelId=452B0C560034
     STR_EMITTER *GetEmitter() { return m_pEmitter; }
-    //##ModelId=452B0C560036
     UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
     STR_PDWPARAM* GetPdwParam();
 
@@ -195,14 +169,6 @@ public:
     char *GetTaskID();
 #endif
 
-
-	//##ModelId=452B0C45022E
-    CSAnalScan( void *pParent, unsigned int uicoMaxPdw );
-	//##ModelId=452B0C450230
-	virtual ~CSAnalScan();
-
 };
 
 #endif
-
-#endif // !defined(AFX_SANALSCAN_H__649D0457_9E49_4DE3_ACF7_3D07257B7545__INCLUDED_)

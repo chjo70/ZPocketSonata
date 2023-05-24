@@ -2,11 +2,14 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#include "pch.h"
+
 #include <time.h>
 #include <math.h>
 #include <ctype.h>
 #include <stdio.h>
 
+#ifdef __VXWORKS__
 #include <ioLib.h>
 #include <errnoLib.h>
 #include <sysSymTbl.h>
@@ -26,12 +29,24 @@
 
 #include "prjParams.h"
 
+#endif
+
+#include "BootShellMain.h"
+
 #include "ManSbc.h"
 //#include "ManFlash.h"
 
 #include "./Untar/FileTar.h"
 
 #include "BootShell.h"
+
+#ifdef _NETMEM_	
+#include "../NetMem/server/ServerSocket2.h"
+#include "../NetMem/utils/PortableSocket.h"
+
+#endif
+
+#include "../Anal/INC/PDW.h"
 
 //////////////////////////////////////////////////////////////////////////
 // 전역 변수 및 객체 정의
@@ -40,12 +55,22 @@ CManSbc *theManSbc=0;
 CBootShell *theBootShell=0;
 CFileTar *theFileTar=0;
 
+#ifdef _NETMEM_	
+ServerSocket *theServerSocket=0;
+
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 IMPORT int USER_FLASH_Unlock();
-IMPORT BOOT_PARAMS stBootParams;
+
+#ifdef __VXWORKS__
+IMPORT BOOT_PARAMS g_stBootParams;
+#endif
+
+
 void re();
 
 void GetKey();
@@ -55,6 +80,27 @@ void GetKey();
 }
 #endif
 
+
+ENUM_UnitType g_enUnitType;
+char g_szBitResult[2][10] = { "비정상", "정상" };
+
+#ifdef _MSC_VER
+void _TRACE( char *format, ... )
+{
+    char buffer[1000];
+    va_list argptr;
+
+    va_start( argptr, format );
+    vsprintf( buffer, format, argptr );
+    va_end( argptr );
+
+    OutputDebugString( buffer );
+
+    //return true;
+
+}
+
+#endif
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,28 +113,50 @@ void GetKey();
 */
 void BootShellMain()
 {
-    time_t rawtime;  
+
+    time_t rawtime;
     struct tm * timeinfo;
 
-	// floating format 연산 에러로 반드시 추가해야 함. 
+	// floating format 연산 에러로 반드시 추가해야 함.
 	// vxworks 에서 해준다하던데.. 실행이 안 되는 것 같음.
-	//floatInit();  	
-	
+	//floatInit();
+
     theFileTar = new CFileTar;
     if( theFileTar == NULL ) {
-        PrintErr( ( "\n [W] 기본 메모리가 부족합니다 !" ) );
+        PrintErr( ( "\n [W] 기본 메모리(theFileTar)가 부족합니다 !" ) );
         WhereIs;
     }
 
+#ifdef _NETMEM_
+    theServerSocket = new ServerSocket( enMAXPRC, sizeof(STR_NETMEM) );
+    if( theServerSocket == NULL ) {
+        PrintErr( ( "\n [W] 기본 메모리(theServerSocket)가 부족합니다 !" ) );
+        WhereIs;
+    }
+    else {
+//        int i;
+//         for( i=0 ; i < enMAXPRC; i++ ) {
+//             MemoryPage *page = theServerSocket->pages[i];
+//
+//             unsigned char *mem = page->Lock( 0 );
+//             memcpy( mem + i * sizeof( long ), &tmp, sizeof( long ) );
+//             page->Unlock( 0, 0 );
+//         }
+
+        theServerSocket->StartThreadSocket( NET_MEM_PORT );
+
+    }
+#endif
+
 	theManSbc = new CManSbc;
 	if( theManSbc == NULL ) {
-		PrintErr( ( "\n [W] 기본 메모리가 부족합니다 !" ) );
+        PrintErr( ( "\n [W] 기본 메모리(theManSbc)가 부족합니다 !" ) );
 		WhereIs;
 	}
 
 	theBootShell = new CBootShell;
 	if( theBootShell == NULL ) {
-		PrintErr( ( "\n [W] 기본 메모리가 부족합니다 !" ) ); 
+        PrintErr( ( "\n [W] 기본 메모리(theBootShell)가 부족합니다 !" ) );
 		WhereIs;
 	}
 
@@ -103,6 +171,12 @@ void BootShellMain()
     delete theFileTar;
     delete theBootShell;
     delete theManSbc;
+
+#ifdef _NETMEM_
+    Sleep( 10 );
+
+    delete theServerSocket;
+#endif
 
 }
 
@@ -143,11 +217,11 @@ CBootShell::CBootShell()
 
 /**
  * @brief		~CBootShell
- * @return		
+ * @return
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/04/21 10:58:50
- * @warning		
+ * @warning
  */
 CBootShell::~CBootShell()
 {
@@ -165,11 +239,12 @@ CBootShell::~CBootShell()
 void CBootShell::Run()
 {
 	UCHAR key;
-	BOOL bRet;
+
+    // 네트워크 메모리 값 전시합니다.
+    theManSbc->ShowNetMemory();
 
 	printf( "\n\n 키 값 (기본=OFP Download/TFFS 파일 설치[w]/응용 프로그램 업데이트[1]/Run OFP in Flash) ? " );
     key = theManSbc->GetCommand();
-    //printf( "\n key=[%d]" , key );
 
     switch( key ) {
         case INSTALL_WEB :      // w 키
@@ -194,7 +269,7 @@ void CBootShell::Run()
         default :
             break;
     }
-    
+
 }
 
 

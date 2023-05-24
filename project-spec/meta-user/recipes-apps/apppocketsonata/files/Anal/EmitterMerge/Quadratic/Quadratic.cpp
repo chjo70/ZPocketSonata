@@ -173,7 +173,7 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
             dDistX = fabs( pResult->dNorthing - ppLongitude[0] );
             dDistY = fabs( pResult->dEasting - ppLatitude[0] );
 
-            if( dDistX < 0.0001 && dDistY < 0.0001 || is_zero<double>( pResult->dEasting ) || is_zero<double>(pResult->dNorthing ) ) {
+            if( ( dDistX < 0.0001 && dDistY < 0.0001 ) || is_zero<double>( pResult->dEasting ) || is_zero<double>(pResult->dNorthing ) ) {
                 pResult->dEasting = -1;
                 pResult->dNorthing = -1;
                 pResult->dLongitude = -1;

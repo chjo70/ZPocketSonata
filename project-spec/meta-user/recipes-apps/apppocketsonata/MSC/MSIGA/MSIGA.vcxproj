@@ -55,8 +55,9 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_LOG_;SQLITE_THREADSAFE=1;_UTM_POSITION_;_TRACK_ENABLED1_;_SCAN_ENABLED_;_SIM_PDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_SONATA1_;_XBAND1_;_KFX1_;_7011_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_LOG_;SQLITE_THREADSAFE=1;_UTM_POSITION_;_SERIAL_DETECT_FLOW_;_SIM_PDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_SONATA1_;_XBAND1_;_KFX1_;_7011_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,7 +82,8 @@ REM ########################################################################
 REM  INI 파일 복사..
 
 cd
-copy ..\..\files\sysconfig.ini c:\sqlite3\.
+copy ..\..\files\sysconfig.ini d:\rawdata\.
+copy ..\..\files\sysconfig.ini d:\tftpboot\INI\.
 dir
 
 REM If errorlevel 0 goto DONE
@@ -139,7 +141,6 @@ REM :END
     <ClInclude Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.h" />
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h" />
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h" />
-    <ClInclude Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\constants.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\Coordinate\Coordinate.h" />
@@ -164,7 +165,6 @@ REM :END
     <ClInclude Include="..\..\files\Anal\EmitterMerge\InverseMethod\VincentyParam.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\IsNumber.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\LatLong-UTMconversion.h" />
-    <ClInclude Include="..\..\files\Anal\EmitterMerge\LOBClustering.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\Matrix\Matrix.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\PositionEstimation.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.h" />
@@ -232,6 +232,15 @@ REM :END
     <ClInclude Include="..\..\files\Include\sysmsg.h" />
     <ClInclude Include="..\..\files\Include\system.h" />
     <ClInclude Include="..\..\files\Include\thrmsg.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-ccs.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-efsl.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-FatFs.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-ffs.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-mdd.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue-stdio.h" />
+    <ClInclude Include="..\..\files\MinIni\minGlue.h" />
+    <ClInclude Include="..\..\files\MinIni\minIni.h" />
+    <ClInclude Include="..\..\files\MinIni\wxMinIni.h" />
     <ClInclude Include="..\..\files\ODBC\MSSQL.h" />
     <ClInclude Include="..\..\files\ODBC\odbccore.h" />
     <ClInclude Include="..\..\files\SQLite\KompexSQLiteBlob.h" />
@@ -270,7 +279,6 @@ REM :END
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp" />
-    <ClCompile Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.cpp" />
     <ClCompile Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
@@ -294,9 +302,6 @@ REM :END
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\EmitterMerge\InverseMethod\CInverseMethod.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Anal\EmitterMerge\LOBClustering.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\EmitterMerge\Matrix\Matrix.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
@@ -393,6 +398,9 @@ REM :END
     <ClCompile Include="..\..\files\cmain.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\files\MinIni\minIni.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\files\ODBC\MSSQL.cpp" />
     <ClCompile Include="..\..\files\ODBC\odbccore.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -456,7 +464,7 @@ REM :END
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\clog.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\csingleclient.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
@@ -467,9 +475,15 @@ REM :END
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\files\Utils\PCIDriver.cpp" />
+    <ClCompile Include="..\..\files\Utils\PCIDriver.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="..\..\files\Utils\programrev.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VSIGA\dkm.c">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MSIGA.cpp" />
     <ClCompile Include="MSIGADlg.cpp" />

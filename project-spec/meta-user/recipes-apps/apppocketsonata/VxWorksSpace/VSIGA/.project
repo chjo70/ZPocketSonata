@@ -400,16 +400,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/curbit.h</locationURI>
 		</link>
 		<link>
-			<name>files/Thread/cusercollect.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cusercollect.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Thread/cusercollect.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cusercollect.h</locationURI>
-		</link>
-		<link>
 			<name>files/Utils/MulDiv64.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/MulDiv64.cpp</locationURI>
@@ -448,16 +438,6 @@
 			<name>files/Utils/ccommonutils.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/ccommonutils.h</locationURI>
-		</link>
-		<link>
-			<name>files/Utils/chwio.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/chwio.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Utils/chwio.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/chwio.h</locationURI>
 		</link>
 		<link>
 			<name>files/Utils/clog.cpp</name>
@@ -506,11 +486,6 @@
 		</link>
 		<link>
 			<name>files/Anal/Collect/DataFile</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>files/Anal/Collect/GenPDW</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -1118,16 +1093,6 @@
 			<name>files/Anal/Collect/DataFile/DataFile.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/DataFile/DataFile.h</locationURI>
-		</link>
-		<link>
-			<name>files/Anal/Collect/GenPDW/CGenPDW.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/GenPDW/CGenPDW.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Anal/Collect/GenPDW/CGenPDW.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/GenPDW/CGenPDW.h</locationURI>
 		</link>
 		<link>
 			<name>files/Anal/Collect/ccollectbank/ccollectbank.cpp</name>

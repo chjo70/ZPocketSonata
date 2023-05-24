@@ -20,6 +20,8 @@
 
 #include "../Utils/PCIDriver.h"
 
+#include "../Utils/clog.h"
+
 
 /**
  * @brief The CSignalCollect class
@@ -49,9 +51,6 @@ private:
 
 
 #ifdef _SQLITE_
-    //char m_szSQLString[4000];
-
-    //Kompex::CSQLiteDatabase *m_pDatabase;
 
 #elif defined(_MSSQL_)
     CODBCDatabase m_theMyODBC;
@@ -133,9 +132,9 @@ private:
 
 public:
 #ifdef _MSSQL_
-    CSignalCollect( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false );
+    CSignalCollect( int iThreadPriority, const char *pClassName=NULL, bool bArrayLanData=false );
 #else
-    CSignalCollect( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false );
+    CSignalCollect( int iThreadPriority, const char *pClassName=NULL, bool bArrayLanData=false );
 #endif
 
 
@@ -162,6 +161,7 @@ public:
     void CheckScanCollectBank( ENUM_PCI_DRIVER enPCIDriver );
 
 #endif
+
 };
 
 

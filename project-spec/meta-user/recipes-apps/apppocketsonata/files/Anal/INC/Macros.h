@@ -2,9 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_MACRO_H__93E04DDF_CE5E_4DB7_95B5_D35B77F287E7__INCLUDED_)
-#define AFX_MACRO_H__93E04DDF_CE5E_4DB7_95B5_D35B77F287E7__INCLUDED_
-
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
@@ -26,7 +23,7 @@
 // #endif
 
 
-#define PrintErr(A)							{ WPrintf A; WhereIs; }
+//#define PrintErr(A)							{ WPrintf A; WhereIs; }
 
 #define DPrintf(A)							theLogDebug->DebugPrintf(A)
 
@@ -61,4 +58,4 @@
                                         B = C;  \
                                         A = B;
 
-#endif // !defined(AFX_MACRO_H__93E04DDF_CE5E_4DB7_95B5_D35B77F287E7__INCLUDED_)
+

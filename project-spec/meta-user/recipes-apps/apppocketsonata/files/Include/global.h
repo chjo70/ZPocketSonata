@@ -26,10 +26,6 @@ int g_iMode;
 ENUM_BoardID g_enBoardId=enPRC_Unknown;
 char g_szPDWScinarioFile[100];
 
-bool g_Loop=true;
-
-bool g_AnalLoop=true;
-
 //ENUM_ENDIAN_MODE g_enEndian;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -57,9 +53,6 @@ extern int g_iMode;
 extern ENUM_BoardID g_enBoardId;
 extern char g_szPDWScinarioFile[100];
 
-extern bool g_Loop;
-extern bool g_AnalLoop;
-
 extern bool g_bSaveFile;
 
 extern char g_szCollectBank[4][10];
@@ -83,7 +76,7 @@ extern "C"
 #endif
 
 extern void _ShowProgramTitle( void );
-extern char *_GetProgramVersion();
+extern const char *_GetProgramVersion();
 
 #ifdef __cplusplus
 }

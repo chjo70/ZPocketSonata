@@ -59,7 +59,7 @@
 #define DB_SERVER_IP_ADDRESS			"127.0.0.1"
 
 //#define LOG_DIRECTORY						"RADARDIR_LOG"
-#define LOG_SUB_DIRECTORY					"레이더 방탐"
+#define LOG_SUBDIRECTORY					"레이더 방탐"
 #define GLOBAL_LOG_DIRECTORY				"\\\\192.168.0.41\\Files"
 #define GLOBAL_LOG_DIRECTORY2				"\\\\192.168.0.41"
 
@@ -68,7 +68,7 @@ extern CCriticalSection g_criticalDbg;
 extern CCriticalSection g_criticalExe;
 
 // 가변인함수로 Lof라는 함수 선언
-void Log( int nType, char *fmt, ... );
+void Log( int nType, const char *fmt, ... );
 CString GetFilePath();
 BOOL _CreateDir( char *pPath );
 BOOL CheckPing();
@@ -88,6 +88,7 @@ BOOL CheckPing();
 //////////////////////////////////////////////////////////////////////////
 
 CString GetIpAddress();
+BOOL CreateDir( char *pPath );
 
 void SetWindowHandler( HWND hWnd );
 void SetMute( bool bEnable );

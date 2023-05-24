@@ -138,7 +138,11 @@ T CalcMode( STR_EMITTER *pEmitter, T *pData, T mean )
  */
 CMakeAET::CMakeAET( unsigned int uiCoMaxLOB )
 {
-    BOOL bRet=TRUE;
+    bool bRet=true;
+
+    // 고정형 주파수 및 규칙성 펄스열 마진
+    float *pFvalue = g_pTheSysConfig->GetMargin();
+    m_tStableMargin = ITOAusCNV( pFvalue[1] );
 
     m_uiCoMaxLOB = uiCoMaxLOB;
 
@@ -147,15 +151,39 @@ CMakeAET::CMakeAET( unsigned int uiCoMaxLOB )
     m_pLOBData = ( SRxLOBData * ) malloc( sizeof( SRxLOBData ) * uiCoMaxLOB );
 
     if( m_pLOBData == NULL ) {
-        bRet = FALSE;
+        bRet = false;
         printf( "\n [W] m_pLOBData's memory allocation error !" );
         WhereIs;
     }
 
-    if( bRet == FALSE ) {
+    if( bRet == false ) {
         printf( "\n [W] 에미터 생성 클래스 생성자 실패 !" );
     }
 
+#if 0
+    STR_EMITTER strEmitter;
+
+    _spOneMicrosec = FDIV( 1000, POCKETSONATA::_toaRes );
+
+    strEmitter.uiStagDwellLevelCount = 4;
+    strEmitter.tStaggerDwellLevel[0] = IMUL( 100, _spOneMicrosec );
+    strEmitter.tStaggerDwellLevel[1] = IMUL( 120, _spOneMicrosec );
+    strEmitter.tStaggerDwellLevel[2] = IMUL( 100, _spOneMicrosec );
+    strEmitter.tStaggerDwellLevel[3] = IMUL( 100, _spOneMicrosec );
+    SortLevel( strEmitter.uiStagDwellLevelCount, strEmitter.tStaggerDwellLevel );
+
+    strEmitter.tStaggerDwellLevel[0] = IMUL( 99.5, _spOneMicrosec );
+    strEmitter.tStaggerDwellLevel[1] = IMUL( 120, _spOneMicrosec );
+    strEmitter.tStaggerDwellLevel[2] = IMUL( 100, _spOneMicrosec );
+    strEmitter.tStaggerDwellLevel[3] = IMUL( 100, _spOneMicrosec );
+    SortLevel( strEmitter.uiStagDwellLevelCount, strEmitter.tStaggerDwellLevel );
+
+    strEmitter.tStaggerDwellLevel[0] = IMUL( 100, _spOneMicrosec );
+    strEmitter.tStaggerDwellLevel[1] = IMUL( 120, _spOneMicrosec );
+    strEmitter.tStaggerDwellLevel[2] = IMUL( 99.5, _spOneMicrosec );
+    strEmitter.tStaggerDwellLevel[3] = IMUL( 100, _spOneMicrosec );
+    SortLevel( strEmitter.uiStagDwellLevelCount, strEmitter.tStaggerDwellLevel );
+#endif
 
 }
 
@@ -208,7 +236,7 @@ void CMakeAET::Init()
  * @date      2005-05-12 19:22:17
  * @warning
  */
-void CMakeAET::MakeAET()
+void CMakeAET::MakeAET( bool bDBInsert )
 {
     int i;
     STR_EMITTER *pEmitter;
@@ -226,7 +254,7 @@ void CMakeAET::MakeAET()
             // CW 에미터인 경우, PRI, 펄스폭을 강제 설정한다.
             // SetCWParameter( pNewAet );
 
-            SaveEmitterPDWFile( pEmitter, m_iCoLOB+1, true );
+            SaveEmitterPDWFile( pEmitter, m_iCoLOB+1, bDBInsert );
 
             ++ m_iCoLOB;
         }
@@ -258,6 +286,8 @@ void CMakeAET::MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
 {
     unsigned int i;
     unsigned int uiCount;
+
+    float fFreqMean;
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
@@ -295,21 +325,21 @@ void CMakeAET::MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
         case _PATTERN_AGILE :
             pFrq->iType = E_AET_FRQ_PATTERN;
             pFrq->iPatPrd = (int) ( pEmitter->fFreqPeriod + (float) 0.5 );
-            pFrq->iPatType = (int) pEmitter->uiFreqPatternType;
+            pFrq->iPatType = (int) pEmitter->enFreqPatternType;
 
             // 펄스열로부터 주파수 최대값과 최소값을 얻는다.
             uiCount = 0;
             pFrq->iMax = 0;
             pFrq->iMin = 0xffffff;
-            pFrq->iMean = 0;
+            fFreqMean = (float) 0.;
             for( i=0 ; i < pEmitter->uiCoSeg ; ++i ) {
                 pSeg = & m_pSeg[ pEmitter->uiSegIdx[i] ];
-                pFrq->iMin = _min( pFrq->iMin, pSeg->stFreq.iMin );
-                pFrq->iMax = _max( pFrq->iMax, pSeg->stFreq.iMax );
-                pFrq->iMean += ( (int) pSeg->stPDW.uiCount * pSeg->stFreq.iMean );
+                pFrq->iMin = min( pFrq->iMin, pSeg->stFreq.iMin );
+                pFrq->iMax = max( pFrq->iMax, pSeg->stFreq.iMax );
+                fFreqMean += (float) ( (float) pSeg->stPDW.uiCount * (float) pSeg->stFreq.iMean );
                 uiCount += pSeg->stPDW.uiCount;
             }
-            pFrq->iMean = IDIV( pFrq->iMean, uiCount);
+            pFrq->iMean = IDIV( fFreqMean, uiCount);
             break;
 
         case _RANDOM_AGILE :
@@ -319,15 +349,15 @@ void CMakeAET::MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
             uiCount = 0;
             pFrq->iMax = 0;
             pFrq->iMin = 0xffffff;
-            pFrq->iMean = 0;
+            fFreqMean = ( float ) 0.;
             for( i=0 ; i < pEmitter->uiCoSeg ; ++i ) {
                 pSeg = & m_pSeg[ pEmitter->uiSegIdx[i] ];
-                pFrq->iMin = _min( pFrq->iMin, pSeg->stFreq.iMin );
-                pFrq->iMax = _max( pFrq->iMax, pSeg->stFreq.iMax );
-                pFrq->iMean += ( (int) pSeg->stPDW.uiCount * pSeg->stFreq.iMean );
+                pFrq->iMin = min( pFrq->iMin, pSeg->stFreq.iMin );
+                pFrq->iMax = max( pFrq->iMax, pSeg->stFreq.iMax );
+                fFreqMean += ( float ) ( ( float ) pSeg->stPDW.uiCount * ( float ) pSeg->stFreq.iMean );
                 uiCount += pSeg->stPDW.uiCount;
             }
-            pFrq->iMean = IDIV( pFrq->iMean, uiCount);
+            pFrq->iMean = IDIV( fFreqMean, uiCount );
             break;
 
         default:
@@ -353,35 +383,14 @@ void CMakeAET::MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter )
 void CMakeAET::MakeStaggerPRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
 {
     UINT j;
-    int min_index, min_stagger_level, stagger_level_index;
+
+    int min_index;
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
-    /*! \todo	스태거 레벨을 가장 작은 값부터 레벨값을 시작하게 한다. */
-    // 스태거 레벨 에서 가장 작은 레벨값과 인덱스 값을 얻는다.
-    min_index = 0;
-    min_stagger_level = IDIV(pEmitter->tStaggerDwellLevel[0], _spOneMicrosec);
-    for (j = 1; j < pEmitter->uiStagDwellLevelCount && j < MAX_FREQ_PRI_STEP; ++j) {
-        if (min_stagger_level > (int) UDIV(pEmitter->tStaggerDwellLevel[j], _spOneMicrosec)) {
-            min_index = (int) j;
-            min_stagger_level = IDIV(pEmitter->tStaggerDwellLevel[j], _spOneMicrosec);
-        }
-    }
-    /*! \bug  역방향으로 작은 레벨값을 검색해서 제일 작은 레벨 값을 시작으로 한다.
-        \date 2006-08-16 20:18:43, 조철희
-    */
-    //
-    stagger_level_index = min_index;
-    for (j = 1; j < pEmitter->uiStagDwellLevelCount && j < MAX_FREQ_PRI_STEP; ++j) {
-        stagger_level_index = (int) ( (pEmitter->uiStagDwellLevelCount + (UINT) stagger_level_index - 1) % pEmitter->uiStagDwellLevelCount );
-        if (TRUE == CompMeanDiff<_TOA>(pEmitter->tStaggerDwellLevel[stagger_level_index], pEmitter->tStaggerDwellLevel[min_index], ITTOAusCNV((_TOA)1))) {
-            min_index = stagger_level_index;
-        }
-        else {
-            break;
-        }
-    }
-    _EQUALS3(pPri->tMin, pPri->tMax, pEmitter->tStaggerDwellLevel[min_index])
+    min_index = SortLevel( (int) pEmitter->uiStagDwellLevelCount, pEmitter->tStaggerDwellLevel );
+
+    _EQUALS3(pPri->tMin, pPri->tMax, pEmitter->tStaggerDwellLevel[0] )
 
     // 그 인덱스 값부터 에미터의 스태거단에 기록한다.
     // 그리고 PRI 범위와 평균값을 기록한다.
@@ -398,7 +407,7 @@ void CMakeAET::MakeStaggerPRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
     // 스태거일 때는 PRI 제원을 확인하여 Jitter율이 작거나 PRI 범위 STABLE_MARGIN 범위에 들면 STABLE로 간주한다.
     //-- 조철희 2005-09-29 15:53:46 --//
     pPri->fJtrPer = FDIV(100 * (pPri->tMax - pPri->tMin), pPri->tMean);
-    if (CompMeanDiff<_TOA>(pPri->tMax, pPri->tMin, 2 * STABLE_MARGIN) == TRUE) {
+    if (CompMeanDiff<_TOA>(pPri->tMax, pPri->tMin, 2 * m_tStableMargin ) == true) {
         pPri->iType = _STABLE;
     }
     // 지터율이 50%이상인 펄스열은 지터율로 정의 한다.
@@ -430,6 +439,59 @@ void CMakeAET::MakeStaggerPRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
         pPri->iType = _STAGGER;
     }
     pPri->iSwtLev = (int) pEmitter->uiStagDwellLevelCount;
+
+
+}
+
+/**
+ * @brief     SortLevel
+ * @param     int iSwtLev
+ * @param     _TOA * pSwtLev
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-14 17:38:17
+ * @warning
+ */
+int CMakeAET::SortLevel( int iSwtLev, _TOA *pSwtLev )
+{
+    unsigned int i;
+
+    int iret;
+    int min_index, stagger_min_index;
+
+    _TOA tMin_stagger_level;
+
+    /*! \todo	스태거 레벨을 가장 작은 값부터 레벨값을 시작하게 한다. */
+    // 스태거 레벨 에서 가장 작은 레벨값과 인덱스 값을 얻는다.
+    min_index = 0;
+    tMin_stagger_level = pSwtLev[0];
+    for( i = 1; i < (unsigned int) iSwtLev  && i < MAX_FREQ_PRI_STEP ; ++i ) {
+        if( false == CompMeanDiff<_TOA>( tMin_stagger_level, pSwtLev[i], (_TOA) _spOneMicrosec ) ) {
+            if( tMin_stagger_level > pSwtLev[i] ) {
+                min_index = ( int ) i;
+                tMin_stagger_level = pSwtLev[i];
+            }
+        }
+
+    }
+    /*! \bug  역방향으로 작은 레벨값을 검색해서 제일 작은 레벨 값을 시작으로 한다.
+        \date 2006-08-16 20:18:43, 조철희
+    */
+    //
+    iret = min_index;
+    for( i = 1; i < (unsigned int) iSwtLev && i < MAX_FREQ_PRI_STEP; ++i ) {
+        stagger_min_index = ( int ) ( ( iSwtLev + ( min_index - ( int ) i ) ) % iSwtLev );
+        if( true == CompMeanDiff<_TOA>( pSwtLev[stagger_min_index], tMin_stagger_level, ( _TOA ) _spOneMicrosec ) ) {
+            iret = stagger_min_index;
+        }
+        else {
+            break;
+        }
+    }
+
+    return iret;
 
 }
 
@@ -506,7 +568,7 @@ void CMakeAET::MakeJitterPRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
         pPri->tMin = min(pPri->tMin, m_pSeg[pEmitter->uiSegIdx[0]].stPRI.tMin);
         pPri->tMax = max(pPri->tMax, m_pSeg[pEmitter->uiSegIdx[0]].stPRI.tMax);
     }
-    //             if( CompMeanDiff<_TOA>( pPri->TMax, pPri->TMin, 2*STABLE_MARGIN ) == TRUE ) {
+    //             if( CompMeanDiff<_TOA>( pPri->TMax, pPri->TMin, 2*STABLE_MARGIN ) == true ) {
     //                 // pPri->type = _STABLE;
     //             }
 
@@ -540,7 +602,7 @@ void CMakeAET::MakeStablePRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
         pPri->tMin = min(pPri->tMin, m_pSeg[pEmitter->uiSegIdx[0]].stPRI.tMin);
         pPri->tMax = max(pPri->tMax, m_pSeg[pEmitter->uiSegIdx[0]].stPRI.tMax);
     }
-    if (CompMeanDiff<_TOA>(pPri->tMax, pPri->tMin, 2 * STABLE_MARGIN) == FALSE) {
+    if (CompMeanDiff<_TOA>(pPri->tMax, pPri->tMin, 2 * m_tStableMargin ) == false) {
         pPri->iType = _JITTER_RANDOM;
     }
 
@@ -589,19 +651,30 @@ void CMakeAET::MakeDefaultPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitt
  * @date      2022-06-16, 13:01
  * @warning
  */
-void CMakeAET::MakeStaggerPRIInfoFromEmitter( STR_PRI *pPri, STR_EMITTER *pEmitter )
+void CMakeAET::MakeStaggerPRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter )
 {
     unsigned int i;
 
-    pPri->tMean = _spZero;
-    pPri->tMin = pEmitter->tStaggerDwellLevel[0];
-    pPri->tMax = pEmitter->tStaggerDwellLevel[0];
+    int min_index;
+
+    min_index = SortLevel( ( int ) pEmitter->uiStagDwellLevelCount, pEmitter->tStaggerDwellLevel );
+
+    pPRI->tMean = _spZero;
+    pPRI->tMin = pEmitter->tStaggerDwellLevel[0];
+    pPRI->tMax = pEmitter->tStaggerDwellLevel[0];
     for( i = 0 ; i < pEmitter->uiStagDwellLevelCount && i < MAX_FREQ_PRI_STEP ; ++i ) {
-        pPri->tMin = min( pPri->tMin, pEmitter->tStaggerDwellLevel[i] );
-        pPri->tMax = max( pPri->tMax, pEmitter->tStaggerDwellLevel[i] );
-        pPri->tMean += pEmitter->tStaggerDwellLevel[i];
+        pPRI->tSwtVal[i] = pEmitter->tStaggerDwellLevel[( ( UINT ) min_index + i ) % pEmitter->uiStagDwellLevelCount];
+
+        pPRI->tMin = min( pPRI->tMin, pEmitter->tStaggerDwellLevel[i] );
+        pPRI->tMax = max( pPRI->tMax, pEmitter->tStaggerDwellLevel[i] );
+        pPRI->tMean += pEmitter->tStaggerDwellLevel[i];
     }
-    pPri->tMean = TDIV<_TOA>(pPri->tMean, pEmitter->uiStagDwellLevelCount);
+    pPRI->tMean = TDIV<_TOA>( pPRI->tMean, pEmitter->uiStagDwellLevelCount);
+
+    // 스태거 관련 정보 추가 저장
+    pPRI->iSwtLev = ( int ) pEmitter->uiStagDwellLevelCount;
+    //memcpy( pPRI->tSwtVal, pEmitter->tStaggerDwellLevel, sizeof( _TOA ) * ( size_t ) pPRI->iSwtLev );
+
 
 }
 
@@ -653,16 +726,13 @@ void CMakeAET::MakePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter )
         pPRI->iType = E_AET_PRI_STAGGER;
         MakeStaggerPRIInfoFromEmitter( pPRI, pEmitter );
 
-        // 스태거 관련 정보 추가 저장
-        pPRI->iSwtLev = (int) pEmitter->uiStagDwellLevelCount;
-        memcpy( pPRI->tSwtVal, pEmitter->tStaggerDwellLevel, sizeof( _TOA )*(size_t) pPRI->iSwtLev );
         pPRI->tPatPrd = pEmitter->tFramePri;
         break;
 
     case _JITTER_PATTERN:
         pPRI->iType = E_AET_PRI_PATTERN;
         pPRI->tPatPrd = UMUL( 1, pEmitter->fPRIPeriod );
-        pPRI->iPatType = (int) pEmitter->uiPRIPatternType;
+        pPRI->iPatType = pEmitter->enPRIPatternType;
         pSeg = & m_pSeg[pEmitter->uiMainSeg];
         pPRI->tMin = pSeg->stPRI.tMin;
         pPRI->tMax = pSeg->stPRI.tMax;
@@ -728,6 +798,8 @@ void CMakeAET::MakePRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
             break;
 
         // 스태거 또는 Dwell 일 때 스태거 레벨 값을 근거로 PRI 값을 설정한다.
+        case _STABLE_STAGGER :
+        case _JITTER_STAGGER :
         case _STAGGER :
             pPri->iType = E_AET_PRI_STAGGER;
             MakeStaggerPRIInfoFromSeg(pPri, pEmitter);
@@ -736,7 +808,7 @@ void CMakeAET::MakePRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
         case _JITTER_PATTERN:
             pPri->iType = E_AET_PRI_PATTERN;
             pPri->tPatPrd = UMUL( 1, pEmitter->fPRIPeriod );
-            pPri->iPatType = (int) pEmitter->uiPRIPatternType;
+            pPri->iPatType = (int) pEmitter->enPRIPatternType;
             pSeg = & m_pSeg[ pEmitter->uiMainSeg ];
             pPri->tMin = pSeg->stPRI.tMin;
             pPri->tMax = pSeg->stPRI.tMax;
@@ -891,12 +963,12 @@ void CMakeAET::MakeAOAInfoFromSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
     unsigned int i;
     int diffAoa, overAoa;
 
-    STR_PULSE_TRAIN_SEG *pSeg;
-
     PDWINDEX *pPdwIndex;
 
     // 방위의 최소 최대값은 모든 펄스열에서 최대, 최소 값으로 한다.
 #if 0
+    STR_PULSE_TRAIN_SEG *pSeg;
+
     int frstAoaMax, frstAoaMin;
 
     STR_MINMAX aoa;
@@ -1000,15 +1072,17 @@ void CMakeAET::MakeAOAInfoFromSeg(STR_MINMAX_SDEV *pAoa, STR_EMITTER *pEmitter)
     // 구현: 김경석
     // 수정: 조철희
     //-- 조철희 2005-07-12 16:39:34 --//
-    pSeg = & m_pSeg[ pEmitter->uiMainSeg ];
+
 #if defined( _GSKIMF_AOAMEANALG_200505_1 )
+    pSeg = & m_pSeg[ pEmitter->uiMainSeg ];
   pAoa->iMean = CalcAoaMean_GSKIMF_200505_1( pSeg );	// 김경석
 #elif defined( _GSKIMF_AOAMEANALG_200505_2 )
+    pSeg = & m_pSeg[ pEmitter->uiMainSeg ];
   pAoa->iMean = CalcAoaMean_GSKIMF_200505_2( pSeg );	// 김경석
 #elif defined( _GSKIMF_AOAMEANALG_200505_3 )
+    pSeg = & m_pSeg[ pEmitter->uiMainSeg ];
     pAoa->iMean = CalcAoaMean_GSKIMF_200505_3( pSeg );	// 김경석
 #elif defined( _GSKIMF_AOAMEANALG_200505_6 )
-
     pAoa->iMode = 0;
 #if defined(_XBAND_) || defined(_701_)
     pAoa->iMode = (int) CalcMode<unsigned int>( pEmitter, m_pAOA, ( unsigned int ) pAoa->iMean );
@@ -1090,7 +1164,7 @@ void CMakeAET::MakeExtInfoFromSeg( STR_EXT *pExt, STR_EMITTER *pEmitter )
     //-- 조철희 2005-11-04 17:44:48 --//
     pExt->uiPDWStat = pSeg->uiStat;
 
-    pExt->bOverId = FALSE;
+    pExt->bOverId = false;
 
     pExt->noMergeEMT = -1;
 
@@ -1387,19 +1461,14 @@ void CMakeAET::MakeFreqLOBDataFromEmitter( SRxLOBData *pLOBData, STR_EMITTER *pE
 
 	pLOBData->fFreqPatternPeriod = (float)FTOAsCNV((_TOA)stFrq.iPatPrd);
 
-	pLOBData->fFreqMean = FFRQMhzCNV(g_enBoardId, stFrq.iMean);
-	pLOBData->fFreqMax = FFRQMhzCNV(g_enBoardId, stFrq.iMax);
-	pLOBData->fFreqMin = FFRQMhzCNV(g_enBoardId, stFrq.iMin);
-	pLOBData->fFreqMode = FFRQMhzCNV(g_enBoardId, stFrq.iMode);
-	//pLOBData->fFreqMean = CPOCKETSONATAPDW::DecodeRealFREQMHz( stFrq.iMean, iCh, ( int ) g_enBoardId );
+	pLOBData->fFreqMean = FFRQMhzCNV(g_enBoardId, (unsigned int) stFrq.iMean);
+	pLOBData->fFreqMax = FFRQMhzCNV(g_enBoardId, ( unsigned int ) stFrq.iMax);
+	pLOBData->fFreqMin = FFRQMhzCNV(g_enBoardId, ( unsigned int ) stFrq.iMin);
+	pLOBData->fFreqMode = FFRQMhzCNV(g_enBoardId, ( unsigned int ) stFrq.iMode);
 
 	memset(pLOBData->fFreqSeq, 0, sizeof(pLOBData->fFreqSeq));
-#ifdef _POCKETSONATA_
 	for (i = 0; i < pLOBData->vFreqPositionCount; ++i) {
-#else
-    for( i = 0; i < pLOBData->vFreqPositionCount; ++i ) {
-#endif
-		pLOBData->fFreqSeq[i] = FFRQMhzCNV(g_enBoardId, stFrq.iSwtVal[i]);
+		pLOBData->fFreqSeq[i] = FFRQMhzCNV(g_enBoardId, ( unsigned int ) stFrq.iSwtVal[i]);
 	}
 	// #else
 	//     pLOBData->fFreqMean = FMUL( stFrq.iMean, (0.001) );      //FFRQCNV( 0, stFrq.mean );
@@ -1450,8 +1519,8 @@ void CMakeAET::MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmi
 	pLOBData->fPRIPatternPeriod = FTOAsCNV((_TOA)stPri.tPatPrd);
 #endif
 
-    _TOA tTest = 158892;
-    float f = FTOAsCNV( tTest );
+    //_TOA tTest = 158892;
+    //float f = FTOAsCNV( tTest );
 
 	pLOBData->fPRIMean = (float) TOAusCNV(stPri.tMean);
 	pLOBData->fPRIMax = (float) TOAusCNV(stPri.tMax);
@@ -1472,7 +1541,7 @@ void CMakeAET::MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmi
 #else
     for( i = 0; i < pLOBData->vPRIPositionCount; ++i ) {
 #endif
-		pLOBData->fPRISeq[i] = TOAusCNV(stPri.tSwtVal[i]);
+		pLOBData->fPRISeq[i] = (float) TOAusCNV(stPri.tSwtVal[i]);
 	}
 
 }

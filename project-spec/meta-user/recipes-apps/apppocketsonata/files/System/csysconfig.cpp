@@ -27,6 +27,8 @@
 
 CSharedMemroy* CSysConfig::m_pSharedMemory = NULL;
 
+unsigned int _spAnalMinPulseCount;
+
 static char g_szDeviceName[5][10] = { "eth1", "wlo1", "enp0s8" } ;
 
 #ifdef __cplusplus
@@ -94,9 +96,10 @@ void CSysConfig::LoadINI()
 
     // INI 파일 로딩하기
     strcpy( m_szIniFileName, INI_FOLDER /* getenv("HOME") */ );
+    strcat( m_szIniFileName, "/" );
     strcat( m_szIniFileName, INI_FILENAME );
 
-#ifdef _MFC_VER
+#ifdef _MFC_VER1
     unsigned int uiValue;
 
     char szBuffer[400], szDefault[400];
@@ -158,7 +161,13 @@ void CSysConfig::LoadINI()
 	GetPrivateProfileString("AOA", "AOA5", szDefault, szBuffer, 100, m_szIniFileName);
 	fValueArray[i++] = (float)atof(szBuffer);
 
-	SetDOAError(fValueArray);
+	SetAOAGroup(fValueArray);
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 고정형 STABLE MARGIN, 주파수 범위값 정의
+    GetPrivateProfileString
+
 
 	///////////////////////////////////////////////////////////////////////////////////
     // 네트워크 환경 설정
@@ -195,58 +204,70 @@ void CSysConfig::LoadINI()
     m_theMinIni.setfilename( m_szIniFileName );
 
     ///////////////////////////////////////////////////////////////////////////////
-    // RX Threshold 값 로딩
+    // 수신기 Threshold 값 로딩
     i = 0;
-    fValueArray[i++] = m_theMinIni.getf( "RXTHRESHOLD" , "Band1" , _DEFAULT_RXTHRESHOLD_BAND1_ );
-    fValueArray[i++] = m_theMinIni.getf( "RXTHRESHOLD" , "Band2" , _DEFAULT_RXTHRESHOLD_BAND2_ );
-    fValueArray[i++] = m_theMinIni.getf( "RXTHRESHOLD" , "Band3" , _DEFAULT_RXTHRESHOLD_BAND3_ );
-    fValueArray[i++] = m_theMinIni.getf( "RXTHRESHOLD" , "Band4" , _DEFAULT_RXTHRESHOLD_BAND4_ );
-    fValueArray[i++] = m_theMinIni.getf( "RXTHRESHOLD" , "Band5" , _DEFAULT_RXTHRESHOLD_BAND5_ );
-    fValueArray[i] = m_theMinIni.getf("RXTHRESHOLD", "Band6", _DEFAULT_RXTHRESHOLD_BAND6_);
-
+    fValueArray[i++] = m_theMinIni.getf( "RECEIVER_THREAHOLD" , "PRC_1" , _DEFAULT_RXTHRESHOLD_BAND1_ );
+    fValueArray[i++] = m_theMinIni.getf( "RECEIVER_THREAHOLD" , "PRC_2" , _DEFAULT_RXTHRESHOLD_BAND2_ );
+    fValueArray[i++] = m_theMinIni.getf( "RECEIVER_THREAHOLD" , "PRC_3" , _DEFAULT_RXTHRESHOLD_BAND3_ );
+    fValueArray[i++] = m_theMinIni.getf( "RECEIVER_THREAHOLD" , "PRC_4" , _DEFAULT_RXTHRESHOLD_BAND4_ );
+    fValueArray[i] = m_theMinIni.getf( "RECEIVER_THREAHOLD" , "PRC_5" , _DEFAULT_RXTHRESHOLD_BAND5_ );
     SetRxThreshold( fValueArray );
 
-    // 대역별 방탐 오차 정의
+    // 수신기 방위 오차 정의
     i = 0;
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA1", _DEFAULT_AOA_MERGE_);
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA2", _DEFAULT_AOA_MERGE_);
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA3", _DEFAULT_AOA_MERGE_);
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA4", _DEFAULT_AOA_MERGE_);
-    fValueArray[i++] = m_theMinIni.getf("MERGE", "AOA5", _DEFAULT_AOA_MERGE_);
-    fValueArray[i] = m_theMinIni.getf("MERGE", "AOA6", _DEFAULT_AOA_MERGE_);
+    fValueArray[i++] = m_theMinIni.getf("RECEIVER_AOA_ERROR", "PRC_1", _DEFAULT_RECEIVER_AOA_ERROR_ );
+    fValueArray[i++] = m_theMinIni.getf("RECEIVER_AOA_ERROR", "PRC_2", _DEFAULT_RECEIVER_AOA_ERROR_ );
+    fValueArray[i++] = m_theMinIni.getf("RECEIVER_AOA_ERROR", "PRC_3", _DEFAULT_RECEIVER_AOA_ERROR_ );
+    fValueArray[i++] = m_theMinIni.getf("RECEIVER_AOA_ERROR", "PRC_4", _DEFAULT_RECEIVER_AOA_ERROR_ );
+    fValueArray[i] = m_theMinIni.getf("RECEIVER_AOA_ERROR", "PRC_5", _DEFAULT_RECEIVER_AOA_ERROR_ );
+    SetReceiverDOAError(fValueArray);
 
-    SetMergeAOADiff(fValueArray);
-
-    // 수신기 방탐 오차 정의
+    // 방위 그룹화시 피크에서 좌우 반경 범위로 설정 정의
     i = 0;
-    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA1", _DEFAULT_AOA_ERROR_);
-    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA2", _DEFAULT_AOA_ERROR_);
-    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA3", _DEFAULT_AOA_ERROR_);
-    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA4", _DEFAULT_AOA_ERROR_);
-    fValueArray[i++] = m_theMinIni.getf("AOA", "AOA5", _DEFAULT_AOA_ERROR_);
-    fValueArray[i] = m_theMinIni.getf("AOA", "AOA6", _DEFAULT_AOA_ERROR_);
+    fValueArray[i++] = m_theMinIni.getf("AOA_GROUP", "PRC_1", _DEFAULT_AOA_ERROR_);
+    fValueArray[i++] = m_theMinIni.getf("AOA_GROUP", "PRC_2", _DEFAULT_AOA_ERROR_);
+    fValueArray[i++] = m_theMinIni.getf("AOA_GROUP", "PRC_5", _DEFAULT_AOA_ERROR_);
+    fValueArray[i++] = m_theMinIni.getf("AOA_GROUP", "PRC_4", _DEFAULT_AOA_ERROR_);
+    fValueArray[i] = m_theMinIni.getf("AOA_GROUP", "PRC_5", _DEFAULT_AOA_ERROR_);
+    SetAOAGroup(fValueArray);
 
-    SetDOAError(fValueArray);
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 마진 값 정의
+    i = 0;
+    fValueArray[i++] = m_theMinIni.getf( "MARGIN", "FIXEDFREQ_MARGIN", _DEFAULT_FREQ_MARGIN_ );
+    fValueArray[i] = m_theMinIni.getf( "MARGIN", "STABLE_MARGIN", _DEFAULT_STABLE_MARGIN_ );
 
+    SetMargin( fValueArray );
+
+
+    ///////////////////////////////////////////////////////////////////////////////
     // 네트워크 환경 설정
     strValue = m_theMinIni.gets( "NETWORK" , "PRIME_SERVER" , PRIME_SERVER );
     SetPrimeServerOfNetwork( strValue.c_str() );
 
+    strValue = m_theMinIni.gets( "NETWORK", "SBC_FROM_IP", SBC_FROM_IP );
+    SetSBCFromIP( strValue.c_str() );
+
+    strValue = m_theMinIni.gets( "NETWORK", "SBC_TO_IP", SBC_FROM_IP );
+    SetSBCToIP( strValue.c_str() );
+
     ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
-    _spAnalMinPulseCount = m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _DEFAULT_ANAL_MINPULSECOUNT_ );
+    _spAnalMinPulseCount = (unsigned int) m_theMinIni.geti( "ANAL" , "MIN_ANALPULSE" , _DEFAULT_ANAL_MINPULSECOUNT_ );
     SetMinAnalPulse( _spAnalMinPulseCount );
 
     // 신호 삭제 시간
     iValue = m_theMinIni.geti( "ANAL" , "DEFAULT_DELETE_TIMESEC" , _DEFAULT_DELETETIME_ );
     SetEmmgEmitterDeleteTimeSec( iValue );
 
+    ///////////////////////////////////////////////////////////////////////////////
     // 프로그램 버젼 정보
     SetProgramVersion( _GetProgramVersion() );
 
+    ///////////////////////////////////////////////////////////////////////////////
     // 위협 라이브러리 버젼 정보
     iValue = m_theMinIni.geti( "IPL" , "VERSION" , _DEFAULT_LIB_VERSION_ );
-    SetIPLVersion( _abs(iValue) );
+    SetIPLVersion( (unsigned int) _abs(iValue) );
 
 #endif
 
@@ -299,7 +320,13 @@ void CSysConfig::InitVar()
 }
 
 /**
- * @brief CSysConfig::SetNetworkIP
+ * @brief     SetNetworkIP
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-24 13:29:25
+ * @warning
  */
 void CSysConfig::SetNetworkIP()
 {
@@ -396,9 +423,11 @@ void CSysConfig::SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell )
     if( uiCh < CO_DETECT_CHANNEL ) {
         SetDetectWindowCell( uiCh, pWindowCell );
     }
+#if CO_TRACK_CHANNEL > 0
     else if( uiCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL ) {
         SetTrackWindowCell( uiCh-CO_DETECT_CHANNEL, pWindowCell );
     }
+#endif
     else if( uiCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL+CO_SCAN_CHANNEL ) {
         SetScanWindowCell( uiCh-CO_DETECT_CHANNEL-CO_TRACK_CHANNEL, pWindowCell );
     }
@@ -420,20 +449,20 @@ void CSysConfig::SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell )
 void CSysConfig::DisplaySystemVar()
 {
 
-    Log( enNormal, "############################# 시스템 환경 설정 값 #############################" );
+    printf( "\n############################# 시스템 환경 설정 값 #############################" );
 
-    Log( enNormal, "\t.보드 식별자           : %d" , m_strConfig.enBoardID );
-    Log( enNormal, "\t.프로그램 버젼          : %s" , m_strConfig.szProgramVersion );
-    LOG_LINEFEED;
+    printf( "\n\t.보드 식별자           : %d" , m_strConfig.enBoardID );
+    printf( "\n\t.프로그램 버젼          : %s" , m_strConfig.szProgramVersion );
+    printf( "\n\n" );
 
     //Log( enNormal, "\t.장비 모드           : %d" , m_strConfig.enMode );
-    Log( enNormal, "\t.라이브러리 버젼           : %d" , m_strConfig.uiIPLVersion );
-    LOG_LINEFEED;
+    printf( "\n\t.라이브러리 버젼           : %d" , m_strConfig.uiIPLVersion );
+    printf( "\n\n" );
 
-    Log( enNormal, "\t.최소 펄스수               : %d" , m_strConfig.uiMinAnalPulse );
-    Log( enNormal, "\t.기본 위협 삭제 시간[초]   : %d" , m_strConfig.iEmitterDeleteTime );
-    Log( enNormal, "\t.대역별 기본 임계값        : %.2f/%.2f/%.2f/%.2f/%.2f" , m_strConfig.fRxThreshold[0], m_strConfig.fRxThreshold[1], m_strConfig.fRxThreshold[2], m_strConfig.fRxThreshold[3], m_strConfig.fRxThreshold[4] );
-    Log( enNormal, "\t.대역별 방위 오차          : %.2f/%.2f/%.2f/%.2f/%.2f", m_strConfig.fRxDOAError[0], m_strConfig.fRxDOAError[1], m_strConfig.fRxDOAError[2], m_strConfig.fRxDOAError[3], m_strConfig.fRxDOAError[4] );
-    LOG_LINEFEED;
+    printf( "\n\t.최소 펄스수               : %d" , m_strConfig.uiMinAnalPulse );
+    printf( "\n\t.기본 위협 삭제 시간[초]   : %d" , m_strConfig.iEmitterDeleteTime );
+    printf( "\n\t.대역별 기본 임계값        : %.2f/%.2f/%.2f/%.2f/%.2f" , m_strConfig.fRxThreshold[0], m_strConfig.fRxThreshold[1], m_strConfig.fRxThreshold[2], m_strConfig.fRxThreshold[3], m_strConfig.fRxThreshold[4] );
+    printf( "\n\t.대역별 방위 오차          : %.2f/%.2f/%.2f/%.2f/%.2f", m_strConfig.fAOAGroup[0], m_strConfig.fAOAGroup[1], m_strConfig.fAOAGroup[2], m_strConfig.fAOAGroup[3], m_strConfig.fAOAGroup[4] );
+    printf( "\n\n" );
 
 }

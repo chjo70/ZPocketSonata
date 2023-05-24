@@ -91,7 +91,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_LOG_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -185,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\files\Utils\carraymsgdata.h" />
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
+    <ClInclude Include="..\..\files\Utils\clog.h" />
     <ClInclude Include="..\..\files\Utils\cmultiserver.h" />
     <ClInclude Include="..\..\files\Utils\cthread.h" />
     <ClInclude Include="framework.h" />
@@ -197,6 +198,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp" />
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp" />
+    <ClCompile Include="..\..\files\Utils\clog.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="..\..\files\Utils\cmultiserver.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>

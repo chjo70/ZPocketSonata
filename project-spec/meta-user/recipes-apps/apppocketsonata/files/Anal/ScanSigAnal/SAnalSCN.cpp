@@ -125,7 +125,7 @@ unsigned int CSAnalScan::GetCoSeg()
  * @brief CSAnalScan::KnownAnalysis
  * @return
  */
-BOOL CSAnalScan::KnownAnalysis()
+bool CSAnalScan::KnownAnalysis()
 {
 
     m_uiCoSeg = GetCoSeg();
@@ -459,7 +459,7 @@ void CSAnalScan::SamplingProcess()
 {
 	UINT i;
 	UINT inpulse;
-	UINT sumY, maxY;
+	int sumY, maxY;
 	_TOA *px, *psx;
 
 	int *py, *psy;
@@ -621,7 +621,7 @@ void CSAnalScan::Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 
 	pPa = & pSample->iPA[0];
 	for( i=0 ; i < pSample->uiCount && i < _spMaxSample ; ++i ) {
-		if( *pPa == (UINT) -1 ) {
+		if( *pPa == (int) -1 ) {
 
 			for( j=i+1 ; j < pSample->uiCount ; ++j ) {
 				// 셈플링 신호가 일정 구간내에 존재하지 않는 것을 체크
@@ -641,7 +641,7 @@ void CSAnalScan::Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt )
 				}
 			}
 
-			if( *pPa == (UINT) -1 ) {
+			if( *pPa == (int) -1 ) {
                 //if( i >= _spOne && i <= sizeof(pSample->iPA)/sizeof(UINT) ) {
 				*pPa = pSample->iPA[i-1];
                 //}
@@ -710,7 +710,7 @@ bool CSAnalScan::CheckSteadySignal( STR_SAMPLE *pSample, UINT meanY )
 	for( i=0 ; i < pSample->uiCount ; ++i ) {
 
 		// debug, 00-07-27 11:00:55
-		if( CompMeanDiff<int>( *pPa++, (int)meanY, iThPa) == _spFalse ) {
+		if( CompMeanDiff<int>( *pPa++, (int)meanY, iThPa) == false ) {
 			++ cleanPa;
 		}
 	}
@@ -803,7 +803,7 @@ UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
     UINT k;
     UINT co;
 
-    BOOL bMatch;
+    bool bMatch;
 
     m_uiCoCanPeak = _spZero;
 
@@ -858,19 +858,19 @@ UINT CSAnalScan::FindPeak( STR_AUTOCOR *pAutoCor )
 	        for( i=0 ; i < m_uiCoCanPeak && jump < m_uiCoCanPeak ; ++i ) {
 		        unsigned int offset;
 
-		        bMatch = TRUE;
+		        bMatch = true;
 		        offset = m_uiCanPeak[i];
 		        for( j=jump ; j < m_uiCoCanPeak ; j += jump ) {
 			        int diff;
 
 			        diff = (int) m_uiCanPeak[j] - (int) m_uiCanPeak[j-jump];
-			        if( TRUE != CompMeanDiff<int>( diff, (int) offset, 4 ) ) {
-				        bMatch = FALSE;
+			        if( true != CompMeanDiff<int>( diff, (int) offset, 4 ) ) {
+				        bMatch = false;
 				        break;
 			        }
 		        }
 
-		        if( bMatch == TRUE ) {
+		        if( bMatch == true ) {
 			        // 피크 값 중에서 주기값이 될만한 값을 찾는다.
 			        // 해상 신호 중에는 메인 로브 마다 가장 큰 신호세기 차가 있을 수 있기 때문에,
 			        // 스캔 신호 중에서 1번째 값보다 2번째 값이 클 수 있다.
@@ -1094,7 +1094,7 @@ UINT CSAnalScan::ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUT
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CSAnalScan::CheckControlWc
-// 반환되는 형  : BOOL
+// 반환되는 형  : bool
 // 함 수 인 자  : UINT noEMT
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 19:23:04
@@ -1149,16 +1149,7 @@ void CSAnalScan::KurtosisSkewness( STR_SAMPLE *pSample )
 
 	long sum=0;
 
-// 	pSample->co = 10;
-//
-// 	_EQUALS6( pSample->pa[0], pSample->pa[2], pSample->pa[4], pSample->pa[6], pSample->pa[8], 10 );
-// 	_EQUALS6( pSample->pa[1], pSample->pa[3], pSample->pa[5], pSample->pa[7], pSample->pa[9], 13 );
-// 	_EQUALS6( pSample->pa[10], pSample->pa[12], pSample->pa[14], pSample->pa[16], pSample->pa[18], 10 );
-// 	_EQUALS6( pSample->pa[11], pSample->pa[13], pSample->pa[15], pSample->pa[17], pSample->pa[19], 10 );
-// 	pSample->pa[5] = 10;
-
 	for( i=0 ; i < pSample->uiCount ; ++i ) {
-		// pSample->pa[i] = i;
 		sum += pSample->iPA[i];
 	}
 	pSample->fMeanY = (float) sum / pSample->uiCount;
@@ -1169,9 +1160,8 @@ void CSAnalScan::KurtosisSkewness( STR_SAMPLE *pSample )
 	/*! \bug  샘플링 계수에 대한 최소 값 설정
 	    \date 2008-11-03 22:29:18, 조철희
 	*/
-	if( is_zero<float>( pSample->fSdevY ) == true || is_zero<float>( pSample->uiCount ) == true ) {
+	if( is_zero<float>( pSample->fSdevY ) == true || pSample->uiCount == 0 ) {
         _EQUALS3( pSample->fKurtosis, pSample->fSkewness, _spZero )
-		co = UINT_MAX;
 	}
 	else {
         N = (double) pSample->uiCount;
@@ -1235,7 +1225,7 @@ UINT CSAnalScan::PeriodVerify( void )
 		    //-- 조철희 2006-04-26 12:29:19 --//
 		    // 마진 을 고려해서 피크 검증해야 함.
 		    if( virPeak < m_uiCanPeak[m_uiCoCanPeak-1]+maxErr ) {
-			    if( CompMeanDiff<unsigned int>( virPeak, m_uiCanPeak[i], maxErr ) == _spTrue ) {
+			    if( CompMeanDiff<unsigned int>( virPeak, m_uiCanPeak[i], maxErr ) == true ) {
 				    virPeak = virPeak + prdPeak;
 				    ++ coSamePeakDtoa;
 			    }
@@ -1494,10 +1484,10 @@ UINT CSAnalScan::GetFlagControlWc( UINT noEMT )
  * @param thresh
  * @return
  */
-// BOOL CSAnalScan::CompMeanDiff(int x, int y, int thresh)
+// bool CSAnalScan::CompMeanDiff(int x, int y, int thresh)
 // {
 //   int diff;
-//   BOOL bRet;
+//   bool bRet;
 //
 //   diff = _diffabs( x, y );
 //
@@ -1720,5 +1710,3 @@ char *CSAnalScan::GetTaskID()
 }
 
 #endif
-
-

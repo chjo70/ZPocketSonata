@@ -246,14 +246,14 @@ T _diffabs( T x, T y)
 ////////////////////////////////////////////////////////////////////////////////////////
 #elif defined(_POCKETSONATA_)
 #define FFRQCNV( A, B )         CPOCKETSONATAPDW::DecodeFREQMHz( B )
-#define FRQMhzCNV( A, B )		FDIV( ( FMUL( gFreqRes[(A)].fRes, (B) ) + gFreqRes[(A)].iOffset ), 1000 )  //CPOCKETSONATAPDW::DecodeFREQMHz( B )
+//#define FRQMhzCNV( A, B )		FDIV( ( FMUL( gFreqRes[(A)].fRes, (B) ) + gFreqRes[(A)].iOffset ), 1000 )  //CPOCKETSONATAPDW::DecodeFREQMHz( B )
 #define I_FRQMhzCNV( A, B )		IMUL( CPOCKETSONATAPDW::DecodeFREQMHz( B ), 1 )
 #define FFRQMhzCNV( A, B )		CPOCKETSONATAPDW::DecodeFREQMHz( B )
 #define IFRQMhzCNV( A, B )		CPOCKETSONATAPDW::EncodeFREQMHz( B )
 #define I_IFRQMhzCNV( A, B )	IDIV( ( FMUL( B, 1000. ) - gFreqRes[(A)].iOffset ), gFreqRes[(A)].fRes )
 #define IFRQMhz( A, B )         CPOCKETSONATAPDW::EncodeFREQMHzCeiling( B )
-#define IFRQCNV( A, B )         IDIV( (B), ( gFreqRes[A].fRes ) )
-#define I_IFRQCNV( A, B )       IDIV( (B), ( gFreqRes[A].fRes ) )
+//#d//efine IFRQCNV( A, B )         IDIV( (B), ( gFreqRes[A].fRes ) )
+//#define I_IFRQCNV( A, B )       IDIV( (B), ( gFreqRes[A].fRes ) )
 
 //#define IFRQMhzCNV( A, B, C )   CPOCKETSONATAPDW::EncodeRealFREQMHz( A )
 
@@ -271,7 +271,7 @@ T _diffabs( T x, T y)
 
 #define PWCNV( A )				CPOCKETSONATAPDW::DecodePWus( A )
 #define I_PWCNV( A )			IMUL( CPOCKETSONATAPDW::DecodePWus( A ), 1.0 )
-#define IPWCNV( A )			    CPOCKETSONATAPDW::EncodePWFloor( A )
+#define IPWCNV( A )			    IMUL( CPOCKETSONATAPDW::DecodePWus( A ), 1.0 )
 
 
 #define IPWCNVLOW( A )			CPOCKETSONATAPDW::EncodePWFloor( A )
@@ -390,7 +390,7 @@ T _diffabs( T x, T y)
 #endif
 
 #ifdef _WIN32
-#define PrintFunction { printf( "\n%s" , __FUNCTION__ ); g_pTheLog->LogMsg( enNormal, "%s", __FUNCTION__ ); }
+#define PrintFunction { printf( "\n%s" , __FUNCTION__ ); /* g_pTheLog->LogMsg( enNormal, "%s", __FUNCTION__ ); */ }
 #else
 #define PrintFunction { }
 #endif

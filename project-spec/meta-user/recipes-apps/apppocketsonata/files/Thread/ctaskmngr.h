@@ -1,11 +1,22 @@
-﻿#ifndef CTASKMNGR_H
-#define CTASKMNGR_H
+﻿/**
+
+    @file      CTASKMNGR.H
+    @brief     
+    @details   ~
+    @author    조철희
+    @date      3.05.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
 
 using namespace std;
 
 #include "../Anal/Identify/define.h"
 #include "../Utils/cthread.h"
-
+#include "../Utils/clog.h"
 #include "../System/csysconfig.h"
 
 
@@ -27,7 +38,7 @@ using namespace std;
 
 
 #ifdef _MSSQL_
-class CTaskMngr : public CThread, public CMSSQL 
+class CTaskMngr : public CThread, public CMSSQL
 #else
 class CTaskMngr : public CThread
 #endif
@@ -71,14 +82,14 @@ private:
 
     void StopUserCollecting();
 
-    inline void *GetRecvData() { 
+    inline void *GetRecvData() {
         void *pRet;
 
         if( m_pMsg->iArrayIndex >= 0 ) {
-            pRet = (void *) ( CThread::GetRecvData() ); 
+            pRet = (void *) ( CThread::GetRecvData() );
         }
         else {
-            pRet = (void *) ( & m_pMsg->x.szData[0] ); 
+            pRet = (void *) ( & m_pMsg->x.szData[0] );
         }
 
         return pRet;
@@ -86,9 +97,9 @@ private:
 
 public:
 #ifdef _MSSQL_
-    CTaskMngr( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false );
+    CTaskMngr( int iThreadPriority, const char *pClassName=NULL, bool bArrayLanData=false );
 #else
-    CTaskMngr( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false, const char *pFileName=NULL );
+    CTaskMngr( int iThreadPriority, const char *pClassName=NULL, bool bArrayLanData=false, const char *pFileName=NULL );
 #endif
 
     virtual ~CTaskMngr(void);
@@ -102,14 +113,15 @@ public:
 
 
     STR_MessageData *GetParentMessage() {
-        return m_pMsg; 
+        return m_pMsg;
     }
 
     inline ENUM_MODE GetMode() { return m_enMode; }
     inline void SetMode( ENUM_MODE enMode ) { m_enMode = enMode; }
 
+
 };
 
 // #define TMNGR   CTaskMngr::GetInstance()
 
-#endif // CTASKMNGR_H
+

@@ -27,7 +27,6 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-06-24 15:41:08
 //
-//##ModelId=429A5BDA0153
 CKnownSigAnal::CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName)
 {
 	InitVar();
@@ -52,7 +51,6 @@ CKnownSigAnal::CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-06-24 15:38:44
 //
-//##ModelId=429A5BDA0154
 CKnownSigAnal::~CKnownSigAnal()
 {
 	_SAFE_DELETE( m_theGroup )
@@ -80,14 +78,14 @@ void CKnownSigAnal::Init()
     \date     2008-07-10 12:43:16
     \warning
 */
-void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
+void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, bool bDBInsert )
 {
-	//BOOL bRet;
-    DWORD dwTime = CCommonUtils::GetTickCounts();
+	//bool bRet;
+    //DWORD dwTime = CCommonUtils::GetTickCounts();
 
-    Log( enLineFeed, "" );
+    //Log( enLineFeed, "" );
 
-    PrintFunction	
+    PrintFunction
 
 	// 추적할 에미터를 복사한다.
     m_pTrkAet = pTrkAet;
@@ -99,7 +97,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 
     Log( enNormal, "#### 추적 - 추적 분석 시작[%dth, Co:%d] ####" , GetStep(), m_uiCoPdw );
 
-    InsertRAWData( & m_stSavePDWData, _spZero );
+    InsertRAWData( & m_stSavePDWData, _spZero, bDBInsert );
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
 	_PDW *pPDW = pstPDWData->stPDW;
@@ -111,29 +109,29 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
 
 	///////////////////////////////////////////////////////////////////////////////////
 	// 추적 분석 시작
-	StartOfTrackSignalAnalysis();
+	StartOfTrackSignalAnalysis( bDBInsert );
 
 	///////////////////////////////////////////////////////////////////////////////////
     // 잔여 펄스열에 대해서 탐지 신호 분석을 수행한다.
-	StartOfNewSignalAnalysis();
+	StartOfNewSignalAnalysis( bDBInsert );
 
 #ifdef _POCKETSONATA_
 #elif defined(_ELINT) || defined(_XBAND_)
 #else
 //         // 추적 에미터와 새로운 에미터와 상관성을 확인하여 추적 에미터 여부를 결정한다.
 //         m_theMakeAET->MakeUpAET();
-// 
+//
 //         // 그룹화된 펄스열 저장하기
 //         SaveGroupPdwFile();
-// 
+//
 //         // 수집 개수 초기화
 //         // 에미터 전송 전에 수집 버퍼 초기화를 한다.
 //         ClearColBuffer();
-// 
+//
 //         SendAllAet();
 #endif
 
-    Log(enNormal, "================ 추적 분석 종료[%s] : %d[ms] =================", CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCounts() - dwTime)));
+    //CLogMsg::Log(enNormal, "================ 추적 분석 종료[%s] : %d[ms] =================", CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCounts() - dwTime)));
 
 }
 
@@ -146,9 +144,9 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet )
  * @date      2023-02-05 14:28:49
  * @warning
  */
-void CKnownSigAnal::StartOfTrackSignalAnalysis()
+void CKnownSigAnal::StartOfTrackSignalAnalysis( bool bDBInsert )
 {
-	BOOL bRet;
+	bool bRet;
 
 	// 그룹화 만들기
 	// 기존에 추출 기능을 그대로 이용하기 위한 초기 설정함.
@@ -163,7 +161,7 @@ void CKnownSigAnal::StartOfTrackSignalAnalysis()
 		m_theAnalPRI->KnownAnalysis();
 
 		// 에미터 분석
-		bRet = m_theMakeAET->KnownMakeAET();
+		bRet = m_theMakeAET->KnownMakeAET( bDBInsert );
 
 		// 추적 실패하면 마킹된 정보를 해지한다.
 		if (bRet == FALSE) {
@@ -173,10 +171,10 @@ void CKnownSigAnal::StartOfTrackSignalAnalysis()
 
 	int iIdxUpdAet = m_theMakeAET->GetIdxUpdAet();
 	if (iIdxUpdAet >= 0) {
-		Log(enNormal, "#### 추적 - 탐지 분석 시작[%dth, Co:%d] ####", GetStep(), m_uiCoPdw - m_theMakeAET->GetPulseCountFromKnownIndex((UINT)iIdxUpdAet));
+        //CLogMsg::Log(enNormal, "#### 추적 - 탐지 분석 시작[%dth, Co:%d] ####", GetStep(), m_uiCoPdw - m_theMakeAET->GetPulseCountFromKnownIndex((UINT)iIdxUpdAet));
 	}
 	else {
-		Log(enError, "에러 발생");
+        //CLogMsg::Log(enError, "에러 발생");
 	}
 
 
@@ -191,7 +189,7 @@ void CKnownSigAnal::StartOfTrackSignalAnalysis()
  * @date      2023-02-02 16:01:33
  * @warning
  */
-void CKnownSigAnal::StartOfNewSignalAnalysis()
+void CKnownSigAnal::StartOfNewSignalAnalysis( bool bDBInsert )
 {
 
 	// 펄스열 추출 초기화
@@ -228,7 +226,7 @@ void CKnownSigAnal::StartOfNewSignalAnalysis()
 			m_theAnalPRI->Analysis();
 
 			// 에미터 분석
-			m_theMakeAET->MakeAET();
+			m_theMakeAET->MakeAET( bDBInsert );
 
 			// 그룹화 생성 개수 증가
 			++m_CoGroup;
@@ -287,7 +285,7 @@ void CKnownSigAnal::InitVar()
  */
 void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 {
-    
+
     m_CoGroup = 0;
 
     // 시간 초기화
@@ -303,8 +301,8 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 
 	// 신호 수집 개수 정의
     if( pstPDWData != NULL ) {
-		MakeAnalDirectory( &pstPDWData->x );
-		CCommonUtils::DeleteAllFile( GetAnalDirectory(), 0 );
+		MakeAnalDirectory( &pstPDWData->x, false );
+		CCommonUtils::DeleteAllFile( GetAnalDirectory() );
 
         memcpy( & m_stSavePDWData.x, & pstPDWData->x, sizeof(UNION_HEADER) );
 
@@ -398,21 +396,21 @@ void CKnownSigAnal::SendAllAet()
 // 		// m_theMakeAET->SetCoNewAet( 0 );
 // 		return;
 // 	}
-// 
+//
 // 	// 두개 이상의 추적 성공 에미터 제외한다.
 // 	count = m_theMakeAET->GetCoNewAet();
-// 
+//
 //     pNewAet = m_theMakeAET->GetLOBData();
-// 
+//
 // 	int inEMT;
-// 
+//
 // 	inEMT = m_theMakeAET->GetIndexNewAet();
-// 
+//
 // 	/*! \bug  새로운 에미터에 대한 포인터
 // 	    \date 2008-07-30 13:06:51, 조철희
 // 	*/
 // 	pDstAet = pNewAet + inEMT;
-// 
+//
 // 	for( i=0 ; i < count ; ++i ) {
 // 		if( pUpdAet == NULL ||
 //             ( pUpdAet != NULL && m_theMakeAET->CheckHarmonic<SRxLOBData>( pUpdAet, (pNewAet+inEMT) ) == 0 ) ) {
@@ -422,10 +420,10 @@ void CKnownSigAnal::SendAllAet()
 // 			//if( TRUE == CheckPdwHarmonic( pUpdAet, pNewAet ) )
 // 			{
 // 				SendNewAet( pNewAet, inEMT );
-// 
+//
 // 				memcpy( pDstAet, & pNewAet[inEMT], sizeof( STR_NEWAET ) );
 // 				++ pDstAet;
-// 
+//
 // 				// 추적에서 새로운 에미터 개수를 제한한다.
 // 				++ m_CoNewAet;
 // 				if( m_CoNewAet >= CO_MAX_KSP_NEW_AET ) {
@@ -434,7 +432,7 @@ void CKnownSigAnal::SendAllAet()
 // 				}
 // 			}
 // 		}
-// 
+//
 // 		++ inEMT;
 // 	}
 
@@ -574,8 +572,8 @@ bool CKnownSigAnal::CheckKnownByAnalysis()
 int CKnownSigAnal::GetPLOBIndex()
 {
     int iPLOBIndex;
-    int iCoFrqAoaPwIdx = m_theGroup->GetCoFrqAoaPwIdx();
+    int iCoFrqAoaPwIdx = (int) m_theGroup->GetCoFrqAoaPwIdx();
 
-    iPLOBIndex = - ( ( int ) iCoFrqAoaPwIdx + 1 );
+    iPLOBIndex = - ( iCoFrqAoaPwIdx + 1 );
     return iPLOBIndex;
 }

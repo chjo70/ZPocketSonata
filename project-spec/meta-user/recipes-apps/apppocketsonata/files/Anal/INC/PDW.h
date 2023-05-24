@@ -103,19 +103,19 @@ struct UZPOCKETPDW_PDWWORD {
     unsigned long long int FalsePdw : 1;
     unsigned long long int FmopDir : 2;
     unsigned long long int PpfCh : 4;
-    unsigned long long int BoardId : 4;		// +
+    unsigned long long int BoardId : 4;
     unsigned long long int Reserved1 : 2;
     unsigned long long int FmopBw : 16;
 
     // 1-2번 : 32비트
-    unsigned long long int uiAOA : 12;         // Doa
+    unsigned long long int uiAOA : 12;
     unsigned long long int Di : 1;
     unsigned long long int Reserved2 : 3;
     unsigned long long int uiPA : 16;
 
     // 2번 : 64비트
     unsigned long long int  uiPW : 24;
-    unsigned long long int  uiFreq : 28;		            // 16 --> 36 (IF --> RF) --> 28, Freq
+    unsigned long long int  uiFreq : 28;
     unsigned long long int  Reserved3 : 12;
 
     // 3번 : 64비트
@@ -131,7 +131,7 @@ struct UZPOCKETPDW_PDWWORD {
 } ;
 
 #else
-struct PDWWORD {
+    struct UZPOCKETPDW_PDWWORD {
     // 1-2번 : 32비트
     unsigned long long int  uiPA : 16;
     unsigned long long int  Reserved2 : 3;
@@ -231,7 +231,7 @@ union DMAPDW {
      * @date      2022-04-06, 10:54
      * @warning
      */
-    unsigned int GetFrequency( int iCh )
+    unsigned int GetFrequency()
     {
         unsigned int uiFrequency;
 
@@ -296,6 +296,20 @@ union DMAPDW {
     }
 
     /**
+     * @brief     GetIndex
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-05-08 18:05:00
+     * @warning
+     */
+    unsigned int GetIndex()
+    {
+        return uPDW.stHwPdwDataRf.Index;
+    }
+
+    /**
      * @brief     GetPulsetype
      * @return    int
      * @exception
@@ -306,12 +320,11 @@ union DMAPDW {
      */
     int GetPulsetype()
     {
-        int iPulsetype = STAT_NORMAL;
+        int iPulsetype;
 
-        if( uPDW.stHwPdwDataRf.CwPulse == 1 ) {
-            iPulsetype = STAT_CW;
-        }
-        else {
+        if( uPDW.stHwPdwDataRf.CwPulse == 0 ) {
+            iPulsetype = STAT_NORMAL;
+
             if( uPDW.stHwPdwDataRf.Pmop == 1 ) {
                 iPulsetype = STAT_PMOP;
             }
@@ -319,14 +332,37 @@ union DMAPDW {
                 if( uPDW.stHwPdwDataRf.FmopDir == 1 ) {
                     iPulsetype = STAT_CHIRPUP;
                 }
-                else {
+                else if( uPDW.stHwPdwDataRf.FmopDir == 2 ) {
                     iPulsetype = STAT_CHIRPDN;
+                }
+                else {
+                    iPulsetype = STAT_CHIRPUK;
                 }
             }
             else {
 
             }
+        }
+        else {
+            iPulsetype = STAT_CW;
 
+            if( uPDW.stHwPdwDataRf.Pmop == 1 ) {
+                iPulsetype = STAT_CW_PMOP;
+            }
+            else if( uPDW.stHwPdwDataRf.Fmop == 1 ) {
+                if( uPDW.stHwPdwDataRf.FmopDir == 1 ) {
+                    iPulsetype = STAT_CW_CHIRPUP;
+                }
+                else if( uPDW.stHwPdwDataRf.FmopDir == 2 ) {
+                    iPulsetype = STAT_CW_CHIRPDN;
+                }
+                else {
+                    iPulsetype = STAT_CW_CHIRPUK;
+                }
+            }
+            else {
+
+            }
         }
 
         return iPulsetype;
@@ -578,18 +614,23 @@ struct TNEW_SPDW {
 
 
 // 아래는 MIDAS 변환을 하기 위해서 각 장치별로 변환 구조체 필요....
-
-// #if TOOL==diab
-// #pragma pack( 1 )
-// #else
-// #pragma pack( push, 1 )
-// #endif
+#ifndef _STR_STAT_BITMAP
+#define _STR_STAT_BITMAP
+struct STR_STAT_BITMAP {
+    unsigned int CwPulse : 1;
+    unsigned int Pmop : 1;
+    unsigned int Fmop : 1;
+    unsigned int FalsePdw : 1;
+    unsigned int FmopDir : 2;
+};
+#endif
 
 #ifndef _UNI_PDW_ETC
 #define _UNI_PDW_ETC
 union UNI_PDW_ETC {
     unsigned int uiCh[5];
 
+#if defined(_GRAPH_) || defined(_XBAND_)
     struct {
         float fPh1;
         float fPh2;
@@ -597,32 +638,36 @@ union UNI_PDW_ETC {
         float fPh4;
         float fPh5;
     } xb;
+#endif
 
+#if defined(_GRAPH_) || defined(_ELINT_)
     struct {
         float fPh1;
         float fPh2;
         float fPh3;
         float fPh4;
 
-        //////////////////////////////////////////////////////////////////////////
-        //int _dummy;
     } el;
+#endif
 
     struct {
-        int iPMOP;
-        int iFMOP;
-
         int iChannel;
 
-        //////////////////////////////////////////////////////////////////////////
-        //int _dummy[2];
+        union UNI_STAT {
+            STR_STAT_BITMAP stStrBitMap;
+
+        } x;
+
+
     } ps;
 
+#if defined(_GRAPH_) || defined(_701_)
     struct {
         int iChannel;
         int iDirectionValid;
 
     } _701;
+#endif
 
 };
 
@@ -632,8 +677,6 @@ union UNI_PDW_ETC {
 #define _PDW_STRUCT
 
 typedef struct _PDW {
-    _TOA ullTOA;
-
     int iStat;
 
     unsigned int uiAOA;
@@ -641,9 +684,11 @@ typedef struct _PDW {
     unsigned int uiPA;
     unsigned int uiPW;
 
-    int iPFTag;
+    unsigned int uiIndex;
 
     UNI_PDW_ETC x;
+
+    _TOA ullTOA;
 
     /**
      * @brief     _PDW 구조체에서 TOA 값을 리턴한다.
@@ -793,6 +838,11 @@ typedef struct _PDW {
         return iStat;
     }
 
+    unsigned int GetIndex()
+    {
+        return uiIndex;
+    }
+
     /**
      * @brief     GetDirectionValid
      * @return    unsigned int
@@ -804,13 +854,14 @@ typedef struct _PDW {
      */
     unsigned int GetDirectionValid()
     {
-        unsigned int uiRet;
+        unsigned int uiRet=(unsigned int ) -1;
 
         if( g_enUnitType == en_701 ) {
+#if defined(_GRAPH_) || defined(_701_)
             uiRet = ( unsigned int ) x._701.iDirectionValid;
+#endif
         }
         else {
-            uiRet = ( unsigned int ) -1;
         }
 
         return uiRet;
@@ -820,12 +871,6 @@ typedef struct _PDW {
 } _PDW;
 
 #endif
-
-// #if TOOL==diab
-// #pragma pack( 4 )
-// #else
-// #pragma pack( pop )
-// #endif
 
 #pragma pack( pop )
 
@@ -976,12 +1021,6 @@ enum ENUM_DataType {
 #define _701_LENGTH_OF_TASK_ID			(20)		//과제ID 문자열 길이 (TBD)
 
 
-// #if TOOL==diab
-// #pragma pack( 1 )
-// #else
-// #pragma pack( push, 1 )
-// #endif
-
 #pragma pack( push, 1 )
 
 #define swapUINTOrder(X)	((X >> 24) | ((X << 8) & 0x00FF0000) | ((X >> 8) & 0x0000FF00) | (X << 24))
@@ -1103,7 +1142,7 @@ struct SRxPDWDataRGroup {
      * @date      2023-01-08 11:55:41
      * @warning
      */
-    unsigned int GetFrequency( int iCh, ENUM_DataType enDataType )
+    unsigned int GetFrequency( ENUM_DataType enDataType )
     {
         unsigned int uiTemp;
 
@@ -1234,14 +1273,6 @@ struct SRxPDWDataRGroup {
     }
 
 };
-
-
-
-// #if TOOL==diab
-// #pragma pack( 4 )
-// #else
-// #pragma pack( pop )
-// #endif
 
 #pragma pack( pop )
 
@@ -1549,7 +1580,7 @@ union UNION_HEADER {
     STR_701_HEADER e7;
 #endif
 
-
+#if defined(_GRAPH_) || defined(_701_)
     void SetTaskID( char *pString )
     {
         switch( g_enUnitType ) {
@@ -1563,11 +1594,10 @@ union UNION_HEADER {
             case en_SONATA:
                 break;
 
-#if defined(_GRAPH_) || defined(_701_)
+
             case en_701:
                 strcpy( e7.aucTaskID, pString );
                 break;
-#endif
 
             default:
                 break;
@@ -1575,6 +1605,8 @@ union UNION_HEADER {
         }
 
     }
+
+#endif
 
     /**
      * @brief     GetTaskID
@@ -1799,7 +1831,7 @@ union UNION_HEADER {
      * @date      2022-05-10, 10:23
      * @warning
      */
-    void SetBoardID( ENUM_UnitType enUnitType, unsigned int uiBoardID )
+    void SetBoardID( unsigned int uiBoardID )
     {
 
         switch( g_enUnitType ) {
@@ -1849,7 +1881,6 @@ union UNION_HEADER {
             xb.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
-
 #if defined(_GRAPH_) || defined(_SONATA_)
         else if( g_enUnitType == en_SONATA ) {
             so.stCommon.tColTime = tColTime;
@@ -1873,19 +1904,19 @@ union UNION_HEADER {
      * @date      2022-05-10, 15:00
      * @warning
      */
-    void SetBoardID( unsigned int uiBoardID )
-    {
-
-        if( g_enUnitType == en_ZPOCKETSONATA ) {
-            ps.uiBoardID = uiBoardID;
-        }
-        else {
-            // x.so.stCommon.uiPDWID;
-        }
-
-        return;
-
-    }
+//     void SetBoardID( unsigned int uiBoardID )
+//     {
+//
+//         if( g_enUnitType == en_ZPOCKETSONATA ) {
+//             ps.uiBoardID = uiBoardID;
+//         }
+//         else {
+//             // x.so.stCommon.uiPDWID;
+//         }
+//
+//         return;
+//
+//     }
 
     /**
      * @brief     SetBand
@@ -2004,6 +2035,8 @@ union UNION_HEADER {
     }
 
 };
+
+
 #endif
 
 
@@ -2942,18 +2975,22 @@ struct STR_UZPOCKETPDW {
         UZPOCKETPDW_PDWWORD *pstHwPdwDataRf = & pstPDW[uiIndex].stHwPdwDataRf;
 
 #ifdef _POCKETSONATA_
+        memset( & o_pstPDW->x, 0, sizeof( UNI_PDW_ETC ) );
+
         if( pstHwPdwDataRf->CwPulse == 0 ) {
             o_pstPDW->iStat = STAT_NORMAL;
             if( pstHwPdwDataRf->Pmop == 1 ) {
                 o_pstPDW->iStat = STAT_PMOP;
+                //o_pstPDW->x.ps.iPMOP = 1;
             }
             if( pstHwPdwDataRf->Fmop == 1 ) {
                 if( pstHwPdwDataRf->FmopDir == 1 ) {
-
                     o_pstPDW->iStat = STAT_CHIRPUP;
+                    //o_pstPDW->x.ps.iFMOP = 1;
                 }
                 if( pstHwPdwDataRf->FmopDir == 2 ) {
                     o_pstPDW->iStat = STAT_CHIRPDN;
+                    //o_pstPDW->x.ps.iFMOP = 1;
                 }
                 else {
                     o_pstPDW->iStat = STAT_CHIRPUK;
@@ -2964,28 +3001,43 @@ struct STR_UZPOCKETPDW {
             o_pstPDW->iStat = STAT_CW;
             if( pstHwPdwDataRf->Pmop == 1 ) {
                 o_pstPDW->iStat = STAT_CW_PMOP;
+                //o_pstPDW->x.ps.iPMOP = 1;
             }
             if( pstHwPdwDataRf->Fmop == 1 ) {
                 if( pstHwPdwDataRf->FmopDir == 1 ) {
                     o_pstPDW->iStat = STAT_CW_CHIRPUP;
+                    //o_pstPDW->x.ps.iFMOP = 1;
                 }
                 if( pstHwPdwDataRf->FmopDir == 2 ) {
                     o_pstPDW->iStat = STAT_CW_CHIRPDN;
+                    //o_pstPDW->x.ps.iFMOP = 1;
                 }
                 else {
                     o_pstPDW->iStat = STAT_CW_CHIRPUK;
                 }
             }
         }
+
+        o_pstPDW->x.ps.iChannel = pstHwPdwDataRf->PpfCh;
+
+        STR_STAT_BITMAP *pStatBitmap;
+        pStatBitmap = & o_pstPDW->x.ps.x.stStrBitMap;
+        pStatBitmap->CwPulse = pstHwPdwDataRf->CwPulse;
+        pStatBitmap->Pmop = pstHwPdwDataRf->Pmop;
+        pStatBitmap->Fmop = pstHwPdwDataRf->Fmop;
+        pStatBitmap->FmopDir = pstHwPdwDataRf->FmopDir;
+
+
 #else
 
 #endif
-
         o_pstPDW->ullTOA = pstHwPdwDataRf->ullTOA;
         o_pstPDW->uiAOA = pstHwPdwDataRf->uiAOA;
         o_pstPDW->uiFreq = pstHwPdwDataRf->uiFreq;
         o_pstPDW->uiPA = pstHwPdwDataRf->uiPA;
         o_pstPDW->uiPW = pstHwPdwDataRf->uiPW;
+
+        o_pstPDW->uiIndex = pstHwPdwDataRf->Index;
 
     }
 
@@ -3002,16 +3054,28 @@ struct STR_UZPOCKETPDW {
      */
     void SavePDWData( unsigned int uiIndex, _PDW *i_pstPDW )
     {
-        memset( & pstPDW[uiIndex], 0, sizeof( UZPOCKETPDW ) );
+        UZPOCKETPDW *puzPDW;
 
-        pstPDW[uiIndex].stHwPdwDataRf.CwPulse = i_pstPDW->iStat;
-        pstPDW[uiIndex].stHwPdwDataRf.ullTOA = i_pstPDW->ullTOA;
-        pstPDW[uiIndex].stHwPdwDataRf.uiAOA = i_pstPDW->uiAOA;
-        pstPDW[uiIndex].stHwPdwDataRf.uiFreq = i_pstPDW->uiFreq;
-        pstPDW[uiIndex].stHwPdwDataRf.uiPA = i_pstPDW->uiPA;
-        pstPDW[uiIndex].stHwPdwDataRf.uiPW = i_pstPDW->uiPW;
+        puzPDW = & pstPDW[uiIndex];
+        memset( puzPDW, 0, sizeof( UZPOCKETPDW ) );
 
-        pstPDW[uiIndex].stHwPdwDataRf.Index = uiIndex;
+        // STAT 값 변환
+        STR_STAT_BITMAP *pStatBitmap;
+        pStatBitmap = & i_pstPDW->x.ps.x.stStrBitMap;
+        puzPDW->stHwPdwDataRf.CwPulse = pStatBitmap->CwPulse;
+        puzPDW->stHwPdwDataRf.Pmop = pStatBitmap->Pmop;
+        puzPDW->stHwPdwDataRf.Fmop = pStatBitmap->Fmop;
+        puzPDW->stHwPdwDataRf.FmopDir = pStatBitmap->FmopDir;
+        //puzPDW->stHwPdwDataRf.CwPulse = i_pstPDW->iStat;
+
+        // PDW 정보
+        puzPDW->stHwPdwDataRf.ullTOA = i_pstPDW->ullTOA;
+        puzPDW->stHwPdwDataRf.uiAOA = i_pstPDW->uiAOA;
+        puzPDW->stHwPdwDataRf.uiFreq = i_pstPDW->uiFreq;
+        puzPDW->stHwPdwDataRf.uiPA = i_pstPDW->uiPA;
+        puzPDW->stHwPdwDataRf.uiPW = i_pstPDW->uiPW;
+
+        puzPDW->stHwPdwDataRf.Index = i_pstPDW->uiIndex;
 
     }
 
@@ -3280,5 +3344,31 @@ typedef DMAPDW SIGAPDW;
 #endif
 
 
+#ifndef _STR_ELINT_HEADER2_
+#define _STR_ELINT_HEADER2_
+struct STR_ELINT_HEADER2 {
+    char aucTaskID[LENGTH_OF_TASK_ID];
+    unsigned int uiIsStorePDW;
+    EN_RADARCOLLECTORID enCollectorID;
+    ELINT::ENUM_BANDWIDTH enBandWidth;
+
+    // 아래는 공용 정보
+    STR_COMMON_HEADER stCommon;
+
+#ifdef _MSC_VER
+//     STR_ELINT_HEADER2::STR_ELINT_HEADER2()
+//     {
+//
+//     };
+#endif
+
+    EN_RADARCOLLECTORID GetCollectorID()
+    {
+        return enCollectorID;
+    };
+
+
+};
+#endif
 
 

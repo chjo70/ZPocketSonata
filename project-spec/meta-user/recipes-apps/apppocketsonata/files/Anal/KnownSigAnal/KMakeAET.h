@@ -57,7 +57,7 @@ public:
         return &m_KwnLOB[iIndex].stKnownInfo;
     }
 
-    
+
     /**
      * @brief     SetCoNewAet
      * @param     int iCount
@@ -71,7 +71,7 @@ public:
     inline void SetCoNewAet( int iCount ) { 
 		m_iCoNewAet=iCount; 
 	}
-    
+
     /**
      * @brief     ClearCoAet
      * @return    void
@@ -84,7 +84,7 @@ public:
     inline void ClearCoAet() { 
 		m_iCoLOB=0; 
 	}
-    
+
     /**
      * @brief     GetCoLOB
      * @return    int
@@ -209,12 +209,12 @@ public:
 
     STR_PDWPARAM* GetPdwParam();
     void Init();
-    void MakeAET();
+    void MakeAET( bool bDBInsert );
     void MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, PULSE_MARK enMarkType );
 
     UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
     int GetIndexNewAet();
-    BOOL CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri );
+    bool CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri );
     STR_PULSE_TRAIN_SEG *GetPulseSeg();
     int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex );
     unsigned int GetColPdw();
@@ -295,8 +295,8 @@ public:
 #else
             if( pAet1->iPRIType == _STAGGER && pAet2->vPRIType == _JITTER_RANDOM ) {
 #endif
-                if( TRUE == CompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, (float) STABLE_MARGIN ) &&
-                    TRUE == CompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, (float) STABLE_MARGIN ) ) {
+                if( true == CompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, (float) m_tStableMargin ) &&
+                    true == CompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, (float) m_tStableMargin ) ) {
                     uRet = 1;
                 }
 
@@ -407,7 +407,7 @@ public:
             }
             else if( pAet1->iPRIType == _DWELL && pAet2->iPRIType == _STABLE ) {
                 for( i=0 ; i < pAet1->iPRIPositionCount ; ++i ) {
-                    BOOL bRet;
+                    bool bRet;
 
                     bRet = CheckHarmonic( pAet1->fPRISeq[i], pAet2->fPRIMin, 2*_spOneMicrosec );
                     if( bRet != 0 ) {
@@ -449,19 +449,20 @@ public:
     void DISP_FineLOB( SRxLOBData *pLOB );
     unsigned int IsStorePDW();
 
-    BOOL IsUpdateAet();
+    bool IsUpdateAet();
     void MakeUpAET();
     int SelectKnownSuccessLOB();
     void CalcAllKnownSucessRatio();
     float CalcFreqSuccessRatio(SRxLOBData *pLOBData);
     float CalcPRISuccessRatio(SRxLOBData *pLOBData);
-    BOOL KnownMakeAET();
+    bool KnownMakeAET( bool bDBInsert );
 
 
     CKMakeAET( void *pParent, unsigned int uiCoMaxPdw );
     virtual ~CKMakeAET();
 
     int GetIdxUpdAet() const { return m_IdxUpdAet; }
+
 };
 
 #endif

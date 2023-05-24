@@ -45,15 +45,15 @@
 #define GLOBAL_LOG_DIRECTORY2			_T("\\\\192.168.0.41")
 
 // 로그 타입 사용자가 원하는 대로 정의
-enum LogType {
-	enDebug=0,
-
-	enNormal,
-	enLineFeed,
-
-	enError,
-	enEnd,
-};
+// enum LogType {
+// 	enDebug=0,
+// 
+// 	enNormal,
+// 	enLineFeed,
+// 
+// 	enError,
+// 	enEnd,
+// };
 
 void Log( int nType, const TCHAR *fmt, ... );
 CString GetFilePath();

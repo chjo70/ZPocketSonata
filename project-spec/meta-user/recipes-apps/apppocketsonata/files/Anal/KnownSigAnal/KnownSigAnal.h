@@ -12,6 +12,7 @@
 
 #include "KDefine.h"
 
+#include "../../Utils/clog.h"
 #include "../../Utils/ccommonutils.h"
 
 #include "../SigAnal/SigAnal.h"
@@ -21,9 +22,10 @@
 #include "KMakeAET.h"
 
 
+
+
 #ifdef __cplusplus
 
-//##ModelId=452B0C520241
 class CKnownSigAnal : public CSigAnal
 {
 private:
@@ -34,11 +36,8 @@ private:
     vector<SRadarMode *> m_VecMatchRadarMode;
 
 public:
-    //##ModelId=452B0C52024B
     int m_CoNewAet;
-    //##ModelId=452B0C52024C
     int m_CoUpdAet;
-    //##ModelId=452B0C520256
     STR_PDWINDEX *m_pGrPdwIndex;
 
     DEFINE_ANAL_VAR_
@@ -62,8 +61,8 @@ protected:
 
 private:
     bool CheckKnownByAnalysis();
-	void StartOfTrackSignalAnalysis();
-	void StartOfNewSignalAnalysis();
+	void StartOfTrackSignalAnalysis( bool bDBInsert );
+	void StartOfNewSignalAnalysis( bool bDBInsert );
 
     int GetPLOBIndex();
 
@@ -139,7 +138,7 @@ public:
     inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2 ); }
     inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, PULSE_MARK enMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex, uiCount, (UINT) enMarkType); }
 	inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
-    inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
+    inline bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount); }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
@@ -149,7 +148,7 @@ public:
     inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
     inline void DeleteAllSeg( STR_EMITTER *pEmitter ) { m_thePulExt->DeleteAllSeg( pEmitter ); }
     inline void ExtractRefStable() { m_theAnalPRI->ExtractRefStable(); }
-    inline BOOL ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) { return m_theAnalPRI->ExtractDwellRefPT( pDwlSewg, pExtRange ); }
+    inline bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) { return m_theAnalPRI->ExtractDwellRefPT( pDwlSewg, pExtRange ); }
     inline UINT ExtractFramePri(STR_PDWINDEX *pPdwIndex, _TOA framePri) { return m_theAnalPRI->ExtractFramePri( pPdwIndex, framePri ); }
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
     inline unsigned int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
@@ -208,16 +207,12 @@ public:
     //##ModelId=452B0C520379
     void SendNewAet( SRxLOBData *pNewAet, int inEMT );
 
-    //##ModelId=452B0C520396
     void Init( STR_STATIC_PDWDATA *pstPDWData );
-    //##ModelId=452B0C52039F
-    void Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet );
+    void Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, bool bDBInsert=true );
 
     void DISP_FineLOB(SRxLOBData *pLOB) {
         CSigAnal::DISP_FineLOB(pLOB);
     }
-
-
 
 };
 

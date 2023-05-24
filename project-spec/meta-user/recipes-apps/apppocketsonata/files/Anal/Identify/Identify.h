@@ -122,6 +122,8 @@ struct STR_H000 {
 
 #endif
 
+#include "../../Utils/clog.h"
+
 #if defined(_POCKETSONATA_)
 #define FLIB_FREQ_RES_MHZ               (1)
 
@@ -168,10 +170,10 @@ class CELSignalIdentifyAlg
 #endif
     static bool m_bInitTable;											///< 식별 테이블 로딩하기 위한 플레그
 
-    static STR_HOWTO_IDENTIFY m_HowToId[MAX_FRQTYPE][MAX_PRITYPE];		///< 식별 함수 테이블
+    static STR_HOWTO_IDENTIFY m_HowToId[E_AET_MAX_FRQ_TYPE][E_AET_MAX_PRI_TYPE];		///< 식별 함수 테이블
 
-    static unsigned char m_FrqIdCallFunc[MAX_FRQTYPE][MAX_FRQTYPE];		///< 주파수 식별 함수 테이블
-    static unsigned char m_PriIdCallFunc[MAX_PRITYPE][MAX_PRITYPE];		///< PRI 식별 함수 테이블
+    static unsigned char m_FrqIdCallFunc[E_AET_MAX_FRQ_TYPE][E_AET_MAX_FRQ_TYPE];		///< 주파수 식별 함수 테이블
+    static unsigned char m_PriIdCallFunc[E_AET_MAX_PRI_TYPE][E_AET_MAX_PRI_TYPE];		///< PRI 식별 함수 테이블
 
     static bool m_bLoadedDB;											///< CED/EOB 테이블 로딩 여부 플레스
 
@@ -228,7 +230,7 @@ private:
     float CalcPRIMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode);
 
  public:
-    void Identify( SRxLOBData *pLOBData, SELLOBDATA_EXT *pThreatDataExt, SPosEstData *pstPosData, BOOL bMakeH0000 );
+    void Identify( SRxLOBData *pLOBData, SELLOBDATA_EXT *pThreatDataExt, SPosEstData *pstPosData, bool bMakeH0000 );
     void Identify( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, SELLOBDATA_EXT *pLOBDataExt, bool bIDExecute=true, bool bMakeH0000=true );
 
     // 식별 함수 정의
@@ -251,8 +253,8 @@ private:
 	void FIdentifyFixHop(void *pData, bool bLOB );
  	void FIdentifyFixFix( void *pData, bool bLOB );
  	void FIdentifyFreq(void *pData, bool bLOB);
- 	BOOL IdentifyPatternRange( SRadarMode *pRadarMode, SRxLOBData *pLOBData );
-    BOOL IdentifyPatternRange( SRadarMode *pRadarMode, SRxABTData *pABTData );
+ 	bool IdentifyPatternRange( SRadarMode *pRadarMode, SRxLOBData *pLOBData );
+    bool IdentifyPatternRange( SRadarMode *pRadarMode, SRxABTData *pABTData );
  	void CallFreqFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyFrq[nCall])( pLOBData, true ); }		//!< http://izeph.com/tt/blog/155 참조.
  	void CallPriFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyPri[nCall])( pLOBData, true); }
 
@@ -270,7 +272,7 @@ private:
 
 
  	void Init();
- 	void CopyAmbiguity( I_AET_ANAL *pIAetAnal, I_AET_DATA *pIAetData, BOOL bMakeH0000 );
+ 	void CopyAmbiguity( I_AET_ANAL *pIAetAnal );
  	void IdentifyFreqPRI( SRxLOBData *pLOBData );
 	void IdentifyFreqPRI( SRxABTData *pABTData );
 
@@ -302,22 +304,22 @@ private:
 	void MallocStaticBuffer();
  	void InitVar();
  	void Destory();
- 	BOOL CompSwitchLevel( float fVal, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
-    BOOL CompSwitchLevel( float fVal, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
-    BOOL CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, int coNumIndex );
-    BOOL CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values );
+ 	bool CompSwitchLevel( float fVal, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
+    bool CompSwitchLevel( float fVal, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
+    bool CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, int coNumIndex );
+    bool CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values );
 
 	bool CheckThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
 
     char *GetFunctionCode( EnumFunctionCodes eFunctionCode );
 
 	template <typename T>
-	BOOL CompSwitchLevel( T *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries )
+	bool CompSwitchLevel( T *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries )
 	{
 		UINT i, j;
 		UINT index;
 
-		BOOL bRet=FALSE;
+		bool bRet=false;
 		SRadarRF_SequenceNumIndex *pTempRF_SequenceNumIndex;
 
 		for( i=0 ; i < coSeries ; ++i ) {
@@ -330,7 +332,7 @@ private:
 				index = j % coSeries;
 
 				bRet = CompMarginDiff22( series[index], pRadarRF_Values->fRF_Min, pRadarRF_Values->fRF_Max, (float) m_pSEnvironVariable->fMarginFrqError );
-				if( FALSE == bRet ) {
+				if( false == bRet ) {
 					break;
 				}
 
@@ -338,8 +340,8 @@ private:
 
 			}
 
-			if( TRUE == bRet ) {
-				// bRet = TRUE;
+			if( true == bRet ) {
+				// bRet = true;
 				break;
 			}
 		}
@@ -349,7 +351,7 @@ private:
 	}
 
 	template <typename T>
-	BOOL CompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
+	bool CompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
 	{
 		int i, j, k;
 		int index1;
@@ -357,18 +359,18 @@ private:
 		T tDiff;
 		T *pSeries;
 
-		BOOL bRet=FALSE;
+		bool bRet=false;
 
 		if( coSeries != 0 ) {
 			for( i=0 ; i < coSeries ; ++i ) {
-				bRet = TRUE;
+				bRet = true;
 				tDiff = 0;
 				for( j=i ; j < coSeries+i ; ++j ) {
 					pSeries = pSeries2;
 					for( k=j ; k < coSeries+j ; ++k ) {
 						index1 = k % coSeries;
 						bRet = CompMeanDiff<T>( pSeries1[index1], *pSeries, margin );
-						if( FALSE == bRet ) {
+						if( false == bRet ) {
 							break;
 						}
 						tDiff += _diffabs( pSeries1[index1], *pSeries );
@@ -376,7 +378,7 @@ private:
 					}
 				}
 
-				if( TRUE == bRet ) {
+				if( true == bRet ) {
 					break;
 				}
 			}
@@ -419,10 +421,10 @@ private:
 // 	float GetEOBFLatitude( int nThreatIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );
 // 	UINT GetEOBPinNumber( int nThreatIndex, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL );
 // 	int CalDistanceNM( int iLat1, int iLong1, int iLat2, int iLong2 );
-// 	BOOL IsFindELNOTInThreat( CString *pStrELNOT, EnumLibType eEOBLibType );
+// 	bool IsFindELNOTInThreat( CString *pStrELNOT, EnumLibType eEOBLibType );
 //
 // 	void IdentifyCEDEOB( EnumLibType eCEDLibType, EnumLibType eEOBLibType );
-// 	BOOL CELSignalIdentifyAlg::FindEOB( int nThreatIndex, int nDeviceIndex );
+// 	bool CELSignalIdentifyAlg::FindEOB( int nThreatIndex, int nDeviceIndex );
 // 	bool GetRadarModeASameELNOTInEOBResult( STR_CEDEOBID_INFO *pIDInfo, SELABTDATA_EXT *pABTExtData, char *pszELNOT, EnumLibType eEOBLibType );
  	bool IsSortELNOT( SRadarMode* pRadarModeRef, SRadarMode *pRadarModeNxt );
 
@@ -451,7 +453,7 @@ protected:
     float CalcFreqTypeMatchRatio(SRadarMode *pRadarMode);
     float CalcPRITypeMatchRatio(SRadarMode *pRadarMode);
 
-	BOOL CheckFreqType(ENUM_AET_FRQ_TYPE enFrqType, SRadarMode *pRadarMode );
+	bool CheckFreqType(ENUM_AET_FRQ_TYPE enFrqType, SRadarMode *pRadarMode );
 
 	void InitRadarModeData();
 

@@ -1,11 +1,22 @@
-//Author :- Nish [nishforever@vsnl.com]
+﻿/**
+
+    @file      FileTar.cpp
+    @brief
+    @details   ~
+    @author    조철희
+    @date      18.04.2023
+    //Author :- Nish [nishforever@vsnl.com]
+
+**/
+
+#include "pch.h"
 
 
-#ifdef _WIN32
-#include "../../A50SigAnal/stdafx.h"
-#else
-
-#endif
+// #ifdef _WIN32
+// #include "../../A50SigAnal/stdafx.h"
+// #else
+//
+// #endif
 
 #include "FileTar.h"
 
@@ -23,8 +34,19 @@ void untar( char *filename, char *destfolder );
 }
 #endif
 
+/**
+ * @brief     strlastfind
+ * @param     char * s
+ * @param     char * t
+ * @return    char *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-18 09:18:52
+ * @warning
+ */
 char *strlastfind(char *s, char *t)
-{    
+{
     int i, j;
     int len_str, len_target;
 
@@ -52,7 +74,7 @@ char *strlastfind(char *s, char *t)
 
 
 char *strfind(char *s, char *t)
-{    
+{
     int i, j;
     int len_str, len_target;
 
@@ -66,7 +88,7 @@ char *strfind(char *s, char *t)
             if (s[i + j] != t[j])   // 위치의 문자들이 같지 않다면 loop를 빠진다.
                 break;
         }
-    
+
         // 만약 j가 len_target과 같다면, 즉 앞의 for문이 중간에
         // break가 되지 않고 끝까지 다 돌았다면 문자열을 찾은 것이다.
         if (j == len_target)
@@ -109,7 +131,7 @@ CFileTar::~CFileTar()
 }
 
 const char * CFileTar::TarHeader::GetDescription()
-{	
+{
 	return m_block.header.name;
 }
 
@@ -141,6 +163,17 @@ void CFileTar::SetFilePath(char *path)
 
 }
 
+/**
+ * @brief     AddFile
+ * @param     char * fname
+ * @param     char * desc
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-18 09:23:34
+ * @warning
+ */
 int CFileTar::AddFile(char *fname, char *desc)
 {
 	char fullpath[_MAX_PATH];
@@ -162,7 +195,7 @@ int CFileTar::AddFile(char *fname, char *desc)
 		CloseHandle(hFile);
 		return 1;
 	}
-	
+
 	if(m_TarHeader.IncrementCount()==0)
 	{
 		CloseHandle(hFile);
@@ -170,15 +203,26 @@ int CFileTar::AddFile(char *fname, char *desc)
 	}
 	TarIndex *pTarIndex=new TarIndex;
 	strcpy(pTarIndex->FileName,fname);
-	strcpy(pTarIndex->Description,desc);	
+	strcpy(pTarIndex->Description,desc);
 	pTarIndex->Size=size;
-	
+
 	m_pTarIndex[m_TarHeader.GetCount()]=pTarIndex;
 
 	CloseHandle(hFile);
 	return 0;
 }
 
+/**
+ * @brief     CreateTar
+ * @param     char * TarFName
+ * @param     char * TarPath
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-18 09:23:29
+ * @warning
+ */
 int CFileTar::CreateTar(char *TarFName, char *TarPath)
 {
 	char tarfullpath[_MAX_PATH];
@@ -190,14 +234,14 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 		strcat(tarfullpath,"/");
 	strcat(tarfullpath,TarFName);
 	int fdout=0;
-	ssize_t ret;
+	int ret;
+
 	int i;
-	if((fdout=open(tarfullpath,_O_CREAT|_O_WRONLY|_O_BINARY|_O_TRUNC,
-		_S_IWRITE))<0)
+	if((fdout=open(tarfullpath,_O_CREAT|_O_WRONLY|_O_BINARY|_O_TRUNC,_S_IWRITE))<0)
 	{
 		_close(fdout);
 		return 1;
-	}	
+	}
 	ret=_write(fdout,(char *) &m_TarHeader,sizeof(UNI_BLOCK));
 	long ssize=m_TarHeader.GetCount()*sizeof (TarIndex)+sizeof(UNI_BLOCK);
 	for(i=1;i<=m_TarHeader.GetCount();i++)
@@ -210,10 +254,10 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 	{
 		char filetoadd[_MAX_PATH];
 		strcpy(filetoadd,FilePath);
-		strcat(filetoadd,m_pTarIndex[i]->FileName);		
+		strcat(filetoadd,m_pTarIndex[i]->FileName);
 		AppendFile(fdout,filetoadd);
 	}
-	
+
 	_close(fdout);
 	return 0;
 }
@@ -222,7 +266,12 @@ int CFileTar::AppendFile(int fdout, char *fpath)
 {
 	int fdin=0;
 	size_t len;
+	
+#ifdef __VXWORKS__	
+	if((fdin=open(fpath,_O_RDONLY|_O_BINARY, 0666))<0)
+#else
 	if((fdin=_open(fpath,_O_RDONLY|_O_BINARY))<0)
+#endif
 	{
 		_close(fdin);
 		return 1;
@@ -257,14 +306,18 @@ BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 {
 	if( m_TarFile < 0 ) {
         printf( "\n pTarFile[%s]" , pTarFile );
+#ifdef __VXWORKS__        
+		if( ( m_TarFile=open( pTarFile,_O_BINARY|_O_RDONLY, 0666 ) ) < 0 ) {
+#else
 		if( ( m_TarFile=_open( pTarFile,_O_BINARY|_O_RDONLY ) ) < 0 ) {
+#endif
 			printf( "\n Error found !" );
 			return FALSE;
 		}
 	}
 
 	memset( pTarHeader, 0, sizeof(UNI_BLOCK) );
-	ssize_t nRead=_read( m_TarFile, (char *) pTarHeader, sizeof(UNI_BLOCK) );
+	int nRead=_read( m_TarFile, (char *) pTarHeader, sizeof(UNI_BLOCK) );
 
 	pTarHeader->m_filesize = Octal2Deciaml( pTarHeader->m_block.header.size, sizeof(pTarHeader->m_block.header.size) );
 	GetDate( & pTarHeader->m_time, pTarHeader->m_block.header.mtime, sizeof(pTarHeader->m_block.header.mtime) );
@@ -288,13 +341,15 @@ BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 {
 	int fdout;
-	ssize_t nRead, nWrite;
+	int nRead, nWrite;
 	UNI_BLOCK *pBlock;
 
 	struct _stat filestat;
 
 #ifdef _WIN32
 	if( ( fdout = _open( pDestFile, _O_CREAT | _O_WRONLY | _O_BINARY | _O_TRUNC, _S_IWRITE ) ) < 0 ) {
+#elif defined(__VXWORKS__)
+	if( ( fdout = open( pDestFile, _O_CREAT | _O_WRONLY | _O_BINARY | _O_TRUNC, 0666 ) ) < 0 ) {
 #else
 	if( ( fdout = _open( pDestFile, _O_CREAT | _O_WRONLY | _O_BINARY | _O_TRUNC ) ) < 0 ) {
 #endif
@@ -308,7 +363,7 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 	unsigned long rem;
 	char buff[sizeof(UNI_BLOCK)];
 	rem = pTarHeader->m_filesize;
-	
+
 	while( rem > sizeof(UNI_BLOCK) ) {
 		nRead = _read( m_TarFile, buff, sizeof(UNI_BLOCK) );
 		nWrite = _write( fdout, buff, nRead );
@@ -324,7 +379,7 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 	if( rem > 0 ) {
 		nRead = _read( m_TarFile, buff, sizeof(UNI_BLOCK) );
 		nWrite = _write( fdout, buff, rem );
-		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != (ssize_t) rem ) {
+		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != (int) rem ) {
 			_close( fdout );
 			printf( "\n*can't read or write the file" );
 			return FALSE;
@@ -345,13 +400,13 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CFileTar::UnTar
-		\author   ��ö��
-		\param    pTarFile �������� char *
-		\param    pDestpath �������� char *
-		\return   int
-		\version  0.0.99
-		\date     2009-09-24 14:29:53
-		\warning
+	\author   ��ö��
+	\param    pTarFile �������� char *
+	\param    pDestpath �������� char *
+	\return   int
+	\version  0.0.99
+	\date     2009-09-24 14:29:53
+	\warning
 */
 int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 {
@@ -368,7 +423,7 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 		if( FALSE == GetTarInfo( pTarFile, & th ) ) {
 			break;
         }
-        
+
 		// ������ ���ϸ� �����
 		strcpy( fpath, pDestpath );
 #ifdef _WIN32
@@ -378,16 +433,16 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 		if( fpath[strlen( fpath )-1] != '/' )
 			strcat( fpath, "/" );
 #endif
-        
+
 		strcat( fpath, th.m_block.header.name );
 
 		switch( th.m_block.header.typeflag ) {
 			case REGTYPE :
-                if( (p=strfind( th.m_block.header.name, "/" )) != NULL ) {
+                if( (p=strfind( th.m_block.header.name, (char *) "/" )) != NULL ) {
                     char fpath2[_MAX_PATH];
 
                     strcpy( fpath2, fpath );
-                    p = strlastfind( fpath2, "/" );
+                    p = strlastfind( fpath2, (char *) "/" );
                     *p = 0;
 
                     MkDir( fpath2 );
@@ -408,7 +463,7 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 				break;
 
 		}
-		
+
 	}
 
 	_close( m_TarFile );
@@ -419,16 +474,17 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 	return bLoop;
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CFileTar::_GetFileSize
-		\author   ��ö��
-		\param    fd �������� int
-		\param    pSize �������� DWORD *
-		\return   DWORD
-		\version  0.0.98
-		\date     2009-09-23 19:29:18
-		\warning
-*/
+/**
+ * @brief     _GetFileSize
+ * @param     int fd
+ * @param     DWORD * pSize
+ * @return    DWORD
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2009-09-23 19:29:18
+ * @warning
+ */
 DWORD CFileTar::_GetFileSize( int fd, DWORD *pSize )
 {
     struct stat filestat;
@@ -470,17 +526,18 @@ unsigned long CFileTar::Octal2Deciaml( char *pByte, int size )
 
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CFileTar::GetDate
-		\author   ��ö��
-		\param    pTime �������� struct _utimbuf
-		\param    pByte �������� char *
-		\param    size �������� int
-		\return   void
-		\version  0.0.99
-		\date     2009-09-24 16:17:25
-		\warning
-*/
+/**
+ * @brief     GetDate
+ * @param     struct _utimbuf * pTime
+ * @param     char * pByte
+ * @param     int size
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2009-09-24 16:17:25
+ * @warning
+ */
 void CFileTar::GetDate( struct _utimbuf *pTime, char *pByte, int size )
 {
 	pTime->modtime = Octal2Deciaml( pByte, size );

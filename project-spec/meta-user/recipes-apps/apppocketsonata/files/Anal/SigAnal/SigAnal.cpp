@@ -8,6 +8,9 @@
 
 #include "../../Utils/ccommonutils.h"
 
+#include "../Identify/Define.h"
+#include "../Identify/ELUtil.h"
+
 #ifdef _MSSQL_
 CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName) : CMSSQL(&m_theMyODBC)
 #else
@@ -16,6 +19,8 @@ CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileNam
 {
 
 	m_uiCoMaxPdw = uiCoMaxPdw;
+
+    m_szRawDataFilename[0] = 0;
 
     SetUnitType();
 
@@ -173,10 +178,10 @@ void CSigAnal::InitResolution()
 
 
 #elif defined(_POCKETSONATA_)
-    _spOneSec = FDIV(1000000000, 6.48824007);
-    _spOneMilli = FDIV(1000000, 6.48824007);
-    _spOneMicrosec = FDIV(1000, 6.48824007);
-    _spOneNanosec = FDIV(1, 6.48824007);
+    _spOneSec = FDIV(1000000000, POCKETSONATA::_toaRes );
+    _spOneMilli = FDIV(1000000, POCKETSONATA::_toaRes );
+    _spOneMicrosec = FDIV(1000, POCKETSONATA::_toaRes );
+    _spOneNanosec = FDIV(1, POCKETSONATA::_toaRes );
 
     _spAOAres = (float)(0.351562);
     _spAMPres = (float)(0.351562);
@@ -446,11 +451,7 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
     CCommonUtils::getFileNamingDesignatedTime(buffer, sizeof(buffer), tiNow.tv_sec);
 #endif
 
-#ifdef _MFC_VER
-    m_szRawDataFilename[0] = NULL;
-#else
-    m_szRawDataFilename[0] = ( char ) '\0';
-#endif
+    m_szRawDataFilename[0] = 0;
 
 	if ( /*pstTime != NULL &&*/ m_bSaveFile == true) {
 #ifdef _POCKETSONATA_
@@ -470,8 +471,11 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
 			}
 
 			sprintf(szRawDataPathname, _T("%s/%s"), GetAnalDirectory(), m_szRawDataFilename);
+			
+#ifdef _MSC_VER
 			unsigned int uiTotalPDW = pPDWData->GetTotalPDW();
 			m_pMidasBlue->SaveRawDataFile(szRawDataPathname, E_EL_SCDT_PDW, pPDWData->pstPDW, &pPDWData->x, uiTotalPDW );
+#endif
 
             if( m_bDBThread == false ) {
                 if( bInsertDB == true ) {
@@ -484,7 +488,7 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB 
             }
 		}
         else {
-            LOGMSG1( enError, "PDW 파일을 셍성할 폳더[%s]를 생성하지 못했습니다.", GetAnalDirectory() );
+            Log( enError, "PDW 파일을 셍성할 폳더[%s]를 생성하지 못했습니다.", GetAnalDirectory() );
         }
 
 #else
@@ -641,7 +645,7 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
 
             }
             catch (Kompex::SQLiteException &sException) {
-                LOGMSG1(enError, " m_pszSQLString[%s]", m_pszSQLString);
+                Log(enError, " m_pszSQLString[%s]", m_pszSQLString);
                 bRet = false;
                 std::cerr << "\nException Occured" << std::endl;
 				sException.Show();
@@ -710,11 +714,11 @@ void CSigAnal::DISP_FineLOB(SRxLOBData *pLOB)
 
 #else
     // 방위
-    iCnt += sprintf(&buffer[iCnt], " %4.1f(%4.1f,%4.1f)", pLOB->fDOAMean, pLOB->fDOAMin, pLOB->fDOAMax);
+    iCnt += sprintf(&buffer[iCnt], " %5.1f(%5.1f,%5.1f)", pLOB->fDOAMean, pLOB->fDOAMin, pLOB->fDOAMax);
 
     // 주파수
 #ifdef _POCKETSONATA_
-    iCnt += sprintf(&buffer[iCnt], " %s", g_szAetFreqType[pLOB->vFreqType]);
+    iCnt += sprintf(&buffer[iCnt], " %s[%s]", g_szAetFreqType[pLOB->vFreqType], g_szAetPatternType[pLOB->vFreqPatternType] );
 #else
     iCnt += sprintf( &buffer[iCnt], " %s", g_szAetFreqType[pLOB->vFreqType] );
 #endif
@@ -734,22 +738,22 @@ void CSigAnal::DISP_FineLOB(SRxLOBData *pLOB)
 
     // PRI
 #ifdef _POCKETSONATA_
-    iCnt += sprintf(&buffer[iCnt], " %s    ", g_szAetPriType[pLOB->vPRIType]);
+    iCnt += sprintf( &buffer[iCnt], " %s[%s]", g_szAetPriType[pLOB->vPRIType], g_szAetPatternType[pLOB->vPRIPatternType] );
 #else
     iCnt += sprintf( &buffer[iCnt], " %s    ", g_szAetPriType[pLOB->vPRIType] );
 #endif
 
 #ifdef _POCKETSONATA_
-    iCnt += sprintf(&buffer[iCnt], "%0.1f(%.1f,%.1f), %2d", pLOB->fPRIMean, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->vPRIPositionCount);
+    iCnt += sprintf(&buffer[iCnt], "%7.1f(%7.1f,%7.1f), %2d", pLOB->fPRIMean, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->vPRIPositionCount);
 #else
     iCnt += sprintf( &buffer[iCnt], "%0.1f(%.1f,%.1f), %2d", pLOB->fPRIMean, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->vPRIPositionCount );
 #endif
 
     // PW
-    iCnt += sprintf(&buffer[iCnt], " %.2f(%.2f,%.2f)", pLOB->fPWMean, pLOB->fPWMin, pLOB->fPWMax);
+    iCnt += sprintf(&buffer[iCnt], " %7.2f(%7.2f,%7.2f)", pLOB->fPWMean, pLOB->fPWMin, pLOB->fPWMax);
 
     // PA
-    iCnt += sprintf(&buffer[iCnt], " %.2f(%.2f,%.2f)", pLOB->fPAMean, pLOB->fPAMin, pLOB->fPAMax);
+    iCnt += sprintf(&buffer[iCnt], " %6.2f(%6.2f,%6.2f)", pLOB->fPAMean, pLOB->fPAMin, pLOB->fPAMax);
 
     // ID
     //printf( " [%d][%d,%d,%d,%d,%d]" , pManAet->aet.id.coAmbi, pManAet->aet.id.noIPL[0], pManAet->aet.id.noIPL[1], pManAet->aet.id.noIPL[2], pManAet->aet.id.noIPL[3], pManAet->aet.id.noIPL[4] );
@@ -922,7 +926,7 @@ bool CSigAnal::InsertToDB_Position( SRxLOBData *pLOBData, bool bFreqSeq )
     }
 
 #elif _SQLITE_
-    if( m_pszSQLString[0] != NULL ) {
+    if( m_pszSQLString[0] != 0 ) {
 
         try {
             Kompex::SQLiteStatement stmt( m_pDatabase );
@@ -958,9 +962,11 @@ bool CSigAnal::InsertToDB_Position( SRxLOBData *pLOBData, bool bFreqSeq )
  * @date      2022-06-02, 11:36
  * @warning
  */
-void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
+bool CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
 {
     bool bRet = true;
+
+#if 0
 
 #ifdef _MSSQL_
     char buffer[100] = { 0 };
@@ -971,20 +977,20 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
 
 #ifdef _POCKETSONATA_
     sprintf_s( m_pszSQLString, MAX_SQL_SIZE, "INSERT INTO LOBDATA ( \
-                                                OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, \
+                                                OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, \
                                                 SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DI_RATIO, \
                                                 FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_POSITION_COUNT, \
                                                 PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_JITTER_RATIO, PRI_POSITION_COUNT, \
                                                 PW_MEAN, PW_MIN, PW_MAX, PA_MEAN, PA_MIN, PA_MAX, NUM_PDW, \
                                                 LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX ) \
-                                                values( '%ld', '%ld', '%ld', '%ld', '%ld', '%ld', '%s', '%s', '%d', \
+                                                values( '%ld', '%ld', '%ld', '%ld', '%ld', '%ld', '%s', '%d', \
                                                 '%d', '%f', '%f', '%f', '%d', \
                                                 '%d', '%d', '%f', '%f', '%f', '%f', '%d', \
                                                 '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%d', \
                                                 '%f', '%f', '%f', '%f', '%f', '%f', '%d', \
                                                 '%f', '%f', '%s', '%d' )", \
-		GetOpInitID(), pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, pLOBData->aucTaskID, buffer, pLOBData->tiContactTimems, \
-        pLOBData->vSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->iDIRatio, \
+		GetOpInitID(), pLOBData->uiPDWID, pLOBData->uiPLOBID, pLOBData->uiLOBID, pLOBData->uiABTID, pLOBData->uiAETID, buffer, pLOBData->tiContactTimems, \
+        pLOBData->vSignalType, pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax, pLOBData->uiDIRatio, \
         pLOBData->vFreqType, pLOBData->vFreqPatternType, pLOBData->fFreqPatternPeriod, pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax, pLOBData->vFreqPositionCount, \
         pLOBData->vPRIType, pLOBData->vPRIPatternType, pLOBData->fPRIPatternPeriod, pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax, pLOBData->fPRIJitterRatio, pLOBData->vPRIPositionCount, \
         pLOBData->fPWMean, pLOBData->fPWMin, pLOBData->fPWMax, pLOBData->fPAMean, pLOBData->fPAMin, pLOBData->fPAMax, pLOBData->uiCoPDWOfAnalysis, \
@@ -1193,7 +1199,7 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
 
         }
         catch( Kompex::SQLiteException &sException) {
-            LOGMSG1( enError, " m_pszSQLString[%s]", m_pszSQLString );
+            Log( enError, " m_pszSQLString[%s]", m_pszSQLString );
             bRet = false;
             std::cerr << "\nException Occured" << std::endl;
 			sException.Show();
@@ -1208,7 +1214,9 @@ void CSigAnal::InsertToDB_LOB( SRxLOBData *pLOBData )
 
 #endif
 
-    return;
+#endif
+
+    return bRet;
 
 }
 
@@ -1236,8 +1244,9 @@ unsigned int CSigAnal::GetOpInitID()
  * @date      2023-01-24 11:54:06
  * @warning
  */
-void CSigAnal::MakeAnalDirectory( UNION_HEADER* pUniHeader )
+void CSigAnal::MakeAnalDirectory( UNION_HEADER* pUniHeader, bool bLog )
 {
+
     if( m_strAnalDirectory.empty() == true ) {
         // 작업 폴더 생성
 #ifdef _ELINT_
@@ -1267,6 +1276,57 @@ void CSigAnal::MakeAnalDirectory( UNION_HEADER* pUniHeader )
         //m_strAnalDirectory.clear();
     }
 
-    LOGMSG1( enNormal, "수집 데이터 저장 위치는 [%s] 입니다.", m_strAnalDirectory.c_str() );
+    if( bLog ) {
+        Log( enNormal, "수집 데이터 저장 위치는 [%s] 입니다.", m_strAnalDirectory.c_str() );
+    }
+
+}
+
+/**
+ * @brief     DeleteAllFiles
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-20 14:24:21
+ * @warning
+ */
+void CSigAnal::DeleteAllFiles()
+{
+    UNION_HEADER stUnionHeader;
+
+    memset( &stUnionHeader, 0, sizeof( UNION_HEADER ) );
+
+#ifdef _ELINT_
+    // m_strAnalDirectory = string_format( "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->el.enCollectorID, pPDWData->el.aucTaskID );
+
+#elif defined(_701_)
+    //m_strAnalDirectory = string_format( "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pUniHeader->e7.GetCollectorID(), pUniHeader->GetTaskID( g_enUnitType ) );
+
+#elif defined(_XBAND_)
+    // m_strAnalDirectory = string_format( "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.xb.GetCollectorID(), pPDWData->x.xb.aucTaskID );
+
+#elif defined(_POCKETSONATA_)
+    stUnionHeader.ps.uiBoardID = (unsigned int) g_enBoardId;
+    //stUnionHeader.ps.enCollectBank = ;
+
+#elif defined(_SONATA_)
+    //m_strAnalDirectory = string_format( "%s/BRD_%d/%s", SHARED_DATA_DIRECTORY, pUniHeader->so.uiBand, g_szCollectBank[pUniHeader->so.enCollectBank] );
+
+#else
+
+#endif
+    int i;
+
+    Log( enNormal, "공유 폴더에 저장된 수집 데이터 모두 파일 지우기..." );
+    for( i=(int) enDetectCollectBank; i <= (int) enScanCollectBank ; ++i ) {
+        m_strAnalDirectory.clear();
+
+        stUnionHeader.ps.enCollectBank = ( ENUM_COLLECTBANK) i;
+        MakeAnalDirectory( & stUnionHeader, false );
+
+        CCommonUtils::DeleteAllFile( GetAnalDirectory() );
+    }
+    m_strAnalDirectory.clear();
 
 }

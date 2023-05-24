@@ -120,12 +120,14 @@ BOOL CMSIGADlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 
-    //_CrtSetBreakAlloc(165979); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
+    _CrtSetBreakAlloc(223); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
 
     //CFileTar theFileTar;
     //theFileTar.UnTar( "d:/tftpboot/tftpboot.tar", "d:/tffs0" );
 
 	m_bReqStart = true;
+
+    srand( 0 );
 
     Start( __argc, __argv );
 

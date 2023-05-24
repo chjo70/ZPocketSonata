@@ -51,7 +51,7 @@
 #define ANZ_DELETE_STATUS   (0x0170)    //
 
 #define PARAM_IDX_R         (0x0200)    // 신호 분석용 PDW Filter 파라미터 읽기 인덱스(채널) 설정값.
-#define ANZ_REQ             (0x0204)    // 신호 분석용 PDW Filter 파라미터 읽기 인덱스(채널) 설정값.
+//#define ANZ_REQ             (0x0204)    //
 
 #define IBRDID              (0x0208)    // 신호 분석용 PDW Filter 파라미터 읽기 인덱스(채널) 설정값.
 
@@ -76,7 +76,8 @@
 #define PATN_INTERVAL_MS    (unsigned int) ( (1000000./ 22. / 6.4) + 0.5)
 #define PATN_INTERVAL_US    (unsigned int) ( (1000./ 22. / 6.4) + 0.5)
 
-#define ANZ_TIME_MS(A)      (unsigned int) ( 156250 * (A) + 0.5 ) // ( (1000000./ 6.4)*(A) + 0.5)
+//#define ANZ_TIME_MS(A)      (unsigned long long int) ( (unsigned long long int) 250000 * (A) + 0.5 ) // ( (1000000./ 6.4)*(A) + 0.5)
+#define ANZ_TIME_MS(A)      (unsigned long long int) ( (unsigned long long int) 125000 * (A) + 0.5 ) // ( (1000000./ 8.0)*(A) + 0.5)
 
 
 #ifdef _MFC_VER
@@ -102,7 +103,7 @@ private:
     STR_COLLECT_INFO *m_pstrCollectInfo;
 
 public:
-    static bool m_bConfigSetting;
+    static bool m_bPCIMemInit;
 
 private:
 	void PCIConfigSetting() const;
@@ -122,7 +123,7 @@ public:
     ~CPCIDriver();
 
     void Init();
-    void BIT();
+    void RunBit();
 
     void StartCollecting();
     void EndCollecting();

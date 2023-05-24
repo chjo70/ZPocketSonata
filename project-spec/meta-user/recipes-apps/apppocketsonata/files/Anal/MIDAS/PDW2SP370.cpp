@@ -101,8 +101,6 @@ void CPDW2SP370::Init(void)
  */
 bool CPDW2SP370::MakeHeader(void)
 {
-	int length, index;
-	char strUnicode[256]={0,};
 
 #if defined(__linux__) || defined(__VXWORKS__)
     strcpy_s( & m_stPDWHeader.szMasterLibraryName[0], LIBRARY_NAME );
@@ -111,6 +109,9 @@ bool CPDW2SP370::MakeHeader(void)
 #endif
 
 #ifndef __VXWORKS__
+    int length, index;
+	char strUnicode[256] = { 0, };
+
 	//pMultibyte = ConvertUnicodeToMultibyte( strUnicode );
 	//int len=MultiByteToWideChar( CP_ACP, 0, m_stPDWHeader.szMasterLibraryName, strlen(m_stPDWHeader.szMasterLibraryName), NULL, NULL );
 	//MultiByteToWideChar( CP_ACP, 0, m_stPDWHeader.szMasterLibraryName, strlen(m_stPDWHeader.szMasterLibraryName), strUnicode, len );
@@ -200,5 +201,5 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 		++ pS_EL_PDW_DATA;
 	}
 	return true;
+	
 }
-

@@ -94,14 +94,14 @@
     <Filter Include="소스 파일\ODBC">
       <UniqueIdentifier>{38258f16-e649-4993-8b02-351dc43ab872}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Anal\Collect\GenPDW">
-      <UniqueIdentifier>{2480af83-f07a-44a3-a171-4822be1710e2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Anal\IntraSigAnal">
       <UniqueIdentifier>{541e0db4-52a1-49c6-a294-59d8f9607cf7}</UniqueIdentifier>
     </Filter>
     <Filter Include="설정 파일">
       <UniqueIdentifier>{64458260-29c8-48b4-bdda-6d7567d9647b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\INI">
+      <UniqueIdentifier>{27b14810-826a-442e-bb34-ea93191de315}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -358,9 +358,6 @@
     <ClInclude Include="..\..\files\Anal\EmitterMerge\LatLong-UTMconversion.h">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\EmitterMerge\LOBClustering.h">
-      <Filter>소스 파일\Anal\EmitterMerge</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Anal\EmitterMerge\PositionEstimation.h">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClInclude>
@@ -487,9 +484,6 @@
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.h">
-      <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Anal\SigAnal\_CED_Define.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
@@ -504,6 +498,33 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\PCIDriver.h">
       <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue.h">
+      <Filter>소스 파일\INI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-ccs.h">
+      <Filter>소스 파일\INI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-efsl.h">
+      <Filter>소스 파일\INI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-FatFs.h">
+      <Filter>소스 파일\INI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-ffs.h">
+      <Filter>소스 파일\INI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-mdd.h">
+      <Filter>소스 파일\INI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-stdio.h">
+      <Filter>소스 파일\INI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minIni.h">
+      <Filter>소스 파일\INI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\wxMinIni.h">
+      <Filter>소스 파일\INI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -651,9 +672,6 @@
     <ClCompile Include="..\..\files\Anal\EmitterMerge\ELThreat.cpp">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\EmitterMerge\LOBClustering.cpp">
-      <Filter>소스 파일\Anal\EmitterMerge</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.cpp">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClCompile>
@@ -705,9 +723,6 @@
     <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\Collect\GenPDW\CGenPDW.cpp">
-      <Filter>소스 파일\Anal\Collect\GenPDW</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Thread\coperationconsole.cpp">
       <Filter>소스 파일\Thread</Filter>
     </ClCompile>
@@ -719,6 +734,12 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\PCIDriver.cpp">
       <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\VxWorksSpace\VSIGA\dkm.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\MinIni\minIni.cpp">
+      <Filter>소스 파일\INI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

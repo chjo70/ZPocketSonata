@@ -71,7 +71,7 @@ enum PATTERN_TYPE
 	SAW_INC,
 	SAW_DEC,
 	TRI,
-	MAX_FRQPATTYPE
+
 };   // same with PRI pattern type
 
 #elif defined(_XBAND_)
@@ -122,13 +122,10 @@ enum PATTERN_TYPE
 enum FREQ_BAND
 {
     BAND0=0,
-    //##ModelId=452B0C510038
+
     BAND1,
-    //##ModelId=452B0C510041
     BAND2,
-    //##ModelId=452B0C51004B
     BAND3,
-    //##ModelId=452B0C51005F
     BAND4,
     BAND5,
 
@@ -140,12 +137,22 @@ enum enSIGNAL_TYPE
 {
 	ST_NORMAL_PULSE = 0,
 	ST_CW,
-	ST_DOPPLER,
-	ST_HIGHPRF,
 
-	ST_FMOP,
-	ST_CW_FMOP,
+	ST_FMOPUK,
+    ST_FMOPDN,
+    ST_FMOPUP,
+
+    ST_CW_FMOPUK,
+    ST_CW_FMOPDN,
+    ST_CW_FMOPUP,
+
+    ST_PMOP,
+    ST_CW_PMOP,
+
 	ST_SHORT,
+    ST_DOPPLER,
+    ST_HIGHPRF,
+
 	ST_ALL,
 	ST_MAX
 } ;
@@ -201,13 +208,11 @@ enum PATTERN_TYPE
 
 #endif
 
-
-
-
-
-
-// 주파수 형태 정의
-enum enFREQ_TYPE
+/**
+    @enum  enFREQ_TYPE
+    @brief 위협 정보의 주파수 형태 정의
+**/
+enum enANL_FREQ_TYPE
 {
     _FREQ_FIXED              = 0,
     _HOPPING,
@@ -216,29 +221,29 @@ enum enFREQ_TYPE
 
     _UNKNOWN_FT,
 
-    _IGNORE_FREQ,
+    // _IGNORE_FREQ,
 
-    MAX_FRQTYPE
+    //MAX_FRQTYPE
 } ;
 
-
-// PRI 형태 정의
-enum enPRI_TYPE
+/**
+    @enum  enPRI_TYPE
+    @brief 위협 정보의 PRI 형태 정의
+**/
+enum enANAL_PRI_TYPE
 {
     _STABLE = 0,
-    _DWELL,
-
     _JITTER_RANDOM,
-
+    _DWELL,
+    _STAGGER,                // 규칙성 펄스열들로부터 Stagger 분석한 것임.
     _JITTER_PATTERN,
 
-    _STAGGER,                // 규칙성 펄스열들로부터 Stagger 분석한 것임.
     _STABLE_STAGGER,         // 스태거 또는 Dwell(?) 의심
     _JITTER_STAGGER,         // 지터 펄스열에서 Stagger 로 분석된것
 
     _UNKNOWN_PRI,
 
-    MAX_PRITYPE,
+    //MAX_PRITYPE,
 
     _REFSTABLE,
 
@@ -319,10 +324,12 @@ enum ENUM_AET_SCAN_TYPE {
 
     E_AET_SCAN_SCANFAIL,
 
+    E_AET_MAX_SCAN_TYPE,
+
 } ;
-static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
 #elif defined(_SONATA_)
-static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
 
 // 기본형
 enum ENUM_AET_SCAN_TYPE {
@@ -345,9 +352,11 @@ enum ENUM_AET_SCAN_TYPE {
 
 
 #else
-static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
 
 // 기본형
+/////////////////////////////////////////////////////////////////////////////////////////
+// 안테나 스캔 형태 정의값
 enum ENUM_AET_SCAN_TYPE {
     E_AET_SCAN_UNKNOWN = 0,
     E_AET_SCAN_CIRCULAR,
@@ -358,12 +367,8 @@ enum ENUM_AET_SCAN_TYPE {
 
     E_AET_SCAN_SCANFAIL,
 
-    UFO,
-    MAX_SCANTYPE,
+    E_AET_MAX_SCAN_TYPE,
 
-    DetType,
-
-    TYPE_UNKNOWN,
 };
 
 #endif
@@ -538,8 +543,13 @@ struct STR_PRI {
 		tMean(0),
 		tMin(0),
 		tMax(0),
-		tMode(0)
+		tMode(0),
+        iPatType(0),
+		fJtrPer(0),
+	    iSwtLev(0),
+        tPatPrd(0)    
 	{
+        memset( tSwtVal, 0, sizeof( tSwtVal ) );
 	}
 
 } ;
@@ -645,7 +655,7 @@ struct STR_REF
 //
 //##ModelId=452B0C520024
 struct STR_CHINFTAB {
-  BOOL valid;              // Is this channel valid or invcalid ?, only use gKsfInfo
+  bool valid;              // Is this channel valid or invcalid ?, only use gKsfInfo
 
   UINT noEMT;              // Emitter #
   UINT stAnal;             // Status of Analysis
@@ -698,7 +708,7 @@ struct STR_CHINFTAB {
   UINT noCol;       // collection pulse #
   UINT noExt;       // extration pulse #
 
-  BOOL bEndCol;     // 수집 완료 플레그
+  bool bEndCol;     // 수집 완료 플레그
 } ;
 
 //##ModelId=452B0C520042
@@ -747,7 +757,7 @@ struct STR_EXT {
 
     STR_ID_INFO id;
 
-    BOOL mark;
+    bool mark;
 
     int coAlive;			// 시뮬레이션할 에미터 라이프 회수
 
@@ -864,10 +874,10 @@ struct STR_AETFLT
 
 // 수집 관련 구조체 정의
 struct STR_PDWFILTER_INFO {
-	BOOL bUse;												// FALSE 이면 사용안함. TRUE 이면 사용함.
+	bool bUse;												// false 이면 사용안함. true 이면 사용함.
 	UINT coCollect;										// 수집 개수
 	UINT nCollectTime;								// 수집 시간, ms
-	BOOL bComplete;										// 수집 완료 플레그
+	bool bComplete;										// 수집 완료 플레그
 
 	int noFilter;											// 소프트웨어 필터판으로 사용할 때 정보
 	int noEMT;

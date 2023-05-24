@@ -1,4 +1,4 @@
-// BootShellmain.h: interface for the BootShellMain
+﻿// BootShellmain.h: interface for the BootShellMain
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -16,19 +16,28 @@
 //#define tPRI_Ref				90
 
 // MBIT 프로그램, 사용자 프로그램, 부트 쉘 프로그램의 메인 타스크의 Priority
-enum { tPRI_HTTPDAEMON=150, tPRI_BOOTSHEL=1, tPRI_App=200 };
+enum {
+    tPRI_HTTPDAEMON = 150, tPRI_BOOTSHEL = 100, tPRI_App = 200, tSERVER_SOCKET, tCLIENT_SOCKET
+};
 
 #define CTRL_X						(24)
 #define REBOOT						CTRL_X
 
 
+
+#define NET_MEM_PORT               (10000)
+
+
 //////////////////
 // SNTP 프로토콜 정의
 #define TRY_GETSNTP                 (3)
-#define SNTP_SERVER_IP				((char *)"192.168.0.200")
+#define DEFAULT_SNTP_SERVER_IP		((char *)"192.168.0.200")
+
 
 void LoadBootParameter();
 void PCIConfigSetting();
+
+
 
 //////////////////////////////////////////////////////////////////////////
 #ifdef __cplusplus
@@ -41,7 +50,7 @@ void BootShellMain();
 //UINT GetDate( char *pDate );
 //UINT GetTime( char *pTime );
 
-IMPORT UINT32 univBaseAdrs;
+//IMPORT UINT32 univBaseAdrs;
 
 #ifdef __cplusplus
 }

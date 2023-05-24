@@ -1,4 +1,4 @@
-WRBuilder.traceBuildRun=true
+WRBuilder.traceBuildRun=false
 WRBuilder.useJobs=false
 WRBuild|disabledBuildInstrumentations=
 WRBuild|disabledBuilderContributions=

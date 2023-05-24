@@ -32,11 +32,6 @@ extern "C" {
 
 #ifdef _MAIN_
 
-
-
-
-//STR_MANAET stTrkAet;
-//STR_SCNAET stScnAet;
 STR_SCANPT stScanPt;
 
 #else
@@ -45,21 +40,6 @@ extern STR_MANAET stTrkAet;
 extern STR_SCNAET stScnAet;
 extern STR_SCANPT stScanPt;
 
-// #if defined(_ELINT_) || defined(_XBAND_)
-// extern UINT stSigma1Aoa[5];
-// extern UINT stSigma1Frq[5];
-// 
-// #elif _POCKETSONATA_
-// extern UINT stSigma1Aoa[enMAXPRC];
-// extern UINT stSigma1Frq[enMAXPRC];
-// 
-// 
-// #else
-// 2
-// extern UINT stSigma1Aoa[3];
-// extern UINT stSigma1Frq[3];
-// 
-// #endif
 
 #endif	// _MAIN_
 
@@ -67,7 +47,6 @@ extern STR_SCANPT stScanPt;
 }
 #endif
 
-// int Printf( char *format, ... );
 
 
 #endif // !defined(AFX_SIGANAL_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)

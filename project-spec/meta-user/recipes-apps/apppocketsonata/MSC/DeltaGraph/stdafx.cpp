@@ -5,6 +5,7 @@
 
 #include "stdafx.h"
 
+#include "../../files/Utils/clog.h"
 
 bool stbLocal=true;
 
@@ -12,7 +13,7 @@ CCriticalSection g_criticalLog;
 CCriticalSection g_criticalDbg;
 CCriticalSection g_criticalExe;
 
-#define LOG_DIRECTORY					_T("DELTAGRAPH_LOG")
+//#define LOG_DIRECTORY					_T("DELTAGRAPH_LOG")
 
 void Log( int nType, const TCHAR *fmt, ... )
 {

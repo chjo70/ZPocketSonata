@@ -323,11 +323,11 @@
             <stringAttribute key="BLD::Info|Tool|C-Compiler|nonDbgFlags|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="-O2"/>
             <stringAttribute key="BLD::Info|Tool|C-Compiler|derivedSigs|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="*.o"/>
             <stringAttribute key="BLD::Info|Tool|C++-Compiler|cmd|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;%cppcompilerprefix% $(TOOL_PATH)/g++ppc %DebugModeFlags% %ToolFlags% %Defines% $(DEFINES) $(ADDED_C++FLAGS) %Includes% $(ADDED_INCLUDES) -std=c++11 -o %OutFile% -c %InFile% &amp;&amp; if [ &quot;$(APICHECK)&quot; = &quot;1&quot; ]; then $(APICHECK_CMD);fi"/>
-            <stringAttribute key="BLD::Info|Tool|C++-Compiler|flags|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="$(CC_ARCH_SPEC) -ansi  -fno-zero-initialized-in-bss -Wall    -MD -MP $(DKM_LONGCALL)"/>
+            <stringAttribute key="BLD::Info|Tool|C++-Compiler|flags|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="$(CC_ARCH_SPEC) -ansi  -fno-zero-initialized-in-bss -Wall -MD -MP -Wcomment $(DKM_LONGCALL)"/>
             <stringAttribute key="BLD::Info|Tool|C++-Compiler|dbgFlags|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="-gdwarf-3"/>
             <stringAttribute key="BLD::Info|Tool|C++-Compiler|nonDbgFlags|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="-O2"/>
             <stringAttribute key="BLD::Info|Tool|C++-Compiler|derivedSigs|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="*.o"/>
-            <stringAttribute key="BLD::Info|Tool|Linker|cmd|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;rm -f %OutFile%;nmppc %Objects% | tclsh $(WIND_BASE)/build/mk/tcl/munch.tcl -c ppc -tags $(VSB_DIR)/krnl/tags/dkm.tags &gt; $(OBJ_DIR)/ctdt.c;%ccompilerprefix% $(TOOL_PATH)/ccppc %DebugModeFlags% $(CC_ARCH_SPEC) -fdollars-in-identifiers -Wall   $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES)  $(DKM_LONGCALL) %Defines% $(DEFINES) -o $(OBJ_DIR)/ctdt.o -c $(OBJ_DIR)/ctdt.c; %linkerprefix% $(TOOL_PATH)/ccppc -r -nostdlib -Wl,-X %ToolFlags% -o %OutFile% $(OBJ_DIR)/ctdt.o %Objects% %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS) &amp;&amp; if [ &quot;$(EXPAND_DBG)&quot; = &quot;1&quot; ]; then plink &quot;$@&quot;;fi &amp;&amp; $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) &amp;&amp; true;rm &quot;d:/tftpboot/*.out&quot;;cp &quot;$@&quot; d:/tftpboot/."/>
+            <stringAttribute key="BLD::Info|Tool|Linker|cmd|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="echo &quot;building $@&quot;;rm -f %OutFile%;nmppc %Objects% | tclsh $(WIND_BASE)/build/mk/tcl/munch.tcl -c ppc -tags $(VSB_DIR)/krnl/tags/dkm.tags &gt; $(OBJ_DIR)/ctdt.c;%ccompilerprefix% $(TOOL_PATH)/ccppc %DebugModeFlags% $(CC_ARCH_SPEC) -fdollars-in-identifiers -Wall   $(ADDED_CFLAGS) %Includes% $(ADDED_INCLUDES)  $(DKM_LONGCALL) %Defines% $(DEFINES) -o $(OBJ_DIR)/ctdt.o -c $(OBJ_DIR)/ctdt.c; %linkerprefix% $(TOOL_PATH)/ccppc -r -nostdlib -Wl,-X %ToolFlags% -o %OutFile% $(OBJ_DIR)/ctdt.o %Objects% %Libraries% $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS) &amp;&amp; if [ &quot;$(EXPAND_DBG)&quot; = &quot;1&quot; ]; then plink &quot;$@&quot;;fi &amp;&amp; $(if $(_WRS_CONFIG_SECURE_LOADER),signtool  --key=$(_WRS_CONFIG_SECURE_LOADER_PRIVATE_SIGNING_KEY_FILE) --cert=$(_WRS_CONFIG_SECURE_LOADER_PUBLIC_SIGNING_CERT_FILE) --type=ELF $@,true) &amp;&amp; true;rm &quot;d:/tftpboot/VSIGA.out&quot;;cp &quot;$@&quot; d:/tftpboot/."/>
             <stringAttribute key="BLD::Info|Tool|Linker|flags|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="-T $(WIND_BASE)/build/tool/gnu_4_8_1_8/krnl/ldscripts/link.OUT"/>
             <stringAttribute key="BLD::Info|Tool|Linker|dbgFlags|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="-gdwarf-3"/>
             <stringAttribute key="BLD::Info|Tool|Linker|nonDbgFlags|VSourceBuild_T2MS32_PPCE6500gnu_SMP" value="-O2"/>
@@ -362,7 +362,9 @@
             <listAttribute key="BLD::Info|Libs|VSourceBuild_T2MS32_PPCE6500gnu_SMP"/>
             <listAttribute key="BLD::Info|Definess|VSourceBuild_T2MS32_PPCE6500gnu_SMP">
                 <stringAttribute value="-DCPU=_VX_$(CPU)"/>
-                <stringAttribute value="-D_SELF_GEN_PDW"/>
+                <stringAttribute value="-D_SERIAL_DETECT_FLOW_"/>
+                <stringAttribute value="-D_UTM_POSITION_"/>
+                <stringAttribute value="-D_SELF_GEN_PDW1"/>
                 <stringAttribute value="-DTOOL=$(TOOL)"/>
                 <stringAttribute value="-DTOOL_FAMILY=$(TOOL_FAMILY)"/>
                 <stringAttribute value="-D_WRS_KERNEL"/>
@@ -370,9 +372,10 @@
                 <stringAttribute value="-D_WRS_CONFIG_SMP"/>
                 <stringAttribute value="-D_VSB_CONFIG_FILE=\&quot;$(VSB_DIR)/h/config/vsbConfig.h\&quot;"/>
                 <stringAttribute value="-D_LOG_"/>
-                <stringAttribute value="-D_SIMPDW_"/>
+                <stringAttribute value="-D_SIM_PDW1_"/>
                 <stringAttribute value="-DSQLITE_THREADSAFE=1"/>
                 <stringAttribute value="-D_TRACK_ENABLED1_"/>
+                <stringAttribute value="-D_SCAN_ENABLED_"/>
                 <stringAttribute value="-D__VXWORKS__"/>
                 <stringAttribute value="-D_POCKETSONATA_"/>
                 <stringAttribute value="-D_SQLITE_"/>

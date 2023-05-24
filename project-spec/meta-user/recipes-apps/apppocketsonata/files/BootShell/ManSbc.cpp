@@ -1,7 +1,17 @@
-// ManSbc.cpp: implementation of the CManSbc class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
 
+    @file      ManSbc.cpp
+    @brief	   SBC 관련 함수 모음 입니다.
+    @details   ~
+    @author    조철희
+    @date      17.04.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#include "pch.h"
+
+#ifdef __VXWORKS__
 #include <taskLib.h>
 #include <ioLib.h>
 #include <private/iosLibP.h>
@@ -15,6 +25,7 @@
 #include <usrLib.h>
 #include <tftpLib.h>
 #include <ifLib.h>
+#include "moduleLib.h"
 
 #include <xbdBlkDev.h>
 #include <dosFsLib.h>
@@ -28,6 +39,16 @@
 #include <tyLib.h>
 
 #include <nfs/nfsCommon.h>
+#include <dirent.h>
+
+#include <sntpcLib.h>
+
+#include "prjParams.h"
+#include "private/timeP.h"
+
+#include "./pciDiag.h"
+
+#endif
 
 #include <time.h>
 #include <ctype.h>
@@ -35,29 +56,33 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include <sntpcLib.h>
-
-#include <dirent.h>
-
-#include "prjParams.h"
-#include "private/timeP.h"
 
 #include "ManSbc.h"
 //#include "ManFlash.h"
 #include "BootShell.h"
 
-#include "./pciDiag.h"
 
 #include "./Untar/FileTar.h"
+
+#include "../Anal/INC/OS.h"
+#include "../Anal/INC/System.h"
+
+#include "../Anal/INC/PDW.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-BOOT_PARAMS stBootParams;
+#ifdef __VXWORKS__
+BOOT_PARAMS g_stBootParams;
 
-IMPORT time_t sysRtcTimeGet (void);
-IMPORT TIMELOCALE * __loctime;
+bool g_bSNTP;
+
+
+IMPORT time_t sysRtcTimeGet( void );
+IMPORT TIMELOCALE *__loctime;
+
+#endif
 
 void Formatting();
 
@@ -68,7 +93,7 @@ extern STATUS sysTffsFormat (void);
 #endif
 
 extern CFileTar *theFileTar;
-extern BOOT_PARAMS stBootParams;
+
 
 void Formatting()
 {
@@ -82,6 +107,16 @@ void Formatting()
 
 CManSbc::CManSbc()
 {
+    m_uiBoardID = 0;
+
+#ifdef _NETMEM_
+    m_pTheNetMem = new NetworkMemory( (char *) "127.0.0.1", NET_MEM_PORT );
+
+    m_netCommand.offset = 0;
+    m_netCommand.data = ( unsigned char * ) malloc( sizeof( STR_NETMEM ) );
+#endif
+
+#ifdef __VXWORKS__
     STATUS status;
 
     char ip_addr[100];
@@ -110,7 +145,7 @@ CManSbc::CManSbc()
 
     //////////////////////////////////////////////////////////////////////////
     // PCI 초기화
-    //PCIConfigSetting();
+    PCIConfigSetting();
 
     //////////////////////////////////////////////////////////////////////////
     // NFS 드라이브 마운트
@@ -130,6 +165,17 @@ CManSbc::CManSbc()
     else {
 
     }
+
+#ifdef ATADRV
+    // ATA 드라이브를 생성 합니다.
+    if( FALSE == CreateAtaDisk( ATADRV ) ) {
+        printf( "\n[W] Application/UDF용 롬 디스크가 생성하지 못했습니다." );
+        WhereIs;
+    }
+    else {
+
+    }
+#endif
 
 
 	//memcpy( & m_ProgInfo, (char *) FLASH_PRGINFO_ADRS, sizeof( STR_PRG_INFO ) );
@@ -157,6 +203,21 @@ CManSbc::CManSbc()
 	// 시간 함수의 환경 변수를 설정한다.
 	// InitSystemVariable();
 
+#endif
+
+
+#ifdef _NETMEM_
+    // NET 커맨드 옵셋 설정
+    m_netCommand.offset = m_uiBoardID;
+
+    // 넷 메모리에 보드 ID 저장
+    m_strMemory.uiSBCID = m_uiBoardID;
+
+    //
+    memcpy( m_netCommand.data, & m_strMemory, sizeof( m_strMemory ) );
+    m_pTheNetMem->UpdatePage( & m_netCommand );
+
+#endif
 
 }
 
@@ -170,6 +231,10 @@ CManSbc::CManSbc()
  */
 CManSbc::~CManSbc()
 {
+#ifdef _NETMEM_
+    delete m_pTheNetMem;
+
+#endif
 
 }
 
@@ -274,7 +339,9 @@ UCHAR CManSbc::Getche2( int sec )
 */
 UCHAR CManSbc::Getche( int sec )
 {
-	char cChar;
+    char cChar;
+
+#ifdef __VXWORKS__
 	int stdInFd, numReady;
 	struct timeval tclSelectTimeout;
 	fd_set readFds;
@@ -323,23 +390,6 @@ UCHAR CManSbc::Getche( int sec )
 
 	numReady = select( FD_SETSIZE, & readFds, NULL, NULL, & tclSelectTimeout );
 
-	//printf( "\n numReady[%d]\n" , numReady );
-
-	/*! \bug  tty ISR callback 에서 ring buffer 에 enqueue 함으로서, rdSyncSema 에
-						wakeup 된 shell task 가 schedule 되기 전에, 역시 select  에서 wakeup
-						되어 running 중인  user task 에서 ring buffer 의  1 char 를 읽어 온
-						후(원래는 tShell 로 pass 될 예정),  rx callback(tyIRd) 을 호출함으로,
-						다시 ring buffer 에 enqueue 후, 그 아래 read API 에서 char return 을
-						받을 수 있도록 하였읍니다.
-	    \date 2007-03-07 11:19:24, 조철희
-	*/
-	//pTyDev = ( TY_DEV_ID ) iosFdValue( stdInFd );
-
-	//ringId = pTyDev->rdBuf;
-	//rngBufGet( pTyDev->rdBuf, & ccc, 2 );
-
-	//ioctl( stdInFd, FIORFLUSH, 0 );
-
 	if( numReady > 0 ) {
 		//tyIRd( pTyDev, cChar );
 	    //printf( "\n cChar[%d]\n" , cChar );
@@ -352,13 +402,16 @@ UCHAR CManSbc::Getche( int sec )
 	ioctl( stdInFd, FIOSETOPTIONS, save_options );
 	ioctl( stdInFd, FIOFLUSH, 0 );
 
-    //WhereIs;
-    //printf( "\n cChar = %d" , cChar );
-
 
 #ifdef INCLUDE_SHELL
 	// taskPrioritySet( taskNameToId( (char *) "tShell0" ), tShell_priority );
 	taskResume( taskID );
+#endif
+
+
+#else
+    cChar = 0;
+
 #endif
 
 	return (UCHAR) cChar;
@@ -381,7 +434,7 @@ BOOL CManSbc::CreateTffsDisk( char *szDiskName )
     lFreeSpace = DiskFreeSpace( szDiskName );
 
     if( lFreeSpace >= 0 ) {
-        printf( "\n\n\n Free space in the [%s] drive = %ld Byte\n" , szDiskName, lFreeSpace );
+		printf( "\n\n\n [%s] 드라이브에 남은 공간이 [%ld KByte] 있습니다.", szDiskName, lFreeSpace );
     }
     else {
         //////////////////////////////////////////////////////////////////////////
@@ -408,6 +461,35 @@ BOOL CManSbc::CreateTffsDisk( char *szDiskName )
 
 }
 
+/**
+ * @brief     CreateTffsDisk
+ * @param     char * szDiskName
+ * @return    BOOL
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-30 11:52:29
+ * @warning
+ */
+BOOL CManSbc::CreateAtaDisk( char *szDiskName )
+{
+    long lFreeSpace;
+
+    lFreeSpace = DiskFreeSpace( szDiskName );
+
+    if( lFreeSpace >= 0 ) {
+        printf( "\n\n\n [%s] 드라이브에 남은 공간이 [%ld KByte] 있습니다.", szDiskName, lFreeSpace );
+    }
+    else {
+        //printf( "\n\n\n rebotting please...\n" );
+        //while( true );
+
+    }
+
+    return lFreeSpace != -1;
+
+}
+
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CManSbc::CreateRamDisk
 	\author   조철희
@@ -420,8 +502,9 @@ BOOL CManSbc::CreateTffsDisk( char *szDiskName )
 	\date     2008-04-18 10:41:18
 	\warning
 */
-BOOL CManSbc::CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks )
+bool CManSbc::CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks )
 {
+#ifdef __VXWORKS__
     char szRamDevs[100];
 
 	BLK_DEV *pBlkDev;
@@ -450,7 +533,9 @@ BOOL CManSbc::CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack
 	// VxWorks 에서 shell component 를 추가하지 않으면 에러가 발생함.
 	long lFreeSpace;
 	lFreeSpace = DiskFreeSpace( szRamDevs );
-	printf( "\n Free space in the [%s] drive = %ld Byte" , szDiskName, lFreeSpace );
+    printf( "\n\n\n [%s] 드라이브에 남은 공간이 [%ld KByte] 있습니다.", szDiskName, lFreeSpace );
+
+#endif
 
 	return true;
 
@@ -467,15 +552,19 @@ BOOL CManSbc::CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack
 */
 long CManSbc::DiskFreeSpace( char *szDiskName )
 {
-	long lDiskFreeSpace;
+	long lDiskFreeSpace=-1;
+
+#ifdef __VXWORKS__
 	struct statfs SStatFs;
 
 	if( statfs( szDiskName, & SStatFs )==OK ) {
-		lDiskFreeSpace = SStatFs.f_bsize * SStatFs.f_bavail;
+		lDiskFreeSpace = (long) ( (float) SStatFs.f_bsize * (float) SStatFs.f_bavail / (float) 1024. );
 	}
 	else {
-		lDiskFreeSpace= -1;
+		perror( "szDiskName" );
+		printf( "\n [W] 드라이브가 잘못됐습니다. " );
 	}
+#endif
 
 	return lDiskFreeSpace;
 }
@@ -490,11 +579,14 @@ long CManSbc::DiskFreeSpace( char *szDiskName )
  */
 void CManSbc::SetTimeBySNMP()
 {
+#ifdef __VXWORKS__
     int iTry;
 	UINT _date, _time;
 
 	STATUS sntpc_status, settime_status;
 	struct timespec tspec;
+
+    g_bSNTP = false;
 
 	// InitSystemVariable();
 	putenv( (char *) "TIMEZONE=KST::-540.000000:000000" );
@@ -503,8 +595,8 @@ void CManSbc::SetTimeBySNMP()
     // 이놈의 vxworks 7은 왜 2번을 수행해야 얻어 오는지....
     iTry = 0;
     do {
-        sntpc_status = sntpcTimeGet( stBootParams.had, 3*OS_ONE_SEC, & tspec );
-        printf( "SNTP를[%s:%d] 요청..." , stBootParams.had, sntpc_status );
+        sntpc_status = sntpcTimeGet( g_stBootParams.had, 3*OS_ONE_SEC, & tspec );
+        printf( "SNTP를[%s:%d] 요청..." , g_stBootParams.had, sntpc_status );
         ++ iTry;
     } while( iTry <= TRY_GETSNTP && sntpc_status != OK );
 
@@ -514,7 +606,7 @@ void CManSbc::SetTimeBySNMP()
 		DIR *pSystemLogDir;
 		struct dirent *pLogEntry;
 
-		printf( "\n [W] SNTPctimeGet failed...%s" , stBootParams.had );
+		printf( "\n [W] SNTPctimeGet failed...%s" , g_stBootParams.had );
 		printf( "\n Returned sntpc_status: %i errno: %s", sntpc_status, strerror(errno) );
 
 		/*
@@ -577,6 +669,9 @@ void CManSbc::SetTimeBySNMP()
 		else {
             struct tm *pstTime;
             char buffer[100];
+
+            g_bSNTP = true;
+
 			// InitSystemVariable();
 			//Time2DateTime( & _date, & _time, tspec.tv_sec );
 			//SetRtcClock( _date, _time );
@@ -588,6 +683,8 @@ void CManSbc::SetTimeBySNMP()
 			printf( "완료[%s, %d].\n" , buffer, ti );
         }
 	}
+
+#endif
 
 }
 
@@ -604,9 +701,6 @@ void CManSbc::InstallWeb()
 	STATUS stat;
 
     char szRamDrvFilename[100];
-    char szRamDrvWebfolder[100];
-    char sztffs0Webfolder[100];
-
     char szSrcFilename[100], szDstFilename[100];
 
     printf( "\n" );
@@ -618,26 +712,38 @@ void CManSbc::InstallWeb()
     printf( "\n\n 1. Backup the files..." );
 #endif
 
-    sprintf( szDstFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER );
+    sprintf( szDstFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY );
+#ifdef __VXWORKS__
     mkdir( szDstFilename );
-    sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
-    sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_FOLDER, CEDEOB_SQLITE_FILENAME );
+#endif
+
+    sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
+    sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
     stat = CopyFile( szSrcFilename, szDstFilename );
     // INI 파일을 백업한다.
-    sprintf( szDstFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, INI_FOLDER );
+    sprintf( szDstFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, INI_DIRECTORY );
+#ifdef __VXWORKS__
     mkdir( szDstFilename );
-    sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, INI_FOLDER, INI_FILENAME );
-    sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, INI_FOLDER, INI_FILENAME );
+#endif
+    sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, INI_DIRECTORY, INI_FILENAME );
+    sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, INI_DIRECTORY, INI_FILENAME );
     stat = CopyFile( szSrcFilename, szDstFilename );
 
     // 포멧 ...
     printf( "\n\n 2. TFFS 드아리브를 포멧합니다..." );
 
+#if defined(__VXWORKS__) || defined(__linux__)
     dosFsVolFormat( TFFSDRV, DOS_OPT_DEFAULT, (FORMAT_PTR) 0 );
+#endif
 
     // 압축된 파일을 추출합니다.
     printf( "\n\n 3. TAR 파일을 풉니다..." );
     sprintf( szRamDrvFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, WEB_FILENAME );
+
+#if defined(__VXWORKS__) || defined(__linux__)
+    char szRamDrvWebfolder[100];
+    char sztffs0Webfolder[100];
+
     if( true == DownloadfromTftp( WEB_FILENAME, (char *) szRamDrvFilename ) ) {
         sprintf( szRamDrvWebfolder, "%s%s" , RAMDRV, RAMDRV_NO );
         printf("\n TAR 파일[%s]을 풀어서 설치합니다." , szRamDrvWebfolder );
@@ -651,6 +757,7 @@ void CManSbc::InstallWeb()
         printf("\n [W] 웹 페이지를 설치하지 못했습니다." );
 
     }
+#endif
 
     // 복구
     // 라이브러리
@@ -682,16 +789,24 @@ void CManSbc::InstallWeb()
  */
 int CManSbc::CopyFile( const char *src_file, const char *dest_file )
 {
-	STATUS stat;
-
 	printf( "\n" );
-	stat = cp( src_file, dest_file );
+#ifdef __VXWORKS__
+    STATUS stat = cp( src_file, dest_file );
 	if( stat == OK ) {
 		printf( "원본 파일(%s)을 대상 파일(%s)에 성공적으로 복사 했습니다.\n" , src_file, dest_file );
 	}
 	else {
 		printf( "원본 파일(%s)을 대상 파일(%s)에 실패 했습니다.\n" , src_file, dest_file );
 	}
+
+    return stat;
+
+#else
+    printf( "\n원본 파일(%s)을 대상 파일(%s)에 성공적으로 복사 했습니다.\n", src_file, dest_file );
+
+    return 0;
+
+#endif
 
 }
 
@@ -711,6 +826,7 @@ void CManSbc::DownloadAndROMWriteApp()
 
     printf( "\n Installing the App program in the drive[%s]...", szTffsDrvFilename );
 
+#ifdef __VXWORKS__
     if( true == DownloadfromTftp( APP_FILENAME, (char *) szTffsDrvFilename ) ) {
     	printf("\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
 
@@ -719,6 +835,10 @@ void CManSbc::DownloadAndROMWriteApp()
         printf("\n [W] 운용 소프트웨어를 설치하지 못 했습니다 !!!" );
 
     }
+#else
+    printf( "\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
+
+#endif
 
 
 }
@@ -738,12 +858,17 @@ void CManSbc::DownloadApp()
     sprintf( szRAMDrvFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, APP_FILENAME );
 
     printf( "\n tftp 를 이용해서 App 프로그램을 램 드라이브[%s]에 설치 합니다..", szRAMDrvFilename );
+#ifdef __VXWORKS__
     if( true == DownloadfromTftp( APP_FILENAME, (char *) szRAMDrvFilename ) ) {
     	printf("\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
     }
     else {
         printf("\n [W] 운용 소프트웨어를 설치하지 못 했습니다 !!!" );
     }
+#else
+    printf( "\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
+
+#endif
 
 
 }
@@ -758,10 +883,11 @@ void CManSbc::DownloadApp()
 	\date     2008-04-18 10:58:31
 	\warning
 */
-BOOL CManSbc::DownloadfromTftp( char *tftpfilename, char *pFilename )
+bool CManSbc::DownloadfromTftp( char *tftpfilename, char *pFilename )
 {
-	bool bret;
+	bool bret=true;
 
+#ifdef __VXWORKS__
 	int	iFdWrite;
 	int	iStatus;
 
@@ -877,6 +1003,8 @@ BOOL CManSbc::DownloadfromTftp( char *tftpfilename, char *pFilename )
 
 	printf( "\n\n" );
 
+#endif
+
 	return bret;
 
 }
@@ -892,16 +1020,7 @@ BOOL CManSbc::DownloadfromTftp( char *tftpfilename, char *pFilename )
 */
 void CManSbc::RunApp( enWhatDrvAPP enApp )
 {
-	SYM_TYPE symType;
-	STATUS stResult;
-	char *pSpawnFuncName;
-
-	TASK_ID tID;
-
     char szDrvAppFilename[100];
-
-    MODULE *m_pModuleId;
-
     if( enApp == enDownloadApp ) {
         sprintf( szDrvAppFilename, "%s%s/%s", RAMDRV, RAMDRV_NO, APP_FILENAME );
     }
@@ -909,9 +1028,18 @@ void CManSbc::RunApp( enWhatDrvAPP enApp )
         sprintf( szDrvAppFilename, "%s/%s", TFFSDRV, APP_FILENAME );
     }
 
-	m_pModuleId = ld( ALL_SYMBOLS, 0, szDrvAppFilename );
+#ifdef __VXWORKS__
+	SYM_TYPE symType;
+	STATUS stResult;
+	char *pSpawnFuncName;
 
-	if( m_pModuleId == NULL ) {
+	TASK_ID tID;
+
+    MODULE *pModuleId;
+
+	pModuleId = ld( ALL_SYMBOLS, 0, szDrvAppFilename );
+
+	if( pModuleId == NULL ) {
 		printf("\n File loading Error....[%s]" , szDrvAppFilename );
     }
 	else {
@@ -922,7 +1050,7 @@ void CManSbc::RunApp( enWhatDrvAPP enApp )
 		stResult = symFindByName( sysSymTbl, (char *) "start" , & pSpawnFuncName, & symType);
 
 		if(stResult == OK) {
-			tID = taskSpawn( APP_TASKNAME, tPRI_App, 0, 64000, (FUNCPTR) pSpawnFuncName,0,0,0,0,0,0,0,0,0,0);
+			tID = taskSpawn( APP_TASKNAME, tPRI_App, 0, 64000, (FUNCPTR) pSpawnFuncName, m_uiBoardID,0,0,0,0,0,0,0,0,0);
 			if( tID == TASK_ID_NULL ) {
 				printf( "\n [W] '%s' 타스크를 생성하지 못했습니다." , APP_TASKNAME );
             }
@@ -941,19 +1069,15 @@ void CManSbc::RunApp( enWhatDrvAPP enApp )
 		if(stResult == OK) {
 			tID = taskSpawn( APP_TASKNAME, tPRI_App, 0, 64000, (FUNCPTR) symbolDesc.value,0,0,0,0,0,0,0,0,0,0);
 			if( tID == TASK_ID_NULL ) {
-#if TOOL==diab
-				//printf( "\n [W] '%s' 타스크를 생성하지 못했습니다." , APP_TASKNAME );
-#else
 				printf( "\n [W] '%s' 타스크를 생성하지 못했습니다." , APP_TASKNAME );
-#endif
             }
 		}
 		else {
 			printf( "\n [W] 'start()' 함수를 찾을 수 없습니다.[%d]...\n" , stResult );
 
         }
-#endif
 
+#endif
 
 	}
 
@@ -966,7 +1090,14 @@ void CManSbc::RunApp( enWhatDrvAPP enApp )
             printf("\n [W] [%s]을 삭제하지 못했습니다.." , szDrvAppFilename );
 
         }
+
     }
+
+
+#else
+    printf( "\n Loading %s...\n\n", szDrvAppFilename );
+
+#endif
 
 }
 
@@ -1013,11 +1144,50 @@ void CManSbc::PCIConfigSetting()
 
 #if defined(_PCI)
 
-	/*
     if( PCIeMemInit( ) == ERROR ) {
         printf( "\n ERROR! PCIe BAR Initialize !" );
     }
-    */
+
+	// SBC 보드 ID 읽기
+	unsigned int uiPSBoardID;
+	uiPSBoardID = PCIeLeftCtrlRead32( 0x208 );
+	uiPSBoardID = swapByteOrder( uiPSBoardID );
+
+	// 왜 이렇게 만들었을까요 ? 나도 모르지...
+	switch( uiPSBoardID ) {
+        case 8:
+            m_uiBoardID = 1;
+            break;
+
+		case 6 :
+		case 7 :
+			m_uiBoardID = 2;
+			break;
+
+        case 0:
+        case 1:
+            m_uiBoardID = 3;
+            break;
+
+		case 2:
+        case 3:
+            m_uiBoardID = 4;
+            break;
+
+        case 4:
+        case 5:
+            m_uiBoardID = 5;
+            break;
+
+		default:
+			m_uiBoardID = 1;
+			break;
+	}
+
+	printf( "\n SBC Board ID : %d, PS Board ID : %d", m_uiBoardID, uiPSBoardID );
+
+	// Print_PCIeLeftCtrlRead32( 0x208 );
+	// Print_PCIeRightCtrlRead32( 0x208 );
 
 #endif
 
@@ -1034,9 +1204,10 @@ void CManSbc::PCIConfigSetting()
  */
 void CManSbc::MountDrive()
 {
+#ifdef __VXWORKS__
 	STATUS status;
 
-	printf( "\nHOST[%s:%s]" , stBootParams.hostName, stBootParams.had );
+	printf( "\nHOST[%s:%s]" , g_stBootParams.hostName, g_stBootParams.had );
 	nfsAuthUnixSet ( (char *) "host", 0, 0, 0, (int *) 0 );
 
     // 호스트명 추가
@@ -1057,5 +1228,38 @@ void CManSbc::MountDrive()
         printf( "\n[W] 호스트명을 등록하지 못 했습니다 !!!" );
         WhereIs;
     }
+#endif
+
+}
+
+/**
+ * @brief     ShowNetMemory
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-19 11:19:06
+ * @warning
+ */
+void CManSbc::ShowNetMemory()
+{
+#ifdef _NETMEM_
+    int i;
+    NetMemCommand netCommand;
+    STR_NETMEM *pNetMem;
+
+    printf( "\n +------- NETMEMORY ----------------------------+" );
+
+    for( i=0 ; i < enMAXPRC ; ++i ) {
+        netCommand.offset = i;
+        if( m_pTheNetMem->ReadPage( & netCommand ) ) {
+            pNetMem = ( STR_NETMEM * ) netCommand.data;
+            printf( "\n [#%d] SBCID[%d]", i, pNetMem->uiSBCID );
+        }
+        else {
+            printf( "\n [#%d] NET 공유 에러 입니다.", i );
+        }
+    }
+#endif
 
 }

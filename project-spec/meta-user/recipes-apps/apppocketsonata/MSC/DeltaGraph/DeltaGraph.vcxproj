@@ -52,6 +52,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)DeltaGraph;C:\ProEssentials9\VC;$(IncludePath)</IncludePath>
     <LibraryPath>C:\ProEssentials9\VC;$(SolutionDir)DeltaGraph\FFTW;$(LibraryPath)</LibraryPath>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -189,6 +190,7 @@ REM CALL CopyAll %DELTA_GRAPH_DEST%
   <ItemGroup>
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h" />
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h" />
+    <ClInclude Include="..\..\files\Anal\INC\PDW.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\Midas.h" />
     <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h" />
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />

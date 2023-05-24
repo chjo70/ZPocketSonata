@@ -15,11 +15,9 @@
 
 class CScanSigAnal;
 
-//##ModelId=452B0C4403AC
-class CSGroup : public CGroup  
+class CSGroup : public CGroup
 {
 protected:
-	//##ModelId=452B0C4403B5
 	CScanSigAnal *m_pScanSigAnal;
 
 public:

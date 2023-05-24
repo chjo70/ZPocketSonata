@@ -56,11 +56,11 @@ struct SRxLOBHeader
 
 
 
-
+#ifndef MAX_FREQ_PRI_STEP
 #define MAX_FREQ_PRI_STEP                   (MAX_STAGGER_LEVEL_ELEMENT)
+#endif
 
 
-// ELMsgDefn.h
 #ifndef _SRxLOBData_STRUCT
 #define _SRxLOBData_STRUCT
 struct SRxLOBData {
@@ -225,6 +225,8 @@ struct SRxLOBData {
 	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
 	unsigned int uiRadarModeIndex;
 
+    unsigned int uiRadarIndex;                  // 레이더 인덱스 : ELNOT
+
 	float fCollectLatitude;
 	float fCollectLongitude;
 
@@ -256,6 +258,7 @@ struct SRxABTHeader
 };
 #endif
 
+// 빔 데이터 구조체 입니다.
 #ifndef _SRxABTData
 #define _SRxABTData
 struct SRxABTData {
@@ -393,8 +396,10 @@ struct SRxABTData {
 
     unsigned int uiTotalPDWOfAnalysis;
 
-    unsigned int uiRadarModeIndex;
-    unsigned int uiThreatIndex;
+    unsigned int uiRadarIndex;                  // 레이더 인덱스 : ELNOT
+
+    unsigned int uiRadarModeIndex;              // 레이더모드 인덱스
+    unsigned int uiThreatIndex;                 // 위협 인덱스
 
 #if defined(_ELINT_)
     int iIsManualInput;
@@ -429,6 +434,7 @@ struct SRxABTData {
 }  ;
 #endif
 
+// 방사체 구조체 입니다.
 #ifndef _STR_AETDATA_STRUCT
 #define _STR_AETDATA_STRUCT
 struct SRxAETData {
@@ -543,8 +549,6 @@ struct SAETData {
 
 } ;
 
-#pragma pack( pop )
-
 struct SCollectingData {
 	char aucTaskID[LENGTH_OF_TASK_ID];
 	unsigned int uiSearchStartFrequency;
@@ -622,4 +626,4 @@ struct STR_TRKSCNPDWDATA {
 
 }  ;
 
-
+#pragma pack( pop )

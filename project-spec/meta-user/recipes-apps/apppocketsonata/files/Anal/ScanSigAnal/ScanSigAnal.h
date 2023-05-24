@@ -1,9 +1,16 @@
-﻿// ScanSigAnal.h: interface for the CScanSigAnal class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
 
-#if !defined(AFX_SCANSIGANAL_H__A2FFC458_5A2A_41E8_8D9D_C80FD0441511__INCLUDED_)
-#define AFX_SCANSIGANAL_H__A2FFC458_5A2A_41E8_8D9D_C80FD0441511__INCLUDED_
+    @file      ScanSigAnal.h
+    @brief     interface for the CScanSigAnal class.
+    @details   ~
+    @author    조철희
+    @date      27.04.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -13,6 +20,7 @@
 #include "SDefine.h"
 #include "SStruct.h"
 
+#include "../../Utils/clog.h"
 #include "../../Utils/ccommonutils.h"
 
 #include "../SigAnal/SigAnal.h"
@@ -22,16 +30,10 @@
 
 #ifdef __cplusplus
 
-//##ModelId=452B0C450011
 class CScanSigAnal : public CSigAnal
 {
 private:
     SRxABTData *m_pScnAet;
-
-    std::string m_strAnalDirectory;
-
-private:
-
 
 public:
     STR_PDWINDEX *m_pGrPdwIndex;
@@ -66,7 +68,7 @@ public:
 
     void SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID );
     void InitVar();
-    void SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, BOOL bOnlyThreat=FALSE );
+    void SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, bool bOnlyThreat=FALSE );
 
     inline unsigned int GetMaxPdw() { return m_uiMaxPdw; }
     inline STR_STATIC_PDWDATA *GetPDWData() { return m_pstPDWData; }
@@ -80,7 +82,7 @@ public:
 
     inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, UINT framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
 
-    inline BOOL CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
+    inline bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
     inline unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
@@ -98,8 +100,6 @@ public:
 
     inline int GetCoGroup() { return 0; }
 
-	inline const char *GetAnalDirectory() { return m_strAnalDirectory.c_str(); }
-
 #if defined(_ELINT_) || defined(_XBAND_)
 	inline EN_RADARCOLLECTORID GetCollectorID() { return CSigAnal::GetCollectorID(); }
 	// inline unsigned char *GetTaskID() { return & m_pPDWData->x.el.aucTaskID[0]; }
@@ -109,15 +109,10 @@ public:
     void Start( STR_PDWDATA *pPDWData, STR_UPDAET *pUpdAet );
     void Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet );
     // void Start( STR_PDWDATA *pPDWData, STR_EMITTER *pEmitter, STR_PULSE_TRAIN_SEG *pSeg, STR_UPDAET *pUpdAet );
-    //##ModelId=452B0C4500AB
     void SendScanResult( UINT nResult );
-    //##ModelId=452B0C4500B3
     STR_SCANPT *GetScanPulseTrain( int noCh );
-    //##ModelId=452B0C4500B5
     void GetScanRes( unsigned int *pScanType, float *pScanPrd );
-    //##ModelId=452B0C4500BD
     UINT GetCoScanPulse();
-
 
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
@@ -128,11 +123,7 @@ public:
     void ScanExtractPulseInit( unsigned int uinoEMT=0, unsigned int uinoCh=0 );
     void ScanSigAnalInit( unsigned int uinoEMT=0, int noCh=0 );
 
-    void ClearAllMark();
-
 };
 
 #endif
 
-
-#endif // !defined(AFX_SCANSIGANAL_H__A2FFC458_5A2A_41E8_8D9D_C80FD0441511__INCLUDED_)

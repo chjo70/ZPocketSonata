@@ -12,26 +12,25 @@
 		<list key="replacement-string.combo">
 		</list>
 		<list key="search-string.combo">
-			<item value="string"/>
-			<item value="std::"/>
-			<item value="unique_ptr"/>
-			<item value="sysClkRateGet"/>
-			<item value="PCIeMemInit"/>
-			<item value="isrPci"/>
-			<item value="isrPcieLeftRead"/>
-			<item value="PCIeLeftCtrlWrite32"/>
-			<item value="ello, VxWorks!"/>
-			<item value="S_adrSpaceLib_INVALID_CONTEXT"/>
-			<item value="pciIntLeftIsrFunc"/>
-			<item value="PHYS_ADDR"/>
+			<item value="adt7481_set_therm_mode"/>
+			<item value="BIT("/>
+			<item value="pAdt7481Inst"/>
+			<item value="adt7481TempPollingTask"/>
+			<item value="start("/>
+			<item value="Starting..."/>
+			<item value="VXB_ADT7481_TEMP_DRV"/>
+			<item value="if (m_pszSQLString[0] != NULL) {"/>
+			<item value="szRawDataFilename[0] = N"/>
+			<item value="root"/>
+			<item value="TransferIQ"/>
+			<item value="break"/>
 		</list>
 		<list key="scope-history">
 			<item value="Workspace"/>
-			<item value="Project VSourceBuild_T2MS32"/>
 			<item value="Project VBootShell_T2MS32"/>
 			<item value="Project VSIGA"/>
 			<item value="Projects VBootShell_T2MS32, ..."/>
-			<item value="Project VSourceBuild_T2MS"/>
+			<item value="Project VSourceBuild_T2MS32"/>
 			<item value="Selected resources"/>
 		</list>
 		<list key="filter-pattern.combo">
@@ -40,7 +39,7 @@
 			<item value="" key="customName"/>
 			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
 			<list key="resources">
-				<item value="/VSourceBuild_T2MS32"/>
+				<item value="/VBootShell_T2MS32"/>
 			</list>
 		</section>
 		<section name="scope-history-Selected resources">

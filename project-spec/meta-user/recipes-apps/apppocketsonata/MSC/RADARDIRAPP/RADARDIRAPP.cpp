@@ -258,7 +258,7 @@ bool CRADARDIRAPPApp::OpenFile( CString &strPathname, CString &strFileName )
 	CFileDialog *pWndFile;
 
 	// 로그 파일을 오픈할 FILE Dialog창을 생성한다.
-	pWndFile = new CFileDialog(TRUE, NULL, NULL, OFN_ENABLESIZING | OFN_NONETWORKBUTTON | OFN_SHOWHELP | OFN_HIDEREADONLY, _T("PDW/IQ 파일들 (*.spdw,*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq;*.csv;*.7pdw)|*.spdw;*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq;*.csv;*.7pdw|PDW 파일들 (*.pdw;*.npw;*.spdw;*.epdw;*.xpdw;*.csv;*.7pdw)|*.pdw;*.npw;*.spdw;*.epdw;*.xpdw;*.csv;*.7pdw|IQ 파일들 (*.iq;*.siq;*.eiq)|*.iq;*.siq;*.eiq|All Files (*.*)|*.*||") );
+	pWndFile = new CFileDialog(TRUE, NULL, NULL, OFN_ENABLESIZING | OFN_NONETWORKBUTTON | OFN_SHOWHELP | OFN_HIDEREADONLY, _T("PDW/IQ 파일들 (*.spdw,*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq;*.csv;*.7pdw;*.zpdw)|*.spdw;*.pdw;*.npw;*.epdw;*.xpdw;*.iq;*.siq;*.csv;*.7pdw;*.zpdw|PDW 파일들 (*.pdw;*.npw;*.spdw;*.epdw;*.xpdw;*.csv;*.7pdw)|*.pdw;*.npw;*.spdw;*.epdw;*.xpdw;*.csv;*.7pdw|IQ 파일들 (*.iq;*.siq;*.eiq)|*.iq;*.siq;*.eiq|All Files (*.*)|*.*||") );
 
 	// Initializes m_ofn structure
 	pWndFile->m_ofn.lpstrTitle = _T("PDW 파일 읽어오기...");

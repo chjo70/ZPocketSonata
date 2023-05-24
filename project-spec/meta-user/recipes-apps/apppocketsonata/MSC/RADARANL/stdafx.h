@@ -71,7 +71,7 @@ extern CCriticalSection g_criticalDbg;
 extern CCriticalSection g_criticalExe;
 
 // 가변인함수로 Lof라는 함수 선언
-void Log( int nType, char *fmt, ... );
+void Log( int nType, const char *fmt, ... );
 CString GetFilePath();
 BOOL CreateDir( char *pPath );
 BOOL CheckPing();

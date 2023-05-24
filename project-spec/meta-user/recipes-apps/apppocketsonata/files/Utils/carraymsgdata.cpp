@@ -16,6 +16,7 @@
  컴파일 일시 :
 *****************************************************************************************/
 
+
 #include "pch.h"
 
 
@@ -26,6 +27,8 @@
 #include "carraymsgdata.h"
 
 #include "../Include/globals.h"
+
+
 
 /**
  * @brief CArrayMsgData::CArrayMsgData
@@ -77,9 +80,9 @@ void CArrayMsgData::Alloc()
 {
     int i;
 
-    if( m_bArrayLanData == true ) {        
+    if( m_bArrayLanData == true ) {
         for( i=0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
-            m_pszArray[i] = ( unsigned char * ) malloc( sizeof(char) * _MAX_LANDATA );            
+            m_pszArray[i] = ( unsigned char * ) malloc( sizeof(char) * _MAX_LANDATA );
             SetMark( i );
         }
     }
@@ -114,8 +117,14 @@ void CArrayMsgData::Free()
 }
 
 /**
- * @brief CArrayMsgData::SetMark
- * @param iIndex
+ * @brief     SetMark
+ * @param     int iIndex
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-02 13:43:28
+ * @warning
  */
 void CArrayMsgData::SetMark( int iIndex )
 {
@@ -125,7 +134,15 @@ void CArrayMsgData::SetMark( int iIndex )
 }
 
 /**
- * @brief CArrayMsgData::PushLanData
+ * @brief     PushLanData
+ * @param     void * pData
+ * @param     unsigned int uiLength
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-02 13:43:24
+ * @warning
  */
 int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 {
@@ -149,15 +166,16 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 
     if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
         //LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );
-        LOGMSG2( enError, "[%s] 가 죽었거나 메시지 처리를 못해서 타스크 관리자에게 요청 합니다[%d]. !!" , GetThreadName(), enERROR_OF_ARRAY_MARK );
-
+        //Log( enError, "[%s] 가 죽었거나 메시지 처리를 못해서 타스크 관리자에게 요청 합니다[%d]. !!" , GetThreadName(), enERROR_OF_ARRAY_MARK );
+        WhereIs;
+        WhereIs;
         SendTaskMngr( enERROR_OF_ARRAY_MARK, GetThreadName() );
 
         iRet = -1;
     }
     else {
 	    if( uiLength > _MAX_LANDATA ) {
-            LOGMSG( enError, "************** 버퍼가 작습니다. _MAX_LANDATA 값을 늘려 주세요..." );
+            //Log( enError, "************** 버퍼가 작습니다. _MAX_LANDATA 값을 늘려 주세요..." );
 		    exit( 1 );
 	    }
 

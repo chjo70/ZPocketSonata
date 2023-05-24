@@ -12,6 +12,8 @@
 #include "../INC/PDW.h"
 #include "../INC/AetIPL.h"
 
+#include "../EmitterMerge/ELStringDefn.h"
+
 struct FREQ_RESOL {
 	// frequency band code를 위한 구조체
 	unsigned int uiMin;       // min frequency
@@ -206,7 +208,7 @@ struct STR_PULSE_TRAIN_SEG {
 	STR_MINMAX_MEDIAN stFreq;				// 주파수 제원
 	STR_MINMAX stPA;					// 신호세기 제원
 	STR_MINMAX stPW;					// 펄스폭 제원
-    enPRI_TYPE enPriType;					// PRI 타입
+    enANAL_PRI_TYPE enPriType;					// PRI 타입
 	STR_MINMAX_TOA stPRI;					// PRI 제원
 
 	_TOA tMinDtoa;					// DTOA 간격 중에서 최소가 되는 값
@@ -246,17 +248,17 @@ struct STR_EMITTER {
 
 	unsigned int uiCoSeg;							// seg[] 수, 펄스열 수, seg_count
 
-    enFREQ_TYPE enFreqType;
-    UINT uiFreqPatternType;
+    enANL_FREQ_TYPE enFreqType;
+    PATTERN_TYPE enFreqPatternType;
     STR_TYPEMINMAX stFreq;				// 에미터 간의 병합시에 판단할 주파수 통계량
     float fFreqPeriod;
     int iFreqLevel[MAX_FREQ_PRI_STEP];
     int iCoFreqLevel;
 
-	enPRI_TYPE enPRIType;							// PRI 형태
+	enANAL_PRI_TYPE enPRIType;							// PRI 형태
 	_TOA tFramePri;								// 스태거일 때의 frmae PRI 값
 	STR_MINMAX_TOA stPRI;							// 에미터 펄스열의 PRI 범위
-	UINT uiPRIPatternType;
+    PATTERN_TYPE enPRIPatternType;
 	float fPRIPeriod;
 
 	unsigned int uiStagDwellElementCount;					// stagger level 수
@@ -550,14 +552,13 @@ struct STR_DWELL_LEVEL {
   float _spFreqMin;
   float _spFreqMax;
 
-  unsigned int _spAnalMinPulseCount;
 
 #define DFD_FREQ_OFFSET		(1900)
 
 #if defined(_ELINT_) || defined(_701_)
     //char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP" };
     char g_szAetSignalType[7][3] = { "NP" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
-    char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
+    char g_szAetFreqType[E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
     char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
 
 
@@ -590,8 +591,8 @@ struct STR_DWELL_LEVEL {
 
 	// LOB & ABT & AET
 	char g_szAetSignalType[7][3] = { "CW" , "NP" , "CW" , "FM" , "CF", "SH", "AL" };
-	char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
-	char g_szAetPriType[MAX_PRITYPE][3] = { "ST", "JT" , "DW", "SG" , "JP" , "UP" } ;
+	char g_szAetFreqType[E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
+	char g_szAetPriType[E_AET_MAX_PRI_TYPE][3] = { "ST", "JT" , "DW", "SG" , "JP" , "UP" } ;
 
 
 	FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
@@ -622,12 +623,12 @@ struct STR_DWELL_LEVEL {
 #elif defined(_POCKETSONATA_)
 
 #define PDW_FREQ_RES        (1.953125)
-    //char g_szPulseType[MAX_STAT][3] = { "--" , "NP" , "CW" , "--" , "--", "FM", "--", "SP", "CD", "CU" };
-    char g_szAetSignalType[5][3] = { "NP" , "CW" , "DP" , "HP", "NK" };
-    char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
-    char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
-
-#define _AOARes                 ( (float) (360./512.) )
+    char g_szPulseType[MAX_STAT][3] = { "NP" , "CW" , "PM" , "CP" , "Fu", "FD", "FU", "Cu", "CD", "CU", "SP" };
+    char g_szAetSignalType[ST_MAX][3] = { "NP" , "CW" , "Fu" , "FD", "FU", "Cu", "CD", "CU", "PM", "CP", "SH", "DO", "HI" };
+    char g_szAetFreqType[E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK" };
+    char g_szAetPriType[E_AET_MAX_PRI_TYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "UK" };
+    char g_szAetPatternType[MAX_FRQPATTYPE][3] = { "UK" , "SI", "S+" , "S-" , "TR" };
+    char g_szAetScanType[E_AET_MAX_SCAN_TYPE][3] = { "UK" , "CI", "UN" , "BI" , "CO", "ST", "FA" };
 
     FREQ_RESOL gFreqRes[ enMAXPRC ] = {	// min, max, offset, res
           {     0,     0, 0, (float) PDW_FREQ_RES } ,
@@ -637,22 +638,11 @@ struct STR_DWELL_LEVEL {
           {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
           {     0,     0, 1984000, (float) PDW_FREQ_RES } } ;
 
-//     PA_RESOL gPaRes[enMAXPRC] =
-//     {	// min, max, offset, res
-//         {     0,     0,  (float) _spPAoffset, _spAMPres },
-//         {  2000,  6000,  (float) _spPAoffset, _spAMPres },		/* 저대역		*/
-//         {  5500, 10000,  (float) _spPAoffset, _spAMPres },		/* 고대역1	*/
-//         { 10000, 14000,  (float) _spPAoffset, _spAMPres },		/* 고대역2	*/
-//         { 14000, 18000,  (float) _spPAoffset, _spAMPres },		/* 고대역3	*/
-//         {     0,  5000,  (float) -54.14071, (float) 0.24681 }		/* C/D			*/
-//     } ;
-
 #elif defined(_SONATA_)
   char g_szAetSignalType[ST_MAX][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
   char g_szAetFreqType[6][3] = { "--", "F_" , "HP" , "RA" , "PA", "UK" };
-  char g_szAetPriType[6][3] = { "ST" , "JT", "DW" , "SG" , "PT" } ;
+  char g_szAetPriType[E_AET_MAX_PRI_TYPE][3] = { "ST" , "JT", "DW" , "SG" , "PT" } ;
 
-#define _AOARes                 ( (float) (360./512.) )
   FREQ_RESOL gFreqRes[ 3 ] =
   {
       {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
@@ -662,8 +652,8 @@ struct STR_DWELL_LEVEL {
 
 #else
   char g_szAetSignalType[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
-  char g_szAetFreqType[MAX_FRQTYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
-  char g_szAetPriType[MAX_PRITYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
+  char g_szAetFreqType[E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
+  char g_szAetPriType[E_AET_MAX_PRI_TYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
 
 //   FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
 //   {
@@ -692,12 +682,12 @@ extern float _spFreqMax;
 #ifndef _GRAPH_
 extern STR_SYS _sp;
 
-extern char g_szAetFreqType[MAX_FRQTYPE][3];
-extern char g_szAetPriType[MAX_PRITYPE][3];
+extern char g_szAetFreqType[E_AET_MAX_FRQ_TYPE][3];
+extern char g_szAetPriType[E_AET_MAX_PRI_TYPE][3];
+extern char g_szAetPatternType[MAX_FRQPATTYPE][3];
+extern char g_szAetScanType[E_AET_MAX_SCAN_TYPE][3];
 
 #endif
-
-extern unsigned int _spAnalMinPulseCount;
 
 
 
@@ -710,7 +700,8 @@ extern double dRCLatitude[RADARCOL_MAX];
 extern double dRCLongitude[RADARCOL_MAX];
 
 #elif defined(_POCKETSONATA_)
-extern char g_szAetSignalType[5][3];
+extern char g_szPulseType[MAX_STAT][3];
+extern char g_szAetSignalType[ST_MAX][3];
 
 extern FREQ_RESOL gFreqRes[ enMAXPRC ];
 extern PA_RESOL gPaRes[ 6 ];

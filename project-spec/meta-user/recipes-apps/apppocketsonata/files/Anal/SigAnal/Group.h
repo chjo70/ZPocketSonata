@@ -11,6 +11,9 @@
 
 #include "_SigAnal.h"
 
+#include "../../Utils/clog.h"
+#include "../../Utils/ccommonutils.h"
+
 #ifdef __cplusplus
 
 //////////////////////////////////////////////////////////////////////
@@ -23,7 +26,12 @@ class CGroup
 protected:
     DEFINE_ANAL_PVAR_
 
-	char m_szPulseType[MAX_STAT][3];
+    unsigned int m_uiAOA_SHIFT_COUNT;
+
+    unsigned int m_uiMAXIMUM_STANDARD_DEVIATION;
+    unsigned int m_uiMAXIMUM_DISTANCE_OF_CLUSTERS;
+
+	//char m_szPulseType[MAX_STAT][3];
 
 #if defined(_ELINT_) || defined(_XBAND_)
 	UINT m_stSigma1Aoa[5];
@@ -32,7 +40,7 @@ protected:
 	UINT m_stSigma1Aoa[enMAXPRC];
 
 #else
-	UINT m_stSigma1Aoa[3];
+    UINT m_stSigma1Aoa[3];
 
 #endif
 
@@ -60,28 +68,26 @@ protected:
 	STR_PDWINDEX *m_pGrPdwIndex;
 
 public:
+    CGroup( unsigned int uiCoMaxPdw = NEW_COLLECT_PDW );
+    virtual ~CGroup();
+
+
 	inline int GetBand() { return m_nBand; }
 	inline UINT GetCoGroups() { return m_PwGroups.uiCount; }
 	inline void SetCoGroups( UINT coGroup ) { m_PwGroups.uiCount=coGroup; }
 	inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return & m_FrqAoaPwIdx; }
 	inline STR_FIRST_FRQAOA_PEAK *GetFrqAoaPeak() { return & m_FrqAoaPeak; }
 	inline int GetPulseStat() { return m_nStat; }
-    inline int GetCoFrqAoaPwIdx() { return m_uiCoFrqAoaPwIdx; }
+    inline unsigned int GetCoFrqAoaPwIdx() { return m_uiCoFrqAoaPwIdx; }
 
 	// 가상 함수 선언
 	virtual unsigned int GetColPdw()=0;
 
-	//##ModelId=452B0C560177
 	int GetFreqShift( int band, int FREQ_NARR_SHIFT );
-	//##ModelId=452B0C56017F
 	bool SetHistBinCount( UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
-	//##ModelId=452B0C560189
 	//void FineFreqGroup();
-	//##ModelId=452B0C56018A
 	void MakePWGroup( bool bForce1Group=false );
-	//##ModelId=452B0C560192
 	//bool IsSameAoaIdx( int nPwIdx );
-	//##ModelId=452B0C560194
 	void MakeFreqGroup( bool bForce1Group=false );
 	void ReDrawPwHist( STR_PW_GROUP *pPwGroup );
 	void GetPwRange( int peak_index, int nShift, STR_PW_GROUP *pPwGroup );
@@ -89,32 +95,22 @@ public:
 	bool IsLastGroup();
 	bool IsLastGroup( unsigned int uiIndex );
 	void ReCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstCluster2, STR_CLUSTER *pSrcCluster );
-	BOOL SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster );
+	bool SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster );
 	void CalClusterInfo( STR_CLUSTER *pCluster );
 	void ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw );
 
     bool MakePDWArray( _PDW *pdw, unsigned int uiCount, unsigned int uiBand=0 );
 
 	void MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex );
-	//##ModelId=452B0C560203
 	void MakeBandGroup();
-	//##ModelId=452B0C560204
-	BOOL LastOneAoaGroup( int noGroup );
-	//##ModelId=452B0C560216
+	bool LastOneAoaGroup( int noGroup );
 	void SaveFrqAoaPeak();
-	//##ModelId=452B0C560217
 	void FilterParam(STR_AOA_GROUP *pAoaGroup, UINT *pParam1, UINT *pParam2, STR_FRQ_GROUP *pFrqGroup, STR_PW_GROUP *pPwGroup, STR_PDWINDEX *pFrqAoaPwIndex );
-	//##ModelId=452B0C560234
-	BOOL MakeGrIndex();
-	//##ModelId=452B0C560235
+	bool MakeGrIndex();
 	void ReDrawFrqHist( STR_FRQ_GROUP *pFrqGroup );
-	//##ModelId=452B0C56023D
-	BOOL GetFrqRange( int peak_index, int nShift, int freqdiff, STR_FRQ_GROUP *pFrqGroup );
-	//##ModelId=452B0C560249
+	bool GetFrqRange( int peak_index, int nShift, int freqdiff, STR_FRQ_GROUP *pFrqGroup );
 	void MakeHist( STR_AOA_GROUP *pSrcIndex, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
-	//##ModelId=452B0C560265
 	void MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
-	//##ModelId=452B0C560271
 	void MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT *pFreq, UINT *pPW, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	void MakeHist( STR_FRQ_GROUP *pFrqGroup, STR_AOA_GROUP *pAoaGroup, UINT *pPdw, UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
 	int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex );
@@ -129,13 +125,10 @@ public:
 	void MakeAOAGroup( STR_PDWINDEX *pGrPdwIndex, bool bForce1Group=false );
 	void MakeStatGroup( STR_PDWINDEX *pBand );
 
-	BOOL MakeGroup(void);
+	bool MakeGroup(void);
 	void Init();
 	void PrintAllGroup();
 	void PrintGroup();
-
-    CGroup( unsigned int uiCoMaxPdw=NEW_COLLECT_PDW );
-	virtual ~CGroup();
 
 };
 

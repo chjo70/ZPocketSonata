@@ -13,7 +13,7 @@ enum ENUM_SRCH_FILTER_EEP_LIMIT
   E_EEP_LESS_THAN_50_KM,
 };
 
-//static const char* strSrchFilterEEPLimit[LENGTH_OF_LOB_STRING] = 
+//static const char* strSrchFilterEEPLimit[LENGTH_OF_LOB_STRING] =
 //{
 //  "1 km",
 //  "5 km",
@@ -38,18 +38,18 @@ enum ENUM_PDW_AXIS_INFO
 	E_PDW_STAT
 };
 #define NUM_OF_PDW_AXIS_INFO 11
-// static const char* strPDWAxisInfo[LENGTH_OF_LOB_STRING] = 
+// static const char* strPDWAxisInfo[LENGTH_OF_LOB_STRING] =
 // {
-// 	"미선택", 
-// 	"주파수", 
-// 	"TOA", 
-// 	"펄스폭", 
-// 	"신호세기", 
+// 	"미선택",
+// 	"주파수",
+// 	"TOA",
+// 	"펄스폭",
+// 	"신호세기",
 // 	"주파수 차",
-// 	"방탐", 
-// 	"PMOP", 
-// 	"방탐유효", 
-// 	"대역", 
+// 	"방탐",
+// 	"PMOP",
+// 	"방탐유효",
+// 	"대역",
 // 	"상태"
 // };
 
@@ -66,6 +66,8 @@ enum ENUM_AET_FRQ_TYPE
 
 	E_AET_FRQ_UNKNOWN,
 	E_AET_FRQ_IGNORE,
+
+    E_AET_MAX_FRQ_TYPE
 };
 
 #else
@@ -78,6 +80,8 @@ enum ENUM_AET_FRQ_TYPE
 
     E_AET_FRQ_UNKNOWN,
     E_AET_FRQ_IGNORE,
+
+    E_AET_MAX_FRQ_TYPE
 };
 
 
@@ -138,7 +142,11 @@ enum ENUM_AET_PRI_TYPE
 	E_AET_PRI_DWELL_SWITCH,
 	E_AET_PRI_STAGGER,
 	E_AET_PRI_PATTERN,
-	
+
+    E_AET_PRI_UNKNOWN,
+
+    E_AET_MAX_PRI_TYPE,
+
 	//E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
 };
 
@@ -150,6 +158,10 @@ enum ENUM_AET_PRI_TYPE
     E_AET_PRI_DWELL_SWITCH,
     E_AET_PRI_STAGGER,
     E_AET_PRI_PATTERN,
+
+	E_AET_PRI_UNKNOWN,
+
+    E_AET_MAX_PRI_TYPE
 
     //E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
 };
@@ -169,7 +181,7 @@ enum ENUM_AET_PRI_TYPE
 // 	"D&S",
 // 	"스태거",
 // 	"패턴",
-// 	
+//
 // };
 
 
@@ -272,7 +284,7 @@ enum ENUM_AET_SIGNAL_TYPE
 	E_AET_SIGNAL_CW,
 };
 #define NUM_OF_AET_SIGNAL_TYPE 2
-//static const char* strAetSignalType[LENGTH_OF_LOB_STRING] = 
+//static const char* strAetSignalType[LENGTH_OF_LOB_STRING] =
 //{
 //	"Pulse",
 //	"CW",
@@ -285,7 +297,7 @@ enum ENUM_AET_SIGNAL_TYPE
 //    E_PDW_SIGNAL_PULSE,
 //};
 #define NUM_OF_PDW_SIGNAL_TYPE 2
-//static const char* strPdwSignalType[LENGTH_OF_LOB_STRING] = 
+//static const char* strPdwSignalType[LENGTH_OF_LOB_STRING] =
 //{
 //	"CW",
 //	"Pulse",
@@ -299,7 +311,7 @@ enum ENUM_AET_STORED_PDW
 	E_AET_NOT_STORED_PDW = 1
 };
 #define NUM_OF_AET_STORED_PDW 2
-// static const char* strAetStoredPDW[LENGTH_OF_LOB_STRING] = 
+// static const char* strAetStoredPDW[LENGTH_OF_LOB_STRING] =
 // {
 // 	"저장",
 // 	"저장안함"
@@ -381,7 +393,7 @@ enum ENUM_EL_DT_ANT_DIR
 enum EnumNBPath
 {
 	E_EL_NBP_NONE_AMPLITY=0,	//비증폭
-	E_EL_NBP_AMPLITY,			//증폭	
+	E_EL_NBP_AMPLITY,			//증폭
 	E_EL_NBP_HIGH_AMPLITY,	//고증폭 (추가됨*)
 	E_EL_NBP_AUTO,				//자동
 };
@@ -429,7 +441,7 @@ enum EnumNBPath
  * @enum			ENUM_AET_PRI_TYPE
  * @brief			극성
  * @author    조철희
- * @date      2014-12-31 
+ * @date      2014-12-31
  */
 enum ENUM_AET_POLIZATION_TYPE
 {
@@ -471,9 +483,9 @@ enum ENUM_RAW_DATA_TYPE
 {
 	E_RAW_DATA_PDW = 0,	// PDW
 	E_RAW_DATA_IQ,		// IQ
-	E_RAW_DATA_IF			// IF	
+	E_RAW_DATA_IF			// IF
 };
-//static const char* strRawDataType [LENGTH_OF_LOB_STRING] = 
+//static const char* strRawDataType [LENGTH_OF_LOB_STRING] =
 //{
 //	"PDW",
 //	"IQ",
@@ -488,7 +500,7 @@ enum ENUM_CONSISTENCY_TYPE
 	E_UNCERTAIN,		// 비확실
 	E_CANT_DECISION	// 판단불가
 };
-// static const char* strConsistencyType [LENGTH_OF_LOB_STRING] = 
+// static const char* strConsistencyType [LENGTH_OF_LOB_STRING] =
 // {
 // 	"확실",
 // 	"비확실",
@@ -503,13 +515,13 @@ enum ENUM_VALIDITY_TYPE
 	E_VALID,				// 유효
 	E_NOT_IGNORE		// 무시
 };
-//static const char* strValidityType [LENGTH_OF_LOB_STRING] = 
+//static const char* strValidityType [LENGTH_OF_LOB_STRING] =
 //{
 //	"무효",
 //	"유효",
 //	"-"
 //};
-//static const char* strValidityType2[LENGTH_OF_LOB_STRING] = 
+//static const char* strValidityType2[LENGTH_OF_LOB_STRING] =
 //{
 //	"유효",
 //	"무효",
@@ -527,7 +539,7 @@ enum ENUM_POS_SYNC_TYPE
 {
 	E_POS_SYNC_AET = 0,	// AET
 	E_POS_SYNC_PDW,	// PDW
-	E_POS_SYNC_IQ,			// IQ	
+	E_POS_SYNC_IQ,			// IQ
 	E_POS_SYNC_IF,
 };
 
@@ -544,7 +556,7 @@ enum ENUM_BIT_FLAG
 	E_BIT_FLAG_BIT_SIG,			// BIT신호
 };
 
-// static const char* strStorageType [LENGTH_OF_LOB_STRING] = 
+// static const char* strStorageType [LENGTH_OF_LOB_STRING] =
 // {
 // 	"IF(ODD)",
 // 	"IF(EVEN)",
@@ -552,7 +564,7 @@ enum ENUM_BIT_FLAG
 // };
 
 // 2018.04.17 활동여부 전시를 위한 정의
-// static const char* strActivityType [LENGTH_OF_LOB_STRING] = 
+// static const char* strActivityType [LENGTH_OF_LOB_STRING] =
 // {
 // 	"미활동",
 // 	"활동",

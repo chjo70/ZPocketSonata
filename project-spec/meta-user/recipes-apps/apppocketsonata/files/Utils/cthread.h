@@ -1,5 +1,16 @@
-﻿#ifndef CTHREAD_H
-#define CTHREAD_H
+﻿/**
+
+    @file      cthread.h
+    @brief
+    @details   ~
+    @author    조철희
+    @date      2.05.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
 
 #ifdef _MSC_VER
 
@@ -47,12 +58,34 @@ using namespace std;
 #include "../Utils/carraymsgdata.h"
 
 
-
 #define LENGTH_OF_CLASSNAME                 (30)
 
 
 #define NO_ECHO                             (0)
 #define ECHO                                (1)
+
+#define PCIISR_NAME                         "PCIISR"
+
+
+
+// VxWorks 용 타스크 전용 정의
+#define TASK_DEFAULT_PRIORITY   (100)
+#define TASK_LOWEST_PRIORITY    (TASK_DEFAULT_PRIORITY+20)
+
+enum TASK_PRIORITY {
+    en_LOG_PRIORITY = TASK_DEFAULT_PRIORITY,
+
+    en_TASK_MANAGER_PRIORITY,
+    en_RECLAN_PRIORITY,
+    en_BIT_PRIORITY,
+    en_EMTMERGE_PRIORITY,
+    en_COLLECT_PRIORITY,
+
+    en_DETECT_ANAL_PRIORITY,
+    en_TRACK_ANAL_PRIORITY,
+    en_SCAN_ANAL_PRIORITY,
+
+};
 
 
 
@@ -104,6 +137,10 @@ static bool IsThereInstance() { \
     } \
     return bRet; }
 
+
+
+
+
 /**
  * @brief 수신 메시지 정의
  */
@@ -116,140 +153,8 @@ enum ENUM_RCVMSG {
 }  ;
 
 
-enum ENUM_PCI_DRIVER {
-    enLEFT_PCI_DRIVER = 0,
-    enRIGHT_PCI_DRIVER,
-    // enDUAL_PCI_DRIVER,
 
-    en_ELEMENT_PCI_DRIVER
 
-};
-
-/**
-    @struct STR_COLLECTINFO
-    @brief  수집 쓰레드 정보
-**/
-struct STR_COLLECT_INFO {
-    unsigned int uiCh;
-    unsigned int uiTotalPDW;
-
-    // 방사체 번호
-    unsigned int uiAETID;
-    // 빔 번호
-    unsigned int uiABTID;
-    // 좌/우 PCI 값
-    ENUM_PCI_DRIVER enPCIDriver;
-    // 수집 뱅크
-    ENUM_COLLECTBANK enCollectBank;
-    // 위협의 인덱스 정보
-    unsigned int uiABTIndex;
-
-    // 채널 번호에 따른 수집 개수
-    unsigned int uiCh2TotalPDW[TOTAL_CHANNELS];
-
-    void Set( unsigned int i_uiCh, unsigned int i_uiTotalPDW, unsigned int i_uiAETID, unsigned int i_uiABTID, ENUM_PCI_DRIVER i_enPCIDriver, ENUM_COLLECTBANK i_enCollectBank, unsigned int i_uiABTIndex ) {
-        uiCh = i_uiCh;
-        uiTotalPDW = i_uiTotalPDW;
-        uiAETID = i_uiAETID;
-        uiABTID = i_uiABTID;
-        enPCIDriver = i_enPCIDriver;
-        enCollectBank = i_enCollectBank;
-        uiABTIndex = i_uiABTIndex;
-
-    }
-
-}  ;
-
-/**
-    @struct STR_ANALINFO
-    @brief  수집한 데이터에서 분석한 LOB 헤더 정보
-**/
-struct STR_DETANAL_INFO {
-    ENUM_BoardID enBoardID;
-    unsigned int uiTotalLOB;
-
-    // 수집한 채널 정보
-    unsigned int uiCh;
-
-    // 탐지, 추적, 스캔 수집 뱅크 정의
-    ENUM_COLLECTBANK enCollectBank;
-
-    // 방사체 번호
-    unsigned int uiAETID;
-    // 빔 번호
-    unsigned int uiABTID;
-
-    // 방사체/빔/LOB 저장소 인덱스
-    unsigned int uiABTIndex;
-
-    void Set( ENUM_BoardID i_enBoardID, unsigned int i_uiTotalLOB, unsigned int i_uiCh, ENUM_COLLECTBANK i_enCollectBank, unsigned int i_uiAETID, unsigned int i_uiABTID, unsigned int i_uiABTIndex ) {
-        enBoardID = i_enBoardID;
-        uiTotalLOB = i_uiTotalLOB;
-        uiCh = i_uiCh;
-        enCollectBank = i_enCollectBank;
-        uiAETID = i_uiAETID;
-        uiABTID = i_uiABTID;
-        uiABTIndex = i_uiABTIndex;
-    }
-
-} ;
-
-/**
-    @struct STR_SCANANAL_INFO
-    @brief  스캔 분석 관련 구조체 정의
-**/
-struct STR_SCANANAL_INFO {
-    ENUM_BoardID enBoardID;
-
-    // 수집한 채널 정보
-    unsigned int uiCh;
-
-    // 탐지, 추적, 스캔 수집 뱅크 정의
-    ENUM_COLLECTBANK enCollectBank;
-
-    // 방사체 번호
-    unsigned int uiAETID;
-    // 빔 번호
-    unsigned int uiABTID;
-
-    // 방사체/빔/LOB 저장소 인덱스
-    unsigned int uiABTIndex;
-
-    // 스캔 채널에 대해서 수집 시간 스텝 정보
-    unsigned int uiScanStep;
-
-    void Set( ENUM_BoardID i_enBoardID, unsigned int i_uiCh, ENUM_COLLECTBANK i_enCollectBank, unsigned int i_uiAETID, unsigned int i_uiABTID, unsigned int i_uiABTIndex, unsigned int i_uiScanStep ) {
-        enBoardID = i_enBoardID;
-        uiCh = i_uiCh;
-        enCollectBank = i_enCollectBank;
-        uiAETID = i_uiAETID;
-        uiABTID = i_uiABTID;
-        uiABTIndex = i_uiABTIndex;
-        uiScanStep = i_uiScanStep;
-
-    }
-
-};
-
-/**
-    @union UNI_MSG_DATA
-    @brief 메시지 데이터 구조체
-**/
-union UNI_MSG_DATA {
-    unsigned int uiData;
-    time_t tiNow;
-
-    STR_COLLECT_INFO strCollectInfo;
-    STR_DETANAL_INFO strDetAnalInfo;
-    STR_SCANANAL_INFO strScanAnalInfo;
-
-    char szData[32*2];
-
-    STR_COLLECT_INFO *GetCollectInfo() { return &strCollectInfo; }
-    STR_DETANAL_INFO *GetDetectAnalInfo() { return &strDetAnalInfo; }
-    STR_SCANANAL_INFO *GetScanAnalInfo() { return &strScanAnalInfo; }
-
-} ;
 
 
 /**
@@ -272,9 +177,6 @@ struct STR_MessageData {
     // 데이터 길이
     unsigned int uiDataLength;
 
-    // 에코 비트 :  이 값이 1 이면 에코 메시지를 전달합니다. 쓰레드간의 메시지 동기화 하기 위함.
-    unsigned int uiEchoBit;
-
     // 데이터 영역 이다.
     UNI_MSG_DATA x;
 
@@ -289,7 +191,7 @@ struct STR_MessageData {
 
 } ;
 
-#if defined(_MSC_VER) || defined(__VXWORKS__)
+#if defined(_MSC_VER)
 class CThreadContext
 {
 public:
@@ -318,6 +220,8 @@ class CThread : public CArrayMsgData
 private:
     // 송신할 때 사용하는 메시지 데이터
     UNI_MSG_DATA m_uniMsgData;
+
+    bool m_bLog;
 
 #ifdef _MSC_VER
     CThreadContext m_MainThread;
@@ -391,7 +295,8 @@ private:
     void DisplayMsg( bool bSend, const char *pszFromClassName=NULL, const char *pszToClassName=NULL, STR_MessageData *pInMsg=NULL );
 
 public:
-    CThread( int iMsgKey, const char *pThreadName, bool bArrayLanData=false, bool bCreateOnlyThread=false );
+    CThread();
+    CThread( int iThreadPriority, const char *pThreadName, bool bArrayLanData=false, bool bCreateOnlyThread=false );
     ~CThread();
 
     void Init();
@@ -421,57 +326,7 @@ public:
     inline void SetTaskSuspend() { taskSuspend( m_TaskID ), m_bTaskRunStat=false; }
     inline void SetTaskResume() { taskResume( m_TaskID ), m_bTaskRunStat=true; }
 
-#define TASK_DEFAULT_PRIORITY   (100)
-#define TASK_LOWEST_PRIORITY    (TASK_DEFAULT_PRIORITY-10)
-
-    // 타스크 명에 따른 우선순위 선정 테이블 입니다.
-    int GetPriorityByThreadName() {
-        int iPriority=TASK_DEFAULT_PRIORITY;
-
-        // 낮은 순으로 정렬함.
-        if( ( ++iPriority ) && strcmp( "CSignalCollect", m_szThreadName ) == 0 ) { // 신호 수집은 제일 낮게 설정. 다른 쓰레드의 빔 데이터를 참조하기 때문에...
-            //WhereIs;
-        }
-        else if( (++ iPriority) && strcmp( "CUrBit" , m_szThreadName ) == 0 ) {
-            //WhereIs;
-        }
-        else if( (++ iPriority) && strcmp( "CUserCollect" , m_szThreadName ) == 0 ) {
-            //WhereIs;
-        }
-        else if( (++ iPriority) && strcmp( "CEmitterMerge" , m_szThreadName ) == 0 ) {
-            //WhereIs;
-        }
-        else if( (++ iPriority) && strcmp( "CDetectAnalysis" , m_szThreadName ) == 0 ) {
-            //WhereIs;
-        }
-        else if( (++ iPriority) && strcmp( "CTrackAnalysis" , m_szThreadName ) == 0 ) {
-            //WhereIs;
-        }
-        else if( (++ iPriority) && strcmp( "CScanAnalysis" , m_szThreadName ) == 0 ) {
-            //WhereIs;
-        }
-        else if( ( ++iPriority ) && strcmp( "CCCUSocket", m_szThreadName ) == 0 ) {
-            //WhereIs;
-        }
-        else if( ( ++iPriority ) && strcmp( "RECCCU", m_szThreadName ) == 0 ) {
-            //WhereIs;
-        }
-        else if( ( ++iPriority ) && strcmp( "CTaskMngr", m_szThreadName ) == 0 ) {
-            //WhereIs;
-        }
-
-        else {
-            printf( "\n 타스크 우선순위가 설정되지 않아서 기본 값으로 설정 합니다.");
-
-            iPriority = TASK_DEFAULT_PRIORITY;
-            WhereIs;
-        }
-
-        //printf( "[iPriority=%d]" , iPriority );
-        return iPriority;
-    }
-
-#define TASK_DEFAULT_STACKSIZE   (0x1000)
+#define TASK_DEFAULT_STACKSIZE   (0x30000)
 
     size_t GetStackSize() {
         int iStackSize=TASK_DEFAULT_STACKSIZE;
@@ -520,23 +375,14 @@ public:
     int QMsgRcv( ENUM_RCVMSG enFlag=enWAIT_FOREVER, DWORD dwMilliSec=0 );
     void QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName=NULL );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const char *pszThreadName );
-    void QMsgSnd(unsigned int uiOpCode, unsigned int uiEchoBit, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName );
-    void QMsgSnd( unsigned int uiOpCode, unsigned int uiEchoBit, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData = NULL, unsigned int uiDataLength = 0 );
-    void QMsgSnd( unsigned int uiOpCode, unsigned int uiEchoBit, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData, unsigned int uiDataLength, const char *pszClassName );
-    //void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData, unsigned int uiDataLength, const char *pszClassName );
     void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName );
-    //void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName );
     void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData=NULL, unsigned int uiDataLength=0, const char *pszClassName=NULL );
     void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength, const char *pszClassName );
     void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL );
 
-    // 에코 메시지 관련 함수
-    void QMsgEchoSnd( unsigned int uiOpCode, const char *pszClassName );
-    void SendEchoMessage();
-
     void QMsgClear();
 
-    int GetThreadID() { return m_iThreadID; }
+    //int GetThreadID() { return m_iThreadID; }
 
     void SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName=NULL );
 
@@ -671,6 +517,10 @@ public:
     virtual STR_MessageData *GetParentMessage() = 0;
 
     //pthread_create(&thread,NULL,thread_routine, NULL);
+
+    //_DEFINE_LOG_VIRTUAL_FUNCTION
+    //virtual void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... ) = 0;
+
 };
 
-#endif // CTHREAD_H
+

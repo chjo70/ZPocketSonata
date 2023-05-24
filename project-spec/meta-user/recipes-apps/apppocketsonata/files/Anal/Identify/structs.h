@@ -5,18 +5,14 @@
 */
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_STRUCTS_H__F11C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_)
-#define AFX_STRUCTS_H__F11C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "ELCEDLibDataType2.h"
 
 #include "../INC/system.h"
 #include "../INC/AetIPL.h"
 #include "../EmitterMerge/ELMsgDefn.h"
+#include "../EmitterMerge/ELStringDefn.h"
 
 typedef unsigned int LIBINDEX;
 
@@ -61,7 +57,7 @@ struct STR_FLIB {
 
 	SRadarMode *pIdxRadarMode[ MAX_RADARMODE ];
 
-	STR_LIB_RANGE pLib[MAX_FRQTYPE][MAX_PRITYPE];
+	STR_LIB_RANGE pLib[E_AET_MAX_FRQ_TYPE][E_AET_MAX_PRI_TYPE];
 
 } ;
 
@@ -86,5 +82,5 @@ struct STR_CEDEOB_FINAL_RESULT {
 } ;
 
 
-#endif // !defined(AFX_STRUCTS_H__F11C3E13_85CC_4285_9FCA_BBA54209C76E__INCLUDED_)
+
 

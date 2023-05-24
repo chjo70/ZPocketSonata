@@ -1,7 +1,7 @@
 ﻿/**
 
     @file      ccommonutils.h
-    @brief     
+    @brief
     @details   ~
     @author    조철희
     @date      3.04.2023
@@ -24,6 +24,8 @@
 #include "../Include/struct.h"
 #include "../Include/thrmsg.h"
 
+#include "clog.h"
+
 #ifdef _MSC_VER
 #include <string>
 
@@ -32,6 +34,29 @@ int clock_gettime(int X, struct timeval *tv);
 LARGE_INTEGER getFILETIMEoffset();
 int gettimeofday(struct timeval * tp, struct timezone * tzp);
 #endif
+
+/**
+ * @brief     IsValidMinMax
+ * @param     T tMin
+ * @param     T tMax
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-19 20:09:20
+ * @warning
+ */
+template <typename T>
+bool IsValidMinMax( T tMin, T tMax )
+{
+    bool bRet = true;
+
+    if( tMin > tMax || tMax == 0 ) {
+        bRet = false;
+    }
+
+    return bRet;
+}
 
 
 /**
@@ -152,18 +177,15 @@ public:
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
 
 	// 시간관련 함수
-    static DWORD GetTickCounts();
     static void getStringPresentTime( char *pString, size_t szString );
     static void getStringDesignatedDate( char *pString, size_t szString, time_t tiTime );
 	static void getStringDesignatedTime(char *pString, size_t szString, time_t tiTime);
-	//static void getStringDesignatedTime( char *pString, size_t szString, __time64_t tiTime );
-    //static void getFileNamingDesignatedTime(char *pString, size_t szString, __time32_t tiTime);
-    //static void getFileNamingDesignatedTime(char *pString, size_t szString, long tiTime);
     static void getFileNamingDesignatedTime(char *pString, size_t szString, time_t tiTime);
     static void GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, unsigned int tColTimeMs );
     static void GetCollectTime( time_t *ptiContactTime, unsigned int *ptiContactTimems );
     static void GetCollectTime( struct timespec *pTimeSpec );
     static void GetCollectTime( time_t  *ptiContactTime, unsigned short *ptiContactTimems );
+    static DWORD GetDiffTime( struct timespec *pTimeSpec );
 
     static int CopySrcToDstFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
 
@@ -174,6 +196,13 @@ public:
 
     static void PrintAllPDWs( STR_UZPOCKETPDW *pstPDW );
     static void PrintOnePDW( UZPOCKETPDW *pstPDW );
+    static void MakeOnePDW( char *pszBuffer, UZPOCKETPDW *pstPDW );
+
+    static void WallMakePrint( char *buffer, char delimeter, int iColumns= MAX_SCREEN_COLUMNS );
+    static void WallMakePrint( char delimeter, int iColumns, char *buffer, ... );
+
+    static float Random( float fMin, float fMax );
+    static int Random( int iMin, int iMax );
 
     // 타입 변환시 사용하는 함수 모음
     //static unsigned int INT2UINT( int iValue );
@@ -189,7 +218,7 @@ public:
 	static unsigned int Parsing(vector<string> *pValues, const char *pData);
 
 	// 폴더 및 파일 삭제
-	static int DeleteAllFile(const char *pszDir, int iForce );
+	static int DeleteAllFile(const char *pszDir );
 
 	// 비트 관련 함수
     static unsigned int CountSetBits( const unsigned int uiValue );

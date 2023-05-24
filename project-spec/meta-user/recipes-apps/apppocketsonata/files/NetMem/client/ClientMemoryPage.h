@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef CLIENTMEMORYPAGE_H
 #define CLIENTMEMORYPAGE_H
 

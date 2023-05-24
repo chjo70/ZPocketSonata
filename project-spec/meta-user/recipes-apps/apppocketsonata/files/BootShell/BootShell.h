@@ -1,18 +1,18 @@
-// BootShell.h: interface for the CBootShell class.
+﻿// BootShell.h: interface for the CBootShell class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_BOOTSHELL_H__F950734C_228A_4C0B_8B29_7547A0BA0978__INCLUDED_)
-#define AFX_BOOTSHELL_H__F950734C_228A_4C0B_8B29_7547A0BA0978__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
 
 #ifndef _WIN32
 #include "moduleLib.h"
 
 #endif
+
+
+#include "..//Anal/INC/OS.h"
 
 #include "Macros.h"
 
@@ -21,32 +21,35 @@
 
 
 // Ű���� ��ɾ�
-enum { 
-	DOWNLOAD_APP=0, 
-	WRITE_APP_FLASH, 
-	RUN_APP, 
-	INSTALL_WEB,            // 'w' 키값
-	DOWNLOAD_UTEST_PROG, 
-	WRITE_UTEST_PROG, 
-	RUN_UTEST_PROG, 
-	WRITE_BOOT_PROG, 
+enum {
+	DOWNLOAD_APP=0,         // 운용 프로그램 다운로드
+
+	WRITE_APP_FLASH,
+	RUN_APP,
+	INSTALL_WEB,            // SBC 환경 설정
+
+	DOWNLOAD_UTEST_PROG,
+	WRITE_UTEST_PROG,
+	RUN_UTEST_PROG,
+	WRITE_BOOT_PROG,
 	RUN_BOOT_PROG,
-	
+
 	DEBUG_APP
 } ;
 
-// Ű���� Ÿ�� �ƿ� ������
+// 키보드 타임아웃 설정 값
 #define KEYBOARD_TIMEOUT					(5)
 
 
 
 //////////////////////////////////////////////////////////////////////////
-// �� ����̺� �� ���� �� ���ϸ� ����
+// 장치 관련 드라이브 정의
 
 #define	EIDDISK										"EIDDISK:"
 #define	RAMDRV										(char *) "/RAMDRV"
 #define	RAMDRV_NO									(char *) ":0"
 #define	TFFSDRV										(char *) "/tffs1"
+#define	ATADRV										(char *) "/ata0:0"
 
 #define	LOGDISK										"LOGDISK:"
 
@@ -56,15 +59,17 @@ enum {
 #define WEB_FILENAME				                ((char *) "tftpboot.tar")
 #define WEB_FOLDER				                    ((char *) "Web")
 
-#define BLK_EMITTER_SQLITE_FILENAME					((char *) "emitter_blank.sqlite3")
-#define EMITTER_SQLITE_FILENAME						((char *) "emitter.sqlite3")
-#define SQLITE_FOLDER								((char *) "LIB")
+//#define BLK_EMITTER_SQLITE_FILENAME					((char *) "emitter_blank.sqlite3")
+//#define EMITTER_SQLITE_FILENAME						((char *) "emitter.sqlite3")
+//#define SQLITE_FOLDER								((char *) "LIB")
 
-#define CEDEOB_SQLITE_FILENAME      				((char *) "cedeob.sqlite3")
+//#define CEDEOB_SQLITE_FILENAME      				((char *) "cedeob.sqlite3")
 
 
-#define INI_FOLDER                  				((char *) "INI")
-#define INI_FILENAME                				((char *) "sysconfig.ini")
+//#define INI_FOLDER                  				((char *) "INI")
+//#define INI_FILENAME                				((char *) "sysconfig.ini")
+
+
 
 #ifdef __VXWORKS__
 #if defined(__LP64__)
@@ -90,11 +95,17 @@ static int _tShell_priority;
 #ifdef INCLUDE_SHELL
 #define	GetCharX					taskPriorityGet( taskNameToId( (char *)"tShell0" ), & _tShell_priority );	\
 													taskPrioritySet( taskNameToId( (char *) "tShell0" ), 255 ); \
-													// getchar();	\
 													taskPrioritySet( taskNameToId( (char *) "tShell0" ), _tShell_priority );
+
 #else
 #define GetCharX					getchar();
 #endif
+
+
+struct STR_NETMEM {
+    unsigned int uiSBCID;
+
+}  ;
 
 
 #ifdef __cplusplus
@@ -114,7 +125,7 @@ void BootShellMain();
 
 #ifdef __cplusplus
 
-class CBootShell  
+class CBootShell
 {
 private:
 	MODULE *m_pModuleId;				// module�� �������� ������ ������ ����ü
@@ -128,4 +139,4 @@ public:
 
 #endif
 
-#endif // !defined(AFX_BOOTSHELL_H__F950734C_228A_4C0B_8B29_7547A0BA0978__INCLUDED_)
+

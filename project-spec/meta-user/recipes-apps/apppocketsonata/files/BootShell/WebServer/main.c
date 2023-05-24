@@ -16,7 +16,7 @@
  */
 
 /********************************* Includes ***********************************/
-
+#ifdef __VXWORKS__
 #include	<envLib.h>
 #include	<hostLib.h>
 #include	<iosLib.h>
@@ -25,6 +25,8 @@
 #include	<symLib.h>
 #include	<sysSymTbl.h>
 #include	<unldLib.h>
+
+#endif
 
 #include	"uemf.h"
 #include	"wsIntrn.h"
@@ -76,7 +78,7 @@ int websvxmain(int argc, char **argv)
 {
 
 /*
- *	Initialize the memory allocator. Allow use of malloc and start 
+ *	Initialize the memory allocator. Allow use of malloc and start
  *	with a 60K heap.  For each page request approx 8KB is allocated.
  *	60KB allows for several concurrent page requests.  If more space
  *	is required, malloc will be used for the overflow.
@@ -157,14 +159,21 @@ static int initWebs()
 #endif
 
 /*
- *	Define the local Ip address, host name, default home page and the 
+ *	Define the local Ip address, host name, default home page and the
  *	root web directory.
  */
 	if (gethostname(host, sizeof(host)) < 0) {
 		error(E_L, E_LOG, T("Can't get hostname"));
 		return -1;
 	}
+    
+#ifdef WIN
+    struct hostent *pHostEnt;
+    pHostEnt = gethostbyname( host );
+    intaddr.s_addr = 0;
+#else
 	intaddr.s_addr = (unsigned long) hostGetByName(host);
+#endif
 
 /*
  *	Set ../web as the root web. Modify this to suit your needs
@@ -187,7 +196,7 @@ static int initWebs()
 	websSetDefaultPage(T("index.html"));
 	websSetPassword(password);
 
-/* 
+/*
  *	Open the web server on the given port. If that port is taken, try
  *	the next sequential port for up to "retries" attempts.
  */
@@ -195,15 +204,15 @@ static int initWebs()
 
 /*
  * 	First create the URL handlers. Note: handlers are called in sorted order
- *	with the longest path handler examined first. Here we define the security 
+ *	with the longest path handler examined first. Here we define the security
  *	handler, forms handler and the default web page handler.
  */
-	websUrlHandlerDefine(T(""), NULL, 0, websSecurityHandler, 
+	websUrlHandlerDefine(T(""), NULL, 0, websSecurityHandler,
 		WEBS_HANDLER_FIRST);
 	websUrlHandlerDefine(T("/goform"), NULL, 0, websFormHandler, 0);
 	websUrlHandlerDefine(T("/cgi-bin"), NULL, 0, websCgiHandler, 0);
-	websUrlHandlerDefine(T(""), NULL, 0, websDefaultHandler, 
-		WEBS_HANDLER_LAST); 
+	websUrlHandlerDefine(T(""), NULL, 0, websDefaultHandler,
+		WEBS_HANDLER_LAST);
 
 /*
  *	Now define two test procedures. Replace these with your application
@@ -222,7 +231,7 @@ static int initWebs()
 /*
  *	Create a handler for the default home page
  */
-	websUrlHandlerDefine(T("/"), NULL, 0, websHomePageHandler, 0); 
+	websUrlHandlerDefine(T("/"), NULL, 0, websHomePageHandler, 0);
 
 /*
  *	Provide signal for clean up on termination.
@@ -236,7 +245,7 @@ static int initWebs()
 /******************************************************************************/
 /*
  *	Test Javascript binding for ASP. This will be invoked when "aspTest" is
- *	embedded in an ASP page. See web/asp.asp for usage. Set browser to 
+ *	embedded in an ASP page. See web/asp.asp for usage. Set browser to
  *	"localhost/asp.asp" to test.
  */
 
@@ -260,8 +269,8 @@ static void formTest(webs_t wp, char_t *path, char_t *query)
 {
 	char_t	*name, *address;
 
-	name = websGetVar(wp, T("name"), T("Joe Smith")); 
-	address = websGetVar(wp, T("address"), T("1212 Milky Way Ave.")); 
+	name = websGetVar(wp, T("name"), T("Joe Smith"));
+	address = websGetVar(wp, T("address"), T("1212 Milky Way Ave."));
 
 	websHeader(wp);
 	websWrite(wp, T("<body><h2>Name: %s, Address: %s</h2>\n"), name, address);
@@ -316,12 +325,12 @@ char_t *websGetCgiCommName()
  *	is not supported in VxWorks.  Instead, we spawn a "task".  A major
  *	difference is that we have to know the entry point for the taskSpawn
  *	API.  Also the module may have to be loaded before being executed;
- *	it may also be part of the OS image, in which case it cannot be 
+ *	it may also be part of the OS image, in which case it cannot be
  *	loaded or unloaded.  The following sequence is used:
  *	1. If the module is already loaded, unload it from memory.
- *	2. Search for a query string keyword=value pair in the environment 
+ *	2. Search for a query string keyword=value pair in the environment
  *		variables where the keyword	is cgientry.  If found use its value
- *		as the the entry point name.  If there is no such pair set 
+ *		as the the entry point name.  If there is no such pair set
  *		the entry point name to the default: basename_cgientry, where
  *		basename is the name of the cgi file without the extension.  Use
  *		the	entry point name in a symbol table search for that name to
@@ -330,7 +339,7 @@ char_t *websGetCgiCommName()
  *	4. If step 3 is successful repeat the entry point search from step
  *		2.  If the entry point exists, go to step 5.  If it does not,
  *		error out.
- *	5. Use taskSpawn to start a new task which uses vxWebsCgiEntry 
+ *	5. Use taskSpawn to start a new task which uses vxWebsCgiEntry
  *		as its starting point.  The five arguments to vxWebsCgiEntry
  *		will be the user entry point address, argp, envp, stdIn
  *		and stdOut.  vxWebsCgiEntry will convert argp to an argc
@@ -344,9 +353,12 @@ char_t *websGetCgiCommName()
 int websLaunchCgiProc(char_t *cgiPath, char_t **argp, char_t **envp,
 					  char_t *stdIn, char_t *stdOut)
 {
+    int rc = 0;
+
+#ifdef __VXWORKS__
 	SYM_TYPE	ptype;
 	char_t		*p, *basename, *pEntry, *pname, *entryAddr, **pp;
-	int			priority, rc, fd;
+	int			priority, fd;
 
 /*
  *	Determine the basename, which is without path or the extension.
@@ -384,7 +396,7 @@ int websLaunchCgiProc(char_t *cgiPath, char_t **argp, char_t **envp,
 
 	entryAddr = 0;
 	/*
-#ifdef 0	
+#ifdef 0
 	if (symFindByName(sysSymTbl, pEntry, &entryAddr, &ptype) == -1) {
 		fmtAlloc(&pname, VALUE_MAX_STRING, T("_%s"), pEntry);
 		symFindByName(sysSymTbl, pname, &entryAddr, &ptype);
@@ -397,7 +409,7 @@ int websLaunchCgiProc(char_t *cgiPath, char_t **argp, char_t **envp,
 		goto DONE;
 	}
 #endif
-*/	
+*/
 
 /*
  *	Try to load the module.
@@ -408,7 +420,7 @@ int websLaunchCgiProc(char_t *cgiPath, char_t **argp, char_t **envp,
 	}
 	printf( "\n spawn : %s, %d, %s, %s" , pEntry, priority, stdIn, stdOut );
 	/*
-#ifdef 0	
+#ifdef 0
 	if ((symFindByName(sysSymTbl, pEntry, &entryAddr, &ptype)) == -1) {
 		fmtAlloc(&pname, VALUE_MAX_STRING, T("_%s"), pEntry);
 		symFindByName(sysSymTbl, pname, &entryAddr, &ptype);
@@ -419,15 +431,21 @@ int websLaunchCgiProc(char_t *cgiPath, char_t **argp, char_t **envp,
 			(int)entryAddr, (int)argp, (int)envp, (int)stdIn, (int)stdOut,
 			0, 0, 0, 0, 0);
 	}
-#endif	
+#endif
 */
-	
+
 DONE:
 	if (fd != -1) {
 		gclose(fd);
 	}
 	bfree(B_L, basename);
 	bfree(B_L, pEntry);
+
+#else
+    printf( "\n websLaunchCgiProc... " );
+
+#endif
+
 	return rc;
 }
 
@@ -436,13 +454,14 @@ DONE:
  *	This is the CGI process wrapper.  It will open and redirect stdin
  *	and stdout to stdIn and stdOut.  It converts argv to an argc, argv
  *	pair to pass to the user entry. It initializes the task environment
- *	with envp strings.  Then it will call the user entry. 
+ *	with envp strings.  Then it will call the user entry.
  */
 
 void vxWebsCgiEntry(void *entryAddr(int argc, char_t **argv),
 					char_t **argp, char_t **envp,
 					char_t *stdIn, char_t *stdOut)
 {
+#ifdef __VXWORKS__
 	char_t	**p;
 
 	int		argc, taskId, fdin, fdout;
@@ -453,13 +472,13 @@ void vxWebsCgiEntry(void *entryAddr(int argc, char_t **argv),
  */
 	taskId = taskIdSelf();
 	if ((fdout = gopen(stdOut, O_RDWR | O_CREAT, 0666)) < 0 &&
-		(fdout = creat(stdOut, O_RDWR)) < 0) {
+		(fdout = gcreat(stdOut, O_RDWR)) < 0) {
 			exit(0);
 	}
 	ioTaskStdSet(taskId, 1, fdout);
 
 	if ((fdin = gopen(stdIn, O_RDONLY | O_CREAT, 0666)) < 0 &&
-		(fdin = creat(stdIn, O_RDWR)) < 0) {
+		(fdin = gcreat(stdIn, O_RDWR)) < 0) {
 		printf("content-type: text/html\n\n"
 				"Can not create CGI stdin to %s\n", stdIn);
 		gclose(fdout);
@@ -500,6 +519,12 @@ void vxWebsCgiEntry(void *entryAddr(int argc, char_t **argv),
 	gclose(fdin);
 	gclose(fdout);
 	exit(0);
+
+#else
+    printf( "\n vxWebsCgiEntry..." );
+
+#endif
+
 }
 
 /******************************************************************************/
@@ -509,6 +534,9 @@ void vxWebsCgiEntry(void *entryAddr(int argc, char_t **argv),
 
 int websCheckCgiProc(int handle)
 {
+#ifdef WIN
+    return 0;
+#else
 	STATUS stat;
 /*
  *	Verify the existence of a VxWorks task
@@ -520,6 +548,8 @@ int websCheckCgiProc(int handle)
 	} else {
 		return 0;
 	}
+#endif
+
 }
 
 /******************************************************************************/
@@ -589,12 +619,11 @@ static void websTermSigHandler(int signo)
  *	Get absolute path.  In VxWorks, functions like chdir, ioctl for mkdir
  *	and ioctl for rmdir, require an absolute path.  This function will
  *	take the path argument and convert it to an absolute path.  It is the
- *	caller's responsibility to deallocate the returned string. 
+ *	caller's responsibility to deallocate the returned string.
  */
 
 static char_t *getAbsolutePath(char_t *path)
 {
-	char_t	*tail;
 	char_t	*dev;
 
 /*
@@ -603,11 +632,16 @@ static char_t *getAbsolutePath(char_t *path)
  *	Note the getcwd call below must not be ggetcwd or else we go into
  *	an infinite loop
  */
+#ifdef __VXWORKS__
+    char_t *tail;
+
 	if (iosDevFind(path, &tail) != NULL && path != tail) {
 		return bstrdup(B_L, path);
 	}
+#endif
+
 	dev = balloc(B_L, LF_PATHSIZE);
-	getcwd(dev, LF_PATHSIZE);
+	ggetcwd(dev, LF_PATHSIZE);
 
 #ifndef __VXWORKS__
 	strcat(dev, "/");
@@ -637,14 +671,14 @@ int vxchdir(char_t *dirname)
  *	below must not be replaced with gchdir or else an infinite
  *	loop will occur.
  */
-	rc = chdir(path);
+	rc = gchdir(path);
 	bfree(B_L, path);
 	return rc;
 }
 
 /******************************************************************************/
 #ifdef B_STATS
-static void memLeaks() 
+static void memLeaks()
 {
 	int		fd;
 

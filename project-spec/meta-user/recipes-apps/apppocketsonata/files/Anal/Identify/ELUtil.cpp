@@ -81,7 +81,7 @@ float DOADiff( float x, float y)
  * @date      2022-11-22 12:40:15
  * @warning
  */
-int MultiByteToUTF8(wchar_t *pszUniCode, int iMaxSizeOfUnicode, char *pszMultiByte)
+int MultiByteToUTF8(wchar_t *pszUniCode, char *pszMultiByte)
 {
     //size_t nLen = strlen( pszMultiByte );
     //char carr[256];

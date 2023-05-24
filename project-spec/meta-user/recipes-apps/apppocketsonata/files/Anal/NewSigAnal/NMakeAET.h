@@ -31,7 +31,7 @@ class CNewSigAnal;
 class CNMakeAET : public CMakeAET
 {
 private:
-    
+
 
 protected:
 	CNewSigAnal *m_pNewSigAnal;
@@ -39,7 +39,7 @@ protected:
 public:
 	void MarkAllAetToPdwIndex();
 	void Init();
-	void MakeAET();
+	void MakeAET( bool bDBInsert );
     void PrintAllAET();
 	int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex );
 	unsigned int GetColPdw();
@@ -75,8 +75,6 @@ public:
     EN_RADARCOLLECTORID GetCollectorID();
     char *GetTaskID();
 #endif
-
-
 
 };
 

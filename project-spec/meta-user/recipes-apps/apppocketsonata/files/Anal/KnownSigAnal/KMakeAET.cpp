@@ -89,14 +89,14 @@ void CKMakeAET::Init()
 //! \date     2006-08-29 10:10:16
 //! \warning
 //
-void CKMakeAET::MakeAET()
+void CKMakeAET::MakeAET( bool bDBInsert )
 {
     PrintFunction
 
 	// 시작 에미터 번호 위치 백업. 
     //nStartAet = m_CoLOB;
 
-	CMakeAET::MakeAET();
+	CMakeAET::MakeAET( bDBInsert );
 
 	/*! \bug  Dwell 인 경우에는 추적할 에미터 제원으로 업데이트 하도록 한다.
 	    \date 2008-10-29 21:39:09, 조철희
@@ -109,20 +109,20 @@ void CKMakeAET::MakeAET()
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CKMakeAET::KnownMakeAET
-// 반환되는 형  : BOOL
+// 반환되는 형  : bool
 // 함 수 인 자  : 없음
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2005-07-28 18:47:54
 //
 //##ModelId=42E98F300030
-BOOL CKMakeAET::KnownMakeAET()
+bool CKMakeAET::KnownMakeAET( bool bDBInsert )
 {
     // int idxLOBData;
 
     //SRxLOBData *pLOBData;
 	STR_EMITTER *pEmitter;
 
-	MakeAET();
+	MakeAET( bDBInsert );
 
 	/*! \bug  m_IdxUpdAet 초기화
 	    \date 2006-06-26 13:43:57, 조철희
@@ -365,21 +365,21 @@ void CKMakeAET::CalcAllKnownSucessRatio()
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CKMakeAET::CompPRI
-// 반환되는 형  : BOOL
+// 반환되는 형  : bool
 // 함 수 인 자  : STR_PRI *pNewPri
 // 함 수 인 자  : STR_PRI *pTrkPri
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2006-01-25 14:03:44
 //
-BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
+bool CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 {
 	int i;
 	float pri_margin;
-    BOOL bRet=TRUE;
+    bool bRet=true;
 
     switch( pNewPri->vPRIType ) {
 		case _STABLE :
-            pri_margin = (float)(2. * STABLE_MARGIN);
+            pri_margin = (float)(2. * m_tStableMargin );
             bRet = CompMeanDiff<float>(pNewPri->fPRIMean, pTrkPri->fPRIMean, pri_margin);
             break;
 
@@ -391,16 +391,16 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
             if( pTrkPri->vPRIType == _JITTER_RANDOM ) {
             }
             else if( pTrkPri->vPRIType == _STAGGER ) {
-                pri_margin = (float) ( 2. * STABLE_MARGIN );  
+                pri_margin = (float) ( 2. * m_tStableMargin );
                 if( pNewPri->vPRIElementCount == pTrkPri->vPRIElementCount ) {
                     for( i=0 ; i < pNewPri->vPRIElementCount ; ++i ) {
-                        if( CompMeanDiff<float>( pNewPri->fPRISeq[i], pTrkPri->fPRISeq[i], pri_margin ) == FALSE ) {
-	  					    bRet = FALSE;
+                        if( CompMeanDiff<float>( pNewPri->fPRISeq[i], pTrkPri->fPRISeq[i], pri_margin ) == false ) {
+	  					    bRet = false;
 						}
 					}
 				}
 				else {
-					bRet = FALSE;
+					bRet = false;
 				}
 			}
             else {
@@ -417,11 +417,11 @@ BOOL CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 			*/
             pri_margin = 20 * _spOneMicrosec;
             if( pTrkPri->vPRIType == _STAGGER ) {
-                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMin, pNewPri->fPRIMin, pri_margin ) ) {
-					bRet = FALSE;
+                if( false == CompMeanDiff<float>( pTrkPri->fPRIMin, pNewPri->fPRIMin, pri_margin ) ) {
+					bRet = false;
                 }
-                if( _spFalse == CompMeanDiff<float>( pTrkPri->fPRIMax, pNewPri->fPRIMax, pri_margin ) ) {
-					bRet = FALSE;
+                if( false == CompMeanDiff<float>( pTrkPri->fPRIMax, pNewPri->fPRIMax, pri_margin ) ) {
+					bRet = false;
                 }
 
 			}
@@ -547,12 +547,12 @@ void CKMakeAET::MakeUpAET()
 //////////////////////////////////////////////////////////////////////
 //
 // 함 수 이 름  : CKMakeAET::IsUpdateAet
-// 반환되는 형  : BOOL
+// 반환되는 형  : bool
 // 함 수 인 자  : 없음
 // 함 수 설 명  : 
 // 최 종 변 경  : 조철희, 2005-09-08 10:14:57
 //
-BOOL CKMakeAET::IsUpdateAet()
+bool CKMakeAET::IsUpdateAet()
 {
 	// 추적 성공 또는 실패인지를 검사한다.
     return m_KwnLOB[_spZero].stLOBData.uiABTID != _spZero;

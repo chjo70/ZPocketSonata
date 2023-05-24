@@ -33,16 +33,16 @@ static const char* strCEDFreqType [] =
 	"Pattern"
 };	*/
 #define NUM_OF_CED_FREQ_TYPE 4
-enum EnumFreqType	//주파수형태
-{
-	E_EL_FREQ_NO_SELECT = -2,	// 해당사항없음
-	E_EL_FREQ_ADD_INIT =-1,   // 추가시 초기값 추가 
-
-	E_EL_FREQ_FIXED=0,				// FIXED
-	E_EL_FREQ_HOPPING,				// Hopping
-	E_EL_FREQ_AGILE,					// Agile
-	E_EL_FREQ_PATTERN					// Pattern
-};
+// enum EnumFreqType	//주파수형태
+// {
+// 	E_EL_FREQ_NO_SELECT = -2,	// 해당사항없음
+// 	E_EL_FREQ_ADD_INIT =-1,   // 추가시 초기값 추가 
+// 
+// 	E_EL_FREQ_FIXED=1,				// FIXED
+// 	E_EL_FREQ_AGILE,					// Agile
+// 	E_EL_FREQ_PATTERN,					// Pattern
+//     E_EL_FREQ_HOPPING,				// Hopping
+// };
 /*
 static const char* strCEDPriType [] =
 {
@@ -54,18 +54,18 @@ static const char* strCEDPriType [] =
 };
 */
 #define NUM_OF_CED_PRI_TYPE 5
-enum EnumPRIType	//PRI형태
-{
-	E_EL_PRI_NO_SELECT = -2,	//해당사항없음
-	E_EL_PRI_ADD_INIT =-1,       //추가시 초기값 추가 
-
-	E_EL_PRI_STABLE=0,			//Stable
-	E_EL_PRI_STAGGER,			//Stagger
-	E_EL_PRI_DwellAndSwitch,	//Dwell&Switch
-	E_EL_PRI_PATTERN,			//Pattern
-	E_EL_PRI_JITTER,			//Jitter
-	
-};
+// enum EnumPRIType	//PRI형태
+// {
+// 	E_EL_PRI_NO_SELECT = -2,	//해당사항없음
+// 	E_EL_PRI_ADD_INIT =-1,       //추가시 초기값 추가 
+// 
+// 	E_EL_PRI_STABLE=0,			//Stable
+// 	E_EL_PRI_STAGGER,			//Stagger
+// 	E_EL_PRI_DwellAndSwitch,	//Dwell&Switch
+// 	E_EL_PRI_PATTERN,			//Pattern
+// 	E_EL_PRI_JITTER,			//Jitter
+// 	
+// };
 /*
 static const char* strCEDScanType [] =
 {

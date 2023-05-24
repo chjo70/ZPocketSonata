@@ -9,24 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 아래는 문자열에 관련된 정의를 나열합니다.
 #define PROGRAM_NAME        "PocketSonata"
-#define PROGRAM_VERSION     "0.5a"
-
-
-//////////////////////////////////////////////////////////////////////////
-// 장치 정의
-// #if defined(_POCKETSONATA_)
-// #define _TRACK_ENABLED_
-// #define _SCAN_ENABLED_
-//
-// #elif defined(_ELINT_) || defined(_XBAND_)
-// #undef _TRACK_ENABLED_
-// #undef _SCAN_ENABLED_
-//
-// #else
-// #define _TRACK_ENABLED_
-// #define _SCAN_ENABLED_
-//
-// #endif
+#define PROGRAM_VERSION     "0.7a"
 
 
 #define _spPass     (0)
@@ -71,6 +54,8 @@ typedef unsigned char UCHAR;
 
 #endif
 
+#define SBC_FROM_IP     (const char *) ( "192.168.0.100" )
+#define SBC_TO_IP       (const char *) ( "192.168.0.110" )
 
 
 // 제어조종장치 서버

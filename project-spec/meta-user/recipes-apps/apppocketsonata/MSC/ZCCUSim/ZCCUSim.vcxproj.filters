@@ -48,6 +48,9 @@
     <ClInclude Include="..\..\files\Utils\ccommonutils.h">
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clog.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ZCCUSim.cpp">
@@ -69,6 +72,9 @@
       <Filter>소스 파일\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clog.cpp">
       <Filter>소스 파일\Utils</Filter>
     </ClCompile>
   </ItemGroup>

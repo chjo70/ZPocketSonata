@@ -3,6 +3,8 @@
 
 
 #include "../Include/system.h"
+
+#include "../Utils/clog.h"
 #include "../Utils/cthread.h"
 
 class CCGI : public CThread
@@ -17,6 +19,10 @@ public:
     virtual ~CCGI();
 
     THREAD_STANDARD_FUNCTION( CCGI )
+
+    void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... ) { }
+    void LogMsg( int nType, const char *fmt, ... ) { }
+
 };
 
 #define CGI     CCGI::GetInstance()

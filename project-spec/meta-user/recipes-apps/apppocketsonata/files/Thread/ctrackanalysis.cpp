@@ -25,7 +25,7 @@
  * @param iKeyId
  * @param pClassName
  */
-CTrackAnalysis::CTrackAnalysis( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CTrackAnalysis::CTrackAnalysis( int iThreadPriority, const char *pClassName, bool bArrayLanData ) : CThread( iThreadPriority, pClassName, bArrayLanData )
 {
 
 #ifdef _SQLITE_
@@ -87,13 +87,13 @@ void CTrackAnalysis::Run(key_t key)
 void CTrackAnalysis::_routine()
 {
     LOGENTRY;
-    bool bWhile=true;
+    //bool bWhile=true;
 
     m_pMsg = GetRecvDataMessage();
 
-    while( g_AnalLoop ) {
+    while( m_bThreadLoop ) {
         if( QMsgRcv() == -1 ) {
-            perror( "QMsgRcv" );
+            perror( "QMsgRcv(CTrackAnalysis)" );
         }
         else {
             switch( m_pMsg->uiOpCode ) {
@@ -118,16 +118,14 @@ void CTrackAnalysis::_routine()
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
-                    LOGMSG1( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
-                    bWhile = false;
+                    Log( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
                     break;
 
                 default:
-                    LOGMSG2( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                    Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
                     break;
             }
 
-            SendEchoMessage();
         }
     }
 }
@@ -148,7 +146,7 @@ void CTrackAnalysis::AnalysisStart()
 
     STR_TRKSCNPDWDATA *pTrkPDWData;
 
-    LOGMSG3( enDebug, " TRK: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiCh, m_pMsg->x.strCollectInfo.uiABTID );
+    Log( enDebug, " TRK: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiReqStatus, m_pMsg->x.strCollectInfo.uiABTID );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
@@ -164,11 +162,9 @@ void CTrackAnalysis::AnalysisStart()
     // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
     iCoLOB = min( (int) (_MAX_LANDATA / sizeof(SRxLOBData) - 1), iCoLOB);
 
-    strAnalInfo.enBoardID = g_enBoardId;
-    strAnalInfo.uiTotalLOB = (unsigned int)iCoLOB;
-    strAnalInfo.uiCh = m_pMsg->x.strCollectInfo.uiCh;
-    strAnalInfo.uiAETID = m_pMsg->x.strDetAnalInfo.uiAETID;
-    strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
+    strAnalInfo.Set( enLEFT_PCI_DRIVER, ( unsigned int ) iCoLOB, m_pMsg->x.strCollectInfo.uiReqStatus, enTrackCollectBank, m_pMsg->x.strDetAnalInfo.uiAETID, m_pMsg->x.strDetAnalInfo.uiABTID, 0 );
+    //strAnalInfo.uiAETID = m_pMsg->x.strDetAnalInfo.uiAETID;
+    //strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
 
     // PDW 헤더 정보 저장
     //memcpy(&strAnalInfo.uniPDWHeader, &pTrkPDWData->strPDW.x, sizeof(UNION_HEADER));

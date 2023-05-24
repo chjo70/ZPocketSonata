@@ -35,8 +35,8 @@ static void websDefaultWriteEvent(webs_t wp);
 /*
  *	Process a default URL request. This will validate the URL and handle "../"
  *	and will provide support for Active Server Pages. As the handler is the
- *	last handler to run, it always indicates that it has handled the URL 
- *	by returning 1. 
+ *	last handler to run, it always indicates that it has handled the URL
+ *	by returning 1.
  */
 
 int websDefaultHandler(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
@@ -56,9 +56,9 @@ int websDefaultHandler(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
  */
 	flags = websGetRequestFlags(wp);
 
-	if (websValidateUrl(wp, path) < 0) 
+	if (websValidateUrl(wp, path) < 0)
    {
-      /* 
+      /*
        * preventing a cross-site scripting exploit -- you may restore the
        * following line of code to revert to the original behavior...
        */
@@ -90,23 +90,23 @@ int websDefaultHandler(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 /*
  *	Open the document. Stat for later use.
  */
-	if (websPageOpen(wp, lpath, path, SOCKET_RDONLY | SOCKET_BINARY, 
-		0666) < 0) 
+	if (websPageOpen(wp, lpath, path, SOCKET_RDONLY | SOCKET_BINARY,
+		0666) < 0)
    {
-      /* 10 Dec 02 BgP -- according to 
-       * <http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html>, 
+      /* 10 Dec 02 BgP -- according to
+       * <http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html>,
        * the proper code to return here is NOT 400 (old code), which is used
        * to indicate a malformed request. Here, the request is good, but the
        * error we need to tell the client about is 404 (Not Found).
        */
-      /* 
+      /*
        * 17 Mar 03 BgP -- prevent a cross-site scripting exploit
 		websError(wp, 404, T("Cannot open URL %s"), url);
        */
-      
+
 		websError(wp, 404, T("Cannot open URL"));
 		return 1;
-	} 
+	}
 
 	if (websPageStat(wp, lpath, path, &sbuf) < 0) {
       /*
@@ -240,7 +240,7 @@ static int badPath(char_t* path, char_t* badPath, int badLen)
          }
       }
       /* if we get here, the first 'badLen' characters match.
-       * If 'path' is 1 character larger than 'badPath' and that extra 
+       * If 'path' is 1 character larger than 'badPath' and that extra
        * character is NOT a letter or a number, we have a bad path.
        */
       retval = 1;
@@ -249,8 +249,8 @@ static int badPath(char_t* path, char_t* badPath, int badLen)
          /* e.g. path == "aux:" */
          if (gisalnum(path[len-1]))
          {
-            /* the last character is alphanumeric, so we let this path go 
-             * through. 
+            /* the last character is alphanumeric, so we let this path go
+             * through.
              */
             retval = 0;
          }
@@ -264,38 +264,42 @@ static int badPath(char_t* path, char_t* badPath, int badLen)
 static int isBadWindowsPath(char_t** parts, int partCount)
 {
    /*
-    * If we're running on Windows 95/98/ME, malicious users can crash the 
-    * OS by requesting an URL with any of several reserved DOS device names 
+    * If we're running on Windows 95/98/ME, malicious users can crash the
+    * OS by requesting an URL with any of several reserved DOS device names
     * in them (AUX, NUL, etc.).
-    * If we're running on any of those OS versions, we scan the URL 
-    * for paths with any of these elements before 
+    * If we're running on any of those OS versions, we scan the URL
+    * for paths with any of these elements before
     * trying to access them. If any of the subdirectory names match one
-    * of our prohibited links, we declare this to be a 'bad' path, and return 
-    * 1 to indicate this. This may be an overly heavy-handed approach, but should 
+    * of our prohibited links, we declare this to be a 'bad' path, and return
+    * 1 to indicate this. This may be an overly heavy-handed approach, but should
     * prevent the DOS attack.
-    * NOTE that this function is only compiled in when we are running on Win32, 
-    * and only has an effect when we are running on Win95/98, or ME. On all other 
+    * NOTE that this function is only compiled in when we are running on Win32,
+    * and only has an effect when we are running on Win95/98, or ME. On all other
     * versions of Windows, we check the version info, and return 0 immediately.
     *
     * According to http://packetstormsecurity.nl/0003-exploits/SCX-SA-01.txt:
 
     *  II.  Problem Description
-    *   When the Microsoft Windows operating system is parsing a path that 
-    *   is being crafted like "c:\[device]\[device]" it will halt, and crash 
-    *   the entire operating system.  
+    *   When the Microsoft Windows operating system is parsing a path that
+    *   is being crafted like "c:\[device]\[device]" it will halt, and crash
+    *   the entire operating system.
     *   Four device drivers have been found to crash the system.  The CON,
-    *   NUL, AUX, CLOCK$ and CONFIG$ are the two device drivers which are 
-    *   known to crash.  Other devices as LPT[x]:, COM[x]: and PRN have not 
-    *   been found to crash the system.  
-    *   Making combinations as CON\NUL, NUL\CON, AUX\NUL, ... seems to 
+    *   NUL, AUX, CLOCK$ and CONFIG$ are the two device drivers which are
+    *   known to crash.  Other devices as LPT[x]:, COM[x]: and PRN have not
+    *   been found to crash the system.
+    *   Making combinations as CON\NUL, NUL\CON, AUX\NUL, ... seems to
     *   crash Ms Windows as well.
     *   Calling a path such as "C:\CON\[filename]" won't result in a crash
     *   but in an error-message.  Creating the map "CON", "CLOCK$", "AUX"
-    *   "NUL" or "CONFIG$" will also result in a simple error-message 
+    *   "NUL" or "CONFIG$" will also result in a simple error-message
     *   saying: ''creating that map isn't allowed''.
     *
     * returns 1 if it finds a bad path element.
     */
+
+#ifdef _MSC_VER
+
+#else
    OSVERSIONINFO version;
    int i;
    version.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
@@ -309,11 +313,11 @@ static int isBadWindowsPath(char_t** parts, int partCount)
          for (i = 0; i < partCount; ++i)
          {
             /*
-             * check against the prohibited names. If any of our requested 
+             * check against the prohibited names. If any of our requested
              * subdirectories match any of these, return '1' immediately.
              */
 
-            if ( 
+            if (
              (badPath(parts[i], T("con"), 3)) ||
              (badPath(parts[i], T("nul"), 3)) ||
              (badPath(parts[i], T("aux"), 3)) ||
@@ -325,8 +329,9 @@ static int isBadWindowsPath(char_t** parts, int partCount)
          }
       }
    }
+#endif
    /*
-    * either we're not on one of the bad OS versions, or the request has 
+    * either we're not on one of the bad OS versions, or the request has
     * no problems.
     */
    return 0;
@@ -351,7 +356,7 @@ int websValidateUrl(webs_t wp, char_t *path)
 
 #define kMaxUrlParts 64
 	char_t	*parts[kMaxUrlParts];	/* Array of ptr's to URL parts */
-	char_t	*token, *dir, *lpath; 
+	char_t	*token, *dir, *lpath;
    int	      i, len, npart;
 
 	a_assert(websValid(wp));
@@ -378,7 +383,7 @@ int websValidateUrl(webs_t wp, char_t *path)
     * backslash character, like:
     *
     *  GoAhead is vulnerable to a directory traversal bug. A request such as
-    *  
+    *
     *  GoAhead-server/../../../../../../../ results in an error message
     *  'Cannot open URL'.
 
@@ -386,7 +391,7 @@ int websValidateUrl(webs_t wp, char_t *path)
     *  the
     *  web root and read arbitrary files from the server.
     *  Hence a request like:
-    * 
+    *
     *  GoAhead-server/..%5C..%5C..%5C..%5C..%5C..%5C/winnt/win.ini returns the
     *  contents of the win.ini file.
     * (Note that the description uses forward slashes (0x2F), but the example
@@ -401,14 +406,14 @@ int websValidateUrl(webs_t wp, char_t *path)
       *token = '/';
       token = gstrchr(token, '\\');
    }
-   
+
 	token = gstrtok(path, T("/"));
 
 /*
  *	Look at each directory segment and process "." and ".." segments
- *	Don't allow the browser to pop outside the root web. 
+ *	Don't allow the browser to pop outside the root web.
  */
-	while (token != NULL) 
+	while (token != NULL)
    {
       if (npart >= kMaxUrlParts)
       {
@@ -418,15 +423,15 @@ int websValidateUrl(webs_t wp, char_t *path)
          bfree(B_L, path);
          return -1;
       }
-		if (gstrcmp(token, T("..")) == 0) 
+		if (gstrcmp(token, T("..")) == 0)
       {
-			if (npart > 0) 
+			if (npart > 0)
          {
 				npart--;
 			}
 
-		} 
-      else if (gstrcmp(token, T(".")) != 0) 
+		}
+      else if (gstrcmp(token, T(".")) != 0)
       {
 			parts[npart] = token;
 			len += gstrlen(token) + 1;
@@ -447,12 +452,12 @@ int websValidateUrl(webs_t wp, char_t *path)
 /*
  *	Create local path for document. Need extra space all "/" and null.
  */
-	if (npart || (gstrcmp(path, T("/")) == 0) || (path[0] == '\0')) 
+	if (npart || (gstrcmp(path, T("/")) == 0) || (path[0] == '\0'))
    {
 		lpath = balloc(B_L, (gstrlen(dir) + 1 + len + 1) * sizeof(char_t));
 		gstrcpy(lpath, dir);
 
-		for (i = 0; i < npart; i++) 
+		for (i = 0; i < npart; i++)
       {
 			gstrcat(lpath, T("/"));
 			gstrcat(lpath, parts[i]);
@@ -461,8 +466,8 @@ int websValidateUrl(webs_t wp, char_t *path)
 		bfree(B_L, path);
 		bfree(B_L, lpath);
 
-	} 
-   else 
+	}
+   else
    {
 		bfree(B_L, path);
 		return -1;
@@ -533,7 +538,7 @@ static void websDefaultWriteEvent(webs_t wp)
 }
 
 /******************************************************************************/
-/* 
+/*
  *	Closing down. Free resources.
  */
 

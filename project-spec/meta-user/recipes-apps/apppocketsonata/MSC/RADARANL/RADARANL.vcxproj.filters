@@ -105,9 +105,6 @@
     <ClCompile Include="..\..\files\System\csysconfig.cpp">
       <Filter>소스 파일\Anal\System</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Utils\clog.cpp">
-      <Filter>소스 파일\Anal\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Utils\programrev.cpp">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClCompile>
@@ -154,6 +151,9 @@
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clog.cpp">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClCompile>
   </ItemGroup>
@@ -229,9 +229,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\System\csysconfig.h">
       <Filter>소스 파일\Anal\System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Utils\clog.h">
-      <Filter>소스 파일\Anal\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\OFP_Main.h">
       <Filter>소스 파일\Anal</Filter>
@@ -336,6 +333,9 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\carraymsgdata.h">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clog.h">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClInclude>
   </ItemGroup>
