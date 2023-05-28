@@ -21,7 +21,6 @@
 #include <symLib.h>
 #include <sysSymTbl.h>
 #include <loadLib.h>
-#include <taskLib.h>
 #include <usrLib.h>
 #include <tftpLib.h>
 #include <ifLib.h>
@@ -50,22 +49,23 @@
 
 #endif
 
+//#include <io.h>
 #include <time.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 
-
 #include "ManSbc.h"
 //#include "ManFlash.h"
+
 #include "BootShell.h"
 
 
 #include "./Untar/FileTar.h"
 
-#include "../Anal/INC/OS.h"
-#include "../Anal/INC/System.h"
+//#include "../Anal/INC/OS.h"
+//#include "../Anal/INC/System.h"
 
 #include "../Anal/INC/PDW.h"
 
@@ -219,6 +219,10 @@ CManSbc::CManSbc()
 
 #endif
 
+    m_pUDPServer = new CUDPServer( 3000 );
+
+    m_pUDPServer->Run();
+
 }
 
 /**
@@ -339,43 +343,93 @@ UCHAR CManSbc::Getche2( int sec )
 */
 UCHAR CManSbc::Getche( int sec )
 {
-    char cChar;
+    char cChar=0;
 
-#ifdef __VXWORKS__
 	int stdInFd, numReady;
 	struct timeval tclSelectTimeout;
+    fd_set original_socket;
+    fd_set original_stdin;
 	fd_set readFds;
-	int save_options;
+    fd_set writeFds;
 
-	TY_DEV_ID pTyDev;
-	RING_ID ringId;
-	char  ccc;
+    int numfd;
 
+    unsigned int address_length;
+
+    struct sockaddr_in server_address, client_address;
+
+#ifdef __VXWORKS__
     int tShell_priority;
 
-    char buffer[200];
-
     taskPriorityGet( 0, & tShell_priority );
-    //printf( "\n tShell_priority priority[%d]" , tShell_priority );
 
 	stdInFd = ioTaskStdGet( taskNameToId( (char *) "tShell0" ), 0 );
 
+#else
+    stdInFd = _fileno( stdin );
+
+#endif
+
+    tclSelectTimeout.tv_sec = ( long ) 100; //  sec;
+    tclSelectTimeout.tv_usec = ( long ) 0;
+
+
+#ifdef __VXWORKS__
 	/* Save options */
-	save_options = ioctl(stdInFd,FIOGETOPTIONS,0); /* current console */
+	int save_options = ioctl(stdInFd,FIOGETOPTIONS,0); /* current console */
+
 	// printf( "\n save_options[%x], new_option[%x]" , save_options, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
 	ioctl(stdInFd, FIOSETOPTIONS, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
+#endif
 
-	/* Enter raw mode */
-	// ioctl (stdInFd, FIOSETOPTIONS, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
+    int socket_fd;
 
-	tclSelectTimeout.tv_sec = (long) sec;
-	tclSelectTimeout.tv_usec = (long) 0;
+    if( ( socket_fd = socket( AF_INET, SOCK_DGRAM, 0 ) ) == -1 ) {
+        printf( "[W] socket() 함수에서 소켓을 할당하지 못했습니다 !" );
+    }
 
+#ifdef _MSC_VER
+    unsigned long nonblock_enabled = TRUE;
+    ioctlsocket( socket_fd, FIONBIO, & nonblock_enabled );
+
+#else
+    int flags = fcntl( socket_fd, F_GETFL );
+    flags |= O_NONBLOCK;
+
+#endif
+
+    // clear the set ahead of time
+    FD_ZERO( &original_socket );
+    FD_ZERO( &original_stdin );
 	FD_ZERO( & readFds );
-	FD_SET( stdInFd, & readFds);
+    FD_ZERO( & writeFds );
 
-	cChar = 0;
+	// FD_SET( stdInFd, & readFds);
+    FD_SET( socket_fd, & original_socket );
+    FD_SET( socket_fd, & readFds );
+    FD_SET( stdInFd, & original_stdin );
+    FD_SET( 0, & writeFds );
 
+    server_address.sin_family = AF_INET;
+    server_address.sin_port = htons( 5000 );
+    server_address.sin_addr.s_addr = INADDR_ANY;
+
+#ifdef _MSC_VER
+    memset( ( char * ) &server_address.sin_zero, 0, sizeof( server_address.sin_zero ) );
+
+#else
+    bzero( &( server_address.sin_zero ), 8 );
+
+#endif
+
+    if( bind( socket_fd, ( struct sockaddr * ) &server_address, sizeof( server_address ) ) == -1 ) {
+        printf( "[W] bind() 함수에서 IP 와 바인딩하지 못했습니다 !" );
+    }
+
+    address_length = sizeof( struct sockaddr );
+
+
+#ifdef __VXWORKS__
 #ifdef INCLUDE_SHELL
 	TASK_ID taskID=taskNameToId( (char *) "tShell0" );
 	taskSuspend( taskID );
@@ -385,33 +439,35 @@ UCHAR CManSbc::Getche( int sec )
     //printf( "\n tShell0 priority[%d]" , tShell_priority );
 	//taskPrioritySet( taskNameToId( (char *) "tShell0" ), 255 );
 #endif
-
     ioctl( stdInFd, FIORFLUSH, 0 );
 
-	numReady = select( FD_SETSIZE, & readFds, NULL, NULL, & tclSelectTimeout );
+#endif
+
+    numfd = socket_fd + 1;
+
+    readFds = original_socket;
+    writeFds = original_stdin;
+
+	// numReady = select( FD_SETSIZE, & readFds, NULL, NULL, & tclSelectTimeout );
+    numReady = select( numfd, &readFds, NULL,/*NULL,*/ NULL, &tclSelectTimeout );
 
 	if( numReady > 0 ) {
-		//tyIRd( pTyDev, cChar );
-	    //printf( "\n cChar[%d]\n" , cChar );
-
 		read( stdInFd, & cChar, 1 );           /* read the key just hit */
+
 		//printf( "\n cChar[%d]\n");
 	}
 
+#ifdef __VXWORKS__
 	/* Leave raw mode */
 	ioctl( stdInFd, FIOSETOPTIONS, save_options );
 	ioctl( stdInFd, FIOFLUSH, 0 );
+
+#endif
 
 
 #ifdef INCLUDE_SHELL
 	// taskPrioritySet( taskNameToId( (char *) "tShell0" ), tShell_priority );
 	taskResume( taskID );
-#endif
-
-
-#else
-    cChar = 0;
-
 #endif
 
 	return (UCHAR) cChar;
@@ -421,13 +477,13 @@ UCHAR CManSbc::Getche( int sec )
 /**
  * @brief		CreateTffsDisk
  * @param		char * szDiskName
- * @return		BOOL
+ * @return		bool
  * @author		조철희 (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2021/04/15 13:54:51
  * @warning
  */
-BOOL CManSbc::CreateTffsDisk( char *szDiskName )
+bool CManSbc::CreateTffsDisk( char *szDiskName )
 {
     long lFreeSpace;
 
@@ -464,14 +520,14 @@ BOOL CManSbc::CreateTffsDisk( char *szDiskName )
 /**
  * @brief     CreateTffsDisk
  * @param     char * szDiskName
- * @return    BOOL
+ * @return    bool
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2023-04-30 11:52:29
  * @warning
  */
-BOOL CManSbc::CreateAtaDisk( char *szDiskName )
+bool CManSbc::CreateAtaDisk( char *szDiskName )
 {
     long lFreeSpace;
 
@@ -719,7 +775,7 @@ void CManSbc::InstallWeb()
 
     sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
     sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
-    stat = CopyFile( szSrcFilename, szDstFilename );
+    stat = CopyToFile( szSrcFilename, szDstFilename );
     // INI 파일을 백업한다.
     sprintf( szDstFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, INI_DIRECTORY );
 #ifdef __VXWORKS__
@@ -727,7 +783,7 @@ void CManSbc::InstallWeb()
 #endif
     sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, INI_DIRECTORY, INI_FILENAME );
     sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, INI_DIRECTORY, INI_FILENAME );
-    stat = CopyFile( szSrcFilename, szDstFilename );
+    stat = CopyToFile( szSrcFilename, szDstFilename );
 
     // 포멧 ...
     printf( "\n\n 2. TFFS 드아리브를 포멧합니다..." );
@@ -787,7 +843,7 @@ void CManSbc::InstallWeb()
  * @date		2022/12/14 18:51:05
  * @warning
  */
-int CManSbc::CopyFile( const char *src_file, const char *dest_file )
+int CManSbc::CopyToFile( const char *src_file, const char *dest_file )
 {
 	printf( "\n" );
 #ifdef __VXWORKS__
@@ -878,7 +934,7 @@ void CManSbc::DownloadApp()
 	\author   조철희
 	\param    tftpfilename 인자형태 char *
 	\param    ramfilename 인자형태 char *
-	\return   BOOL
+	\return   bool
 	\version  0.0.1
 	\date     2008-04-18 10:58:31
 	\warning

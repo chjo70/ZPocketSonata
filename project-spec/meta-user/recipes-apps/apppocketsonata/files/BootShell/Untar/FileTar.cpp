@@ -18,7 +18,14 @@
 //
 // #endif
 
+
 #include "FileTar.h"
+
+//#include <io.h>
+#include <string.h>
+#include <stdio.h>
+
+//#include "../../Anal/SigAnal/_Type.h"
 
 #ifdef __VXWORKS__
 IMPORT CFileTar *theFileTar;
@@ -174,43 +181,43 @@ void CFileTar::SetFilePath(char *path)
  * @date      2023-04-18 09:23:34
  * @warning
  */
-int CFileTar::AddFile(char *fname, char *desc)
-{
-	char fullpath[_MAX_PATH];
-	strcpy(fullpath,FilePath);
-	strcat(fullpath,fname);
-	HANDLE hFile;
-	DWORD size;
-
-	hFile=CreateFile(fullpath,GENERIC_READ,0,NULL,
-		OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
-	if(hFile==INVALID_HANDLE_VALUE)
-	{
-		CloseHandle(hFile);
-		return 1;
-	}
-	size=GetFileSize(hFile,NULL);
-	if(size==0xFFFFFFFF)
-	{
-		CloseHandle(hFile);
-		return 1;
-	}
-
-	if(m_TarHeader.IncrementCount()==0)
-	{
-		CloseHandle(hFile);
-		return 1;
-	}
-	TarIndex *pTarIndex=new TarIndex;
-	strcpy(pTarIndex->FileName,fname);
-	strcpy(pTarIndex->Description,desc);
-	pTarIndex->Size=size;
-
-	m_pTarIndex[m_TarHeader.GetCount()]=pTarIndex;
-
-	CloseHandle(hFile);
-	return 0;
-}
+// int CFileTar::AddFile(char *fname, char *desc)
+// {
+// 	char fullpath[_MAX_PATH];
+// 	strcpy(fullpath,FilePath);
+// 	strcat(fullpath,fname);
+// 	HANDLE hFile;
+// 	unsigned long size;
+//
+// 	hFile=CreateFile(fullpath,GENERIC_READ,0,NULL,
+// 		OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+// 	if(hFile==INVALID_HANDLE_VALUE)
+// 	{
+// 		CloseHandle(hFile);
+// 		return 1;
+// 	}
+// 	size=GetFileSize(hFile,NULL);
+// 	if(size==0xFFFFFFFF)
+// 	{
+// 		CloseHandle(hFile);
+// 		return 1;
+// 	}
+//
+// 	if(m_TarHeader.IncrementCount()==0)
+// 	{
+// 		CloseHandle(hFile);
+// 		return 1;
+// 	}
+// 	TarIndex *pTarIndex=new TarIndex;
+// 	strcpy(pTarIndex->FileName,fname);
+// 	strcpy(pTarIndex->Description,desc);
+// 	pTarIndex->Size=size;
+//
+// 	m_pTarIndex[m_TarHeader.GetCount()]=pTarIndex;
+//
+// 	CloseHandle(hFile);
+// 	return 0;
+// }
 
 /**
  * @brief     CreateTar
@@ -237,7 +244,11 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 	int ret;
 
 	int i;
+#ifdef __VXWORKS__
 	if((fdout=open(tarfullpath,_O_CREAT|_O_WRONLY|_O_BINARY|_O_TRUNC,_S_IWRITE))<0)
+#else
+    if( ( fdout = _open( tarfullpath, _O_CREAT | _O_WRONLY | _O_BINARY | _O_TRUNC ) ) < 0 )
+#endif
 	{
 		_close(fdout);
 		return 1;
@@ -297,12 +308,12 @@ const char * CFileTar::GetHeaderDescription()
 		\author   ��ö��
 		\param    pTarFile �������� char *
 		\param    pTarHeader �������� TarHeader *
-		\return   BOOL
+		\return   bool
 		\version  0.0.99
 		\date     2009-09-24 14:42:33
 		\warning
 */
-BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
+bool CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 {
 	if( m_TarFile < 0 ) {
         printf( "\n pTarFile[%s]" , pTarFile );
@@ -312,7 +323,7 @@ BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 		if( ( m_TarFile=_open( pTarFile,_O_BINARY|_O_RDONLY ) ) < 0 ) {
 #endif
 			printf( "\n Error found !" );
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -323,22 +334,22 @@ BOOL CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 	GetDate( & pTarHeader->m_time, pTarHeader->m_block.header.mtime, sizeof(pTarHeader->m_block.header.mtime) );
 
 	if( nRead <= 0 ) {
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CFileTar::UnTar
 		\author   ��ö��
 		\param    pDestFile �������� char *
-		\return   BOOL
+		\return   bool
 		\version  0.0.99
 		\date     2009-09-24 15:08:28
 		\warning
 */
-BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
+bool CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 {
 	int fdout;
 	int nRead, nWrite;
@@ -355,7 +366,7 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 #endif
 		_close( fdout );
 		printf( "\n*can't creat the file(%s)" , pDestFile );
-		return FALSE;
+		return false;
 	}
 
 	pBlock = & pTarHeader->m_block;
@@ -370,7 +381,7 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != nRead ) {
 			_close( fdout );
 			printf( "\n*can't read or write the file" );
-			return FALSE;
+			return false;
 		}
 
 		rem -= sizeof(UNI_BLOCK);
@@ -382,7 +393,7 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != (int) rem ) {
 			_close( fdout );
 			printf( "\n*can't read or write the file" );
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -395,7 +406,7 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 	_utime( pDestFile, & pTarHeader->m_time );
 
 	printf( "\n*extract the file(%s)" , pDestFile );
-	return TRUE;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -410,7 +421,7 @@ BOOL CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 */
 int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 {
-	BOOL bLoop=TRUE;
+	bool bLoop=true;
 	char fpath[_MAX_PATH];
     char *p;
 	TarHeader th;
@@ -420,7 +431,7 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 
 	while( bLoop ) {
 
-		if( FALSE == GetTarInfo( pTarFile, & th ) ) {
+		if( false == GetTarInfo( pTarFile, & th ) ) {
 			break;
         }
 
@@ -468,7 +479,7 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 
 	_close( m_TarFile );
 
-	if( bLoop == TRUE )
+	if( bLoop == true )
 		printf( "\n*success of all extract files" );
 
 	return bLoop;
@@ -477,15 +488,15 @@ int CFileTar::UnTar( char *pTarFile, char *pDestpath )
 /**
  * @brief     _GetFileSize
  * @param     int fd
- * @param     DWORD * pSize
- * @return    DWORD
+ * @param     unsigned long * pSize
+ * @return    unsigned long
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
  * @date      2009-09-23 19:29:18
  * @warning
  */
-DWORD CFileTar::_GetFileSize( int fd, DWORD *pSize )
+unsigned long CFileTar::_GetFileSize( int fd, unsigned long *pSize )
 {
     struct stat filestat;
 
@@ -550,17 +561,17 @@ void CFileTar::GetDate( struct _utimbuf *pTime, char *pByte, int size )
 /*! \brief    CFileTar::MkDir
 		\author   ��ö��
 		\param    directory �������� char *
-		\return   BOOL
+		\return   bool
 		\version  0.0.99
 		\date     2009-09-24 17:31:13
 		\warning
 */
-BOOL CFileTar::MkDir( char *directory )
+bool CFileTar::MkDir( char *directory )
 {
 	printf( "\n*make directory(%s)" , directory );
 	//return _mkdir( directory ) == 0;
 
-    BOOL bRet;
+    bool bRet;
     char dirName[256];
     char *p=directory;
     char *q=dirName;

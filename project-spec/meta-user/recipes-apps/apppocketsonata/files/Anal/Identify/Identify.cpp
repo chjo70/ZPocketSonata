@@ -1368,8 +1368,8 @@ void CELSignalIdentifyAlg::InitIgnoreFreqIdentifyTable()
 	*pPriType = (int)E_AET_PRI_DWELL_SWITCH;
 
 	// 주파수 무시, PRI 무시
-	pFrqType = &m_HowToId[E_AET_FRQ_IGNORE][_UNKNOWN_PRI].frq[0];
-	pPriType = &m_HowToId[E_AET_FRQ_IGNORE][_UNKNOWN_PRI].pri[0];
+	pFrqType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_UNKNOWN].frq[0];
+	pPriType = &m_HowToId[E_AET_FRQ_IGNORE][E_AET_PRI_UNKNOWN].pri[0];
 	*pFrqType++ = (int)E_AET_FRQ_FIXED;
 	*pPriType++ = (int)E_AET_PRI_FIXED;
 	*pFrqType++ = (int)E_AET_FRQ_FIXED;

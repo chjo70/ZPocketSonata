@@ -1,5 +1,5 @@
 case-sensitive=true
 eclipse.preferences.version=1
 file-patterns=*.c,*.cpp,*.cxx,*.h,*.hpp,*.hxx,*.mk,Makefile
-search-string=adt7481_set_therm_mode
+search-string=IDLE
 whitespace-tolerant=false

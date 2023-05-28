@@ -323,7 +323,7 @@ void CAnalPRI::Init()
     // 아래 초기화는 버그를 잡기 위한 것입니다. 나중에 제거해도 됩니다.
     for( i=0 ; i < MAX_AET ; ++i ) {
         memset( & m_Emitter[i], 0, sizeof( STR_EMITTER ) - sizeof( STR_PDWINDEX ) );
-        m_Emitter[i].uiMainSeg = -1;
+        m_Emitter[i].uiMainSeg = (unsigned int) -1;
     }
 #endif
 
@@ -2951,8 +2951,14 @@ void CAnalPRI::SamplingProcess( STR_EMITTER *pEmitter )
 
             dShgh += m_SamplingTime;
 
+            if( psx < m_pSampleToa+m_uiMaxPdw ) {
             ++ psx;
+            }
+
+            if( psy < m_pSampleData + m_uiMaxPdw ) {
             ++ psy;
+            }
+
             _EQUALS3( sumY, maxY, 0 )
 
             inpulse = 0;
@@ -6843,7 +6849,7 @@ bool CAnalPRI::CheckFreqType(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2)
         iThreshold = IFRQMhzCNV( iBand, FIXED_FREQ_MARGIN );
 
 #elif defined( _POCKETSONATA_)
-        iThreshold = IFRQMhzCNV( 0, (float) FIXED_FREQ_MARGIN );
+        iThreshold = ( int ) IMUL( IFRQMhzCNV( 0, FIXED_FREQ_MARGIN ), 1 );
 
 #else
         iThreshold = 10;

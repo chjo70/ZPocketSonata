@@ -20,7 +20,7 @@
 
 
 
-// Ű���� ��ɾ�
+// 부트 쉘 명령어 정의
 enum {
 	DOWNLOAD_APP=0,         // 운용 프로그램 다운로드
 
@@ -113,7 +113,7 @@ extern "C" {
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-// �Լ� ����
+// 부투 메인 함수
 void BootShellMain();
 
 
@@ -128,7 +128,7 @@ void BootShellMain();
 class CBootShell
 {
 private:
-	MODULE *m_pModuleId;				// module�� �������� ������ ������ ����ü
+	MODULE *m_pModuleId;				// 시작 포인터
 
 public:
 	void Run();

@@ -2,18 +2,21 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_MANSBC_H__EFE07A81_C798_4CCA_9C20_FF2CDE5453CC__INCLUDED_)
-#define AFX_MANSBC_H__EFE07A81_C798_4CCA_9C20_FF2CDE5453CC__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
+#ifdef _MSC_VER
+#include <intsafe.h>
+
+#endif
+
 
 #include "Macros.h"
 
-#include "BootShell.h"
+#include "../Utils/cudpserver.h"
 
-#include "../System/csysconfig.h"
+//#include "BootShell.h"
+
+//#include "../System/csysconfig.h"
 
 //#include "../OFP/COMMON/common.h"
 #define DRAM_SIZE			(0)
@@ -66,6 +69,7 @@ enum enWhatDrvAPP {
 #endif
 
 
+
 class CManSbc
 {
 private :
@@ -73,7 +77,9 @@ private :
 
 	STR_PRG_INFO m_ProgInfo;
 
-    CSysConfig *g_pTheSysConfig;
+    // CSysConfig *g_pTheSysConfig;
+
+    CUDPServer *m_pUDPServer;
 
 
 #ifdef _NETMEM_	
@@ -98,20 +104,20 @@ private:
 
 	void SetRtcClock( UINT date, UINT time );
 	void SetTimeBySNMP();
-	BOOL CopyToRamdrive( STR_PRG_INFO *pComPrgInfo, char *pFileName );
+	bool CopyToRamdrive( STR_PRG_INFO *pComPrgInfo, char *pFileName );
 	long DiskFreeSpace( char *szDiskName );
 
 
     //////////////////////////////////////////////////////////////////////////
     //
 	bool CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks );
-    BOOL CreateTffsDisk( char *szDiskName );
-	BOOL CreateAtaDisk( char *szDiskName );
+    bool CreateTffsDisk( char *szDiskName );
+	bool CreateAtaDisk( char *szDiskName );
 	UCHAR Getche( int sec );
 	UCHAR Getche2( int sec );
 
     bool DownloadfromTftp(char *tftpfilename, char *ramfilename );
-    int CopyFile( const char *src_file, const char *dest_file );
+    int CopyToFile( const char *src_file, const char *dest_file );
 
 public:
 	UCHAR GetCommand();
@@ -131,4 +137,4 @@ public:
 
 };
 
-#endif // !defined(AFX_MANSBC_H__EFE07A81_C798_4CCA_9C20_FF2CDE5453CC__INCLUDED_)
+

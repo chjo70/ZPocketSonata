@@ -3,6 +3,7 @@
 #ifdef _WIN32
 #include <io.h>
 #include <direct.h>
+#include <stdbool.h>
 #include <sys/utime.h>
 
 #else
@@ -20,7 +21,7 @@
 
 #include "types/vxTypesOld.h"
 
-#define DWORD ULONG 
+//#define unsigned long ULONG
 
 #define _write write
 //#define _open(A,B) open(A,B,0666)
@@ -256,7 +257,7 @@ typedef union {
 
 } UNI_BLOCK ;
 
-class CFileTar  
+class CFileTar
 {
 private :
 	int m_TarFile;
@@ -285,15 +286,15 @@ public:
 		const char * GetDescription();
 	};
 
-public:	
-	BOOL MkDir( char *directory );
+public:
+	bool MkDir( char *directory );
 	void GetDate( struct _utimbuf *pTime, char *pByte, int size );
 	unsigned long Octal2Deciaml( char *pByte, int size );
-	DWORD _GetFileSize( int fd, DWORD *pSize );
+	unsigned long _GetFileSize( int fd, unsigned long *pSize );
 	int UnTar( char *pTarFile, char *pDestpath );
-	BOOL UnTar( char *pDestFile, TarHeader *pTarHeader );
-	BOOL GetTarInfo(char *TarFile,TarHeader *pTarHeader);
-	BOOL SetHeaderDescription(char *strdesc);
+	bool UnTar( char *pDestFile, TarHeader *pTarHeader );
+	bool GetTarInfo(char *TarFile,TarHeader *pTarHeader);
+	bool SetHeaderDescription(char *strdesc);
 	const char * GetHeaderDescription();
 	int CreateTar(char *TarFName, char *TarPath = NULL);
 	int AddFile(char *fname, char *desc);

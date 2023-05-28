@@ -41,14 +41,13 @@
 
 void _TRACE( char *format, ... );
 
-
 #ifdef __VXWORKS__
 STATUS usrBootLineCrack (char * bootString, BOOT_PARAMS *pParams);
 
 extern BOOT_PARAMS g_stBootParams;
 
 #elif defined(_MSC_VER)
-#define printf _TRACE
+//#define printf _TRACE
 
 
 #endif
@@ -60,9 +59,6 @@ void Main()
 {
 
     printf("\n");
-    // NFS 서버 호출
-    //nfsExport( "/tffs0", 100, FALSE, 0 );
-    //nfsExportShow( "localhost" );
 
     //////////////////////////////////////////////////////////////////////////
     LoadBootParameter();
@@ -81,7 +77,7 @@ void Main()
 	taskSpawn( "tHttpd", tPRI_HTTPDAEMON, VX_STDIO|VX_SUPERVISOR_MODE, 64000, (FUNCPTR) websvxmain, 0,0,0,0,0,0,0,0,0,0 );
 #endif
 
-#elif WIN
+#elif _MSC_VER
     BootShellMain();
 
 #endif
@@ -89,13 +85,12 @@ void Main()
 }
 
 #ifdef WIN
-int main()
-{
-
-    Main();
-    return 0;
-
-}
+// int main()
+// {
+//     Main();
+//     return 0;
+// 
+// }
 #endif
 
 

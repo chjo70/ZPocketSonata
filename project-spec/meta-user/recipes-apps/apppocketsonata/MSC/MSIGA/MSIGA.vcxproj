@@ -57,7 +57,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_LOG_;SQLITE_THREADSAFE=1;_UTM_POSITION_;_SERIAL_DETECT_FLOW_;_SIM_PDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_SONATA1_;_XBAND1_;_KFX1_;_7011_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

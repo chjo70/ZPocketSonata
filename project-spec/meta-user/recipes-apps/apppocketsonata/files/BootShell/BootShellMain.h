@@ -52,6 +52,8 @@ void BootShellMain();
 
 //IMPORT UINT32 univBaseAdrs;
 
+void Main();
+
 #ifdef __cplusplus
 }
 #endif

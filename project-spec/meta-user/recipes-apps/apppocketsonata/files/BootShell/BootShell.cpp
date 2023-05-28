@@ -117,10 +117,6 @@ void BootShellMain()
     time_t rawtime;
     struct tm * timeinfo;
 
-	// floating format 연산 에러로 반드시 추가해야 함.
-	// vxworks 에서 해준다하던데.. 실행이 안 되는 것 같음.
-	//floatInit();
-
     theFileTar = new CFileTar;
     if( theFileTar == NULL ) {
         PrintErr( ( "\n [W] 기본 메모리(theFileTar)가 부족합니다 !" ) );

@@ -256,7 +256,6 @@ void CSingleClient::RunClient()
 
         Log( enDebug, "[클라이언트:%s] [%s/%d] 연결하려 합니다.", GetThreadName(), m_szServerAddress[iServerSwitch], m_usPort );
 
-        //type of socket created
 #ifdef _MSC_VER
         memset( (char *)&sockAddress, 0, sizeof(sockAddress) );
 #else
