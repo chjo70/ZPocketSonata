@@ -268,7 +268,7 @@ static int getkeystring(INI_FILETYPE *fp, const TCHAR *Section, const TCHAR *Key
             sp = skipleading(LocalBuffer);
             ep = _tcsrchr(sp, ']');
             ++ idx;
-    } 
+    }
     while (*sp != '[' || ep == NULL || (((int)(ep-sp-1) != len || Section == NULL || _tcsnicmp(sp+1,Section,(unsigned int) len) != 0) && idx != idxSection));
 
     if (idxSection >= 0) {
@@ -636,7 +636,7 @@ static int cache_accum(const TCHAR *string, int *size, int max)
     iret = 0;
   }
   else {
-  *size += len;
+    *size += len;
   }
   return iret;
 }
@@ -904,7 +904,7 @@ static void long2str(long value, TCHAR *str)
     int n = (int)(value % 10);          /* get next lowest digit */
     str[i++] = (TCHAR)(ABS(n) + '0');   /* handle case of negative digit */
     value /= 10;
-  } 
+  }
   while (value);                /* delete the lowest digit */
 
   if (sign < 0)

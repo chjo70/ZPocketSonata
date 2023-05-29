@@ -188,7 +188,9 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
     <ClCompile Include="..\..\files\Anal\EmitterMerge\UTM\UTM.cpp" />
     <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp" />
     <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp" />
-    <ClCompile Include="..\..\files\MinIni\minIni.cpp" />
+    <ClCompile Include="..\..\files\MinIni\minIni.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\files\ODBC\MSSQL.cpp" />
     <ClCompile Include="..\..\files\ODBC\odbccore.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>

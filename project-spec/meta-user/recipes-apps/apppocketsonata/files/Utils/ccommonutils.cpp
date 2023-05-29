@@ -1401,7 +1401,7 @@ int CCommonUtils::DeleteAllFile(const char *pszDir )
 
 		while (bFind) {
 			bFind = ff.FindNextFile();
-			if (ff.IsDots() == TRUE || ff.IsDirectory() == TRUE)
+			if (ff.IsDots() == TRUE || ff.IsDirectory() == TRUE )
                 continue;
 			SetFileAttributes(ff.GetFilePath(), FILE_ATTRIBUTE_NORMAL);
 			DeleteFile( ff.GetFilePath() );

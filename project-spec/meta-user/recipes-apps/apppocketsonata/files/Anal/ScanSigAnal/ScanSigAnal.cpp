@@ -243,7 +243,7 @@ void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USH
 {
 	for( unsigned int i=0 ; i < uiCount; ++i ) {
 		MARK[ *pPdwIndex++ ] = usMarkType;
-	}
+}
 }
 
 /**

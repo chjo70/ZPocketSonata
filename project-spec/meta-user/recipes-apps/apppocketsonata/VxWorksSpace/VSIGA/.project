@@ -490,6 +490,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>files/Anal/Collect/GenPDW</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>files/Anal/Collect/ccollectbank</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -1093,6 +1098,16 @@
 			<name>files/Anal/Collect/DataFile/DataFile.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/DataFile/DataFile.h</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/Collect/GenPDW/CGenPDW.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/GenPDW/CGenPDW.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/Collect/GenPDW/CGenPDW.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/GenPDW/CGenPDW.h</locationURI>
 		</link>
 		<link>
 			<name>files/Anal/Collect/ccollectbank/ccollectbank.cpp</name>

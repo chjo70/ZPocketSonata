@@ -221,7 +221,7 @@ CManSbc::CManSbc()
 
     m_pUDPServer = new CUDPServer( 3000 );
 
-    m_pUDPServer->Run();
+    m_pUDPServer->CheckServer();
 
 }
 
@@ -349,7 +349,7 @@ UCHAR CManSbc::Getche( int sec )
 	struct timeval tclSelectTimeout;
     fd_set original_socket;
     fd_set original_stdin;
-	fd_set readFds;
+    fd_set readFds;
     fd_set writeFds;
 
     int numfd;
@@ -379,7 +379,7 @@ UCHAR CManSbc::Getche( int sec )
 	int save_options = ioctl(stdInFd,FIOGETOPTIONS,0); /* current console */
 
 	// printf( "\n save_options[%x], new_option[%x]" , save_options, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
-	ioctl(stdInFd, FIOSETOPTIONS, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
+	ioctl( stdInFd, FIOSETOPTIONS, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
 #endif
 
     int socket_fd;
@@ -401,7 +401,7 @@ UCHAR CManSbc::Getche( int sec )
     // clear the set ahead of time
     FD_ZERO( &original_socket );
     FD_ZERO( &original_stdin );
-	FD_ZERO( & readFds );
+    FD_ZERO( & readFds );
     FD_ZERO( & writeFds );
 
 	// FD_SET( stdInFd, & readFds);

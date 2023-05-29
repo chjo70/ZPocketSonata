@@ -3,10 +3,10 @@
 #ifndef PORTABLE_SOCKET
 #define PORTABLE_SOCKET
 
-#ifdef WIN32
+#ifdef WIN32        
     #include <winsock2.h>
     #include <Ws2tcpip.h>
-#else
+#else                       
     #include <sys/types.h>
     #include <sys/socket.h>
     #include <netinet/in.h>

@@ -102,7 +102,7 @@ int MemoryPage::Unlock(unsigned char * newData, int callerId)
 		
 #endif
 
-   {
+	{
 #ifdef _MSC_VER			
         m_thePageMutex->Unlock();
         
@@ -134,7 +134,7 @@ int MemoryPage::Unlock(unsigned char * newData, int callerId)
 
 #ifdef _MSC_VER	
     m_thePageMutex->Unlock();
-    
+
 #elif defined(__VXWORKS__)
     sem_wait( & m_thePageMutex );
     

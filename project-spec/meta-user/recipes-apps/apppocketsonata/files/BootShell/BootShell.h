@@ -94,8 +94,8 @@ static int _tShell_priority;
 
 #ifdef INCLUDE_SHELL
 #define	GetCharX					taskPriorityGet( taskNameToId( (char *)"tShell0" ), & _tShell_priority );	\
-													taskPrioritySet( taskNameToId( (char *) "tShell0" ), 255 ); \
-													taskPrioritySet( taskNameToId( (char *) "tShell0" ), _tShell_priority );
+									taskPrioritySet( taskNameToId( (char *) "tShell0" ), 255 ); \
+									taskPrioritySet( taskNameToId( (char *) "tShell0" ), _tShell_priority );
 
 #else
 #define GetCharX					getchar();

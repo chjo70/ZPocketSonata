@@ -1277,7 +1277,7 @@ void CSigAnal::MakeAnalDirectory( UNION_HEADER* pUniHeader, bool bLog )
     }
 
     if( bLog ) {
-        Log( enNormal, "수집 데이터 저장 위치는 [%s] 입니다.", m_strAnalDirectory.c_str() );
+    Log( enNormal, "수집 데이터 저장 위치는 [%s] 입니다.", m_strAnalDirectory.c_str() );
     }
 
 }

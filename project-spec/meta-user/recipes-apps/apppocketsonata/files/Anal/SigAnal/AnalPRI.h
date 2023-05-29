@@ -250,7 +250,7 @@ public:
     int ExtractStagger( STR_EMITTER *pEmitter, UINT framePri );
     bool FindRefFramePri( UINT dtoa );
     _TOA CheckFramePRI( STR_EMITTER *pEmitter );
-    
+
 
 
     //bool OverlappedStableSeg( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );

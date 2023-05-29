@@ -257,7 +257,7 @@ typedef union {
 
 } UNI_BLOCK ;
 
-class CFileTar
+class CFileTar  
 {
 private :
 	int m_TarFile;
@@ -286,7 +286,7 @@ public:
 		const char * GetDescription();
 	};
 
-public:
+public:	
 	bool MkDir( char *directory );
 	void GetDate( struct _utimbuf *pTime, char *pByte, int size );
 	unsigned long Octal2Deciaml( char *pByte, int size );

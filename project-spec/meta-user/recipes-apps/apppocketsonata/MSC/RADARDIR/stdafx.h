@@ -71,7 +71,7 @@ extern CCriticalSection g_criticalExe;
 void Log( int nType, const char *fmt, ... );
 CString GetFilePath();
 BOOL _CreateDir( char *pPath );
-BOOL CheckPing();
+bool CheckPing();
 
 // #ifndef _LOG_TYPE_
 // #define _LOG_TYPE_

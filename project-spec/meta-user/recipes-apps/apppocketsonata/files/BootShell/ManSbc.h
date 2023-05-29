@@ -63,7 +63,7 @@ enum enWhatDrvAPP {
 // 서울 기준
 #define SEOUL_LOCAL_TIME				(9)
 
-#ifdef _NETMEM_	
+#ifdef _NETMEM_
 #include "../NetMem/client/NetworkMemory.h"
 
 #endif
@@ -82,13 +82,13 @@ private :
     CUDPServer *m_pUDPServer;
 
 
-#ifdef _NETMEM_	
+#ifdef _NETMEM_
     STR_NETMEM m_strMemory;
 
     NetworkMemory *m_pTheNetMem;
     NetMemCommand m_netCommand;
 
-#endif    
+#endif
 
 private:
 	void Time2DateTime( UINT *pDate, UINT *pTime, time_t now_sec );

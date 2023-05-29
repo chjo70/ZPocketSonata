@@ -2952,11 +2952,11 @@ void CAnalPRI::SamplingProcess( STR_EMITTER *pEmitter )
             dShgh += m_SamplingTime;
 
             if( psx < m_pSampleToa+m_uiMaxPdw ) {
-            ++ psx;
+                ++ psx;
             }
 
             if( psy < m_pSampleData + m_uiMaxPdw ) {
-            ++ psy;
+                ++ psy;
             }
 
             _EQUALS3( sumY, maxY, 0 )
@@ -5302,23 +5302,23 @@ bool CAnalPRI::CheckMergeOfStablePRIType( STR_EMITTER *pEmitter )
     bool bRet = false;
 
     switch( pEmitter->enPRIType ) {
-            case _STABLE:
-                break;
-            case _STAGGER:
-                break;
-            case _JITTER_RANDOM:
+        case _STABLE:
+            break;
+        case _STAGGER:
+            break;
+        case _JITTER_RANDOM:
             bRet = true;
-                break;
-            case _DWELL:
-                break;
-            case _JITTER_PATTERN:
+            break;
+        case _DWELL:
+            break;
+        case _JITTER_PATTERN:
             bRet = true;
-                break;
+            break;
 
-            default:
-                break;
+        default:
+            break;
 
-        }
+    }
 
     return bRet;
 }

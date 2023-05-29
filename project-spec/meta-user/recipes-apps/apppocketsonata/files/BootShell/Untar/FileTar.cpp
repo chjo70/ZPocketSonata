@@ -277,8 +277,8 @@ int CFileTar::AppendFile(int fdout, char *fpath)
 {
 	int fdin=0;
 	size_t len;
-	
-#ifdef __VXWORKS__	
+
+#ifdef __VXWORKS__
 	if((fdin=open(fpath,_O_RDONLY|_O_BINARY, 0666))<0)
 #else
 	if((fdin=_open(fpath,_O_RDONLY|_O_BINARY))<0)
@@ -317,7 +317,7 @@ bool CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 {
 	if( m_TarFile < 0 ) {
         printf( "\n pTarFile[%s]" , pTarFile );
-#ifdef __VXWORKS__        
+#ifdef __VXWORKS__
 		if( ( m_TarFile=open( pTarFile,_O_BINARY|_O_RDONLY, 0666 ) ) < 0 ) {
 #else
 		if( ( m_TarFile=_open( pTarFile,_O_BINARY|_O_RDONLY ) ) < 0 ) {

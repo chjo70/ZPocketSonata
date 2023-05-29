@@ -40,7 +40,7 @@
 
 #include "BootShell.h"
 
-#ifdef _NETMEM_	
+#ifdef _NETMEM_
 #include "../NetMem/server/ServerSocket2.h"
 #include "../NetMem/utils/PortableSocket.h"
 
@@ -55,7 +55,7 @@ CManSbc *theManSbc=0;
 CBootShell *theBootShell=0;
 CFileTar *theFileTar=0;
 
-#ifdef _NETMEM_	
+#ifdef _NETMEM_
 ServerSocket *theServerSocket=0;
 
 #endif

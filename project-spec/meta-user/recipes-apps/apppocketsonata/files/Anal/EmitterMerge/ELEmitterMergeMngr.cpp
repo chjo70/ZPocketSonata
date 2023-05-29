@@ -6406,16 +6406,16 @@ int CELEmitterMergeMngr::CompPRIJitter(SRxABTData *pABTData)
         // 						return THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
         // 					}
         // 					break;
-            fOverlapSpace = CalOverlapSpace<float>( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax );
-            fTotalRange = min(m_pLOBData->fPRIMax - m_pLOBData->fPRIMin, pABTData->fPRIMax - pABTData->fPRIMin);
-            fOverlapSpaceRatio = FDIV(fOverlapSpace * 100, fTotalRange);
+        fOverlapSpace = CalOverlapSpace<float>( m_pLOBData->fPRIMin, m_pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax );
+        fTotalRange = min(m_pLOBData->fPRIMax - m_pLOBData->fPRIMin, pABTData->fPRIMax - pABTData->fPRIMin);
+        fOverlapSpaceRatio = FDIV(fOverlapSpace * 100, fTotalRange);
 
-            if (fOverlapSpaceRatio < m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio) {
+        if (fOverlapSpaceRatio < m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio) {
             iRet = THRESHOLD_OF_MIN_CANDIDATE_LEVEL;
-            }
-            else {
-                iRet = (int)(_diffabs<float>(pABTData->fPRIMean, m_pLOBData->fPRIMean) + 0.5);
-            }
+        }
+        else {
+            iRet = (int)(_diffabs<float>(pABTData->fPRIMean, m_pLOBData->fPRIMean) + 0.5);
+        }
         break;
 
     case E_AET_PRI_STAGGER:

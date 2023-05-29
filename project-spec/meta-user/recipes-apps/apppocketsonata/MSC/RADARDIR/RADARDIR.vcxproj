@@ -62,7 +62,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <DisableSpecificWarnings>4828; 4819</DisableSpecificWarnings>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
@@ -238,7 +238,9 @@ REM :END</Command>
     <ClCompile Include="..\..\files\Anal\SigAnal\PulExt.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp" />
     <ClCompile Include="..\..\files\Anal\SigAnal\SysPara.cpp" />
-    <ClCompile Include="..\..\files\MinIni\minIni.cpp" />
+    <ClCompile Include="..\..\files\MinIni\minIni.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\files\ODBC\MSSQL.cpp" />
     <ClCompile Include="..\..\files\ODBC\odbccore.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
