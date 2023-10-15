@@ -55,7 +55,11 @@ END_MESSAGE_MAP()
 
 // CRADARANLAPPDoc 생성/소멸
 
+#ifdef _MSSQL_
 CRADARANLAPPDoc::CRADARANLAPPDoc() : CMSSQL( & m_theMyODBC )
+#else
+CRADARANLAPPDoc::CRADARANLAPPDoc()
+#endif
 {
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
 #ifdef _MSSQL_
@@ -184,7 +188,7 @@ void CRADARANLAPPDoc::OnFileOpen()
 
 	pLOBData = & stLOBData.stLOBData[0];
 	for( i=0 ; i < stLOBData.stLOBHeader.uiNumOfLOB ; ++i ) {
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 
 #elif defined(_ELINT_) || defined(_XBAND_)
 		pLOBData->iCollectorID = RADARCOL_1 + ( i % RADARCOL_3 ) ;
@@ -209,7 +213,7 @@ void CRADARANLAPPDoc::OnFileOpen()
 		pLOBData->vSignalType = ST_CW;
 
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
         fTheta = (float) (rand() % 360);
 #elif defined(_ELINT_) || defined(_XBAND_)
 		fTheta = (float) GCAzimuth( (double) dRCLatitude[pLOBData->iCollectorID], (double) dRCLongitude[pLOBData->iCollectorID], dRTarget[0], dRTarget[1], false );
@@ -246,8 +250,8 @@ void CRADARANLAPPDoc::OnFileOpen()
 
 		pLOBData->uiDIRatio = 100;
 
-		pLOBData->vFreqType = _FREQ_FIXED;
-		pLOBData->vFreqPatternType = UNK;
+		pLOBData->vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED;
+		pLOBData->vFreqPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN;
 		pLOBData->fFreqPatternPeriod = 0;	  // [us]
 		pLOBData->fFreqMean = (float) 6000.297852;										// [10KHz]
 		pLOBData->fFreqMax = (float) 6000.803955;
@@ -255,8 +259,8 @@ void CRADARANLAPPDoc::OnFileOpen()
 		pLOBData->vFreqPositionCount = 0;
 		memset( pLOBData->fFreqSeq, 0 , sizeof(pLOBData->fFreqSeq) );
 
-		pLOBData->vPRIType = _STABLE;
-		pLOBData->vPRIPatternType = UNK;
+		pLOBData->vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED;
+		pLOBData->vPRIPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN;
 		pLOBData->fPRIPatternPeriod = 0;
 		pLOBData->fPRIMean = (float) 1233.268188;
 		pLOBData->fPRIMax = (float) 1359.570313;
@@ -278,14 +282,14 @@ void CRADARANLAPPDoc::OnFileOpen()
 #if defined(_XBAND_) || defined(_ELINT_)
 		pLOBData->iIsStoreData = 0;
 #endif
-		pLOBData->uiCoPDWOfCollection = 50;
-        pLOBData->uiCoPDWOfAnalysis = 50;
+		pLOBData->uiNumOfCollectedPDW = 50;
+        pLOBData->uiNumOfAnalyzedPDW = 50;
 
         memset(pLOBData->szRadarModeName, 0, sizeof(pLOBData->szRadarModeName));
         pLOBData->uiRadarModeIndex = 0;
         //pLOBData->iThreatIndex = 0;
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 
 #elif defined(_ELINT_) || defined(_XBAND_)
 		pLOBData->fLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
@@ -425,6 +429,19 @@ void CRADARANLAPPDoc::WriteProfile( char *pAppName, char *pAppKey, char *pValue 
 
 }
 
+/**
+ * @brief     LoadProfile
+ * @param     char * pValue
+ * @param     int iSize
+ * @param     char * pAppName
+ * @param     char * pAppKey
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-13 09:44:51
+ * @warning
+ */
 void CRADARANLAPPDoc::LoadProfile( char *pValue, int iSize, char *pAppName, char *pAppKey )
 {
 	CFileStatus fs;
@@ -440,22 +457,43 @@ void CRADARANLAPPDoc::LoadProfile( char *pValue, int iSize, char *pAppName, char
 
 }
 
+/**
+ * @brief     Init
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-13 09:44:49
+ * @warning
+ */
 void CRADARANLAPPDoc::Init()
 {
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::SWInit();
 }
 
+/**
+ * @brief     Run
+ * @param     int nLOB
+ * @param     SRxLOBData * pLOBData
+ * @param     SELLOBDATA_EXT * pLOBExt
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-13 09:44:48
+ * @warning
+ */
 void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBExt )
 {
 	int i;
 
-
 	STR_LOBDATA stResLOBData;
 	STR_ABTDATA stResABTData;
+    STR_AETDATA stResAETData;
 
 	m_stLOBData.stLOBHeader.uiNumOfLOB = nLOB;
 	for( i=0 ; i < nLOB ; ++i ) {
-		memcpy( & m_stLOBData.stLOBData[i], pLOBData, sizeof(SRxLOBData) );
+		memcpy( & m_stLOBData.stLOBData[i], pLOBData, sizeof( struct SRxLOBData) );
 
 		++ pLOBData;
 	}
@@ -465,26 +503,8 @@ void CRADARANLAPPDoc::Run( int nLOB, SRxLOBData *pLOBData, SELLOBDATA_EXT *pLOBE
 
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetLOBData( & stResLOBData );
 	RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetABTData( & stResABTData );
+    RadarAnlAlgotirhm::RadarAnlAlgotirhm::GetAETData( & stResAETData );
 
-// 	SRxLOBData *pSRxLOBData;
-//  unsigned int ui;
-// 	pSRxLOBData = & stResLOBData.stLOBData[0];
-// 	TRACE( "\n LOB 데이터 [%d] ==============================================================", stResLOBData.stLOBHeader.uiNumOfLOB );
-// 	for( ui=0 ; ui < stResLOBData.stLOBHeader.uiNumOfLOB ; ++ui ) {
-//         TRACE( "\n AET[%d], ABT[%d], LOB[%d]" , pSRxLOBData->uiAETID, pSRxLOBData->uiABTID, pSRxLOBData->uiLOBID );
-// 		++ pSRxLOBData;
-// 	}
-//     TRACE( "\n ");
-//
-// 	SRxABTData *pSRxABTData;
-//
-// 	pSRxABTData = & stResABTData.stABTData[0];
-//     TRACE( "\n ABT 데이터 [%d] ===============================================================", stResABTData.stABTHeader.iNumOfABT );
-// 	for( i=0 ; i < stResABTData.stABTHeader.iNumOfABT ; ++i ) {
-//         TRACE( "\n AET[%d], ABT[%d]" , pSRxABTData->uiAETID, pSRxABTData->uiABTID );
-// 		++ pSRxABTData;
-// 	}
-//     TRACE( "\n ");
 }
 
 
@@ -506,13 +526,14 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 {
 	*pnLOB = 0;
 
+#ifdef _MSSQL_
 	DECLARE_BEGIN_CHECKODBC
 
 	int index, iCnt=0;
 
 	CODBCRecordset theRS = CODBCRecordset( m_pMyODBC );
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 	iCnt += sprintf_s(&m_szSQLString[iCnt], MAX_SQL_SIZE - iCnt, "select OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_DEV, DOA_STD, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_DEV, FREQ_STD, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_MODE, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PW_MODE, PA_MEAN, PA_MIN, PA_MAX, PA_MODE, NUM_PDW, ISNULL(COLLECTOR_ID,0) AS COLLECTOR_ID, LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA");
 #else
 	iCnt += sprintf_s( & m_szSQLString[iCnt], MAX_SQL_SIZE-iCnt, "select OP_INIT_ID, PDWID, PLOBID, LOBID, ABTID, AETID, TASK_ID, CONTACT_TIME, CONTACT_TIME_MS, SIGNAL_TYPE, DOA_MEAN, DOA_MIN, DOA_MAX, DOA_MODE, DI_RATIO, FREQ_TYPE, FREQ_PATTERN_TYPE, FREQ_PATTERN_PERIOD, FREQ_MEAN, FREQ_MIN, FREQ_MAX, FREQ_MODE, FREQ_POSITION_COUNT, PRI_TYPE, PRI_PATTERN_TYPE, PRI_PATTERN_PERIOD, PRI_MEAN, PRI_MIN, PRI_MAX, PRI_MODE, PRI_JITTER_RATIO, PRI_POSITION_COUNT, PW_MEAN, PW_MIN, PW_MAX, PW_MODE, PA_MEAN, PA_MIN, PA_MAX, PA_MODE, NUM_PDW, ISNULL(COLLECTOR_ID,0) AS COLLECTOR_ID, LATITUDE, LONGITUDE, RADARMODE_NAME, RADARMODE_INDEX from LOBDATA" );
@@ -527,8 +548,8 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 		index = 0;
 
-		memset(pLOBData, 0, sizeof(SRxLOBData));
-		memset(pLOBExt, 0, sizeof(SELLOBDATA_EXT));
+		memset(pLOBData, 0, sizeof( struct SRxLOBData));
+		memset(pLOBExt, 0, sizeof( struct SELLOBDATA_EXT));
 
 		theRS.GetFieldValue(index++, (int *) & pLOBExt->aetData.uiOpInitID );
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -545,10 +566,10 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, pLOBData->aucTaskID);
 #endif
 
-		theRS.GetFieldTimeValue(index++, & pLOBData->tiContactTime );
+		theRS.GetFieldTimeValue(index++, (time_t *) & pLOBData->tiContactTime );
 		theRS.GetFieldValue(index++, (int *) &pLOBData->tiContactTimems);
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 		theRS.GetFieldValue(index++, (int *)& iDummy );
         pLOBData->vSignalType = ( unsigned char ) iDummy;
 #else
@@ -563,9 +584,9 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, &pLOBData->uiDIRatio);
 
 		theRS.GetFieldValue(index++, (int *)&pLOBData->vFreqType);
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
         theRS.GetFieldValue( index++, ( int * ) & iDummy );
-		pLOBData->vFreqPatternType = ( unsigned char ) iDummy;
+		pLOBData->vFreqPatternType = ( ENUM_AET_FREQ_PRI_PATTERN_TYPE ) iDummy;
 #else
         theRS.GetFieldValue( index++, &pLOBData->vFreqPatternType );
 #endif
@@ -574,18 +595,18 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, &pLOBData->fFreqMin);
 		theRS.GetFieldValue(index++, &pLOBData->fFreqMax);
         theRS.GetFieldValue( index++, &pLOBData->fFreqMode );
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
         theRS.GetFieldValue( index++, ( int * ) & iDummy );
 		pLOBData->vFreqPositionCount = ( unsigned char ) iDummy;
 #else
         theRS.GetFieldValue( index++, &pLOBData->vFreqPositionCount );
 #endif
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
         theRS.GetFieldValue( index++, ( int * ) & iDummy );
-        pLOBData->vPRIType = ( unsigned char ) iDummy;
+        pLOBData->vPRIType = ( ENUM_AET_PRI_TYPE ) iDummy;
         theRS.GetFieldValue( index++, ( int * ) & iDummy );
-		pLOBData->vPRIPatternType = ( unsigned char ) iDummy;
+		pLOBData->vPRIPatternType = ( ENUM_AET_FREQ_PRI_PATTERN_TYPE ) iDummy;
 #else
         theRS.GetFieldValue( index++, ( int * ) &pLOBData->vPRIType );
         theRS.GetFieldValue( index++, ( int * ) &pLOBData->vPRIPatternType );
@@ -598,7 +619,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 		theRS.GetFieldValue(index++, &pLOBData->fPRIMax);
         theRS.GetFieldValue( index++, &pLOBData->fPRIMode );
 		theRS.GetFieldValue(index++, & pLOBData->fPRIJitterRatio);
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
         theRS.GetFieldValue( index++, ( int * ) & iDummy );
         pLOBData->vPRIPositionCount = ( unsigned char ) iDummy;
 #else
@@ -616,7 +637,7 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
         theRS.GetFieldValue( index++, &pLOBData->fPAMode );
 
 		// theRS.GetFieldValue(index++, (int*)&pLOBData->iIsStoreData);
-		theRS.GetFieldValue(index++, (int*)&pLOBData->uiCoPDWOfCollection );
+		theRS.GetFieldValue(index++, (int*)&pLOBData->uiNumOfCollectedPDW );
 		theRS.GetFieldValue(index++, (int*)& iDummy);
 
 		theRS.GetFieldValue(index++, &pLOBData->fCollectLatitude);
@@ -642,6 +663,13 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 
 	DECLARE_END_CHECKODBC
 	DECLARE_RETURN
+
+#else
+
+    return true;
+
+#endif
+
 }
 
 
@@ -660,6 +688,9 @@ bool CRADARANLAPPDoc::GetDB_LOB( int *pnLOB, SRxLOBData *pLOBData, SELLOBDATA_EX
 bool CRADARANLAPPDoc::LoadFieldOfTable( int *pCoField, char **pField, char *pTable )
 {
     *pCoField = 0;
+
+#ifdef _MSSQL_
+    
 	DECLARE_BEGIN_CHECKODBC
 
 	CODBCRecordset theRS = CODBCRecordset(m_pMyODBC);
@@ -687,6 +718,12 @@ bool CRADARANLAPPDoc::LoadFieldOfTable( int *pCoField, char **pField, char *pTab
 
 	DECLARE_END_CHECKODBC
 	DECLARE_RETURN
+
+#else
+
+    return true;
+
+#endif
 }
 
 /**
@@ -702,6 +739,7 @@ bool CRADARANLAPPDoc::LoadFieldOfTable( int *pCoField, char **pField, char *pTab
  */
 bool CRADARANLAPPDoc::GetFieldNameOfTable( std::vector<string> *pVecString, char *pTable)
 {
+#ifdef _MSSQL_
 	DECLARE_BEGIN_CHECKODBC
 
 	CODBCRecordset theRS = CODBCRecordset(m_pMyODBC);
@@ -727,6 +765,12 @@ bool CRADARANLAPPDoc::GetFieldNameOfTable( std::vector<string> *pVecString, char
 	DECLARE_END_CHECKODBC
 	DECLARE_RETURN
 
+#else
+
+    return true;
+
+#endif
+
 }
 
 /**
@@ -745,6 +789,8 @@ bool CRADARANLAPPDoc::GetFieldNameOfTable( std::vector<string> *pVecString, char
 bool CRADARANLAPPDoc::GetDB_LOB_POSITION( int *pnLOB, SRxLOBData *pLOBData, char *pWhere, int iMaxItems )
 {
 	*pnLOB = 0;
+
+#ifdef _MSSQL_
 
 	DECLARE_BEGIN_CHECKODBC
 
@@ -781,4 +827,9 @@ bool CRADARANLAPPDoc::GetDB_LOB_POSITION( int *pnLOB, SRxLOBData *pLOBData, char
 
 	DECLARE_END_CHECKODBC
 	DECLARE_RETURN
+#else
+    return true;
+
+#endif
+
 }

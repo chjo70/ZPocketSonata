@@ -21,6 +21,8 @@
 
 #include "../Anal/Collect/DataFile/CRWRCommonVariables.h"
 
+#include "../Anal/EmitterMerge/ELThreat.h"
+
 
 // #if TOOL==diab
 // #pragma pack( 1 )
@@ -30,12 +32,38 @@
 
 #pragma pack( push, 1 )
 
+struct SELDELETE {
+    UINT uiAET;
+    UINT uiABT;
+
+};
+
+struct SELREQSCAN {
+    UINT uiAET;
+    UINT uiABT;
+
+};
+
+struct SELUSERSCANRESULT {
+    UINT uiAET;
+    UINT uiABT;
+
+    ENUM_AET_SCAN_STAT enScanStat;
+    ENUM_AET_SCAN_TYPE enScanType;
+
+    float fScanPeriod;
+
+};
+
 /**
     @struct STR_LAN_HEADER
     @brief  랜 메시지 정의
 **/
 struct STR_LAN_HEADER {
-    unsigned int uiOpCode;
+    unsigned char ucSource;
+    unsigned char ucDestination;
+    unsigned short usOpCode;
+
     unsigned int uiLength;
 
 } ;
@@ -50,9 +78,11 @@ struct STR_LAN_HEADER {
 enum ENUM_MODE {
     //enES_MODE=1,
     //enEW_MODE,
-    enREADY_MODE=1,
+    enNOT_READY_MODE = 0,
 
-    enOP_Mode = 0,
+    enREADY_MODE,
+
+    enOP_Mode,
 
 //    enANAL_Mode=0x80,
 
@@ -104,11 +134,15 @@ enum enREQ_MESSAGE {
     enREQ_COL_END = REQ_STOP,
     enREQ_RAWDATA = REQ_RAWDATA,
 
+    enREQ_ANAL_SCAN = _START_OPCODE_OF_THREAT_ + 7,
+    enREQ_DELETE_THREAT_DATA,
+
     // 시스템 변수
-    enREQ_SYS=Mcnf_ReqSys,
+    enREQ_SET_SYS = _START_OPCODE_OF_OPSYSVAR_,
+    enREQ_SYS,
 
     // 경고
-    enSYSERROR,
+    enREQ_SYSERROR = _START_OPCODE_OF_SYSERROR_,
 
     // 디버깅 용
     enREQ_SIM_PDWDATA,  // PDW 데이터 모의
@@ -122,7 +156,7 @@ enum enREQ_MESSAGE {
 
 #define REQ_OP_START_DELAY          (1)       //!< 시작 요청에 대한 처리 시간
 
-#define REQ_OP_STOP_DELAY           (3)       //!< 시작 종료에 대한 처리 시간
+#define REQ_OP_STOP_DELAY           (1)       //!< 시작 종료에 대한 처리 시간
 
 // 각각의 명령어에 대한 데이터 구조체 정의
 // struct STR_REQ_DUMP_LIST {
@@ -164,7 +198,14 @@ enum enRES_MESSAGE {
     enDEL_BEAM_DATA,
     enLST_THREAT_DATA,
     enLST_BEAM_DATA,
-    en_SCAN_DATA,
+    enRES_SCAN_DATA,
+
+    en_PDWDATA,
+
+    enRES_USERSCAN,
+    enRES_USER_DELETE_THREAT_DATA,
+
+    enRES_SYSERROR = _START_OPCODE_OF_SYSERROR_,
 
 
 //    enAET_NEWUPD_CCU = _START_OPCODE_OF_THREAT_,
@@ -176,12 +217,20 @@ enum enRES_MESSAGE {
 //    enIPL_WRITESTATUS = Mipl_WriteStatus,
 
     enRES_SETSYS = Ecnf_SetSys,
+    enRES_SYS ,
 
     esRES_SETCONFIG = Mres_SetConfig,
     enRES_COLSTART = Mres_ColStart,
     enRES_RAWDATA = Mres_RawData_ZPDW,
 
 } ;
+
+struct STR_BIT {
+    bool bTemp;
+    bool bTask;
+    bool bSNMP;
+
+};
 
 // union UNI_ES_IBIT {
 //     unsigned int w32;
@@ -327,6 +376,10 @@ union UNI_LAN_DATA {
     // 기존 SONATA 체계 데이터 구조체 정의
     unsigned int uiMode;
 
+    SELDELETE stDelete;
+
+    SELREQSCAN stReqScan;
+
     // 자체점검
     //UNI_ES_IBIT strESIBit;
     //UNI_RSA_CBIT strRSACBit;
@@ -342,6 +395,8 @@ union UNI_LAN_DATA {
     //STR_BAND_ENABLE strBandEnable;
     //STR_FMOP_THRESHOLD strFMOPThreshold;
     //STR_PMOP_THRESHOLD strPMOPThreshold;
+
+    char szString[_MAX_LANDATA];
 
     SAETData stAET;
 

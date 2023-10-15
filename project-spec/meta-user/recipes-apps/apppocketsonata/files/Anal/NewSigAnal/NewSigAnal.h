@@ -29,17 +29,9 @@
 
 class CNewSigAnal : public CSigAnal
 {
-public:
-    CNGroup *m_theGroup;
-    CNPulExt *m_thePulExt;
-    CNAnalPRI *m_theAnalPRI;
-    CNMakeAET *m_theMakeAET;
-
-	//CIntraSigAnal *m_pTheIntraSigAnal;
-
-    DEFINE_ANAL_VAR_
-
 private:
+    ENUM_ANAL_TYPE m_enAnalType;
+
     unsigned int m_uiPDWID;
 
     int m_CoGroup;
@@ -53,6 +45,16 @@ private:
     CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
 
     vector<SRadarMode *> m_VecMatchRadarMode;
+
+public:
+    CNGroup *m_theGroup;
+    CNPulExt *m_thePulExt;
+    CNAnalPRI *m_theAnalPRI;
+    CNMakeAET *m_theMakeAET;
+
+	//CIntraSigAnal *m_pTheIntraSigAnal;
+
+    DEFINE_ANAL_VAR_
 
 private:
 	void AallocMemory();
@@ -153,43 +155,63 @@ public:
 
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
     inline unsigned int GetColPdw() { return m_uiCoPdw; }
-    inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
-    inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
-    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, PULSE_MARK enMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex , uiCount, enMarkType); }
-    inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
-    inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
-    inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
-    inline unsigned int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
-    inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
 
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 그룹화 관련 함수 모음.
     inline void SetCoGroups( UINT coGroup ) { m_theGroup->SetCoGroups( coGroup ); }
-    inline UINT GetCoGroups() { return m_theGroup->GetCoGroups(); }
-    inline void SetColPdw(UINT coPdw ) { m_uiCoPdw=coPdw; }
-    inline int GetCoAnalPdw() { return m_theMakeAET->GetCoAnalPdw(); }
-    inline void SetCoAnalPdw( UINT coExtPdw ) { m_theMakeAET->SetCoAnalPdw(coExtPdw); }
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
-    inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
-    inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, uiCount, pRange ); }
-    inline STR_DTOA_HISTOGRAM *GetDtoaHist() { return m_theAnalPRI->GetDtoaHist(); }
+    inline UINT GetCoFrqAoaPwIdx() { return m_theGroup->GetCoFrqAoaPwIdx(); }
+    inline UINT GetCoGroups() { return m_theGroup->GetCoGroups(); }
+    inline int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist( uiCount, pPdwIndex ); }
+    inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 펄스열 추출 관련 함수 모음.
+    inline STR_PDWPARAM *GetPdwParam() { return m_thePulExt->GetPdwParam(); }
+    inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
+    inline unsigned int ExtractStagger( _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( framePri, pEmitter ); }
+    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, PULSE_MARK enMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex, uiCount, enMarkType ); }
+    inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     inline void DeleteAllSeg( STR_EMITTER *pEmitter ) { m_thePulExt->DeleteAllSeg( pEmitter ); }
     inline void PrintAllSeg() { m_thePulExt->PrintAllSeg(); }
-    inline void ExtractRefStable() { m_thePulExt->ExtractRefStable(); }
-    inline bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange ) { return m_thePulExt->ExtractDwellRefPT( pDwlSeg, pExtRange ); }
-    inline int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) { return m_theGroup->FindPeakInHist(uiCount, pPdwIndex ); }
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount ); }
-    inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
+    inline bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange ) { return m_thePulExt->ExtractDwellRefPT( pDwlSeg, pExtRange ); }
+    inline UINT MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
+    inline void ExtractRefStable() { m_thePulExt->ExtractRefStable(); }
+    inline int CalcPAMean( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount ); }
+    inline unsigned int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount ); }
+    inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2, iMaxMiss, bForceMerge ); }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // PRI 분석 관련 함수 모음.
+    inline UINT CheckHarmonic( _TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
+    inline unsigned int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
+    inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
+    inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, uiCount, pRange ); }
+    inline STR_DTOA_HISTOGRAM *GetDtoaHist() { return m_theAnalPRI->GetDtoaHist(); }
+    //inline UINT ExtractFramePri( STR_PDWINDEX *pPdwIndex, _TOA framePri ) { return m_theAnalPRI->ExtractFramePri( pPdwIndex, framePri ); }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 에미터 생성 관련 함수 모음.
+    inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
+    inline int GetCoAnalPdw() { return m_theMakeAET->GetCoAnalPdw(); }
+    inline void SetCoAnalPdw( UINT coExtPdw ) { m_theMakeAET->SetCoAnalPdw( coExtPdw ); }
     inline void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoFromSeg( pPri, pEmitter ); }
-    inline UINT ExtractFramePri(STR_PDWINDEX *pPdwIndex, _TOA framePri) { return m_theAnalPRI->ExtractFramePri( pPdwIndex, framePri ); }
+    inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
+    inline CNMakeAET *GetMakeAET() { return m_theMakeAET; }
+
+    inline ENUM_ANAL_TYPE GetAnalType() { return m_enAnalType; }
+
+    inline void SetColPdw(UINT coPdw ) { m_uiCoPdw=coPdw; }
+
     //inline unsigned int GetCoPulseTrains() { return m_thePulExt->m_CoPulseTrains; }
     //inline void SetCoPulseTrains( UINT coPulses ) { m_thePulExt->m_CoPulseTrains=coPulses; }
     inline unsigned int GetMaxPdw() { return m_uiMaxPdw; }
-    inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
-    inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
-    inline unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
-    inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
-    inline CNMakeAET* GetMakeAET() { return m_theMakeAET; }
-    inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic , pSeg1, pSeg2 ); }
+
+
     inline int GetCoGroup() { return m_CoGroup; }
 
     inline void SetGlobalBoardID( ENUM_BoardID enBoardID ) { g_enBoardId = enBoardID; }
@@ -204,6 +226,12 @@ public:
     // 분석 관련 함수
     void Start(STR_PDWDATA *pPDWData, bool bDBInsert=false );
     bool CheckKnownByAnalysis();
+
+    void SaveDebug( const char *pSourcefile, int iLines );
+
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
+#endif
 
 };
 

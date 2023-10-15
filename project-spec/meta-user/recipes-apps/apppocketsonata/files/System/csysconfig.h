@@ -13,9 +13,9 @@
 
 
 
-#include <string.h>
-
 #include "../Anal/INC/system.h"
+
+#include <string.h>
 
 //#ifndef _MSC_VER
 #include "../MinIni/minIni.h"
@@ -35,7 +35,7 @@ struct STR_SYSCONFIG {
     /**
      * @brief 프로그램 버젼 정보
      */
-    char szProgramVersion[10];
+    char szProgramVersion[50];
 
     /**
      * @brief 최소 분석 개수
@@ -47,10 +47,18 @@ struct STR_SYSCONFIG {
      */
     int iEmitterDeleteTime;
 
+    //!< 탐지 분석에서 최대 LOB 개수
+    unsigned int uiMaxCountOfLOB;
+
 	/**
-		 * @brief 방탐 오차
+		 * @brief 방위 그룹화 범위
 	*/
 	float fAOAGroup[enMAXPRC - 1];
+
+    /**
+         * @brief 주파수 그룹화 범위
+    */
+    float fFRQGroup[enMAXPRC - 1];
 
     /**
      * @brief 대역별 임계값
@@ -61,7 +69,17 @@ struct STR_SYSCONFIG {
     //!<  Fixed 주파수, 규칙성 펄스열 DTOA 마진 값 정의
     float fMargin[2];
 
+    //!<     그룹화 마진 정의
+    unsigned int uiAOAGroupMargin;
 
+    //!<     고정형 최소 신호세기 정의
+    int iMinSteadyPAAmplitude;
+
+    //!<     CONICAL 최소 스캔 주기 정의 [ms]
+    unsigned int uiMinConicalPeriod;
+
+    //!<     CONICAL 최대 스캔 주기 정의 [ms]
+    unsigned int uiMaxConicalPeriod;
 
     /**
      * @brief 대역별 병합 방위 오차
@@ -69,19 +87,34 @@ struct STR_SYSCONFIG {
     float fReceiverDOAError[enMAXPRC-1];
 
     /**
-     * @brief 최근 연결된 서버 IP 주소
+     * @brief 운용 서버 IP 주소
      */
     char szPrimeServer[30];
 
     /**
+    * @brief 운용 서버 IP 주소
+    */
+    char szSecondServer[30];
+
+    /**
+     * @brief 최근 연결된 CCU 서버 IP 주소
+     */
+    char szCCUServer[30];
+
+    /**
      * @brief 장치 내의 SBC 시작 IP 주소
      */
-    char szSBCFromIP[30];
+    int iSBCFromIP;
 
     /**
      * @brief 장치 내의 SBC 종료 IP 주소
      */
-    char szSBCToIP[30];
+    int iSBCToIP;
+
+    /**
+     * @brief TFFS 옵션 설정
+     */
+    int iTFFSBoot;
 
     /**
      * @brief 장비 모드 상태
@@ -92,6 +125,11 @@ struct STR_SYSCONFIG {
      * @brief IPL 버젼 정보
      */
     UINT uiIPLVersion;
+
+    /**
+     * @brief CPU 온도 경고 임계값
+     */
+    UINT uiCPUTempWarning;
 
     /**
      * @brief IP 어드레스
@@ -154,15 +192,17 @@ public:
 
 private:
     void InitVar();
-    void LoadINI();
+
 
     void SetNetworkIP();
     bool GetIPAddress( char *pIPAddress, char *pNetworkName );
 
-    void DisplaySystemVar();
-
 public:
+    void LoadINI();
+    void DisplaySystemVar();
     void SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell );
+
+    void WriteServerIPAddress( char *pIPAddress );
 
 public:
     inline STR_SYSCONFIG *GetSysConfig() { return & m_strConfig; }
@@ -181,7 +221,7 @@ public:
     };
 
     unsigned int GetIPLVersion() { return m_strConfig.uiIPLVersion; };
-    void SetIPLVersion( const unsigned int uiIPLVersion ) {
+    void SetIPLVersion( unsigned int uiIPLVersion ) {
         m_strConfig.uiIPLVersion = uiIPLVersion;
 #ifdef _MSC_VER
         char szBuffer[100];
@@ -191,6 +231,14 @@ public:
 #else
         m_theMinIni.put( "IPL", "VERSION", (int) uiIPLVersion );
 #endif
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+
+    };
+
+    unsigned int GetCPUTempWarning() { return m_strConfig.uiCPUTempWarning; };
+    void SetCPUTempWarning( unsigned int uiCPUTempWarning )
+    {
+        m_strConfig.uiCPUTempWarning = uiCPUTempWarning;
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
 
     };
@@ -217,6 +265,14 @@ public:
 
     };
 
+    unsigned int GetMaxCountOfLOB() { return m_strConfig.uiMaxCountOfLOB; };
+    void SetMaxCountOfLOB( unsigned int uiMaxCountOfLOB )
+    {
+        m_strConfig.uiMaxCountOfLOB = uiMaxCountOfLOB;
+        m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
+
+    };
+
     float* GetReceiverDOAError() { return & m_strConfig.fReceiverDOAError[0]; }
     float GetReceiverDOAError(ENUM_BoardID enBoardID) {
         float fValue= m_strConfig.fReceiverDOAError[enPRC1];
@@ -239,10 +295,47 @@ public:
 		m_pSharedMemory->copyToSharedMemroy(&m_strConfig);
 	};
 
-    float *GetMargin() { return & m_strConfig.fMargin[0]; }
-    void SetMargin( float *fValue )
+    float *GetFRQGroup() { return & m_strConfig.fFRQGroup[0]; }
+    void SetFRQGroup( float *fValue )
     {
-        memcpy( m_strConfig.fMargin, fValue, sizeof( m_strConfig.fMargin ) );
+        memcpy( m_strConfig.fFRQGroup, fValue, sizeof( m_strConfig.fFRQGroup ) );
+        m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
+    };
+
+
+    unsigned int GetAOAGroupMargin() { return m_strConfig.uiAOAGroupMargin; }
+    void SetAOAGroupMargin( unsigned int uiValue )
+    {
+        m_strConfig.uiAOAGroupMargin = uiValue;
+        m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
+    };
+
+    int GetSteadyMinPA() { return m_strConfig.iMinSteadyPAAmplitude; }
+    void SetSteadyMinPA( int iValue )
+    {
+        m_strConfig.iMinSteadyPAAmplitude = iValue;
+        m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
+    };
+
+    unsigned int GetConcalMinPeriod() { return m_strConfig.uiMinConicalPeriod; }
+    void SetConcalMinPeriod( unsigned int uiValue )
+    {
+        m_strConfig.uiMinConicalPeriod = uiValue;
+        m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
+    };
+
+    unsigned int GetConcalMaxPeriod() { return m_strConfig.uiMaxConicalPeriod; }
+    void SetConcalMaxPeriod( unsigned int uiValue )
+    {
+        m_strConfig.uiMaxConicalPeriod = uiValue;
+        m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
+    };
+
+    float *GetMargin() { return & m_strConfig.fMargin[0]; }
+    float GetMargin(unsigned int uiIndex) { return m_strConfig.fMargin[uiIndex]; }
+    void SetMargin( float *pfValue )
+    {
+        memcpy( m_strConfig.fMargin, pfValue, sizeof( m_strConfig.fMargin ) );
         m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
     };
 
@@ -264,16 +357,48 @@ public:
         }
     };
 
-    char *GetSBCFromIP() { return & m_strConfig.szSBCFromIP[0]; };
-    void SetSBCFromIP( const char *pSBCIP )
+    char *GetSecondServerOfNetwork() { return & m_strConfig.szSecondServer[0]; };
+    void SetSecondServerOfNetwork( const char *pSecondServer, bool bINI = false )
     {
-        strcpy( m_strConfig.szSBCFromIP, pSBCIP );
+        strcpy( m_strConfig.szSecondServer, pSecondServer );
+        if( bINI == true ) {
+#ifdef _MSC_VER
+            WritePrivateProfileString( "NETWORK", "SECOND_SERVER", pSecondServer, m_szIniFileName );
+#else
+            m_theMinIni.put( "NETWORK", "SECOND_SERVER", pSecondServer );
+#endif
+        }
     };
 
-    char *GetSBCToIP() { return & m_strConfig.szSBCToIP[0]; };
-    void SetSBCToIP( const char *pSBCIP )
+    char *GetCCUServerOfNetwork() { return & m_strConfig.szCCUServer[0]; };
+    void SetCCUServerOfNetwork( const char *pCCUServer, bool bINI = false )
     {
-        strcpy( m_strConfig.szSBCToIP, pSBCIP );
+        strcpy( m_strConfig.szCCUServer, pCCUServer );
+        if( bINI == true ) {
+#ifdef _MSC_VER
+            WritePrivateProfileString( "NETWORK", "CCU_SERVER_IP_ADDRESS", pCCUServer, m_szIniFileName );
+#else
+            m_theMinIni.put( "NETWORK", "CCU_SERVER_IP_ADDRESS", pCCUServer );
+#endif
+        }
+    };
+
+    int GetSBCFromIP() { return m_strConfig.iSBCFromIP; };
+    void SetSBCFromIP( const int iValue )
+    {
+        m_strConfig.iSBCFromIP = iValue;
+    };
+
+    int GetSBCToIP() { return m_strConfig.iSBCToIP; };
+    void SetSBCToIP( const int iValue )
+    {
+        m_strConfig.iSBCToIP = iValue;
+    };
+
+    int GetTFFSBoot() { return m_strConfig.iTFFSBoot; };
+    void SetTFFSBoot( const int iValue )
+    {
+        m_strConfig.iTFFSBoot = iValue;
     };
 
     //ENUM_MODE GetMode() { return m_strConfig.enMode; };
@@ -295,25 +420,25 @@ public:
 
     STR_WINDOWCELL *GetDetectWindowCell( unsigned int uiCh ) { return & m_strConfig.strDetectWindowCell[uiCh]; }
     void SetDetectWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell ) {
-        memcpy( & m_strConfig.strDetectWindowCell[uiCh], pWindowCell, sizeof(STR_WINDOWCELL) );
+        memcpy( & m_strConfig.strDetectWindowCell[uiCh], pWindowCell, sizeof( struct STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 
     STR_WINDOWCELL *GetTrackWindowCell( unsigned int uiCh ) { return & m_strConfig.strTrackWindowCell[uiCh]; }
     void SetTrackWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell ) {
-        memcpy( & m_strConfig.strTrackWindowCell[uiCh], pWindowCell, sizeof(STR_WINDOWCELL) );
+        memcpy( & m_strConfig.strTrackWindowCell[uiCh], pWindowCell, sizeof( struct STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 
     STR_WINDOWCELL *GetScanWindowCell( unsigned int uiCh ) { return & m_strConfig.strScanWindowCell[uiCh]; }
     void SetScanWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell ) {
-        memcpy( & m_strConfig.strScanWindowCell[uiCh], pWindowCell, sizeof(STR_WINDOWCELL) );
+        memcpy( & m_strConfig.strScanWindowCell[uiCh], pWindowCell, sizeof( struct STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 
     STR_WINDOWCELL *GetUserWindowCell( unsigned int uiCh ) { return & m_strConfig.strUserWindowCell[uiCh]; }
     void SetUserWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell ) {
-        memcpy( & m_strConfig.strUserWindowCell[uiCh], pWindowCell, sizeof(STR_WINDOWCELL) );
+        memcpy( & m_strConfig.strUserWindowCell[uiCh], pWindowCell, sizeof( struct STR_WINDOWCELL) );
         m_pSharedMemory->copyToSharedMemroy( & m_strConfig );
     }
 

@@ -102,8 +102,8 @@ static int 				bStatsMemMalloc = 0;	/* Malloced memory */
 static bType			*bQhead[B_MAX_CLASS];	/* Per class block q head */
 static char				*bFreeBuf;				/* Pointer to free memory */
 static char				*bFreeNext;				/* Pointer to next free mem */
-static int				bFreeSize;				/* Size of free memory */
-static int				bFreeLeft;				/* Size of free left for use */
+static size_t				bFreeSize;				/* Size of free memory */
+static size_t				bFreeLeft;				/* Size of free left for use */
 static int				bFlags = B_USE_MALLOC;	/* Default to auto-malloc */
 static int				bopenCount = 0;			/* Num tasks using balloc */
 
@@ -126,7 +126,7 @@ static void verifyFreeBlock(bType *bp, int q);
 void verifyBallocSpace();
 #endif
 
-static int ballocGetSize(int size, int *q);
+static size_t ballocGetSize(size_t size, int *q);
 
 /********************************** Code **************************************/
 /*
@@ -139,7 +139,7 @@ static int ballocGetSize(int size, int *q);
  *	an initial buffer of size bufsize for use by the application.
  */
 
-int bopen(void *buf, int bufsize, int flags)
+int bopen(void *buf, size_t bufsize, int flags)
 {
 	bFlags = flags;
 
@@ -214,10 +214,11 @@ void bclose()
  *	queues for a suitable one.
  */
 
-void *balloc(B_ARGS_DEC, int size)
+void *balloc(B_ARGS_DEC, size_t size)
 {
 	bType	*bp;
-	int		q, memSize;
+    int		q;
+    size_t memSize;
 
 /*
  *	Call bopen with default values if the application has not yet done so
@@ -370,7 +371,7 @@ void *balloc(B_ARGS_DEC, int size)
 void bfree(B_ARGS_DEC, void *mp)
 {
 	bType	*bp;
-	int		q, memSize;
+	int		q; //, memSize;
 
 #ifdef B_VERIFY_CAUSES_SEVERE_OVERHEAD
 	verifyBallocSpace();
@@ -383,7 +384,8 @@ void bfree(B_ARGS_DEC, void *mp)
 		return;
 	}
 
-	memSize = ballocGetSize(bp->u.size, &q);
+	//memSize = ballocGetSize(bp->u.size, &q);
+	ballocGetSize(bp->u.size, &q);
 
 #ifdef B_VERIFY_CAUSES_SEVERE_OVERHEAD
 	verifyUsedBlock(bp,q);
@@ -453,7 +455,7 @@ char *bstrdupA(B_ARGS_DEC, char *s)
 char_t *bstrdup(B_ARGS_DEC, char_t *s)
 {
 	char_t	*cp;
-	int		len;
+	size_t		len;
 
 	if (s == NULL) {
 		s = T("");
@@ -472,7 +474,7 @@ char_t *bstrdup(B_ARGS_DEC, char_t *s)
  *	preserved.
  */
 
-void *brealloc(B_ARGS_DEC, void *mp, int newsize)
+void *brealloc(B_ARGS_DEC, void *mp, size_t newsize)
 {
 	bType	*bp;
 	void	*newbuf;
@@ -505,15 +507,15 @@ void *brealloc(B_ARGS_DEC, void *mp, int newsize)
  *	from both balloc and bfree.
  */
 
-static int ballocGetSize(int size, int *q)
+static size_t ballocGetSize(size_t size, int *q)
 {
-	int	mask;
+	size_t	mask;
 
 	mask = (size == 0) ? 0 : (size-1) >> B_SHIFT;
 	for (*q = 0; mask; mask >>= 1) {
 		*q = *q + 1;
 	}
-	return ((1 << (B_SHIFT + *q)) + sizeof(bType));
+	return (( ( size_t ) 1 << (B_SHIFT + *q)) + sizeof(bType));
 }
 
 /******************************************************************************/

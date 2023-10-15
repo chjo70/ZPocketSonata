@@ -4,8 +4,8 @@
 		<item value="false" key="ComponentsPage.STORE_AUTO_RESIZE_COLUMNS"/>
 		<item value="false" key="ComponentsPage.STORE_FILTER_UNAVAILABLE"/>
 		<list key="ComponentsPage.STORE_SPLITTER_WEIGHTS">
-			<item value="762"/>
-			<item value="237"/>
+			<item value="520"/>
+			<item value="479"/>
 		</list>
 		<list key="ComponentsPage.STORE_COLUMN_WIDTH">
 			<item value="0"/>
@@ -16,11 +16,38 @@
 		<list key="ComponentsPage.STORE_EXPANDED_ELEMENTS">
 			<item value="FOLDER_CPLUS"/>
 			<item value="FOLDER_TOOLS"/>
+			<item value="FOLDER_CORE_DUMP"/>
+			<item value="FOLDER_CORE_DUMP_KERNEL"/>
+			<item value="INCLUDE_CORE_DUMP"/>
 			<item value="FOLDER_SHELL"/>
-			<item value="SELECT_SHELL_EDIT_MODE"/>
-			<item value="SELECT_SHELL_INTERP"/>
+			<item value="FOLDER_SHOW_ROUTINES"/>
+			<item value="FOLDER_SYMTBL"/>
+			<item value="FOLDER_NETWORK"/>
+			<item value="FOLDER_NETWORK_ADVANCED"/>
+			<item value="FOLDER_IPCOM_FS"/>
+			<item value="SELECT_IPCOM_FS"/>
+			<item value="FOLDER_NET_L5_APPLICATIONS"/>
+			<item value="FOLDER_FTP"/>
+			<item value="INCLUDE_IPFTPS"/>
+			<item value="INCLUDE_IPFTPS_TLS"/>
+			<item value="FOLDER_TFTP"/>
+			<item value="INCLUDE_IPTFTP_COMMON"/>
 			<item value="FOLDER_OS"/>
 			<item value="FOLDER_ANSI"/>
+			<item value="FOLDER_IO_SYSTEM"/>
+			<item value="FOLDER_IO_SUBSYSTEM"/>
+			<item value="INCLUDE_IO_BASIC"/>
+			<item value="FOLDER_KERNEL"/>
+			<item value="INCLUDE_KERNEL"/>
+			<item value="INCLUDE_REBOOT_HOOKS"/>
+			<item value="INCLUDE_MEM_PART_CACHE"/>
+			<item value="FOLDER_SECURITY"/>
+			<item value="FOLDER_APPLICATION"/>
+			<item value="FOLDER_STORAGE"/>
+			<item value="FOLDER_FILESYSTEM"/>
+			<item value="FOLDER_DOSFS"/>
+			<item value="INCLUDE_DOSFS_MAIN"/>
+			<item value="FOLDER_NFS"/>
 		</list>
 	</section>
 </section>

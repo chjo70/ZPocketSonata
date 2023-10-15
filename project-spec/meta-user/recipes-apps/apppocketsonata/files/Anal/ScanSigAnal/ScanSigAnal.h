@@ -33,7 +33,9 @@
 class CScanSigAnal : public CSigAnal
 {
 private:
-    SRxABTData *m_pScnAet;
+    ENUM_ANAL_TYPE m_enAnalType;
+
+    SRxABTData *m_pABTData;
 
 public:
     STR_PDWINDEX *m_pGrPdwIndex;
@@ -55,8 +57,7 @@ protected:
 
     unsigned int m_uiMaxPdw;
 
-    STR_SCANRESULT m_strScnResult;
-
+    STR_SCANRESULT *m_pstrScnResult;
 
 public:
     CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
@@ -78,27 +79,30 @@ public:
 
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
-    inline UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
+    inline UINT MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
+    inline UINT MedianPA( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianPA( pMinMax, pPdwIndex, uiCount ); }
 
-    inline unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, UINT framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( pPdwIndex, framePri, pEmitter ); }
+    inline unsigned int ExtractStagger( UINT framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( framePri, pEmitter ); }
 
     inline bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->CalcPAMean( pPdwIndex, uiCount); }
     inline unsigned int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) { return m_thePulExt->VerifyPW( pPdwIndex, uiCount); }
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount ); }
-    inline _TOA CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2 ); }
+    inline _TOA CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2, iMaxMiss, bForceMerge ); }
 
-    inline STR_SCANRESULT *GetScanResult() { return & m_strScnResult; }
+    inline STR_SCANRESULT *GetScanResult() { return m_pstrScnResult; }
     inline SRxLOBData *GetLOBData(int index=0) { return m_theAnalScan->GetLOBData(index); }
 
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline unsigned int GetCoPdw() { return m_uiCoPdw; }
     inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
-    inline SRxABTData *GetScnAET() { return m_pScnAet; }
+    inline SRxABTData *GetScnAET() { return m_pABTData; }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
 
     inline int GetCoGroup() { return 0; }
+
+    inline ENUM_ANAL_TYPE GetAnalType() { return m_enAnalType; }
 
 #if defined(_ELINT_) || defined(_XBAND_)
 	inline EN_RADARCOLLECTORID GetCollectorID() { return CSigAnal::GetCollectorID(); }
@@ -107,11 +111,11 @@ public:
 
     void Start( STR_PDWDATA *pPDWData, STR_MANAET *pManAet );
     void Start( STR_PDWDATA *pPDWData, STR_UPDAET *pUpdAet );
-    void Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet );
+    void Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pABTData, unsigned int uiScanStep, unsigned int uiReqScanPeriod, STR_SCANRESULT *pstScanResult );
     // void Start( STR_PDWDATA *pPDWData, STR_EMITTER *pEmitter, STR_PULSE_TRAIN_SEG *pSeg, STR_UPDAET *pUpdAet );
     void SendScanResult( UINT nResult );
     STR_SCANPT *GetScanPulseTrain( int noCh );
-    void GetScanRes( unsigned int *pScanType, float *pScanPrd );
+    //void GetScanRes( ENUM_AET_SCAN_TYPE *penScanType, float *pScanPrd );
     UINT GetCoScanPulse();
 
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
@@ -122,6 +126,12 @@ public:
     void Init( STR_STATIC_PDWDATA *pstPDWData);
     void ScanExtractPulseInit( unsigned int uinoEMT=0, unsigned int uinoCh=0 );
     void ScanSigAnalInit( unsigned int uinoEMT=0, int noCh=0 );
+
+    void SaveDebug( const char *pSourcefile, int iLines );
+
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
+#endif
 
 };
 

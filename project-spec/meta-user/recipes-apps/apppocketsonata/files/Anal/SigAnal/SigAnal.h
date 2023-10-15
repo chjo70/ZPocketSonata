@@ -32,6 +32,7 @@ private:
 	unsigned int m_uiCoMaxPdw;
 
     std::string m_strAnalDirectory;
+    std::string m_strDebugDirectory;
 
 #if defined(_MSSQL_) || defined(_SQLITE_)
     char *m_pszSQLString;
@@ -71,7 +72,7 @@ private:
     EN_RADARCOLLECTORID m_enCollectorID;
     XBAND::ENUM_BANDWIDTH m_enBandWidth;
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
     POCKETSONATA::ENUM_BANDWIDTH m_enBandWidth;
 
 #else
@@ -94,8 +95,10 @@ protected:
 #endif
     void SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_PDWDATA *pstPDW, int iPLOBID, bool bSaveFile );
     void SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_STATIC_PDWDATA *pPDWData, int iPLOBID, bool bSaveFile );
+    void SATATIC_PDWDATA_TO_PDWDATA(STR_STATIC_PDWDATA *pPDWData );
     void SaveRemainedPdwFile();
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
+    void SaveEmitterPDWFile( STR_EMITTER *pEmitter, STR_STATIC_PDWDATA *pPDWData, int iPLOBID, bool bSaveFile );
     bool InsertToDB_LOB( SRxLOBData *pLOBData );
 
 public:
@@ -118,10 +121,14 @@ public:
 
     void InitDataFromDB();
 
+    bool DeleteDB_RAW( const char *pTable, unsigned int uiCoRecord=0 );
     bool InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID);
-    void InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, bool bInsertDB=true );
+    void InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, int iScanStep, bool bInsertDB=true );
     bool InsertToDB_LOB( SRxLOBData *pLOBData, int iCoLOBData, bool bDBInsert );
-
+#ifdef _SQLITE_
+    void SQLiteException( Kompex::SQLiteException *psException );
+#endif
+    bool CleanupDatabase();
     bool InsertToDB_Position( SRxLOBData *pLOBData, bool bFreqSeq );
 
     //! 출력 관련 함수
@@ -129,9 +136,33 @@ public:
 
 	unsigned int GetOpInitID();
     void MakeAnalDirectory( UNION_HEADER* pUniHeader, bool bLog=true );
+    void MakeDebugDirectory( UNION_HEADER *pUniHeader, bool bLog = true );
 
+    /**
+     * @brief     GetAnalDirectory
+     * @return    const char*
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-08-16 13:23:08
+     * @warning
+     */
     inline const char* GetAnalDirectory() {
         return m_strAnalDirectory.c_str();
+    }
+
+    /**
+     * @brief     GetDebugDirectory
+     * @return    const char *
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-08-16 13:23:05
+     * @warning
+     */
+    inline const char *GetDebugDirectory()
+    {
+        return m_strDebugDirectory.c_str();
     }
 
 
@@ -251,7 +282,7 @@ public:
 #elif defined(_701_)
 		m_enBandWidth = (_701::ENUM_BANDWIDTH) iVal;
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 		m_enBandWidth = (POCKETSONATA::ENUM_BANDWIDTH) iVal;
 
 #else
@@ -285,7 +316,7 @@ public:
 		return m_enBandWidth;
 	}
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 
 #endif
 

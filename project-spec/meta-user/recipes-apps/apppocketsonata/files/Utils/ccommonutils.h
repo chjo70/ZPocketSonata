@@ -26,6 +26,8 @@
 
 #include "clog.h"
 
+#include "../Anal/EmitterMerge/IsNumber.h"
+
 #ifdef _MSC_VER
 #include <string>
 
@@ -35,28 +37,7 @@ LARGE_INTEGER getFILETIMEoffset();
 int gettimeofday(struct timeval * tp, struct timezone * tzp);
 #endif
 
-/**
- * @brief     IsValidMinMax
- * @param     T tMin
- * @param     T tMax
- * @return    bool
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-04-19 20:09:20
- * @warning
- */
-template <typename T>
-bool IsValidMinMax( T tMin, T tMax )
-{
-    bool bRet = true;
 
-    if( tMin > tMax || tMax == 0 ) {
-        bRet = false;
-    }
-
-    return bRet;
-}
 
 
 /**
@@ -73,20 +54,36 @@ template <typename T>
 T CheckOverflow( unsigned long long int ullFileSize ) {
     T value;
 
-    if( sizeof(T) == sizeof(int) ) {
-        if( ullFileSize > UINT_MAX ) {
-            value = UINT_MAX;
+    const char *pType = typeid( T ).name();
+
+#ifdef __VXWORKS__
+
+    printf( "\n CheckOverflow : %s" , pType );
+
+#endif
+
+//     if( sizeof(T) == sizeof(int) ) {
+//         if( ullFileSize > INT32_MAX ) {
+//             value = INT32_MAX;
+//         }
+//         else {
+//             value = (T) ullFileSize;
+//         }
+//     }
+//     else if( sizeof(T) == sizeof(short) ) {
+//         if( ullFileSize > SHRT_MAX ) {
+//             value = SHRT_MAX;
+//         }
+//         else {
+//             value = (T) ullFileSize;
+//         }
+//     }
+    if( strcmp( pType, "__int64" ) == 0 || strcmp( pType, "unsigned __int64" ) == 0 || strcmp( pType, "unsigned int" ) == 0 ) {
+        if( ullFileSize > INT32_MAX ) {
+            value = INT32_MAX;
         }
         else {
-            value = (T) ullFileSize;
-        }
-    }
-    else if( sizeof(T) == sizeof(short) ) {
-        if( ullFileSize > SHRT_MAX ) {
-            value = SHRT_MAX;
-        }
-        else {
-            value = (T) ullFileSize;
+            value = ( T ) ullFileSize;
         }
     }
     else {
@@ -118,7 +115,7 @@ std::string string_format( const std::string& format, Args ... args )
 #ifdef __VXWORKS__
 	std::string strPrintf;
 
-	int iSize = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+	int iSize = snprintf( 0, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
 	if( iSize <= 0 ) {
 		throw std::runtime_error( "Error during formatting." );
 	}
@@ -154,17 +151,21 @@ public:
     CCommonUtils();
 
 public:
-    static void SendLan( UINT uiOpCode );
-    static void SendLan( UINT uiOpCode, void *pData, UINT uiLength );
-    static void CloseSocket();
+    //static void SendLan( UINT uiOpCode );
+    //static void SendLan( UINT uiOpCode, void *pData, UINT uiLength );
+    //static void CloseSocket();
+
+    static bool IsValidMinMax( float fMin, float fMax );
 
     static void DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop=NULL );
 
     static int CalcDiffAOA( int iAOA1, int iAOA2 );
 
 	// SWAP 관련 함수
+    static void AllSwapData16( void *pData, unsigned int uiLength );
     static void AllSwapData64( void *pData, unsigned int uiLength );
     static void AllSwapData32( void *pData, unsigned int uiLength );
+
     static void swapByteOrder( unsigned int& ui );
     static void swapByteOrder( unsigned long long int &d);
     static void swapByteOrder(double & d);
@@ -177,14 +178,15 @@ public:
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
 
 	// 시간관련 함수
-    static void getStringPresentTime( char *pString, size_t szString );
+    static struct tm *GetLocaltime( time_t *ptiTime );
+    static void getStringPresentTime( char *pString, size_t szString, bool bASCII =false );
     static void getStringDesignatedDate( char *pString, size_t szString, time_t tiTime );
 	static void getStringDesignatedTime(char *pString, size_t szString, time_t tiTime);
     static void getFileNamingDesignatedTime(char *pString, size_t szString, time_t tiTime);
     static void GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, unsigned int tColTimeMs );
-    static void GetCollectTime( time_t *ptiContactTime, unsigned int *ptiContactTimems );
+    static void GetCollectTime( unsigned int *ptiContactTime, unsigned int *ptiContactTimems );
     static void GetCollectTime( struct timespec *pTimeSpec );
-    static void GetCollectTime( time_t  *ptiContactTime, unsigned short *ptiContactTimems );
+    static void GetCollectTime( unsigned int *ptiContactTime, unsigned short *ptiContactTimems );
     static DWORD GetDiffTime( struct timespec *pTimeSpec );
 
     static int CopySrcToDstFile( const char *src_file, const char *dest_file, int overwrite, int copy_attr );
@@ -199,10 +201,13 @@ public:
     static void MakeOnePDW( char *pszBuffer, UZPOCKETPDW *pstPDW );
 
     static void WallMakePrint( char *buffer, char delimeter, int iColumns= MAX_SCREEN_COLUMNS );
+    static void CenterMakePrint( char *buffer, char delimeter, int iColumns = MAX_SCREEN_COLUMNS );
     static void WallMakePrint( char delimeter, int iColumns, char *buffer, ... );
 
     static float Random( float fMin, float fMax );
     static int Random( int iMin, int iMax );
+
+    static float NormalDistribution( float fMean, float fDevi );
 
     // 타입 변환시 사용하는 함수 모음
     //static unsigned int INT2UINT( int iValue );

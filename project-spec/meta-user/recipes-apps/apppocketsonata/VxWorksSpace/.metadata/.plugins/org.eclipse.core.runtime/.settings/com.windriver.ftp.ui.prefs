@@ -1,3 +1,7 @@
 autostart=false
 eclipse.preferences.version=1
+ftp.user.t2080.home=d\:\\rawdata
+ftp.user.t2080.passhash=8171cf10bd64c1682d99a6ed064c7a5
+ftp.user.t2080.write=true
+ftp.userlist=t2080
 tftp.home=D\:\\tftpboot

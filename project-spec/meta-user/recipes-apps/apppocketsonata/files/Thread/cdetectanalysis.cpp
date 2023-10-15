@@ -43,11 +43,19 @@ CDetectAnalysis::CDetectAnalysis( int iThreadPriority, const char *pClassName, b
 
     strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
     strcat( szSQLiteFileName, "/" );
-    strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
+
+#ifdef _MSC_VER
+    char szSrcSQLiteFileName[100];
+
+    sprintf( szSrcSQLiteFileName, "%s_%d.sqlite3", EMITTER_SQLITE_FILENAME, g_enBoardId );
+    strcat( szSQLiteFileName, szSrcSQLiteFileName );
+#else
+    strcat( szSQLiteFileName, EMITTER_SQLITE_FILEEXTNAME );
+#endif
 
     m_pTheNewSigAnal = new CNewSigAnal( NEW_COLLECT_PDW, false, szSQLiteFileName );
 #else
-    m_pTheNewSigAnal = new CNewSigAnal( KWN_COLLECT_PDW, false );
+    m_pTheNewSigAnal = new CNewSigAnal( NEW_COLLECT_PDW, false );
 
 #endif
 
@@ -55,7 +63,7 @@ CDetectAnalysis::CDetectAnalysis( int iThreadPriority, const char *pClassName, b
     _SAFE_NEW( m_pTheSysPara, CSysPara )
 
     m_PDWData.pstPDW = NULL;
-    m_PDWData.pstPDW = new _PDW [sizeof(_PDW) * MAX_PDW];
+    m_PDWData.pstPDW = new _PDW [sizeof( struct _PDW) * MAX_PDW];
 
     InitDetectAnalysis();
 
@@ -92,7 +100,7 @@ CDetectAnalysis::~CDetectAnalysis(void)
  */
 void CDetectAnalysis::Run(key_t key)
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     CThread::Run();
 
@@ -109,16 +117,28 @@ void CDetectAnalysis::Run(key_t key)
  */
 void CDetectAnalysis::_routine()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     m_pMsg = GetRecvDataMessage();
 
     while( m_bThreadLoop ) {
+#ifdef _MSC_VER
+        if( QMsgRcv( enTIMER, OS_MILLISEC( 1000 ) ) == -1 ) {
+            perror( "QMsgRcv" );
+        }
+#else
         if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv" );
         }
+
+#endif
         else {
             switch( m_pMsg->uiOpCode ) {
+#ifdef _MSC_VER
+                case enTHREAD_TIMER:
+                    break;
+
+#endif
                 // 운용 제어 관련 메시지
                 case enREQ_OP_START:
                     // QMsgClear();
@@ -127,12 +147,12 @@ void CDetectAnalysis::_routine()
 
                 case enTHREAD_DISCONNECTED:
                 case enREQ_OP_SHUTDOWN:
-                    QMsgClear();
-                    InitDetectAnalysis();
+                    //QMsgClear();
+                    //InitDetectAnalysis();
                     break;
 
                 case enREQ_OP_RESTART:
-                    QMsgClear();
+                    //QMsgClear();
                     InitDetectAnalysis();
                     break;
 
@@ -171,6 +191,9 @@ void CDetectAnalysis::_routine()
  */
 void CDetectAnalysis::InitDetectAnalysis()
 {
+    // 테이블 삭제하기
+    Log( enNormal, "테이블을 삭제합니다." );
+    m_pTheNewSigAnal->DeleteDB_RAW( "RAWDATA" );
 
 }
 
@@ -185,12 +208,12 @@ void CDetectAnalysis::InitDetectAnalysis()
  */
 void CDetectAnalysis::AnalysisStart()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
-    Log( enDebug, "탐지 : 채널[%d]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.uiReqStatus, m_pMsg->x.strCollectInfo.uiTotalPDW );
+    //Log( enDebug, "탐지 : 채널[%d]에서, PDW[%d] 를 수집했습니다." , m_pMsg->x.strCollectInfo.uiReqStatus, m_pMsg->x.strCollectInfo.uiTotalPDW );
 
     // 1. 탐지 신호 분석을 호출한다.
-    m_pTheNewSigAnal->Start( & m_PDWData );
+    m_pTheNewSigAnal->Start( & m_PDWData, true );
 
     // 3. 분석 결과를 병합/식별 쓰레드에 전달한다.
     unsigned int uiTotalLOB=(unsigned int) m_pTheNewSigAnal->GetCoLOB();
@@ -199,19 +222,19 @@ void CDetectAnalysis::AnalysisStart()
         //! LOB 크기는 내부 메시지 크기로 개수를 정합니다.
         //! #메시지 크기 제한
         // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
-        uiTotalLOB = min( ( _MAX_LANDATA / sizeof(SRxLOBData)-1), uiTotalLOB);
+        uiTotalLOB = min( ( _MAX_LANDATA / sizeof(struct SRxLOBData)-1), uiTotalLOB);
 
         GetDetectAnalInfo()->Set( m_pMsg->x.strCollectInfo.enPCIDriver, uiTotalLOB, m_pMsg->x.strCollectInfo.uiReqStatus, m_pMsg->x.strCollectInfo.enCollectBank, 0, 0, 0 );
 
-        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_RESULT, m_pTheNewSigAnal->GetLOBData(), sizeof(SRxLOBData), uiTotalLOB, GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_DETECTANAL_RESULT, m_pTheNewSigAnal->GetLOBData(), sizeof( struct SRxLOBData), uiTotalLOB, GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
 
     }
 #ifdef _SERIAL_DETECT_FLOW_
     else {
-        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, & m_pMsg->x.strCollectInfo, sizeof( STR_COLLECT_INFO ), GetThreadName() );
+        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, & m_pMsg->x.strCollectInfo, sizeof( struct STR_COLLECT_INFO ), GetThreadName() );
     }
 #else
-    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, & m_pMsg->x.strCollectInfo, sizeof( STR_COLLECT_INFO ), GetThreadName() );
+    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, & m_pMsg->x.strCollectInfo, sizeof( struct STR_COLLECT_INFO ), GetThreadName() );
 
 #endif
 
@@ -228,7 +251,7 @@ void CDetectAnalysis::AnalysisStart()
  */
 void CDetectAnalysis::MakePDWData()
 {
-    unsigned int i, uiTotalPDW;
+    unsigned int uiTotalPDW;
 
     STR_STATIC_PDWDATA *pStaticPDWData;
 
@@ -237,50 +260,54 @@ void CDetectAnalysis::MakePDWData()
     pStaticPDWData = ( STR_STATIC_PDWDATA * ) GetRecvData();
 
     // 헤더 복사
-    memcpy( & m_PDWData.x, & pStaticPDWData->x, sizeof(UNION_HEADER) );
+    memcpy( & m_PDWData.x, & pStaticPDWData->x, sizeof(union UNION_HEADER) );
 
     // 데이터 복사
     pPDWSrc = & pStaticPDWData->stPDW[0];
     pPDWDest = & m_PDWData.pstPDW[0];
     uiTotalPDW = pStaticPDWData->GetTotalPDW();
-    for( i=0 ; i < uiTotalPDW ; ++i ) {
-        pPDWDest->ullTOA = pPDWSrc->ullTOA;
 
-        pPDWDest->iStat = pPDWSrc->iStat;
+    memcpy( pPDWDest, pPDWSrc, uiTotalPDW * sizeof( _PDW ) );
 
-        pPDWDest->uiAOA = pPDWSrc->uiAOA;
-        pPDWDest->uiFreq = pPDWSrc->uiFreq;
-        pPDWDest->uiPA = pPDWSrc->uiPA;
-        pPDWDest->uiPW = pPDWSrc->uiPW;
-
-        pPDWDest->uiIndex = pPDWSrc->uiIndex;
-
-        //pPDWDest->iPFTag = pPDWSrc->iPFTag;
-
-        memcpy( &pPDWDest->x, &pPDWSrc->x, sizeof( UNI_PDW_ETC ) );
-
-// #if defined(_ELINT_)
-//         pPDWDest->fPh1 = pPDWSrc->fPh1;
-//         pPDWDest->fPh2 = pPDWSrc->fPh2;
-//         pPDWDest->fPh3 = pPDWSrc->fPh3;
-//         pPDWDest->fPh4 = pPDWSrc->fPh4;
+//     for( i=0 ; i < uiTotalPDW ; ++i ) {
 //
-// #elif defined(_XBAND_)
-//         pPDWDest->fPh1 = pPDWSrc->fPh1;
-//         pPDWDest->fPh2 = pPDWSrc->fPh2;
-//         pPDWDest->fPh3 = pPDWSrc->fPh3;
-//         pPDWDest->fPh4 = pPDWSrc->fPh4;
-//         pPDWDest->fPh5 = pPDWSrc->fPh5;
+//         pPDWDest->tTOA = pPDWSrc->tTOA;
 //
-// #elif _POCKETSONATA_
-//         pPDWDest->iPMOP = pPDWSrc->iPMOP;
-//         pPDWDest->iFMOP = pPDWSrc->iFMOP;
-//         pPDWDest->iChannel = pPDWSrc->iChannel;
+//         pPDWDest->iStat = pPDWSrc->iStat;
 //
-// #endif
-
-        ++ pPDWSrc;
-        ++ pPDWDest;
-    }
+//         pPDWDest->uiAOA = pPDWSrc->uiAOA;
+//         pPDWDest->uiFreq = pPDWSrc->uiFreq;
+//         pPDWDest->uiPA = pPDWSrc->uiPA;
+//         pPDWDest->uiPW = pPDWSrc->uiPW;
+//
+//         pPDWDest->uiIndex = pPDWSrc->uiIndex;
+//
+//         //pPDWDest->iPFTag = pPDWSrc->iPFTag;
+//
+//         memcpy( &pPDWDest->x, &pPDWSrc->x, sizeof( union UNI_PDW_ETC ) );
+//
+// // #if defined(_ELINT_)
+// //         pPDWDest->fPh1 = pPDWSrc->fPh1;
+// //         pPDWDest->fPh2 = pPDWSrc->fPh2;
+// //         pPDWDest->fPh3 = pPDWSrc->fPh3;
+// //         pPDWDest->fPh4 = pPDWSrc->fPh4;
+// //
+// // #elif defined(_XBAND_)
+// //         pPDWDest->fPh1 = pPDWSrc->fPh1;
+// //         pPDWDest->fPh2 = pPDWSrc->fPh2;
+// //         pPDWDest->fPh3 = pPDWSrc->fPh3;
+// //         pPDWDest->fPh4 = pPDWSrc->fPh4;
+// //         pPDWDest->fPh5 = pPDWSrc->fPh5;
+// //
+// // #elif defined(_POCKETSONATA_) || defined(_712_)
+// //         pPDWDest->iPMOP = pPDWSrc->iPMOP;
+// //         pPDWDest->iFMOP = pPDWSrc->iFMOP;
+// //         pPDWDest->iChannel = pPDWSrc->iChannel;
+// //
+// // #endif
+//
+//         ++ pPDWSrc;
+//         ++ pPDWDest;
+//     }
 
 }

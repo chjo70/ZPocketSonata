@@ -75,7 +75,8 @@ CELEnvironVariable::CELEnvironVariable(void)
     // 신호 식별 마진 정의 값
     m_stEnvironVariable.fMarginMinRqdFrqRangeNestedRatio = ( float ) 90.;
 
-    m_stEnvironVariable.fMarginMinRqdPriRangeNestedRatio = ( float ) 90.;
+    // 지터-스태거 중첩률 정의
+    m_stEnvironVariable.fMarginMinRqdPriRangeNestedRatio = ( float ) 70.;
 
     m_stEnvironVariable.fMarginFrqModPeriodErrorRatio = ( float ) 10;
 
@@ -127,7 +128,7 @@ CELEnvironVariable::~CELEnvironVariable(void)
  */
 void CELEnvironVariable::SetEnvironVaraiable( SEnvironVariable *pSEnvironVariable )
 {
-	memcpy( & m_stEnvironVariable, pSEnvironVariable, sizeof(SEnvironVariable) );
+	memcpy( & m_stEnvironVariable, pSEnvironVariable, sizeof( struct SEnvironVariable) );
 
 }
 

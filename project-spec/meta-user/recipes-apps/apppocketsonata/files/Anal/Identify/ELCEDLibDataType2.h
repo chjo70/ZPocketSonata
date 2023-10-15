@@ -1,4 +1,14 @@
-﻿
+﻿/**
+
+    @file      ELCEDLibDataType2.h
+    @brief
+    @details   ~
+    @author    조철희
+    @date      27.06.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
 #pragma once
 
 #ifndef __VXWORKS__
@@ -14,8 +24,8 @@ using namespace std;
 
 #ifdef _MSC_VER
 #include <string>
-#include <string.h>
-#include <atlstr.h>
+//#include <string.h>
+//#include <atlstr.h>
 
 #else
 #include "../SigAnal/_Type.h"
@@ -366,16 +376,28 @@ static char _ContinuityCodes[ContinuityCode::enumCountinuous + 1][25 + 1] =
 
 namespace PatternCode
 {
-	enum EnumPatternCode
-	{
-		enumUndefinedPatternCode = -1, //아무것도 표시되지 않음
+    enum EnumPatternCode {
+        enumUndefinedPatternCode = -1, //아무것도 표시되지 않음
 
-		enumUnknown = 0,
-		enumPatterned,
-		enumNonPatterned,
-		enumAdaptive,
-		enumUnmodulated = 5
-	};
+        enumUnknown = 0,
+
+#if defined(_POCKETSONATA_) || defined(_712_) || defined(_SONATA_)
+        enumPatterned_Sine,
+        enumPatterned_Slide_Inc,
+        enumPatterned_Slide_Dec,
+        enumPatterned_Slide_Saw_Tri,
+
+#else
+        enumPatterned,
+
+#endif
+
+        enumNonPatterned=10,
+        enumAdaptive,
+        enumUnmodulated
+
+    };
+
 }
 /*
 static char _PatternCodes[PatternCode::enumUnmodulated + 1][25 + 1] =
@@ -508,7 +530,7 @@ namespace CEDSignalType
 		enumPulsed,	//기본값
 		enumEA
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 		enumSignalUndefined = 0,
         enumPulsed,
         enumCW,
@@ -564,7 +586,7 @@ namespace RadarModeFreqType
 
 namespace RadarModePRIType
 {
-#if defined(_XBAND_) || defined(_POCKETSONATA_)
+#if defined(_XBAND_)
 	enum EnumRadarModePRIType
 	{
 		enumStable = 0,
@@ -579,10 +601,10 @@ namespace RadarModePRIType
 	enum EnumRadarModePRIType
 	{
 		enumStable = 1,
+        enumSTAGGER,
 		enumJITTER,
+        enumPATTERN,
 		enumDwellSWITCH,
-		enumSTAGGER,
-		enumPATTERN,
 
 		enumPRIUnknown
 	};
@@ -628,32 +650,62 @@ enum EnumRadarStatus
 // 섹터형, 탐지형, 추적형 추가할 때 CheckScanType()와 CalcMatchRatio()에 해당 항목을 추가 코딩해야 함.
 namespace ScanType
 {
-	//start_static_0919
-	enum EnumScanType	//#FA_Q_2502_T2
-	{
-		enumUndefinedScanType = INT_MAX,                        //아무것도 표시되지 않음
 
-		enumA_Circular = 0,										// 탐지형
-		enumB_Horizontal_Sector_Bi_directional,					// 섹터형(탐지형)
-		enumC_Vertical_Sector_Bi_directional,					// 섹터형(탐지형)
-		enumD_Non_Scanning,										// 추적형
-		enumE_Irregular,										// Unknown
-		enumF_Conical,											// 추적형
-		enumG_Lobe_Switching,									// 추적형
-		enumH_Orthogonal_or_Interleaved_Sectors,				// 탐색형
-		enumJ_Raster,											// 섹터형(탐지형)
-		enumK_Spiral,											// 섹터형(탐지형)
-		enumL_Helical,											// 섹터형(탐지형)
-		enumO_Sector_Uni_or_Bi_Directional,						// 섹터형(탐지형)
-		enumP_Agile_Beam,										// 추적형
-		enumR_Other_Combination_Patterns,						// Unknown
-		enumS_Vertical_Sector_Uni_Directional,					// 섹터형(탐지형)
-		enumT_Horizontal_Sector,								// 섹터형(탐지형)
-		enumU_Uni_Directional_Sector_Plane_Undertermined,		// 섹터형(탐지형)
-		enumV_Bi_Directional_Sector_Plane_Undetermined,			// 섹터형(탐지형)
-		enumZ_Undetermined										// Unknown
-	};
-	//end_static_0919
+#if defined(_POCKETSONATA_) || defined(_712_)
+	//start_static_0919
+    enum EnumScanType	//#FA_Q_2502_T2
+    {
+        enumUndefinedScanType = INT_MAX,                        //아무것도 표시되지 않음
+
+        enumA_Circular = 1,										// 탐지형
+        enumB_Horizontal_Sector_Bi_directional,					// 섹터형(탐지형)
+        enumC_Vertical_Sector_Bi_directional,					// 섹터형(탐지형)
+        enumD_Non_Scanning = 5,										// 추적형
+        enumE_Irregular,										// Unknown
+        enumF_Conical=4,											// 추적형
+        enumG_Lobe_Switching,									// 추적형
+        enumH_Orthogonal_or_Interleaved_Sectors,				// 탐색형
+        enumJ_Raster,											// 섹터형(탐지형)
+        enumK_Spiral,											// 섹터형(탐지형)
+        enumL_Helical,											// 섹터형(탐지형)
+        enumO_Sector_Uni_or_Bi_Directional,						// 섹터형(탐지형)
+        enumP_Agile_Beam,										// 추적형
+        enumR_Other_Combination_Patterns,						// Unknown
+        enumS_Vertical_Sector_Uni_Directional,					// 섹터형(탐지형)
+        enumT_Horizontal_Sector,								// 섹터형(탐지형)
+        enumU_Uni_Directional_Sector_Plane_Undertermined=2,		// 섹터형(탐지형)
+        enumV_Bi_Directional_Sector_Plane_Undetermined=3,			// 섹터형(탐지형)
+        enumZ_Undetermined										// Unknown
+    };
+
+#else
+    enum EnumScanType	//#FA_Q_2502_T2
+    {
+        enumUndefinedScanType = INT_MAX,                        //아무것도 표시되지 않음
+
+        enumA_Circular = 0,										// 탐지형
+        enumB_Horizontal_Sector_Bi_directional,					// 섹터형(탐지형)
+        enumC_Vertical_Sector_Bi_directional,					// 섹터형(탐지형)
+        enumD_Non_Scanning,										// 추적형
+        enumE_Irregular,										// Unknown
+        enumF_Conical,											// 추적형
+        enumG_Lobe_Switching,									// 추적형
+        enumH_Orthogonal_or_Interleaved_Sectors,				// 탐색형
+        enumJ_Raster,											// 섹터형(탐지형)
+        enumK_Spiral,											// 섹터형(탐지형)
+        enumL_Helical,											// 섹터형(탐지형)
+        enumO_Sector_Uni_or_Bi_Directional,						// 섹터형(탐지형)
+        enumP_Agile_Beam,										// 추적형
+        enumR_Other_Combination_Patterns,						// Unknown
+        enumS_Vertical_Sector_Uni_Directional,					// 섹터형(탐지형)
+        enumT_Horizontal_Sector,								// 섹터형(탐지형)
+        enumU_Uni_Directional_Sector_Plane_Undertermined,		// 섹터형(탐지형)
+        enumV_Bi_Directional_Sector_Plane_Undetermined,			// 섹터형(탐지형)
+        enumZ_Undetermined										// Unknown
+    };
+
+#endif
+
 }
 /*
 static char _ScanTypes[ScanType::enumZ_Undetermined + 1][100 + 1] =
@@ -2123,6 +2175,8 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
 
 
 	int iTimeInactivated;										// 비활성화 시간
+
+    int iCategory;
 
     PlatformCode::EnumPlatformCode ePlatform;					//플랫폼 형태: 탑재 플랫폼의 종류 (PLATFORM_CODE 참조)
     CEDSignalType::EnumSignalType eSignalType;					//신호형태 (Pulsed, CW, EA) enum형태

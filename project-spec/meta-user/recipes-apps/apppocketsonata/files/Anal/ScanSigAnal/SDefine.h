@@ -16,7 +16,7 @@
 #define	_spPaHistBinSize                (256)
 #define	_spDtoaHistBinSize              (1024)
 
-#define	_spMaxSample                    (600)
+#define	_spMaxSample                    (600*2)
 #define	_spCoSteadyCollect              (4)
 
 #define	_spCoBreakPulse                 (3)				// debug, 99-11-06 15:22:09
@@ -28,18 +28,19 @@
 
 #define	_spMinMSEThr					(0.5)
 
-#define _spScnPrdErrRat				(0.05)		// 5 % error of scan period
+#define _spScnPrdErrRat				    (0.05)		// 5 % error of scan period
 
-#define _spMinCoUnderThr			(5) 			// under threshold
+#define _spMinCoUnderThr			    (5) 			// under threshold
 
-#define _spMinPeaksInSpanTime	(3)
-#define _spMinPeakRatio				(0.9)
+#define _spMinPeaksInSpanTime	        (3)
+#define _spMinPeakRatio				    (0.9)
 
-#define	_spFilterRatio				(0.95)					// 필터링의 전체 개수의 필터링율의 Threshold
-#define	_spNeighborTh					(3./_spAMPres)	// Neighbor Threshold
+#define	_spFilterRatio				    (0.95)					// 필터링의 전체 개수의 필터링율의 Threshold
+//#define	_spNeighborTh					(3./_spAMPres)	// Neighbor Threshold
 
-#define _spNoneTrack          LOWTHREAT
-#define _spTrack              HIGHTHREAT
+
+#define SEADY_PA_MARGIN                 UDIV( 3.0, _spAMPres )         // 3dBm
+#define SEADY_PA_DEVIATION              UDIV( 1.0, _spAMPres )         // 3dBm
 
 
 #endif // !defined(AFX_SDEFINE_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)

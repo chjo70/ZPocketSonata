@@ -34,7 +34,7 @@
  *	websMD5binary returns the MD5 hash
  */
 
-char *websMD5binary(unsigned char *buf, int length)
+char *websMD5binary(unsigned char *buf, size_t length)
 {
     const char		*hex = "0123456789abcdef";
     MD5_CONTEXT		md5ctx;
@@ -86,7 +86,7 @@ char_t *websMD5(char_t *string)
 
 	if (string && *string) {
 		char	*strTemp, *strHash;
-		int		nLen;
+		size_t		nLen;
 /*
  *		Convert input char_t string to char string
  */

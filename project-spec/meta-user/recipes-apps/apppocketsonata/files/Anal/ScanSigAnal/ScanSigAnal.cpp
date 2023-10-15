@@ -35,6 +35,8 @@
 CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName)
 {
 
+    m_enAnalType = enSCN_ANAL;
+
 	InitVar();
 
 	// 신호 분석 관련 클래스 생성
@@ -54,6 +56,8 @@ CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *
 	m_pSeg = GetPulseSeg();
 
 	m_pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
+
+    m_pstrScnResult = m_theAnalScan->GetScanResult();
 
 }
 
@@ -86,26 +90,30 @@ CScanSigAnal::~CScanSigAnal()
  * @date      2009-01-05 13:41:21
  * @warning
  */
-void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
+void CScanSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pABTData, unsigned int uiScanStep, unsigned int uiReqScanPeriod, STR_SCANRESULT *pstScanResult )
 {
     unsigned int uiTotalPDW;
-    char buffer[200];
+    char buffer[400];
 
     // 추적할 에미터를 복사한다.
-    m_pScnAet = pScnAet;
+    m_pABTData = pABTData;
 
     NextStep();
 
     // 신호 분석 관련 초기화.
-    Init( pPDWData );
+    Init( pstPDWData );
 
     sprintf( buffer, "==== 스캔 분석 시작[%dth, Co:%d]", GetStep(), m_uiCoPdw );
     CCommonUtils::WallMakePrint( buffer, '=' );
-    Log( enNormal, buffer );
+    Log( enNormal, "%s", buffer);
 
-    uiTotalPDW = pPDWData->GetTotalPDW();
+    // STATIC_PDWDATA 구조체를 PDWDATA 구조체로 변환
+    SATATIC_PDWDATA_TO_PDWDATA( pstPDWData );
+
+    InsertRAWData( & m_stSavePDWData, _spZero, (int) uiScanStep, true );
 
     // 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
+    uiTotalPDW = pstPDWData->GetTotalPDW();
     m_theGroup->MakePDWArray( m_pstPDWData->stPDW, uiTotalPDW);
 
     /*! \bug  그룹화는 생략하고 수집 펄스열을 하나의 그룹화 내에 올려 놓는다.
@@ -113,7 +121,7 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
     */
     m_theGroup->MakeOneGroup();
 
-    SaveGroupPDWFile( m_pGrPdwIndex, pPDWData, -1, true );
+    SaveGroupPDWFile( m_pGrPdwIndex, pstPDWData, -1, true );
 
     // 펄스열 추출
     m_thePulExt->KnownPulseExtract();
@@ -124,16 +132,15 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pScnAet )
 	// 스캔 분석 수행한다.
     //m_strScnResult.uiABTID = m_pScnAet->uiABTID;
     //m_strScnResult.uiAETID = m_pScnAet->uiAETID;
-	EN_SCANRESULT enResult = m_theAnalScan->AnalScan();
-	m_strScnResult.enResult = enResult;
-    GetScanRes( & m_strScnResult.uiScanType, & m_strScnResult.fScanPeriod );
+	m_theAnalScan->AnalScan( pstScanResult );
+    //GetScanRes( & m_strScnResult.enScanType, & m_strScnResult.fScanPeriod );
 
 	// 스캔 분석 결과를 저장한다.
     //SaveScanInfo( nResult, m_pScnAet );
 
-    sprintf( buffer, "================ 스캔 분석 종료 : [%s(%d)] %.2f[ms]", g_szAetScanType[m_strScnResult.uiScanType], m_strScnResult.uiScanType, m_strScnResult.fScanPeriod );
+    sprintf( buffer, "================ 스캔 분석 종료 : [%s(%d)] %.2f[ms]", g_szAetScanType[(unsigned int) m_pstrScnResult->enScanType], m_pstrScnResult->enScanType, FDIV( m_pstrScnResult->uiScanPeriod, _spOneMilli ) );
     CCommonUtils::WallMakePrint( buffer, '=' );
-    Log( enNormal, buffer );
+    Log( enNormal, "%s", buffer);
 
 }
 
@@ -211,7 +218,7 @@ void CScanSigAnal::SendScanResult( UINT nResult )
 //
 UINT CScanSigAnal::GetCoScanPulse()
 {
-	return stScanPt.uiCount;
+	return 0;
 }
 //////////////////////////////////////////////////////////////////////
 //
@@ -243,7 +250,7 @@ void CScanSigAnal::MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USH
 {
 	for( unsigned int i=0 ; i < uiCount; ++i ) {
 		MARK[ *pPdwIndex++ ] = usMarkType;
-}
+	}
 }
 
 /**
@@ -286,7 +293,7 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
     if (pstPDWData != NULL) {
 		MakeAnalDirectory( &pstPDWData->x, false );
 
-        memcpy(&m_stSavePDWData.x, &pstPDWData->x, sizeof(UNION_HEADER));
+        memcpy(&m_stSavePDWData.x, &pstPDWData->x, sizeof(union UNION_HEADER));
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
         SetPDWID(m_pstPDWData->GetPDWID());
@@ -385,14 +392,14 @@ STR_SCANPT *CScanSigAnal::GetScanPulseTrain( int noCh )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-16 11:02:34
 //
-void CScanSigAnal::GetScanRes( unsigned int *pScanType, float *pScanPrd )
-{
-    UINT uiScnPrd;
-
-    m_theAnalScan->GetScanRes( pScanType, & uiScnPrd );
-
-    *pScanPrd = TOAmsCNV( uiScnPrd );
-}
+// void CScanSigAnal::GetScanRes( ENUM_AET_SCAN_TYPE *penScanType, float *pScanPrd )
+// {
+//     UINT uiScnPrd;
+//
+//     m_theAnalScan->GetScanRes( penScanType, & uiScnPrd );
+//
+//     *pScanPrd = (float) TOAmsCNV( uiScnPrd );
+// }
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -405,41 +412,22 @@ void CScanSigAnal::GetScanRes( unsigned int *pScanType, float *pScanPrd )
 //
 void CScanSigAnal::SaveEmitterPDWFile( STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
 {
+    CSigAnal::SaveEmitterPDWFile( pEmitter, & m_pstPDWData->stPDW[0], iPLOBID, bSaveFile );
+}
 
-#ifdef _WIN321
-	int i;
-	int total_count;
-	FILE *pdwfile;
-	TNEW_PDW *pPDW;
-	PDWINDEX *pPdwIndex;
-	PDWINDEX *pEmitterPdwIndex;
-
-	char filename[100];
-
-	CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
-	CAdvSigAnalView *pView = ( CAdvSigAnalView * ) pFrame->GetActiveView();
-
-	CString strFilename=pView->GetFileTitle();
-
-	LPTSTR p = strFilename.GetBuffer( 100 );
-
-	pPdwIndex = & m_pGrPdwIndex->pIndex[0];
-	sprintf( filename, "c:\\temp\\%s_emitter_%02d_ksp.pdw", p, index );
-	pdwfile = fopen( filename, "wb" );
-
-	total_count = pEmitter->stPDW.uiCount;
-
-	pEmitterPdwIndex = pEmitter->stPDW.pIndex;
-	for( i=0 ; i < total_count ; ++i ) {
-		pPDW = & m_pPdwBank->pPdw[ *pEmitterPdwIndex++ ];
-		fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );
-	}
-
-	fclose( pdwfile );
-
-	strFilename.ReleaseBuffer();
-
-#endif
+/**
+ * @brief     SaveDebug
+ * @param     char * pSourcefile
+ * @param     char * piLines
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-06 13:47:35
+ * @warning
+ */
+void CScanSigAnal::SaveDebug( const char *pSourcefile, int iLines )
+{
 
 }
 
@@ -555,9 +543,9 @@ void CScanSigAnal::SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID )
 		pdw.word[2] = ntohl( pPDW->word[2] );
 		pdw.word[3] = ntohl( pPDW->word[3] );
 
-		fwrite( & pdw, sizeof( TNEW_PDW ), 1, pdwfile );
+		fwrite( & pdw, sizeof( struct TNEW_PDW ), 1, pdwfile );
 #else
-		fwrite( pPDW, sizeof( TNEW_PDW ), 1, pdwfile );
+		fwrite( pPDW, sizeof( struct TNEW_PDW ), 1, pdwfile );
 #endif
 	}
 
@@ -569,4 +557,32 @@ void CScanSigAnal::SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID )
 
 }
 
+#ifdef _LOG_ANALTYPE_
+/**
+ * @brief     GetLogAnalType
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-21 11:52:09
+ * @warning
+ */
+bool CScanSigAnal::GetLogAnalType()
+{
+    bool bRet=true;
 
+    if( g_enLogAnalType == enALL ) {
+    }
+    else {
+        if( m_enAnalType == g_enLogAnalType ) {
+
+        }
+        else {
+            bRet = false;
+        }
+    }
+
+    return bRet;
+}
+
+#endif

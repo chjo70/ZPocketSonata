@@ -24,8 +24,8 @@
 
 
 // 랜 데이터 최대 크기
-#define _MAX_LANDATA        (200*1024)
-#define _MAX_LOBDATA        (_MAX_LANDATA/sizeof(SRxLOBData))
+//#define _MAX_LANDATA        (50*1024)
+//#define _MAX_LOBDATA        (_MAX_LANDATA/sizeof(struct SRxLOBData))
 
 
 
@@ -34,6 +34,8 @@
 #define _START_OPCODE_OF_OPCONTROL_             (0x0101)  // (0xA100)
 #define _START_OPCODE_OF_LIBRARY_               (0x0201)  // (0xA100)
 #define _START_OPCODE_OF_THREAT_                (0x0301)  // (0xA100)
+#define _START_OPCODE_OF_OPSYSVAR_              (0x0401)
+#define _START_OPCODE_OF_SYSERROR_              (0x0F01)
 
 #define _START_OPCODE_OF_THREAD_MESSAGE_        (0x80)  //(0xA000)
 
@@ -55,14 +57,24 @@
 
 
 
-// 대역별 방위 병합 오차
-#define _DEFAULT_AOA_ERROR_							(float) (1.0)       // 도(degree)
+// 방위 그룹화시 피크에서 좌우 반경 범위로 설정 정의
+#define _DEFAULT_AOA_GROUP_							(float) (1.0)       // 도(degree)
+
+
+// 방위 그룹화시 피크에서 좌우 반경 범위로 설정 정의
+#define _DEFAULT_FRQ_GROUP_							(float) (1000.0)    // 도(KHz)
 
 
 // 기본 마진 값
 #define _DEFAULT_FREQ_MARGIN_                       (float) (5.0)
 #define _DEFAULT_STABLE_MARGIN_                     (float) (2.0)
 
+#define _DEFAULT_AOA_GROUP_MARGIN_                  (7)
+
+#define _DEFAULT_STEADY_MIN_PA_DBM                  (-50)
+
+#define _DEFAULT_CONICAL_MIN_PERIOD_MS              (5)
+#define _DEFAULT_CONICAL_MAX_PERIOD_MS              (500)
 
 
 // 에미터 최소 펄스 신호 개수
@@ -72,8 +84,14 @@
 #define _DEFAULT_DELETETIME_                        (30)
 #define _DEFAULT_MIN_EMITTER_DELETETIME             (10)
 
+#define _DEFAULT_COUNT_OF_LOB_                      (10)
+#define _DEFAULT_MAX_COUNT_OF_LOB_                  (100)
+
 // 기본 라이브러리 버젼
 #define _DEFAULT_LIB_VERSION_                       (0)
+
+// CPU 온도 경고 임계값
+#define _DEFAULT_CPU_TEMP_WARNING_                  (90)
 
 
 #include "defines.h"
@@ -82,10 +100,6 @@
 #include "sysmsg.h"
 #include "thrmsg.h"
 #include "global.h"
-
-//#include "../Utils/ccommonutils.h"
-
-//#include "../Utils/stdstring.h"
 
 // 쓰레드에 대한 큐메시지 키 값 정의
 
@@ -237,8 +251,6 @@ struct STR_DETANAL_INFO {
     @brief  스캔 분석 관련 구조체 정의
 **/
 struct STR_SCANANAL_INFO {
-    ENUM_BoardID enBoardID;
-
     // 수집한 채널 정보
     unsigned int uiCh;
 
@@ -256,15 +268,76 @@ struct STR_SCANANAL_INFO {
     // 스캔 채널에 대해서 수집 시간 스텝 정보
     unsigned int uiScanStep;
 
-    void Set( ENUM_BoardID i_enBoardID, unsigned int i_uiCh, ENUM_COLLECTBANK i_enCollectBank, unsigned int i_uiAETID, unsigned int i_uiABTID, unsigned int i_uiABTIndex, unsigned int i_uiScanStep )
+    // 스캔 채널에 대해서 수집 시간 정보
+    unsigned int uiReqScanPeriod;
+
+    // 스캔 분석 결과
+    STR_SCANRESULT stScanResult;
+
+
+    /**
+     * @brief     Set
+     * @param     ENUM_BoardID i_enBoardID
+     * @param     unsigned int i_uiCh
+     * @param     ENUM_COLLECTBANK i_enCollectBank
+     * @param     unsigned int i_uiAETID
+     * @param     unsigned int i_uiABTID
+     * @param     unsigned int i_uiABTIndex
+     * @param     unsigned int i_uiScanStep
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-08-17 09:08:01
+     * @warning
+     */
+    void Set( unsigned int i_uiCh, ENUM_COLLECTBANK i_enCollectBank, unsigned int i_uiAETID, unsigned int i_uiABTID, unsigned int i_uiABTIndex, unsigned int i_uiReqScanPeriod, unsigned int i_uiScanStep )
     {
-        enBoardID = i_enBoardID;
+        uiCh = i_uiCh;
+        enCollectBank = i_enCollectBank;
+        uiAETID = i_uiAETID;
+        uiABTID = i_uiABTID;
+        uiABTIndex = i_uiABTIndex;
+        uiReqScanPeriod = i_uiReqScanPeriod;
+        uiScanStep = i_uiScanStep;
+
+        memset( & stScanResult, 0, sizeof( stScanResult ) );
+
+        stScanResult.enResult = _spAnalFail;
+        stScanResult.enScanType = ENUM_AET_SCAN_TYPE::E_AET_SCAN_UNKNOWN;
+
+    }
+
+    /**
+     * @brief     Set
+     * @param     ENUM_BoardID i_enBoardID
+     * @param     unsigned int i_uiCh
+     * @param     ENUM_COLLECTBANK i_enCollectBank
+     * @param     unsigned int i_uiAETID
+     * @param     unsigned int i_uiABTID
+     * @param     unsigned int i_uiABTIndex
+     * @param     unsigned int i_uiScanStep
+     * @param     STR_SCANRESULT i_scanResult
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-08-17 09:08:04
+     * @warning
+     */
+    void Set( unsigned int i_uiCh, ENUM_COLLECTBANK i_enCollectBank, unsigned int i_uiAETID, unsigned int i_uiABTID, unsigned int i_uiABTIndex, unsigned int i_uiReqScanPeriod, unsigned int i_uiScanStep, STR_SCANRESULT *i_pscanResult)
+    {
         uiCh = i_uiCh;
         enCollectBank = i_enCollectBank;
         uiAETID = i_uiAETID;
         uiABTID = i_uiABTID;
         uiABTIndex = i_uiABTIndex;
         uiScanStep = i_uiScanStep;
+        uiReqScanPeriod = i_uiReqScanPeriod;
+
+        if( i_pscanResult != NULL ) {
+            stScanResult = *i_pscanResult;
+        }
 
     }
 
@@ -278,11 +351,18 @@ union UNI_MSG_DATA {
     unsigned int uiData;
     time_t tiNow;
 
+    SELDELETE stDelete;
+
+    SELREQSCAN stReqScan;
+    ENUM_AET_USER_SCAN_STAT enUserScanStat;
+
     STR_COLLECT_INFO strCollectInfo;
     STR_DETANAL_INFO strDetAnalInfo;
     STR_SCANANAL_INFO strScanAnalInfo;
 
     STR_LOG_INFO strLogInfo;
+
+    SELUSERSCANRESULT stUserScanResult;
 
     char szData[32 * 2];
 
@@ -291,5 +371,4 @@ union UNI_MSG_DATA {
     STR_SCANANAL_INFO *GetScanAnalInfo() { return &strScanAnalInfo; }
 
 };
-
 

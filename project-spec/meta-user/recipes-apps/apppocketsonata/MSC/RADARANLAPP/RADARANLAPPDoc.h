@@ -9,8 +9,11 @@
 
 #include "../RadarAnl/RadarAnlAlgorithm.h"
 
-
+#ifdef _MSSQL_
 class CRADARANLAPPDoc : public CDocument, public CMSSQL
+#else
+class CRADARANLAPPDoc : public CDocument
+#endif
 {
 protected: // serialization에서만 만들어집니다.
 	CRADARANLAPPDoc();

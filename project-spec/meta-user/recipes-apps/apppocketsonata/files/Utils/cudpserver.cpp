@@ -1,4 +1,14 @@
-﻿
+﻿/**
+
+    @file      cudpserver.cpp
+    @brief
+    @details   ~
+    @author    조철희
+    @date      31.05.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
 #include "pch.h"
 
 #include <stdio.h>
@@ -15,14 +25,20 @@
 #include <arpa/inet.h>
 #include <sys/select.h>
 
-#elif _MSC_VER
+#elif defined(_MSC_VER)
 #include <io.h>
 #include <winsock.h>
 #include <ws2tcpip.h>
 
+
 #endif
 
 #include "cudpserver.h"
+
+#include "../System/csysconfig.h"
+
+
+extern CSysConfig *g_pTheSysConfig;
 
 /**
  * @brief CUDPServer::CUDPServer
@@ -30,25 +46,60 @@
  * @param pClassName
  * @param iPort
  */
-CUDPServer::CUDPServer( int iPort )
+CUDPServer::CUDPServer( char *szIPAddress, int iPort )
 {
-    m_iPort = iPort;
+    //
+    strcpy( m_szIPAddress, szIPAddress );
+
+    m_iPort = iPort++;
 
     // 체크 서버/클라이언트 포트 번호 할당
-    m_iCheckServerPort = m_iPort + 1;
+    m_iServerPort = iPort++;
+    m_iClientPort = iPort++;
+    m_iCheckServerPort = iPort++;
+
+    m_bGetKey = true;
+
+    printf( "\n UDP서버 포트[%s:%d]에서 대기하고 있습니다...", szIPAddress, m_iServerPort );
+
+#ifdef __VXWORKS__
+    m_tThread = taskSpawn( (char *) "tUDPServer", tUDP_SERVER, VX_STDIO | VX_SUPERVISOR_MODE | VX_FP_TASK | VX_ALTIVEC_TASK, 64000, ( FUNCPTR ) ThreadRoutine, (_Vx_usr_arg_t) this, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+
+#elif _MSC_VER
+    m_tThread = thread( ThreadRoutine, this );
+
+    // m_tThread.join();
+#endif
 
     Init();
 
     Alloc();
+
 }
 
-
 /**
- * @brief CMultiServer::~CMultiServer
+ * @brief     ~CUDPServer
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-31 10:00:40
+ * @warning
  */
 CUDPServer::~CUDPServer()
 {
-    printf( "객체를 종료 처리 합니다..." );
+
+    printf( "\n[CUDPServer]객체를 종료 처리 합니다..." );
+
+#ifdef __VXWORKS__
+    printf( "\ntUDPServer를 종료합니다." );
+    taskDelete( m_tThread );
+
+#elif _MSC_VER
+    printf( "\ntUDPServer를 종료합니다." );
+    m_tThread.detach();
+
+#endif
 
     Free();
 }
@@ -90,122 +141,113 @@ void CUDPServer::Free()
  * @date      2023-05-24, 22:06
  * @warning
  */
-void CUDPServer::Run()
+void CUDPServer::RunServer()
 {
+#ifdef __VXWORKS__
+    int opt = true, /* addresslen, */ iActivity, iRead, stdInFd;
+    socklen_t addresslen;
+
+#else
     int opt = true, addresslen, iActivity, iRead, stdInFd;
-    int iMasterSocket;
+
+#endif
 
     char cChar;
 
-    struct sockaddr_in sockAddress, clienAddress;
+    struct sockaddr_in sockAddress, clientAddress;
 
     struct timeval stTimeOut;
 
-    fd_set readfds, writefds, original_socket;
+    fd_set readfds;
 
     char szReceiveMessage[MAX_MSG];
 
-    stTimeOut.tv_sec = 5;
+    // 수신 명령어 또는 키보드 저장소 클리어
+    m_szMessage[0] = 0;
+
+#ifdef _MSC_VER
+    stTimeOut.tv_sec = 5000;
+#else
+    stTimeOut.tv_sec = 3;
+#endif
     stTimeOut.tv_usec = 0;
 
-    printf( "\n[서버] 소켓을 설정 합니다..." );
-
+    // stdout input key 얻기
     stdInFd = SaveStdInOption();
 
-    //create a master socket
-    if( ( iMasterSocket = socket( AF_INET, SOCK_DGRAM, 0 ) ) <= 0 ) {
-#ifdef _MFC_VER
-        int errorCode = WSAGetLastError();
-#endif
-        perror( "Master Socket 실패" );
-    }
+    CreateServer( m_iServerPort );
 
-    //set master socket to allow multiple connections ,
-    //this is just a good habit, it will work without this
-    if( setsockopt(iMasterSocket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 ) {
-        perror( "Master Socket 소켓 옵션");
-    }
+    // printf( "\n UDP서버 포트[%d/%d]에서 대기하고 있습니다...", m_iServerPort, stdInFd );
 
-    //type of socket created
-    sockAddress.sin_family = AF_INET;
-    sockAddress.sin_addr.s_addr = INADDR_ANY;
-    sockAddress.sin_port = htons( m_iPort );
-
-    if( bind( iMasterSocket, (struct sockaddr *)&sockAddress, sizeof(sockAddress)) < 0 ) {
-        perror( "Bind 실패");
-    }
-    if( setsockopt( iMasterSocket, SOL_SOCKET, SO_KEEPALIVE, ( const char * ) &opt, sizeof( opt ) ) < 0 ) {
-        perror( "소켓 옵션(SO_KEEPALIVE)" );
-    }
-    else {
-#ifdef _MSC_VER
-        int optionVal;
-
-        optionVal = 60;
-        setsockopt( iMasterSocket, IPPROTO_UDP, TCP_KEEPCNT, ( const char * ) &optionVal, sizeof( optionVal ) );
-
-        optionVal = 5;
-        setsockopt( iMasterSocket, IPPROTO_UDP, TCP_KEEPIDLE, ( const char * ) &optionVal, sizeof( optionVal ) );
-
-        optionVal = 5;
-        setsockopt( iMasterSocket, IPPROTO_UDP, TCP_KEEPINTVL, ( const char * ) &optionVal, sizeof( optionVal ) );
-#endif
-
-    }
-
-
-    printf( "\n 포트[%d]에서 대기하고 있습니다...", m_iPort );
-
-    //accept the incoming connection
     addresslen = sizeof(sockAddress);
-    puts( " Waiting for connections ..." );
 
     while( true ) {
-        //clear the socket set
-        FD_ZERO( &original_socket );
-
         FD_ZERO( & readfds );
-        FD_ZERO( & writefds );
+
+        if( m_bGetKey == true ) {
+#ifdef _MSC_VER
+            // FD_SET( stdInFd, &readfds );
+#else
+            FD_SET( stdInFd, &readfds );
+#endif
+        }
+
+        FD_SET( m_iServerSocket, &readfds);
 
 #ifdef _MSC_VER
 #else
-        FD_SET( stdInFd, &readfds );
+        ioctl( stdInFd, FIORFLUSH, 0 );
 #endif
 
-        FD_SET( iMasterSocket, &readfds);
-        FD_SET( iMasterSocket, &writefds );
-
-        iActivity = select( iMasterSocket + 1 , &readfds , NULL, NULL , &stTimeOut );
+        iActivity = select( (int)( m_iServerSocket + (SOCKET) 1 ) , &readfds , NULL, NULL , &stTimeOut );
 
         if ((iActivity < 0) && (errno!=EINTR) ) {
+            ReStoreStdInOption( stdInFd );
             perror( "select 에러" );
-
+            break;
         }
         else if( iActivity == 0 ) {
-            printf( "\n timeout..." );
-            // break;
+            ReStoreStdInOption( stdInFd );
+
+            stTimeOut.tv_sec = 100000;
+
+            // printf( "\n [클라이언트] 타임아웃...그리고 UDP 서버 종료..." );
+
+            m_bGetKey = false;
+            m_szMessage[0] = KEY_TIMEOUT;
         }
 
         // 포트에서 수신되는 메시지 처리
-        if( FD_ISSET( iMasterSocket, &readfds ) ) {
+        if( FD_ISSET( m_iServerSocket, &readfds ) ) {
             char buffer[100];
 
-            FD_CLR( iMasterSocket, &readfds );
-            iRead = recvfrom( iMasterSocket, szReceiveMessage, MAX_MSG, 0, ( struct sockaddr * ) & clienAddress, & addresslen );
-            inet_ntop( AF_INET, &clienAddress.sin_addr, buffer, sizeof( buffer ) );
+            ReStoreStdInOption( stdInFd );
+
+            FD_CLR( m_iServerSocket, &readfds );
+            iRead = recvfrom( m_iServerSocket, szReceiveMessage, MAX_MSG, 0, ( struct sockaddr * ) & clientAddress, & addresslen );
+            inet_ntop( AF_INET, &clientAddress.sin_addr, buffer, sizeof( buffer ) );
             printf( "\n read data...from[%s]", buffer );
 
+            m_szMessage[0] = szReceiveMessage[0];
+
         }
-//         else if( FD_ISSET( iMasterSocket, &writefds ) ) {
-//             printf( "\n writefds..." );
-//         }
         else if( FD_ISSET( stdInFd, &readfds ) ) {
-            printf( "\n readfds..." );
 #ifdef _MSC_VER
-            _read( stdInFd, &cChar, 1 );           /* read the key just hit */
+            _read( stdInFd, &cChar, 1 );
 #else
-            read( stdInFd, &cChar, 1 );           /* read the key just hit */
+            read( stdInFd, &cChar, 1 );
 #endif
+            printf( "\n readfds..." );
+
+            ReStoreStdInOption( stdInFd );
+
+            m_szMessage[0] = cChar;
+
+            SendAllUDPServer();
+
+            stTimeOut.tv_sec = 100000;
+
+            m_bGetKey = false;
         }
         else {
 
@@ -213,7 +255,18 @@ void CUDPServer::Run()
 
     }
 
-    ReStoreStdInOption();
+    // ReStoreStdInOption( stdInFd );
+#if 0
+    while( true ) {
+        printf( "\n Out of key..." );   WhereIs;
+    }
+#else
+    // WhereIs;
+    WhereIs;
+
+#endif
+
+    CloseSocket( m_iServerSocket );
 
 }
 
@@ -231,9 +284,8 @@ int CUDPServer::SaveStdInOption()
     int stdInFd;
 
 #ifdef __VXWORKS__
-    int tShell_priority;
-
-    taskPriorityGet( 0, & tShell_priority );
+//     int tShell_priority;
+//     taskPriorityGet( 0, & tShell_priority );
 
     stdInFd = ioTaskStdGet( taskNameToId( ( char * ) "tShell0" ), 0 );
 
@@ -242,6 +294,13 @@ int CUDPServer::SaveStdInOption()
 
     // printf( "\n save_options[%x], new_option[%x]" , save_options, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
     ioctl( stdInFd, FIOSETOPTIONS, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
+
+    m_ShellTaskID = taskNameToId( ( char * ) "tShell0" );
+    if( TASK_ID_ERROR != m_ShellTaskID ) {
+    	taskSuspend( m_ShellTaskID );
+    }
+
+    ioctl( stdInFd, FIORFLUSH, 0 );
 
 #else
     stdInFd = _fileno( stdin );
@@ -261,12 +320,15 @@ int CUDPServer::SaveStdInOption()
  * @date      2023-05-27 17:22:24
  * @warning
  */
-void CUDPServer::ReStoreStdInOption()
+void CUDPServer::ReStoreStdInOption( int stdInFd )
 {
 #ifdef __VXWORKS__
-    /* Leave raw mode */
     ioctl( stdInFd, FIOSETOPTIONS, m_iStdinOption );
     ioctl( stdInFd, FIOFLUSH, 0 );
+
+    if( TASK_ID_ERROR != m_ShellTaskID ) {
+        taskResume( m_ShellTaskID );
+    }
 
 #endif
 
@@ -287,27 +349,29 @@ bool CUDPServer::CreateServer( int iPort )
     struct sockaddr_in sockAddress;
 
     int opt = 1;
+
+
     try {
         if( ( m_iServerSocket = socket( AF_INET, SOCK_DGRAM, 0 ) ) <= 0 ) {
-#ifdef _MFC_VER
+#ifdef _MSC_VER
             int errorCode = WSAGetLastError();
 #endif
-            throw ENUM_ERROF_OF_SOCKET;
+            bRet = false;
+            //throw ENUM_ERROF_OF_SOCKET;
         }
 
-        //set master socket to allow multiple connections ,
-        //this is just a good habit, it will work without this
         if( setsockopt( m_iServerSocket, SOL_SOCKET, SO_REUSEADDR, ( char * ) &opt, sizeof( opt ) ) < 0 ) {
-            throw ENUM_ERROF_OF_SOCKETOPT;
+            bRet = false;
+            //throw ENUM_ERROF_OF_SOCKETOPT;
         }
 
-        //type of socket created
         sockAddress.sin_family = AF_INET;
         sockAddress.sin_addr.s_addr = INADDR_ANY;
         sockAddress.sin_port = htons( iPort );
 
         if( bind( m_iServerSocket, ( struct sockaddr * ) &sockAddress, sizeof( sockAddress ) ) < 0 ) {
-            throw ENUM_ERROF_OF_BIND;
+            bRet = false;
+            //throw ENUM_ERROF_OF_BIND;
         }
 #if 0
         if( setsockopt( m_iServerSocket, SOL_SOCKET, SO_KEEPALIVE, ( const char * ) &opt, sizeof( opt ) ) < 0 ) {
@@ -347,6 +411,87 @@ bool CUDPServer::CreateServer( int iPort )
 }
 
 /**
+ * @brief     SendAllUDPServer
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-31 10:02:44
+ * @warning
+ */
+void CUDPServer::SendAllUDPServer()
+{
+    int i, iRet;
+    SOCKET iClientSocket;
+    struct sockaddr_in clientAddress;
+
+    char szInetAddress[100];
+
+    iClientSocket = socket( AF_INET, SOCK_DGRAM, 0 );
+#ifdef _MSC_VER
+    ZeroMemory( & clientAddress, sizeof( clientAddress ) );
+
+#else
+    memset( & clientAddress, 0, sizeof( clientAddress ) );
+
+#endif
+
+    int iStart = g_pTheSysConfig->GetSBCFromIP();
+    int iEnd = g_pTheSysConfig->GetSBCToIP();
+
+    for( i=iStart ; i < iEnd ; ++i ) {
+#ifdef _MSC_VER
+        sprintf( szInetAddress, "10.29.245.%d", 51 + 0 );
+#else
+        sprintf( szInetAddress, "192.168.0.%d", i );
+
+#endif
+
+        if( strcmp( m_szIPAddress, szInetAddress ) == 0 ) {
+            WhereIs;
+            continue;
+        }
+        else {
+            clientAddress.sin_family = AF_INET;
+            clientAddress.sin_addr.s_addr = inet_addr( szInetAddress );
+            clientAddress.sin_port = htons( m_iClientPort );
+
+            iRet = sendto( iClientSocket, m_szMessage, (int) strlen( m_szMessage ), 0, ( struct sockaddr * ) & clientAddress, sizeof( struct sockaddr ) );
+            if( iRet > 0 ) {
+                printf( "\n[%s:%d]에 메시지[%d]를 전송합니다.", szInetAddress, m_iClientPort, m_szMessage[0] );
+            }
+            else {
+                printf( "*" );
+            }
+        }
+
+    }
+
+}
+
+/**
+ * @brief     CloseSocket
+ * @param     int iSocket
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-04 14:51:15
+ * @warning
+ */
+void CUDPServer::CloseSocket( SOCKET iSocket )
+{
+#ifdef _MSC_VER
+    closesocket( iSocket );
+#else
+
+    shutdown( iSocket, SHUT_RDWR );
+    close( iSocket );
+
+#endif
+}
+
+/**
  * @brief     CheckServer
  * @return    void
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
@@ -357,7 +502,13 @@ bool CUDPServer::CreateServer( int iPort )
  */
 void CUDPServer::CheckServer()
 {
+#ifdef __VXWORKS__
+	int /* iAddresslen, */ iActivity, iRead;
+	socklen_t iAddresslen;
+#else
     int iAddresslen, iActivity, iRead;
+
+#endif
 
     struct sockaddr_in sockAddress, clienAddress;
 
@@ -385,14 +536,14 @@ void CUDPServer::CheckServer()
 
             FD_SET( m_iServerSocket, &readfds );
 
-            iActivity = select( m_iServerSocket + 1, &readfds, NULL, NULL, &stTimeOut );
+            iActivity = select( (int)( m_iServerSocket + (SOCKET) 1), &readfds, NULL, NULL, &stTimeOut );
 
             if( ( iActivity < 0 ) && ( errno != EINTR ) ) {
                 perror( "select 에러" );
                 break;
             }
             else if( iActivity == 0 ) {
-                printf( "\n timeout..." );
+                printf( "\n [서버] timeout..." );
                 break;
             }
 
@@ -405,7 +556,7 @@ void CUDPServer::CheckServer()
                 inet_ntop( AF_INET, &clienAddress.sin_addr, buffer, sizeof( buffer ) );
                 printf( "\n read data from[%s]", buffer );
 
-                sendto( m_iServerSocket, szSendMessage, strlen( szSendMessage ), 0, ( struct sockaddr * ) & clienAddress, sizeof( struct sockaddr ) );
+                sendto( m_iServerSocket, szSendMessage, (int) strlen( szSendMessage ), 0, ( struct sockaddr * ) & clienAddress, sizeof( struct sockaddr ) );
             }
         }
     }
@@ -414,8 +565,7 @@ void CUDPServer::CheckServer()
 
 }
 
-
-    /**
+/**
  * @brief     ReadBytes
  * @param     unsigned char * pchData
  * @param     int length
@@ -426,30 +576,28 @@ void CUDPServer::CheckServer()
  * @date      2023-05-24, 21:38
  * @warning
  */
-    int CUDPServer::ReadBytes( int iSocket, char *pchData, int length )
+int CUDPServer::ReadBytes( int iSocket, char *pchData, int length )
+{
+    char message[MAX_MSG];
+
+    int size;
+    int maxSize = ( length > MAX_MSG ) ? MAX_MSG : length;
+    int bytesRead = 0;
+
+    while( bytesRead < length )
     {
-        char message[MAX_MSG];
-
-        int size;
-        int maxSize = ( length > MAX_MSG ) ? MAX_MSG : length;
-        int bytesRead = 0;
-
-        while( bytesRead < length )
-        {
-            size = recv( iSocket, message, maxSize, 0 );
-            if( size <= 0 ) {
-                //throw CLIENT_DISCONNECTED;
-            }
-            else {
-                memcpy( pchData + bytesRead, message, size );
-                bytesRead += size;
-                maxSize = ( length - bytesRead > MAX_MSG ) ? MAX_MSG : length - bytesRead;
-            }
+        size = recv( iSocket, message, maxSize, 0 );
+        if( size <= 0 ) {
+            //throw CLIENT_DISCONNECTED;
         }
-        return 1;
+        else {
+            memcpy( pchData + bytesRead, message, size );
+            bytesRead += size;
+            maxSize = ( length - bytesRead > MAX_MSG ) ? MAX_MSG : length - bytesRead;
+        }
     }
-
-
+    return 1;
+}
 
 /**
  * @brief CMySocket::CloseSocket
@@ -459,11 +607,21 @@ void CUDPServer::CheckServer()
  */
 void CUDPServer::CloseSocket( int iSocket, struct sockaddr_in *pAddress, int *pClientSocket )
 {
+#ifdef __VXWORKS__
+    socklen_t addrlen;
+#else
     int addrlen;
+#endif
+
 
     addrlen = sizeof(sockaddr_in);
     //Somebody disconnected , get his details and print
+#ifdef __VXWORKS__
+    getpeername(iSocket , (struct sockaddr*) pAddress , &addrlen);
+#else
     getpeername(iSocket , (struct sockaddr*) pAddress , (int *)&addrlen);
+#endif
+
     printf( "\n연결 단절: ip %s , port %d" , inet_ntoa(pAddress->sin_addr) , ntohs(pAddress->sin_port));
 
     //Close the socket and mark as 0 in list for reuse

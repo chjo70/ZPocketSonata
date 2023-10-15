@@ -16,7 +16,7 @@
  컴파일 일시 :
 *****************************************************************************************/
 
-#include "stdafx.h"
+#include "pch.h"
 
 #include <time.h>
 #include <stdio.h>
@@ -31,9 +31,8 @@
 
 #include "ccommonutils.h"
 
+#include "../gen-versioninfo.h"
 
-//#include "../INC/_common.h"
-//#include "../BSP/sbc_str.h"
 
 // 업데이트 버젼
 // Ver 1.05 : 2005-12-19 4:20오후
@@ -79,30 +78,62 @@ static std::string g_strVersion;
 
 
 /**
- * @brief ShowProgramTitle
+ * @brief     _ShowProgramTitle
+ * @param     void
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-04 10:37:55
+ * @warning
  */
 void _ShowProgramTitle( void )
 {
+    char szDate[100], szHeader[200]={0};
+    CCommonUtils::getStringPresentTime( szDate, sizeof( szDate ) );
+
+    CCommonUtils::WallMakePrint( szHeader, '~' );
+    Log( enNormal, "%s", szHeader);
+    Log( enNormal, "[%s] 프로그램 시작 시간 [%s] 버젼 (%s)...", PROGRAM_NAME, szDate, GEN_VER_VERSION_STRING );
 
 #ifdef _POCKETSONATA_
-#elif defined(_ELINT_) || defined(_XBAND_) || defined(_701_) || defined(_SONATA_)
+    Log( enNormal, "%s", szHeader );
+    Log( enNormal, " ZZZZZZZZ    PPPPPPPP   OOOOO    CCCCCC  KK    KK  EEEEEE  TTTTTTTTT" );
+    Log( enNormal, "      ZZ     PP    PP  OO   OO  CC       KK  KK    EE         TT" );
+    Log( enNormal, "    ZZ       PPPPPPPP  OO   OO  CC       KKKK      EEEEEE     TT" );
+    Log( enNormal, "  ZZ         PP        OO   OO  CC       KK  KK    EE         TT" );
+    Log( enNormal, " ZZZZZZZZ    PP         OOOOO    CCCCCC  KK    KK  EEEEEE     TT" );
+    Log( enNormal, "%s", szHeader );
+
+#elif defined(_712_)
+    Log( enNormal, "%s", szHeader );
+    Log( enNormal, " 77777777    11      22222           EEEEEE  LL      II  N      N TTTTTT  " );
+    Log( enNormal, "      77     111         22          EE      LL      II  N NN   N   TT   " );
+    Log( enNormal, "    77       11       22      ====   EEEEEE  LL      II  N  NN  N   TT   " );
+    Log( enNormal, "  77         11     22               EE      LL      II  N   NN N   TT   " );
+    Log( enNormal, " 77          11     2222222          EEEEEE  LLLLLL  II  N    NNN   TT   " );
+    Log( enNormal, "%s", szHeader );
+
+#elif defined(_ELINT_)
+    Log( enNormal, "%s", szHeader );
+
+    Log( enNormal, "%s", szHeader );
+
+
+#elif defined(_XBAND_)
+    Log( enNormal, "%s", szHeader );
+    Log( enNormal, " XXXXXXXX    BBBBBBB      AA    NN   NN  DDDDDDD   " );
+    Log( enNormal, " XX   XX     BB    BB    A  A   NNN  NN  DD    DD  " );
+    Log( enNormal, "   XXX       BBBBBBB    AAAAAA  NN N NN  DD    DD  " );
+    Log( enNormal, "  XX  XX     BB    BB   A    A  NN  NNN  DD    DD  " );
+    Log( enNormal, " XXXXXXXX    BBBBBBB    A    A  NN   NN  DDDDDDD   " );
+    Log( enNormal, "%s", szHeader );
+
 #else
-	if( gnoPrc == prc_CIP ) {
-#ifndef _TESTBIT_
-        int i;
-		for( i=prc_CIP ; i <= _spCoSbc ; ++i ) {
-			pDebug = (STR_DEBUG *) ( ahwVME_CMS + aDebug );
-			pDebug = pDebug + i;
-			memcpy( str1, pDebug->_date, sizeof( __DATE__ ) );
-			memcpy( str2, pDebug->_time, sizeof( __TIME__ ) );
-#ifndef __VXWORKS__
-			printf( "\n  Prc[%d] Compile Date[%s" , i, str1 );
-			printf( ", %s]" , str2 );
+    _MSG( "장비 헤더 메시지를 생성해야 합니다." );
+
 #endif
-		}
-    }
-#endif
-#endif
+
 
 }
 
@@ -114,7 +145,7 @@ const char *_GetProgramVersion()
 {
 
     //memset( g_szVersion, 0, sizeof(g_szVersion) );
-    g_strVersion = PROGRAM_VERSION;
+    g_strVersion = GEN_VER_VERSION_STRING;
 
     //sscanf( __DATE__, "%s %d %d" , szMon, & iDate, & iYear );
     //strcat( g_szVersion, __DATE__ );

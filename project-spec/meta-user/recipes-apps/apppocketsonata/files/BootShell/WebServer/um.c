@@ -1237,7 +1237,7 @@ int	umSetAccessLimitGroup(char_t *url, char_t *group)
 char_t *umGetAccessLimit(char_t *url)
 {
 	char_t	*urlRet, *urlCheck, *lastChar;
-	int		len;
+	size_t		len;
 	
 	a_assert(url && *url);
 	urlRet = NULL;

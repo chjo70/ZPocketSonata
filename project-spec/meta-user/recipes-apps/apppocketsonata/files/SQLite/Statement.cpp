@@ -8,14 +8,15 @@
  * Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
  * or copy at http://opensource.org/licenses/MIT)
  */
+
+#include "sqlite3.h"
+
 #include "Statement.h"
 
 #include "Database.h"
 #include "Column.h"
 #include "Assertion.h"
 #include "Exception.h"
-
-#include <sqlite3.h>
 
 namespace SQLite
 {

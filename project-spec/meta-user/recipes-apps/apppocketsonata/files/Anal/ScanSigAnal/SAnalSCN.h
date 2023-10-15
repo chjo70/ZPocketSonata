@@ -23,7 +23,6 @@
 #include "../SigAnal/_SigAnal.h"
 
 enum LowHighThreatType { LOWTHREAT=0, HIGHTHREAT, OBSCURITY } ;
-enum PseudoScanType { TrackUnknown=10, DetectUnknown, LowIllustrationTest } ;
 
 
 #ifdef __cplusplus
@@ -33,30 +32,28 @@ class CScanSigAnal;
 class CSAnalScan : public CAnalPRI, public CMakeAET
 {
 private:
+    int m_iMinSteadyPAAmplitude;
+    unsigned int m_uiMinConicalPeriod;
+    unsigned int m_uiMaxConicalPeriod;
+
     SRxABTData *m_pScnAet;
 
     unsigned int m_uiMaxPdw;
 
-    SRxLOBData m_LOBData[ MAX_AET+1 ];
-
-
 protected:
-    //##ModelId=452B0C5300EF
     CScanSigAnal *m_pScanSigAnal;
 
 protected:
     STR_EMITTER *m_pEmitter;
 
-	//##ModelId=452B0C450148
 	UINT m_uiCanPeak[_spMaxSample];
 
 	/*! \bug  스캔 주기를 int 에서 unsigned integer로 형 변경함.
 	    \date 2009-10-08 12:39:49, 조철희
 	*/
-    UINT m_uiScnPrd;										//! 스캔 주기값
-	unsigned char m_ucScnTyp;										//! 스캔 형태
+    STR_SCANRESULT m_stScanResult;
 
-	STR_AUTOCOR m_nAutoCor;
+	STR_AUTOCOR m_stAutoCor;
 	UINT m_uiCoCanPeak;
 
 	UINT m_nSampleTime;
@@ -64,10 +61,30 @@ protected:
 	unsigned int m_uinoEMT;
 
 	STR_SCANPT *m_pScanPt;
-	STR_SAMPLE m_nSample;
-    UINT m_nCoModWc[256+1];
+	STR_SAMPLE m_stSample;
+    //UINT m_nCoModWc[TOTAL_ITEMS_OF_THREAT_NODE +1];
 
-    UINT stOffPdw;
+    UINT m_uiOffCoPDW;
+
+private:
+    void CalcSamplingTime();
+    void Interpolation();
+    void ReplaceOffSampling();
+    void SamplingProcess();
+    float Normalize();
+    bool CheckSteadySignal();
+    void AutoCorerelation();
+    void KurtosisSkewness( STR_SAMPLE *pSample );
+    EN_SCANRESULT ScanTypeDecision();
+    EN_SCANRESULT ScanTypeLowDecision( UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUTOCOR *pAcf );
+    UINT FindPeak();
+
+    void SearchLowHghInArray( int *series, UINT co, STR_LOWHIGH *lh );
+
+    UINT CalcSamplingTime( UINT priMean );
+    UINT CalcSamplingTime( UINT noEMT, UINT priMean );
+
+    void SaveScanResult( STR_SCANRESULT *pstScanResul );
 
 public:
     CSAnalScan( void *pParent, unsigned int uicoMaxPdw );
@@ -81,33 +98,17 @@ public:
 
 	//bool CompMeanDiff(int x, int y, int thresh);
 	//float MeanInArray( UINT *series, UINT co );
-    inline void GetScanRes( unsigned int *pScanType, UINT *pScanPrd ) { *pScanType = m_ucScnTyp, *pScanPrd= m_uiScnPrd; }
+    //inline void GetScanRes( ENUM_AET_SCAN_TYPE *penScanType, UINT *pScanPrd ) { /* *penScanType = m_enScnType, *pScanPrd= m_uiScnPrd; */}
 	// inline STR_SCANPT *GetScanPulseTrain( int noCh ) { return & stScanPt[m_noCh]; }
 
 	//bool CheckControlWc( UINT noEMT );
 
 	UINT GetFlagControlWc( UINT noEMT );
-	UINT DetectNonTrackScanPattern( STR_SAMPLE *pSample, STR_AUTOCOR *pAutocf );
+    ENUM_AET_SCAN_TYPE DetectNonTrackScanPattern( STR_SAMPLE *pSample, STR_AUTOCOR *pAutocf );
     ENUM_AET_SCAN_TYPE HighIllustrationTest2( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf );
 	UINT PeriodVerify( void );
 
-	//float SDevInArray( UINT *series, int co, float mean );
-
-	void KurtosisSkewness( STR_SAMPLE *pSample );
-	UINT ScanTypeDecision( STR_SAMPLE *pSample, STR_AUTOCOR *pAcf );
-    UINT ScanTypeLowDecision(UINT uiPrdVer, STR_SAMPLE *pSample, STR_AUTOCOR *pAcf);
-	UINT FindPeak( STR_AUTOCOR *pAutoCor );
-	void AutoCorerelation( STR_SAMPLE *pSample, STR_AUTOCOR *pAutoCor );
-    bool CheckSteadySignal( STR_SAMPLE *pSample, UINT meanY );
-	float Normalize( int *series, UINT co, float *norm );
-	void Interpolation( STR_SAMPLE *pSample, STR_SCANPT *pScanPt );
-	void ReplaceOffSampling( STR_SAMPLE *pSample, STR_SCANPT *pScanPt );
-	void SearchLowHghInArray( int *series, UINT co, STR_LOWHIGH *lh );
-	void SamplingProcess();
-	UINT CalcSamplingTime( UINT priMean );
-	UINT CalcSamplingTime( UINT noEMT, UINT priMean );
-	void CalcSamplingTime();
-    EN_SCANRESULT AnalScan( int preAnalStat=0 );
+    EN_SCANRESULT AnalScan( STR_SCANRESULT *pstScanResult );
 	void Init( unsigned int uinoEMT=0, int noCh=0 );
     void MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int idxEmitter );
 
@@ -119,13 +120,14 @@ public:
     void ExtractRefStable() { }
 
     bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) { return 0; }
-    UINT ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri ) { return 0; }
+    //UINT ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri ) { return 0; }
 
     void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof ) { }
 
     void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { }
-    unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter) { return 0; }
-    UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
+    unsigned int ExtractStagger( _TOA framePri, STR_EMITTER *pEmitter) { return 0; }
+    UINT MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
+    UINT MedianPA( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
 
     _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount );
 
@@ -150,11 +152,14 @@ public:
 
 	void GetCollectTime( struct timespec *pTimeSpec );
 
+    ENUM_ANAL_TYPE GetAnalType();
 
     void DISP_FineLOB( SRxLOBData *pLOBData ) { }
-    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge=false );
 
     unsigned int IsStorePDW();
+
+    void SaveDebug( const char *pSourcefile, int iLines );
 
     CMakeAET* GetMakeAET() { return NULL; }
 
@@ -164,9 +169,17 @@ public:
     void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) { }
 
 
+
 #if defined(_ELINT_) || defined(_XBAND_)
     EN_RADARCOLLECTORID GetCollectorID();
     char *GetTaskID();
+#endif
+
+    inline void *GetParentSigAnal() { return ( void * ) m_pScanSigAnal; }
+    inline STR_SCANRESULT *GetScanResult() { return & m_stScanResult; }
+
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
 #endif
 
 };

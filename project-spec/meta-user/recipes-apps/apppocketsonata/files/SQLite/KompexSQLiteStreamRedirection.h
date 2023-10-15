@@ -51,7 +51,7 @@ namespace Kompex
 		//! Copy constrctor
 		Redirection(const Redirection& r);
 		//! Assignment operator
-		Redirection& operator=(const Redirection& r) {return *this;} 
+		// Redirection& operator=(const Redirection& r) {return *this;} 
 	};
 
 	//! std::cerr redirection.

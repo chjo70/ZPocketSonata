@@ -80,7 +80,7 @@
 #define ANZ_TIME_MS(A)      (unsigned long long int) ( (unsigned long long int) 125000 * (A) + 0.5 ) // ( (1000000./ 8.0)*(A) + 0.5)
 
 
-#ifdef _MFC_VER
+#ifdef _MSC_VER
 #define IRQ_PCI_LEFT            (25)
 #define IRQ_PCI_RIGHT           (30)
 #endif

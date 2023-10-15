@@ -1,4 +1,14 @@
-﻿
+﻿/**
+
+    @file      ELMsgDefn.h
+    @brief
+    @details   ~
+    @author    조철희
+    @date      16.06.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
 #pragma once
 
 
@@ -9,6 +19,8 @@ using namespace std;
 #include "../INC/PDW.h"
 
 #include "../Identify/ELCEDLibDataType2.h"
+
+#include "ELStringDefn.h"
 
 //#define XOR_I_DATA			(0x8A5A)
 //#define XOR_Q_DATA			(0x8A5A)
@@ -23,7 +35,12 @@ using namespace std;
 
 #define MAX_LOB_ITEMS					50		//
 
-//추가됨
+/**
+    @brief
+    @tparam T     -
+    @param  tObjp -
+    @retval       -
+**/
 template <class T>
 static T SwapEndian (T* tObjp)
 {
@@ -32,9 +49,9 @@ static T SwapEndian (T* tObjp)
 	return *tObjp;
 }
 
-
-
 #pragma pack( push, 1 )
+
+//#include "LOBABTAET.h"
 
 /*! 항공에서 수신되는 LOB 메시지의 Data 구조체
  * @struct  SRxLOBData
@@ -46,18 +63,16 @@ struct SRxLOBHeader
 {
     unsigned int uiNumOfLOB;
 
-// #ifdef _POCKETSONATA_
-//     unsigned int uiEWRecProc;   // EW수신처리판 번호
-// #endif
-
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned int uiEWRecProc;   // EW수신처리판 번호
+#endif
 
 };
 #endif
 
 
-
 #ifndef MAX_FREQ_PRI_STEP
-#define MAX_FREQ_PRI_STEP                   (MAX_STAGGER_LEVEL_ELEMENT)
+#define MAX_FREQ_PRI_STEP                   (MAX_STAGGER_LEVEL_POSITION)
 #endif
 
 
@@ -72,9 +87,9 @@ struct SRxLOBData {
 	unsigned int uiABTID;
 	unsigned int uiAETID;
 
-	time_t tiContactTime;			// _USE_32BIT_TIME_T 로 선언하면 32비트, 없으면 64비트로 설정됨.
+	unsigned int tiContactTime;			// _USE_32BIT_TIME_T 로 선언하면 32비트, 없으면 64비트로 설정됨.
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712)
 	unsigned short tiContactTimems;
 #else
     unsigned int tiContactTimems;
@@ -104,7 +119,7 @@ struct SRxLOBData {
 
 #endif
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 	unsigned char vSignalType;
 #else
     unsigned int vSignalType;
@@ -118,13 +133,8 @@ struct SRxLOBData {
 
 	unsigned int uiDIRatio;					// [1 %]
 
-#ifdef _POCKETSONATA_
-	unsigned char vFreqType;
-    unsigned char vFreqPatternType;
-#else
-    int vFreqType;
-    int vFreqPatternType;
-#endif
+    ENUM_AET_FRQ_TYPE vFreqType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE vFreqPatternType;
 
 	float fFreqPatternPeriod;                       // [us]
 	float fFreqMean;				// [10KHz]
@@ -133,7 +143,7 @@ struct SRxLOBData {
 	float fFreqDeviation;
     float fFreqMode;            // Freq 최빈수
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char vFreqPositionCount;
     unsigned char vFreqElementCount;
 #else
@@ -143,13 +153,8 @@ struct SRxLOBData {
 
 	float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
-#ifdef _POCKETSONATA_
-    unsigned char vPRIType;
-    unsigned char vPRIPatternType;
-#else
-	int vPRIType;
-	int vPRIPatternType;
-#endif
+    ENUM_AET_PRI_TYPE vPRIType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE vPRIPatternType;
 
 	float fPRIPatternPeriod;		// [us]
 	float fPRIMean;				// [1ns]
@@ -159,7 +164,7 @@ struct SRxLOBData {
     float fPRIMode;             // PRI 최빈수
 	float fPRIJitterRatio;		// [%]
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char vPRIPositionCount;
     unsigned char vPRIElementCount;
 #else
@@ -182,9 +187,9 @@ struct SRxLOBData {
     float fPAMode;              // 신호세기 최빈수
 
 #if defined(_XBAND_) || defined(_ELINT_)
-#elif defined(_POCKETSONATA_)
-	unsigned char ucScanType;
-	float fScanPeriod;			// [msec]
+#elif defined(_POCKETSONATA_) || defined(_712_)
+    ENUM_AET_SCAN_TYPE vScanType;
+	float fMeanScanPeriod;			// [msec]
 
 	unsigned char ucMOPType;				// 인트라 타입
     unsigned char ucDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
@@ -194,7 +199,7 @@ struct SRxLOBData {
 	float fMOPFreqDeviation;
 
 #else
-	int iScanType;
+    ENUM_AET_SCAN_TYPE vScanType;
 	float fScanPeriod;			// [msec]
 
 	int iMOPType;				// 인트라 타입
@@ -215,8 +220,8 @@ struct SRxLOBData {
 	int iIsStoreData;
 #endif
 
-    unsigned int uiCoPDWOfCollection;			// 신호 수집 개수
-	unsigned int uiCoPDWOfAnalysis;             // 분석된 PDW 개수
+    unsigned int uiNumOfCollectedPDW;			// 신호 수집 개수
+	unsigned int uiNumOfAnalyzedPDW;             // 분석된 PDW 개수
 
 #if defined(_XBAND_) || defined(_ELINT_)
 	int iNumOfIQ;
@@ -230,8 +235,7 @@ struct SRxLOBData {
 	float fCollectLatitude;
 	float fCollectLongitude;
 
-#ifdef _POCKETSONATA_
-
+#if defined(_POCKETSONATA_) || defined(_712_)
 
 #elif defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
 	char aucTaskID[LENGTH_OF_TASK_ID];
@@ -265,7 +269,7 @@ struct SRxABTData {
     unsigned int uiABTID;
     unsigned int uiAETID;
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char vSignalType;
 #else
     unsigned int vSignalType;
@@ -273,8 +277,8 @@ struct SRxABTData {
 
     unsigned int uiCoLOB;
 
-	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
-	time_t tiLastSeenTime;
+    unsigned int tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+    unsigned int tiLastSeenTime;
 
     unsigned int uiRadarModePriority;
     unsigned int uiRadarPriority;
@@ -289,13 +293,8 @@ struct SRxABTData {
     float fDOAMin;
     float fDOADeviation;				// [0.1도]
 
-#if defined(_POCKETSONATA_)
-    unsigned char vFreqType;
-    unsigned char vFreqPatternType;
-#else
-    int vFreqType;
-    int vFreqPatternType;
-#endif
+    ENUM_AET_FRQ_TYPE vFreqType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE vFreqPatternType;
 
     float fFreqPatternPeriodMean;	  // [us]
     float fFreqPatternPeriodMin;	  // [us]
@@ -305,7 +304,7 @@ struct SRxABTData {
     float fFreqMin;
     float fFreqDeviation;
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char vFreqPositionCount;
     unsigned char vFreqElementCount;
 #else
@@ -315,13 +314,8 @@ struct SRxABTData {
 
     float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
-#if defined(_POCKETSONATA_)
-    unsigned char vPRIType;
-    unsigned char vPRIPatternType;
-#else
-    int vPRIType;
-    int vPRIPatternType;
-#endif
+    ENUM_AET_PRI_TYPE vPRIType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE vPRIPatternType;
 
     float fPRIPatternPeriodMean;							// [us]
     float fPRIPatternPeriodMin;							// [us]
@@ -332,7 +326,7 @@ struct SRxABTData {
     float fPRIDeviation;			// [1ns]
     float fPRIJitterRatio;							// [%]
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char vPRIPositionCount;
     unsigned char vPRIElementCount;
 #else
@@ -342,28 +336,33 @@ struct SRxABTData {
 
     float fPRISeq[MAX_FREQ_PRI_STEP];
 
-    float fPWMean;											// 1ns
+    float fPWMean;
     float fPWMax;
     float fPWMin;
     float fPWDeviation;
 
-    float fPAMean;											// 기존대로
+    float fPAMean;
     float fPAMax;
     float fPAMin;
     float fPADeviation;
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_701_) || defined(_SONATA_)
-#if defined(_POCKETSONATA_)
-    unsigned char vScanType;
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_701_) || defined(_SONATA_) || defined(_712_)
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    ENUM_AET_SCAN_TYPE vScanType;
 #else
     int vScanType;
 #endif
 
-    float fMeanScanPeriod;			// [usec]
+    float fMeanScanPeriod;
     float fMaxScanPeriod;			// [usec]
     float fMinScanPeriod;			// [usec]
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
+    ENUM_AET_SCAN_STAT vScanStat;
+#endif
+
+#if defined(_POCKETSONATA_) || defined(_712_)
     bool bHasIntraMod;
 #else
     bool iHasIntraMod;
@@ -373,10 +372,10 @@ struct SRxABTData {
     float fMinIntraMod;
 #endif
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char ucPEValid;
 #else
-    int ucPEValid;
+    int iPEValid;
 #endif
 
     float fLatitude;							// [deg]
@@ -388,13 +387,13 @@ struct SRxABTData {
     float fTheta;									// [0.1도]
     float fDistanceErrorOfThreat;	// [m]
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
     bool bValidity;
 #else
     int bValidity;
 #endif
 
-    unsigned int uiTotalPDWOfAnalysis;
+    unsigned int uiTotaOfPDW;
 
     unsigned int uiRadarIndex;                  // 레이더 인덱스 : ELNOT
 
@@ -404,10 +403,10 @@ struct SRxABTData {
 #if defined(_ELINT_)
     int iIsManualInput;
 
-    time_t tiFinalAlarmTime;
+    unsigned int tiFinalAlarmTime;
 #endif
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
 #else
 	int iStat;
 #endif
@@ -434,6 +433,7 @@ struct SRxABTData {
 }  ;
 #endif
 
+
 // 방사체 구조체 입니다.
 #ifndef _STR_AETDATA_STRUCT
 #define _STR_AETDATA_STRUCT
@@ -447,7 +447,7 @@ struct SRxAETData {
     char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
     char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
-    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+    char szRadarName[_MAX_RADARNAME_SIZE];
 
 #if defined(_XBAND_) || defined(_ELINT_)
     char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
@@ -456,10 +456,10 @@ struct SRxAETData {
     char szNickName[_MAX_NICKNAME_STRING_SIZE_];
     char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
 
-#if defined(_POCKETSONATA_)
-    unsigned char vPlatformType;
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned char vCategory;
 #else
-    int vPlatformType;
+    int vCategory;
 #endif
 
     unsigned int uiPinNum;
@@ -472,16 +472,16 @@ struct SRxAETData {
     unsigned int uiRadarPriority;
     unsigned int uiThreatPriority;
 
-	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
-	time_t tiLastSeenTime;
+    unsigned int tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+    unsigned int tiLastSeenTime;
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char ucValidity;
 #else
     int ucValidity;
 #endif
 
-#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_) || defined(_SONATA_)
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_) || defined(_SONATA_) || defined(_712_)
     float fDOAMean;                                 // [0.1도]
     float fDOAMax;
     float fDOAMin;
@@ -512,7 +512,7 @@ struct SRxAETData {
     unsigned int uiRadarModeIndex;
     unsigned int uiThreatIndex;
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char ucPEValid;
 #else
     int ucPEValid;
@@ -530,17 +530,20 @@ struct SRxAETData {
     char szIDInfo[_MAX_SIZE_OF_IDINFO];
 
 #if defined(_XBAND_) || defined(_ELINT_)
-    time_t tiFinalAlarmTime;
+    unsigned int tiFinalAlarmTime;
 
 #endif
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
 #else
     int iStat;
 #endif
 
 }  ;
 #endif
+
+//
+///////////////////////////////////////////////////////////////////////////////////
 
 struct SAETData {
     SRxLOBData stLOBData;
@@ -596,18 +599,9 @@ struct SCollectingData {
 
 } ;
 
-#ifndef SRxScanData_STRUCT
-#define SRxScanData_STRUCT
-struct STR_SCANRESULT {
-    //UINT uiABTID;
-    //UINT uiAETID;
 
-    EN_SCANRESULT enResult;
 
-    float fScanPeriod;     //! 스캔 주기값
-    UINT uiScanType;     //! 스캔 형태
-};
-#endif
+
 
 // struct SCollectingList
 // {
@@ -626,4 +620,20 @@ struct STR_TRKSCNPDWDATA {
 
 }  ;
 
+
 #pragma pack( pop )
+
+#ifndef SRxScanData_STRUCT
+#define SRxScanData_STRUCT
+struct STR_SCANRESULT {
+
+    EN_SCANRESULT enResult;
+    unsigned int uiScanPeriod;          //! 스캔 주기
+    ENUM_AET_SCAN_TYPE enScanType;      //! 스캔 형태
+
+    float fCoScanCollectingPDW;
+    float fScanDurationms;      // [ms]
+    unsigned int uiMedianPA;
+
+};
+#endif

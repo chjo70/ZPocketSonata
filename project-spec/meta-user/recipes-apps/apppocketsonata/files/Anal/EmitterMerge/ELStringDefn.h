@@ -1,5 +1,15 @@
-﻿#ifndef _H_EL_STRING_DEFN
-#define _H_EL_STRING_DEFN
+﻿/**
+
+    @file      ELStringDefn.h
+    @brief
+    @details   ~
+    @author    Cool Guy
+    @date      18.06.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+#pragma once
+
 
 #define LENGTH_OF_LOB_STRING	(14)
 
@@ -53,12 +63,23 @@ enum ENUM_PDW_AXIS_INFO
 // 	"상태"
 // };
 
+enum ENUM_AET_AOA {
+    E_AET_DOA_FIXED = 0,
+    E_AET_DOA_MULTI,
+
+    E_AET_DOA_GAUSSIAN,
+
+};
+
 
 //////////////////////////////////////////////////////////////////////////
-// AET - Frq Type
-#if defined(_XBAND_) || defined(_ELINT_) || defined(_POCKETSONATA_) || defined(_701_)
-enum ENUM_AET_FRQ_TYPE
-{
+//
+#if defined(_POCKETSONATA_) || defined(_712_)
+
+// 주파수 형태 정의
+#ifndef _ENUM_AET_FRQ_TYPE
+#define _ENUM_AET_FRQ_TYPE
+enum class ENUM_AET_FRQ_TYPE : unsigned char {
     E_AET_FRQ_FIXED = 0,
 	E_AET_FRQ_HOPPING,
 	E_AET_FRQ_AGILE,
@@ -69,10 +90,31 @@ enum ENUM_AET_FRQ_TYPE
 
     E_AET_MAX_FRQ_TYPE
 };
+#endif
+
+// PRI 형태 정의
+#ifndef _ENUM_AET_PRI_TYPE
+#define _ENUM_AET_PRI_TYPE
+enum class ENUM_AET_PRI_TYPE : unsigned char {
+    E_AET_PRI_FIXED = 0,
+    E_AET_PRI_JITTER,
+    E_AET_PRI_DWELL_SWITCH,
+    E_AET_PRI_STAGGER,
+    E_AET_PRI_PATTERN,
+
+    E_AET_PRI_UNKNOWN,
+
+    E_AET_MAX_PRI_TYPE,
+
+    //E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
+};
+#endif
 
 #else
-enum ENUM_AET_FRQ_TYPE
-{
+
+#ifndef _ENUM_AET_FRQ_TYPE
+#define _ENUM_AET_FRQ_TYPE
+enum class ENUM_AET_FRQ_TYPE : unsigned int {
     E_AET_FRQ_FIXED = 0,
     E_AET_FRQ_HOPPING,
     E_AET_FRQ_AGILE,
@@ -83,12 +125,139 @@ enum ENUM_AET_FRQ_TYPE
 
     E_AET_MAX_FRQ_TYPE
 };
+#endif
 
+// PRI 형태 정의
+#ifndef _ENUM_AET_PRI_TYPE
+#define _ENUM_AET_PRI_TYPE
+enum class ENUM_AET_PRI_TYPE : unsigned int {
+    E_AET_PRI_FIXED = 0,
+    E_AET_PRI_JITTER,
+    E_AET_PRI_DWELL_SWITCH,
+    E_AET_PRI_STAGGER,
+    E_AET_PRI_PATTERN,
+
+    E_AET_PRI_UNKNOWN,
+
+    E_AET_MAX_PRI_TYPE,
+
+    //E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
+};
+#endif
 
 #endif
 
+#ifndef _ENUM_AET_SCAN_TYPE
+#define _ENUM_AET_SCAN_TYPE
+
+#if defined(_ELINT_) || defined(_XBAND_)
+/////////////////////////////////////////////////////////////////////////////////////////
+// 안테나 스캔 형태 정의값
+enum ENUM_AET_SCAN_TYPE : unsigned int {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR = 1,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+    UFO,
+    MAX_SCANTYPE,
+    DetType,
+
+    TYPE_UNKNOWN,
+};
+static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" };
+
+#elif defined(_POCKETSONATA_) || defined(_712_)
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// 안테나 스캔 형태 정의값
+enum class ENUM_AET_SCAN_TYPE : unsigned char {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+
+    E_AET_TRACKUNKNOWN,
+    E_AET_DETECTUNKNOWN,
+    E_AET_LOWILLUSTRATION,
+
+    E_AET_MAX_SCAN_TYPE,
+
+};
+//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+#elif defined(_SONATA_)
+//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+// 기본형
+enum ENUM_AET_SCAN_TYPE {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+
+    UFO,
+    MAX_SCANTYPE,
+
+    DetType,
+
+    TYPE_UNKNOWN,
+};
 
 
+#else
+
+//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+
+// 기본형
+/////////////////////////////////////////////////////////////////////////////////////////
+// 안테나 스캔 형태 정의값
+enum ENUM_AET_SCAN_TYPE {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+
+    E_AET_MAX_SCAN_TYPE,
+
+};
+
+#endif
+#endif
+
+#ifndef _ENUM_AET_SCAN_STAT
+#define _ENUM_AET_SCAN_STAT
+enum class ENUM_AET_SCAN_STAT : unsigned char {
+    E_AET_UNANALYZED=0,
+
+    E_AET_SELF_SCAN_SUCCESS,
+    E_AET_SELF_SCAN_FAIL,
+    E_AET_USER_SCAN_SUCCESS,
+    E_AET_USER_SCAN_FAIL,
+
+};
+#endif
+
+enum class ENUM_AET_USER_SCAN_STAT : unsigned int {
+    E_AET_USER_SCAN_PROCESSING=0,
+
+    E_AET_USER_SCAN_ALREADYPROCESSING,
+    E_AET_USER_SCAN_CANT,
+
+};
 
 
 #define NUM_OF_AET_FRQ_TYPE 4
@@ -132,42 +301,6 @@ enum ENUM_AET_MOP_TYPE
 // 	"개수부족"
 // };
 
-//////////////////////////////////////////////////////////////////////////
-// AET - PRI Type
-#if defined(_XBAND_) || defined(_ELINT_) || defined(_POCKETSONATA_)
-enum ENUM_AET_PRI_TYPE
-{
-	E_AET_PRI_FIXED=0,
-	E_AET_PRI_JITTER,
-	E_AET_PRI_DWELL_SWITCH,
-	E_AET_PRI_STAGGER,
-	E_AET_PRI_PATTERN,
-
-    E_AET_PRI_UNKNOWN,
-
-    E_AET_MAX_PRI_TYPE,
-
-	//E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
-};
-
-#else
-enum ENUM_AET_PRI_TYPE
-{
-    E_AET_PRI_FIXED = 0,
-    E_AET_PRI_JITTER,
-    E_AET_PRI_DWELL_SWITCH,
-    E_AET_PRI_STAGGER,
-    E_AET_PRI_PATTERN,
-
-	E_AET_PRI_UNKNOWN,
-
-    E_AET_MAX_PRI_TYPE
-
-    //E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
-};
-
-#endif
-
 
 #define NUM_OF_AET_PRI_TYPE		5
 /*! \bug		PRI 형태 변경
@@ -186,14 +319,36 @@ enum ENUM_AET_PRI_TYPE
 
 
 // AET - 주파수/PRI 패턴 Type
-enum ENUM_AET_FREQ_PRI_PATTERN_TYPE
+#if defined(_POCKETSONATA_) || defined(_712_)
+#ifndef _ENUM_AET_FREQ_PRI_PATTERN_TYPE
+#define _ENUM_AET_FREQ_PRI_PATTERN_TYPE
+enum class ENUM_AET_FREQ_PRI_PATTERN_TYPE : unsigned char
 {
 	E_AET_FREQ_PRI_UNKNOWN = 0,
 	E_AET_FREQ_PRI_SINE,
 	E_AET_FREQ_PRI_SLIDE_INC,
 	E_AET_FREQ_PRI_SLIDE_DEC,
-	E_AET_FREQ_PRI_SAW_TRI
+	E_AET_FREQ_PRI_SAW_TRI,
+
+    E_AET_MAX_FREQ_PRI_PATTERN_TYPE,
+
 };
+#endif
+#else
+#ifndef _ENUM_AET_FREQ_PRI_PATTERN_TYPE
+#define _ENUM_AET_FREQ_PRI_PATTERN_TYPE
+enum class ENUM_AET_FREQ_PRI_PATTERN_TYPE : unsigned int {
+    E_AET_FREQ_PRI_UNKNOWN = 0,
+    E_AET_FREQ_PRI_SINE,
+    E_AET_FREQ_PRI_SLIDE_INC,
+    E_AET_FREQ_PRI_SLIDE_DEC,
+    E_AET_FREQ_PRI_SAW_TRI,
+
+    E_AET_MAX_FREQ_PRI_PATTERN_TYPE
+};
+#endif
+
+#endif
 
 #define NUM_OF_AET_PRI_PATTERN_TYPE 5
 /*! \bug  	스캔 형태 값 수정
@@ -577,5 +732,43 @@ enum ENUM_BIT_FLAG
 //#define STR_AIR_INDEPENDENT_DC_TASK		"DC_TASK"	//
 //#define STR_AIR_INDEPENDENT_HG_TASK		"HG_TASK"	//
 
+struct STR_RADAR_PDW {
+    ENUM_AET_AOA enDOA;
+    float fDOA;
+    float fDOARange;
 
-#endif
+    ENUM_AET_FRQ_TYPE enFreqType;
+    float fFreq;
+    float fFreqPeriod;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE enFreqPatternType;
+    int iCoFreqHoopingPositions;
+    int iFreqBW;
+    int iFreqPulsePerLobe;
+
+    ENUM_AET_PRI_TYPE enPRIType;
+    float fPRI;
+    float fPRIPeriod;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE enPRIPatternType;
+    int iCoPRIDwellStaggerPositions;
+    int iJitterRatio;
+    int iPRIPulsePerLobe;
+    float fStaggerPositions[MAX_STAGGER_LEVEL_POSITION];
+
+    ENUM_AET_SCAN_TYPE enScanType;
+    float fScanPeriod;
+
+    int iSignalIntensity;
+    int iAmplitude;
+
+    // 메인 로브에서 펄스 발생 개수
+    unsigned int uiCoPulsePerLobe;
+
+    // 펄스폭
+    float fPW;
+
+    // 기타
+    int iMissingPercent;
+    int iDDROffset;
+
+
+};

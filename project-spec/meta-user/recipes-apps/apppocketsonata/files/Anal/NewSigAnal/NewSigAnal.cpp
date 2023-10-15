@@ -61,6 +61,7 @@ static char THIS_FILE[]=__FILE__;
  */
 CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName ) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName )
 {
+    m_enAnalType = enDET_ANAL;
 
 	// 클래스 관련 초기화
 	m_uiMaxPdw = uiCoMaxPdw;
@@ -71,7 +72,6 @@ CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pF
 	m_pSeg = GetPulseSeg();
 
     Init();
-
 
 
 }
@@ -112,9 +112,10 @@ void CNewSigAnal::AallocMemory()
 	m_theGroup = new CNGroup(this, m_uiMaxPdw);
 	m_thePulExt = new CNPulExt(this, m_uiMaxPdw);
 	m_theAnalPRI = new CNAnalPRI(this, m_uiMaxPdw);
-	m_theMakeAET = new CNMakeAET(this, m_uiMaxPdw);
 
-	//m_pTheIntraSigAnal = new CIntraSigAnal();
+    // LOB 개수 제한 설정
+    unsigned int uiCoMaxLOB = g_pTheSysConfig->GetMaxCountOfLOB();
+	m_theMakeAET = new CNMakeAET(this, uiCoMaxLOB );
 
 }
 
@@ -178,13 +179,13 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
     if( pPDWData != NULL ) {
         MakeAnalDirectory( &pPDWData->x, false );
 
-        memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof(UNION_HEADER) );
+        memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof(union UNION_HEADER) );
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
         m_uiCoPdw = pPDWData->GetTotalPDW();
 
 		SetPDWID(pPDWData->GetPDWID());
-        SetColTime(pPDWData->GetColTime());
+        SetColTime( (time_t) pPDWData->GetColTime());
         SetStorePDW( pPDWData->GetStorePDW() );
         SetBandWidth( pPDWData->GetBandWidth () );
         SetTaskID( pPDWData->GetTaskID() );
@@ -255,9 +256,9 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
     // 신호 분석 관련 초기화.
     Init( pPDWData );
 
-    sprintf( buffer, "==== 탐지 분석 시작[%dth, Co:%d]" , GetStep(), m_uiCoPdw );
+    sprintf( buffer, "==== 탐지 분석 시작[%dth, PDWID: %d, Co:%d]" , GetStep(), GetPDWID(), m_uiCoPdw );
     CCommonUtils::WallMakePrint( buffer, '=' );
-    Log( enNormal, buffer );
+    Log( enNormal, "%s", buffer );
 
     if( m_uiCoPdw <= RPC /* || m_uiCoPdw > MAX_PDW */ ) {
         Log( enNormal, "PDW(%d/%d) 데이터 개수가 부족합니다 !!" , m_uiCoPdw, RPC );
@@ -266,7 +267,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
         CheckValidData( m_pPDWData );
 
         // 수집한 PDW 파일 저장하기...
-        InsertRAWData(m_pPDWData, _spZero, bDBInsert );
+        InsertRAWData(m_pPDWData, _spZero, (int) -1, bDBInsert );
 
         // PDW 수집 상태 체크를 함.
 		_PDW *pPDW = m_pPDWData->pstPDW;
@@ -275,7 +276,7 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 #if defined(_ELINT_) || defined(_XBAND_)
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , m_pPDWData->iCollectorID, m_pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , m_pPDWData->GetTaskID(), m_pPDWData->GetCollectorID(), m_pMidasBlue->GetRawDataFilename() );
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 			unsigned int uiBoardID = m_pPDWData->x.ps.uiBoardID;
             //printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , uiBoardID, m_pMidasBlue->GetRawDataFilename() );
             Log( enError, "[%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요..", uiBoardID, m_pMidasBlue->GetRawDataFilename());
@@ -304,11 +305,11 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 
     }
 
-    InsertToDB_LOB( GetLOBData(0), GetCoLOB(), bDBInsert );
+    // InsertToDB_LOB( GetLOBData(0), GetCoLOB(), bDBInsert );
 
     sprintf( buffer, "================ 탐지 분석 종료[%s] : %d[ns]", CSigAnal::GetRawDataFilename(), ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
     CCommonUtils::WallMakePrint( buffer, '=' );
-    Log( enNormal, buffer );
+    Log( enNormal, "%s", buffer);
 
 }
 
@@ -422,7 +423,7 @@ enum FREQ_BAND CNewSigAnal::GetBand( int freq )
 {
     enum FREQ_BAND enBand;
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
     if( freq >= 2000 && freq < 6000 ) {
         enBand = BAND1;
     }
@@ -513,3 +514,60 @@ int CNewSigAnal::GetPLOBIndex()
     iPLOBIndex = - ( int ) iCoFrqAoaPwIdx;
     return iPLOBIndex;
 }
+
+/**
+ * @brief     SaveDebug
+ * @param     char * pSourcefile
+ * @param     char * piLines
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-06 13:43:31
+ * @warning
+ */
+void CNewSigAnal::SaveDebug( const char *pSourcefile, int iLines )
+{
+    bool bRet;
+
+    //char szRawDataPathname[600];
+    Log( enError, "신호 탐지에서 소스[%s], 라인[%d]에 예기치 않은 에러가 발생했습니다 !", pSourcefile, iLines );
+
+    bRet = CreateDir( GetDebugDirectory() );
+    if( bRet == true ) {
+        Log( enError, "폴더[%s]를 생성하지 못했습니다. !", GetDebugDirectory() );
+    }
+
+//     m_pMidasBlue->SaveRawDataFile( ( const char * ) szRawDataPathname, E_EL_SCDT_PDW, pPDWData->pstPDW, &pPDWData->x, pPDWData->GetTotalPDW() );
+
+}
+
+#ifdef _LOG_ANALTYPE_
+/**
+ * @brief     GetLogAnalType
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-21 11:53:48
+ * @warning
+ */
+bool CNewSigAnal::GetLogAnalType()
+{
+    bool bRet = true;
+
+    if( g_enLogAnalType == enALL ) {
+    }
+    else {
+        if( m_enAnalType == g_enLogAnalType ) {
+
+        }
+        else {
+            bRet = false;
+        }
+    }
+
+    return bRet;
+}
+
+#endif

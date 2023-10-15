@@ -31,12 +31,17 @@
 
 #include <fcntl.h>
 
+#include <random>
+
+std::default_random_engine generator;
 
 #elif __VXWORKS__
 #include <taskLib.h>
 #include <ioLib.h>
 #include <usrFsLib.h>
 
+
+#include <stat.h>
 
 #else
 #include <unistd.h>
@@ -75,6 +80,27 @@ CCommonUtils::CCommonUtils()
 
 }
 
+/**
+ * @brief     IsValidMinMax
+ * @param     T tMin
+ * @param     T tMax
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-04-19 20:09:20
+ * @warning
+ */
+bool CCommonUtils::IsValidMinMax( float fMin, float fMax )
+{
+    bool bRet = true;
+
+    if( fMin > fMax || is_zero<float>( fMax ) == 0 ) {
+        bRet = false;
+    }
+
+    return bRet;
+}
 
 
 #ifndef _GRAPH_
@@ -90,13 +116,13 @@ CCommonUtils::CCommonUtils()
  * @date      2023-03-19 18:56:42
  * @warning
  */
-void CCommonUtils::GetCollectTime( time_t *ptiContactTime, unsigned short *ptiContactTimems )
+void CCommonUtils::GetCollectTime( unsigned int *ptiContactTime, unsigned short *ptiContactTimems )
 {
     struct timespec tsNow;
 
     CCommonUtils::GetCollectTime( &tsNow );
 
-    *ptiContactTime = tsNow.tv_sec;
+    *ptiContactTime = (unsigned int) tsNow.tv_sec;
 
 #ifdef _MSC_VER
     *ptiContactTimems = ( unsigned int ) tsNow.tv_usec / ( unsigned int ) 1000;
@@ -117,13 +143,13 @@ void CCommonUtils::GetCollectTime( time_t *ptiContactTime, unsigned short *ptiCo
  * @date      2023-05-10 20:03:06
  * @warning
  */
-void CCommonUtils::GetCollectTime( time_t *ptiContactTime, unsigned int *ptiContactTimems )
+void CCommonUtils::GetCollectTime( unsigned int *ptiContactTime, unsigned int *ptiContactTimems )
 {
     struct timespec tsNow;
 
     CCommonUtils::GetCollectTime( &tsNow );
 
-    *ptiContactTime = tsNow.tv_sec;
+    *ptiContactTime = (unsigned int) tsNow.tv_sec;
 
 #ifdef _MSC_VER
     *ptiContactTimems = ( unsigned int ) tsNow.tv_usec / ( unsigned int ) 1000;
@@ -133,11 +159,11 @@ void CCommonUtils::GetCollectTime( time_t *ptiContactTime, unsigned int *ptiCont
 
 }
 
-void CCommonUtils::SendLan( UINT uiOpCode )
-{
-    CCommonUtils::SendLan( uiOpCode, NULL, 0 );
-
-}
+// void CCommonUtils::SendLan( UINT uiOpCode )
+// {
+//     CCommonUtils::SendLan( uiOpCode, NULL, 0 );
+//
+// }
 
 /**
  * @brief opcode, data 를 입력받아서 랜으로 송신한다.
@@ -145,71 +171,71 @@ void CCommonUtils::SendLan( UINT uiOpCode )
  * @param uiLength
  * @param pData
  */
-void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
-{
-#ifdef _USRDLL
-
-#else
-#if defined(_ELINT_) || defined(_XBAND_)
-
-#elif _POCKETSONATA_
-#ifndef _CGI_LIST_
-    // 마스터 보드에서는 랜 메시지를 CCU 장치로 전송한다.
-    if( g_enBoardId == enMaster ) {
-        if( g_pTheCCUSocket != NULL ) {
-            g_pTheCCUSocket->SendLan( uiOpCode, pData, uiLength );
-
-        }
-
-        // EA 경우에 AET 관련 메세지를 전달한다.
-//         if( g_pThePMCSocket != NULL ) { //&& ( uiOpCode == esAET_NEW_CCU || uiOpCode == esAET_UPD_CCU || uiOpCode == esAET_DEL_CCU ) ) {
-//             g_pThePMCSocket->SendLan( uiOpCode, pData, uiLength );
-//         }
-
-    }
-    // 클라이언트 보드 인 경우에는 랜 메시지를 마스터 보드에 전달한다.
-    else {
-//         if( g_pTheZYNQSocket != NULL ) {
-//             //g_pTheZYNQSocket->SendLan( uiOpCode, pData, uiLength );
-//         }
-//         else {
+// void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
+// {
+// #ifdef _USRDLL
+//
+// #else
+// #if defined(_ELINT_) || defined(_XBAND_)
+//
+// #elif _POCKETSONATA_
+// #ifndef _CGI_LIST_
+//     // 마스터 보드에서는 랜 메시지를 CCU 장치로 전송한다.
+//     if( g_enBoardId == enMaster ) {
+//         if( g_pTheCCUSocket != NULL ) {
+//             g_pTheCCUSocket->SendLan( uiOpCode, pData, uiLength );
 //
 //         }
-    }
-#endif
-#endif
-
-#endif
-
-}
+//
+//         // EA 경우에 AET 관련 메세지를 전달한다.
+// //         if( g_pThePMCSocket != NULL ) { //&& ( uiOpCode == esAET_NEW_CCU || uiOpCode == esAET_UPD_CCU || uiOpCode == esAET_DEL_CCU ) ) {
+// //             g_pThePMCSocket->SendLan( uiOpCode, pData, uiLength );
+// //         }
+//
+//     }
+//     // 클라이언트 보드 인 경우에는 랜 메시지를 마스터 보드에 전달한다.
+//     else {
+// //         if( g_pTheZYNQSocket != NULL ) {
+// //             //g_pTheZYNQSocket->SendLan( uiOpCode, pData, uiLength );
+// //         }
+// //         else {
+// //
+// //         }
+//     }
+// #endif
+// #endif
+//
+// #endif
+//
+// }
 
 /**
  * @brief CCommonUtils::CloseSocket
  */
-void CCommonUtils::CloseSocket()
-{
-#ifdef _USRDLL
-
-#else
-#if defined(_ELINT_) || defined(_XBAND_)
-
-#elif _POCKETSONATA_
-#ifndef _CGI_LIST_
-    if( g_enBoardId == enMaster ) {
-        if( g_pTheCCUSocket != NULL ) {
-            g_pTheCCUSocket->CloseSocket();
-        }
-
-    }
-    else {
-
-    }
-#endif
-#endif
-
-#endif
-
-}
+// void CCommonUtils::CloseSocket()
+// {
+// #ifdef _USRDLL
+//
+// #else
+// #if defined(_ELINT_) || defined(_XBAND_)
+//
+// #elif _POCKETSONATA_
+// #ifndef _CGI_LIST_
+//     if( g_enBoardId == enMaster ) {
+//         if( g_pTheCCUSocket != NULL ) {
+//             g_pTheCCUSocket->CloseSocket();
+//         }
+//
+//     }
+//     else {
+//
+//     }
+// #endif
+// #endif
+//
+// #endif
+//
+// }
 
 
 
@@ -308,10 +334,33 @@ int clock_gettime(int X, struct timeval *tv)
  */
 float CCommonUtils::Random( float fMin, float fMax )
 {
-    float fRet;
+    float fRet, fRand;
     // std::uniform_int_distribution<float> dist( fMin, fMax );
+    fRand = ( float ) rand() / ( float ) RAND_MAX;
+    fRet = fMin + ( fRand * ( fMax - fMin ) );
 
-    fRet = fMin + ( ( ( float ) rand() / ( float ) RAND_MAX ) * ( fMax - fMin + (float) 1.0 ) );
+    return fRet;
+
+}
+
+/**
+ * @brief     NormalDistribution
+ * @param     float fMean
+ * @param     float fDevi
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-07-16 15:13:38
+ * @warning
+ */
+float CCommonUtils::NormalDistribution( float fMean, float fDevi )
+{
+    float fRet;
+
+    std::normal_distribution<float> distribution( fMean, fDevi );
+
+    fRet = distribution( generator );
     return fRet;
 
 }
@@ -350,13 +399,35 @@ int CCommonUtils::Random( int iMin, int iMax )
  * @date      2021-06-30, 17:27
  * @warning
  */
-void CCommonUtils::getStringPresentTime( char *pString, size_t szString )
+void CCommonUtils::getStringPresentTime( char *pString, size_t szString, bool bASCII )
 {
-    struct tm *pstTime;
     time_t nowTime=time(NULL);
 
+#ifdef _MSC_VER
+    struct tm stTime;
+    localtime_s( & stTime, & nowTime );
+
+    if( bASCII == true ) {
+        strftime( pString, szString, "%Y_%m_%d_%H_%M_%S", & stTime );
+    }
+    else {
+        strftime( pString, szString, "%Y-%m-%d %H:%M:%S", & stTime );
+}
+
+#else
+    struct tm *pstTime;
+
     pstTime = localtime( & nowTime );
-    strftime(pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
+
+    if( bASCII == true ) {
+        strftime(pString, szString, "%Y_%m_%d_%H_%M_%S", pstTime);
+    }
+    else {
+        strftime( pString, szString, "%Y-%m-%d %H:%M:%S", pstTime );
+    }
+
+#endif
+
 //     if( pstTime != NULL ) {
 //         strftime( pString, szString, "%Y-%m-%d %H:%M:%S", pstTime );
 //     }
@@ -380,7 +451,6 @@ void CCommonUtils::getStringPresentTime( char *pString, size_t szString )
  */
 void CCommonUtils::getStringDesignatedDate( char *pString, size_t szString, time_t tiTime )
 {
-    struct tm *pstTime;
 
 #ifdef _MSC_VER
     strcpy_s( pString, szString, "1970-01-01 00:00:00" );
@@ -388,7 +458,17 @@ void CCommonUtils::getStringDesignatedDate( char *pString, size_t szString, time
     strcpy( pString, "1970-01-01 00:00:00" );
 #endif
 
+#ifdef _MSC_VER
+    struct tm stTime;
+
+    localtime_s( & stTime, & tiTime );
+    strftime( pString, szString, "%Y-%m-%d %H:%M:%S", & stTime );
+
+#else
+    struct tm *pstTime;
+
     pstTime = localtime( & tiTime );
+
 	if (pstTime != NULL) {
 		strftime(pString, szString, "%Y-%m-%d %H:%M:%S", pstTime);
 	}
@@ -399,6 +479,8 @@ void CCommonUtils::getStringDesignatedDate( char *pString, size_t szString, time
         *pString = (char) '\0';
 #endif
 	}
+#endif
+
 
 }
 
@@ -416,7 +498,6 @@ void CCommonUtils::getStringDesignatedDate( char *pString, size_t szString, time
  */
 void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, time_t tiTime)
 {
-	struct tm *pstTime;
 
 #ifdef _MSC_VER
 	strcpy_s(pString, szString, "00:00:00");
@@ -424,7 +505,16 @@ void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, time_
 	strcpy(pString, "1970-01-01 00:00:00");
 #endif
 
-	pstTime = localtime(&tiTime);
+#ifdef _MSC_VER
+    struct tm stTime;
+	localtime_s( & stTime, &tiTime );
+
+    strftime( pString, szString, "%H:%M:%S", & stTime );
+#else
+    struct tm *pstTime;
+
+    pstTime = localtime( &tiTime );
+
 	if (pstTime != NULL) {
 		strftime(pString, szString, "%H:%M:%S", pstTime);
 	}
@@ -435,6 +525,7 @@ void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, time_
         *pString = (char) '\0';
 #endif
 	}
+#endif
 
 }
 
@@ -452,7 +543,7 @@ void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, time_
  */
 void CCommonUtils::getFileNamingDesignatedTime(char *pString, size_t szString, time_t tiTime)
 {
-    struct tm *pstTime;
+
 
 #ifdef _MSC_VER
     strcpy_s(pString, szString, "1970-01-01 00:00:00");
@@ -460,7 +551,18 @@ void CCommonUtils::getFileNamingDesignatedTime(char *pString, size_t szString, t
     strcpy(pString, "1970-01-01 00:00:00");
 #endif
 
-    pstTime = localtime(&tiTime);
+
+
+#ifdef _MSC_VER
+    struct tm stTime;
+
+    localtime_s( &stTime, &tiTime );
+    strftime( pString, szString, "%Y-%m-%d %H_%M_%S", & stTime );
+
+#else
+    struct tm *pstTime;
+
+    pstTime = localtime( &tiTime );
     if (pstTime != NULL) {
         strftime(pString, szString, "%Y-%m-%d %H_%M_%S", pstTime);
     }
@@ -471,6 +573,7 @@ void CCommonUtils::getFileNamingDesignatedTime(char *pString, size_t szString, t
         *pString = (char) '\0';
 #endif
     }
+#endif
 
 }
 
@@ -550,10 +653,10 @@ DWORD CCommonUtils::GetDiffTime( struct timespec *pTimeSpec )
         tsDiff.tv_usec = 1000000000 + tsNow.tv_usec - pTimeSpec->tv_usec;
     }
 
-    printf( "\n tsDiff.tv_sec[%u]", tsDiff.tv_sec );
-    printf( "\n tsDiff.tv_nsec[%u]", tsDiff.tv_usec );
+    //printf( "\n tsDiff.tv_sec[%u]", tsDiff.tv_sec );
+    //printf( "\n tsDiff.tv_nsec[%u]", tsDiff.tv_usec );
 
-    ret = ( 1000000000 ) * tsDiff.tv_sec + tsDiff.tv_usec;
+    ret = ( DWORD ) ( ( 1000000000 ) * tsDiff.tv_sec + tsDiff.tv_usec );
 
 #else
     tsDiff.tv_sec = tsNow.tv_sec - pTimeSpec->tv_sec;
@@ -592,14 +695,14 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
     int     src_fd;
     int     dest_fd;
     struct  stat sts;
-    char    data_buf[4096];
+    char    read_data_buf[4096], write_data_buff[4096];
     int     tmp_errno;
     int iSize;
 
     // printf( "\n\t[%s]을 [%s]으로 복사중..." , src_file, dest_file );
 
 #if defined(__linux__) || defined(__VXWORKS__)
-    src_fd = open(src_file, O_RDONLY | O_BINARY, 0644 );
+    src_fd = open(src_file, O_RDONLY , 0644 );
 #else
     src_fd = open(src_file, O_RDONLY | O_BINARY );
 
@@ -614,7 +717,7 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
         if(overwrite) { /* 이미 파일이 있으면 overwrite를 하겠다면... */
             dest_fd = open(dest_file, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, sts.st_mode);
         } else {        /* 파일이 있으면, 생성하지 말라고 설정한 경우 */
-            dest_fd = open(dest_file, O_WRONLY | O_CREAT | O_EXCL | O_BINARY , sts.st_mode);
+            dest_fd = open(dest_file, O_WRONLY | O_CREAT | O_EXCL | O_BINARY, sts.st_mode);
         }
 
         if(dest_fd == -1) {
@@ -626,13 +729,14 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
         }
         else {
             do {
-                iSize = read(src_fd, data_buf, 4096);
+                iSize = read(src_fd, read_data_buf, 4096);
                 if( iSize <= 0 ) {
                     break;
                 }
                 iRet += iSize;
 
-                while(write(dest_fd, data_buf, (unsigned int) iSize ) == -1) {
+                memcpy( write_data_buff, read_data_buf, sizeof(char)*(size_t) iSize );
+                while(write(dest_fd, write_data_buff, (unsigned int) iSize ) == -1) {
                     if(errno == EINTR) {
                         /* signal이 발생한 경우에는 재작업 */
                         continue;
@@ -658,7 +762,7 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
             * 이미 존재했던 파일은 파일권한이 기존 파일의 권한이므로
             * 파일의 권한도 복구합니다.
             */
-            chmod(dest_file, sts.st_mode);
+            // chmod(dest_file, sts.st_mode);
 
 #ifdef __VXWORKS__
 
@@ -762,14 +866,14 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
     _TOA ullfirstTOA;
 
     pPDW = & pPDWData->pstPDW[0];
-    ullfirstTOA = pPDW->ullTOA;
+    ullfirstTOA = pPDW->tTOA;
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned int i;
 
     for( i=0 ; i < pPDWData->GetTotalPDW() ; ++i ) {
         printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
-                pPDW->ullTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->ullTOA-ullfirstTOA ), \
+                pPDW->tTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->tTOA-ullfirstTOA ), \
                 CPOCKETSONATAPDW::DecodeDOA( (int) pPDW->uiAOA), \
                 CPOCKETSONATAPDW::DecodeFREQMHz( pPDW->uiFreq), pPDW->uiFreq,
                 CPOCKETSONATAPDW::DecodePW( (int) pPDW->uiPW), pPDW->uiPW );
@@ -811,10 +915,41 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 
 #endif	// _GRAPH_
 
+
 /**
- * @brief CCommonUtils::AllSwapData32
- * @param pData
- * @param iLength
+ * @brief     AllSwapData16
+ * @param     void * pData
+ * @param     unsigned int uiLength
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 10:50:27
+ * @warning
+ */
+void CCommonUtils::AllSwapData16( void *pData, unsigned int uiLength )
+{
+    UINT i;
+    unsigned short *pWord16;
+
+    pWord16 = ( unsigned short * ) pData;
+    for( i = 0; i < uiLength; i += sizeof( short ) ) {
+        swapByteOrder( *pWord16 );
+        ++ pWord16;
+    }
+
+}
+
+/**
+ * @brief     AllSwapData32
+ * @param     void * pData
+ * @param     unsigned int uiLength
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 10:49:11
+ * @warning
  */
 void CCommonUtils::AllSwapData32( void *pData, unsigned int uiLength )
 {
@@ -1037,12 +1172,15 @@ int CCommonUtils::Isalpha( int iCh )
 {
     int iRet;
 
-    if( iCh >= 'A' && iCh <= 'Z' )
+    if( iCh >= 'A' && iCh <= 'Z' ) {
         iRet = 1;
-    else if( iCh >= 'a' && iCh <= 'z' )
+    }
+    else if( iCh >= 'a' && iCh <= 'z' ) {
         iRet = 2;
-    else
+    }
+    else {
         iRet = 0;
+    }
 
     return iRet;
 }
@@ -1071,7 +1209,8 @@ size_t CCommonUtils::CheckMultiplyOverflow( int iSize, int iItems )
 			// throw 0;
 		}
 
-        else if( iSize > (INT_MAX / iItems) || iSize < ((int) INT_MIN / iItems) ) {
+        //else if( iSize > (INT_MAX / iItems) || iSize < ((int) INT_MIN / iItems) ) {
+        else if( iSize > ( INT_MAX / iItems ) ) {
             throw 0;
         }
 
@@ -1254,7 +1393,7 @@ int CCommonUtils::Rand( int range )
  */
 void CCommonUtils::Parsing(vector<string> *pValues, string *pStrIn, string & strDelimiter)
 {
-	unsigned int pos = 0;
+	size_t pos = 0;
 	string token;
 
 	//while ((pos = pStrIn->find(strDelimiter)) != string::npos) {
@@ -1273,6 +1412,7 @@ void CCommonUtils::Parsing(vector<string> *pValues, string *pStrIn, string & str
 
 }
 
+#if defined(_GRAPH_) || defined(_701_)
 /**
  * @brief     \r\n 으로 라인이 구성이 되어야 제대로 해석이 됨.
  * @param     vector<string> * pValues
@@ -1309,6 +1449,7 @@ unsigned int CCommonUtils::Parsing(vector<string> *pValues, const char *pData )
 	return iIndex + 1;
 
 }
+#endif
 
 /**
  * @brief     DeleteAllFile
@@ -1400,9 +1541,14 @@ int CCommonUtils::DeleteAllFile(const char *pszDir )
 		bool bFind = ff.FindFile(strName);
 
 		while (bFind) {
+            BOOL bRet1, bRet2;
+
 			bFind = ff.FindNextFile();
-			if (ff.IsDots() == TRUE || ff.IsDirectory() == TRUE )
+            bRet1 = ff.IsDots();
+            bRet2 = ff.IsDirectory();
+			if ( bRet1 == TRUE || bRet2 == TRUE ) {
                 continue;
+            }
 			SetFileAttributes(ff.GetFilePath(), FILE_ATTRIBUTE_NORMAL);
 			DeleteFile( ff.GetFilePath() );
 		}
@@ -1516,7 +1662,11 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
             break;
 
         case enRES_SETSYS:
-            *pszString = "시스템 변수";
+            *pszString = "신호분석 변수 설정 요청";
+            break;
+
+        case enRES_SYS:
+            *pszString = "신호분석 변수 요청";
             break;
 
         case enTHREAD_DISCONNECTED:
@@ -1555,6 +1705,10 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
             *pszString = "스캔분석 시작";
             break;
 
+        case enREQ_ANAL_SCAN:
+            *pszString = "운용자 스캔 분석";
+            break;
+
 //         case enTHREAD_REQ_SET_SCANWINDOWCELL:
 //             *pszString = "스캔 수집 요청";
 //             break;
@@ -1571,6 +1725,9 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
             *pszString = "로그";
             break;
 
+        case enRES_SYSERROR:
+            *pszString = "에러";
+            break;
 
         default:
             *pszString = "이름 없음";
@@ -1695,7 +1852,7 @@ void CCommonUtils::MakeOnePDW( char *pszBuffer, UZPOCKETPDW *pstPDW )
 
     uiFreq = UMUL( FFRQMhzCNV( 0, pstPDW->stHwPdwDataRf.uiFreq ), 1 );
     uiAOA = pstPDW->stHwPdwDataRf.uiAOA;
-    uiPW = IPWCNV( pstPDW->stHwPdwDataRf.uiPW );
+    uiPW = I_PWCNV( pstPDW->stHwPdwDataRf.uiPW );
     iPA = (int) IMUL( PACNV( pstPDW->stHwPdwDataRf.uiPA ), 1 );
     sprintf( pszBuffer, "[%3d] %1d[%1d%1d/%2d %4d[%4d] %4d[MHz] %8d[us] %8d[dBm] 0x%016llx %1c", ( unsigned int ) pstPDW->stHwPdwDataRf.Index, ( unsigned int ) pstPDW->stHwPdwDataRf.CwPulse, \
         ( unsigned int ) pstPDW->stHwPdwDataRf.Pmop, ( unsigned int ) pstPDW->stHwPdwDataRf.Fmop, ( unsigned int ) pstPDW->stHwPdwDataRf.FmopDir, \
@@ -1727,7 +1884,39 @@ void CCommonUtils::WallMakePrint( char *buffer, char delimeter, int iColumns )
 
     iCnt = ( int ) strlen( buffer );
     for( i = iCnt; i < iColumns ; ++i ) {
-        // iCnt += sprintf( & buffer[iCnt], "%c", delimeter );
+        buffer[i] = delimeter;
+    }
+    buffer[i] = 0;
+
+}
+
+/**
+ * @brief     CenterMakePrint
+ * @param     char * buffer
+ * @param     char delimeter
+ * @param     int iColumns
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-17 15:05:32
+ * @warning
+ */
+void CCommonUtils::CenterMakePrint( char *buffer, char delimeter, int iColumns )
+{
+    int i, iCnt, iCenter;
+
+    iCnt = ( int ) strlen( buffer );
+    iCenter = ( iColumns - iCnt ) / 2;
+
+    memcpy( & buffer[iCenter], buffer, (size_t) iCnt * sizeof( char ) );
+
+    for( i = 0 ; i < iCenter ; ++i ) {
+        buffer[i] = delimeter;
+    }
+
+    i += iCnt;
+    for( ; i < iColumns; ++i ) {
         buffer[i] = delimeter;
     }
     buffer[i] = 0;
@@ -1754,7 +1943,8 @@ void CCommonUtils::WallMakePrint( char delimeter, int iColumns, char *fmt, ... )
 
     va_list args;
 
-    va_start( args, fmt );
+    //va_start( args, (const char *) fmt );          /*   */
+    va_start( args, fmt );          /*   */
     vsprintf( buffer, fmt, args );
     va_end( args );
 

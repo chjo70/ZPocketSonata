@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #include "csharedmemory.h"
 
@@ -73,7 +73,7 @@ void CSharedMemroy::setShmId( int id )
  */
 void CSharedMemroy::setKey( key_t key )
 {
-    
+
 #ifdef _MSC_VER
     m_hHandle = NULL;
 #else
@@ -112,25 +112,28 @@ void CSharedMemroy::setupSharedMemory( SIZE_T szSize )
     if( szSize == 0 ) {
         if( m_hHandle == NULL ) {
             m_hHandle = ::OpenFileMapping( FILE_MAP_ALL_ACCESS, NULL, SHARED_NAME );
-        }            
+        }
         if( m_hHandle != NULL ) {
             m_shared_memory = (void *) ::MapViewOfFile( m_hHandle, FILE_MAP_ALL_ACCESS, 0, 0, szSize );
         }
     }
     else {
         if( m_hHandle == NULL ) {
-            m_hHandle = ::CreateFileMapping( INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, szSize, SHARED_NAME );
+            m_hHandle = ::CreateFileMapping( INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, (DWORD) szSize, SHARED_NAME );
         }
         if( m_hHandle != NULL ) {
             m_shared_memory = (void *) ::MapViewOfFile( m_hHandle, FILE_MAP_ALL_ACCESS, 0, 0, szSize );
         }
     }
 
+#ifdef _712_
+    m_shared_memory = (void *) NULL;
+#endif
+
 #else
    m_shmid = 0;
 
 #endif
-
 
     m_szSize = szSize;
 }
@@ -150,7 +153,8 @@ void CSharedMemroy::attachSharedMemory()
 #elif _MSC_VER
 
 #else
-    m_shared_memory = (void *) -1;
+    m_shared_memory = (void *) NULL;
+    WhereIs;
 
 #endif
 
@@ -165,7 +169,7 @@ bool CSharedMemroy::copyToSharedMemroy( void *pData )
 {
     bool bRet=true;
     // copy string to shared memory
-    if( m_shared_memory != (void *) -1 ) {
+    if( m_shared_memory != (void *) NULL ) {
         memcpy( m_shared_memory, pData , m_szSize );
     }
     else {
@@ -186,7 +190,7 @@ bool CSharedMemroy::copyToLocalMemroy( void *pData, SIZE_T szSize )
 {
     bool bRet=true;
     // copy string to shared memory
-    if( m_shared_memory != (void *) -1 ) {
+    if( m_shared_memory != NULL ) {
         memcpy( pData, m_shared_memory, szSize );
     }
     else {

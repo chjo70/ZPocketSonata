@@ -1,4 +1,17 @@
-﻿/****************************************************************************************
+﻿/**
+
+    @file      _Type.h
+    @brief
+    @details   ~
+    @author    Cool Guy
+    @date      18.06.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
+/****************************************************************************************
  파 일 명 : _type.h
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  목    적 :
@@ -15,11 +28,6 @@
  에러처리/복귀순서:
  컴파일 일시 :
 *****************************************************************************************/
-
-
-
-#ifndef _TYPE_H_
-#define _TYPE_H_
 
 
 #include <vector>
@@ -69,7 +77,7 @@ typedef string CString;
 #define __time32_t              time_t
 
 
-#define _open                   open
+//#define _open                   open
 #define _close                  close
 #define	_write					write
 #define	_read					read
@@ -143,8 +151,6 @@ typedef string CString;
 
 #define IPC_PRIVATE     		(0)
 
-#define sprintf_s               sprintf
-
 #define wsprintf                sprintf
 #define __time32_t              time_t
 #define	_time64					time
@@ -154,12 +160,13 @@ typedef string CString;
 typedef char TCHAR;
 #define _T(A)                   (A)
 
-#define _open                   open
+//#define _open                   open
 #define _close                  close
 #define	_write					write
 #define	_read					read
 
-#define	wcslen					strlen
+//#define sprintf_s               sprintf
+//#define	wcslen					strlen
 #define	wcscpy					strcpy
 #define	_localtime64_s(A, B)	localtime_r(B, A)
 #define	localtime_s(A, B)		localtime_r(B, A)
@@ -209,4 +216,4 @@ typedef unsigned int INT32;
 
 
 
-#endif  // #ifndef _TYPE_H_
+

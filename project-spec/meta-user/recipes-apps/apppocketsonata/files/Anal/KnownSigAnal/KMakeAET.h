@@ -1,9 +1,16 @@
-﻿// KMakeAET.h: interface for the CKMakeAET class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
 
-#if !defined(AFX_KMAKEAET_H__0B6C1D4B_0545_4DD1_9E8C_1FDB63EDF929__INCLUDED_)
-#define AFX_KMAKEAET_H__0B6C1D4B_0545_4DD1_9E8C_1FDB63EDF929__INCLUDED_
+    @file      KMakeAET.h
+    @brief
+    @details   ~
+    @author    조철희
+    @date      9.06.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -19,7 +26,7 @@
 
 struct STR_KWNINFO {
     float fKnownSuccessRatio;   // 추적 성공율 [%]
-    int iIdxEmitter;            // PRI Emitter Index   
+    int iIdxEmitter;            // PRI Emitter Index
 
 } ;
 
@@ -32,7 +39,7 @@ struct STR_KWNLOB {
 class CKMakeAET : public CMakeAET
 {
 private :
-    STR_KWNLOB m_KwnLOB[MAX_AET + 1];       // 추적 성공하면 첫번째 LOB 데이터는 추적 성공한 LOB 정보 임.
+    STR_KWNLOB m_KwnLOB[MAX_LOB + 1];       // 추적 성공하면 첫번째 LOB 데이터는 추적 성공한 LOB 정보 임.
 
     SRxABTData *m_pTrkABT;
 
@@ -62,27 +69,27 @@ public:
      * @brief     SetCoNewAet
      * @param     int iCount
      * @return    void
-     * @exception 
+     * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-07-10 13:08:00
      * @warning
      */
-    inline void SetCoNewAet( int iCount ) { 
-		m_iCoNewAet=iCount; 
+    inline void SetCoNewAet( int iCount ) {
+		m_iCoNewAet=iCount;
 	}
 
     /**
      * @brief     ClearCoAet
      * @return    void
-     * @exception 
+     * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
      * @version   1.0.0
      * @date      2022-07-10 13:07:58
      * @warning
      */
-    inline void ClearCoAet() { 
-		m_iCoLOB=0; 
+    inline void ClearCoAet() {
+		m_iCoLOB=0;
 	}
 
     /**
@@ -94,8 +101,8 @@ public:
      * @date      2022-05-09, 10:53
      * @warning
      */
-    inline int GetCoLOB() { 
-        return m_iCoLOB; 
+    inline int GetCoLOB() {
+        return m_iCoLOB;
     }
 
     /**
@@ -110,7 +117,7 @@ public:
      * @warning
      */
     inline void SetKnownSuccessRatio(int iIndex, float fValue) {
-		if (iIndex <= MAX_AET) {
+		if (iIndex <= MAX_LOB) {
 			m_KwnLOB[iIndex].stKnownInfo.fKnownSuccessRatio = fValue;
 		}
 		else {
@@ -143,7 +150,7 @@ public:
      * @warning
      */
     inline void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) {
-		if ( uiIndex <= MAX_AET) {
+		if ( uiIndex <= MAX_LOB) {
 			m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter = iIdxEmitter;
 		}
 		else {
@@ -164,7 +171,7 @@ public:
     inline unsigned int GetKnownIndexEmitter(unsigned int uiIndex) {
 		unsigned int uiRet=0;
 
-		if (uiIndex <= MAX_AET) {
+		if (uiIndex <= MAX_LOB) {
 			uiRet = (UINT) m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter;
 		}
 		return uiRet;
@@ -224,9 +231,9 @@ public:
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     unsigned int GetCoSeg();
     unsigned int GetCoEmitter();
-    
+
     STR_EMITTER *GetEmitter();
-    
+
     SRxLOBData *GetNewLOB();
     SRxLOBData *GetUpdLOB();
     int GetCoNewAet();
@@ -252,7 +259,7 @@ public:
             exp_pri_min = UMUL( fdiv_jitter_ratio, pPri2->fPRIMin );
             exp_pri_max = UMUL( fdiv_jitter_ratio, pPri2->fPRIMax );
 
-            fOverlap_space = CalOverlapSpace<float>( pPri1->fPRIMin, pPri1->fPRIMax, (float) exp_pri_min, (float) exp_pri_max );
+            fOverlap_space = TCalOverlapSpace<float>( pPri1->fPRIMin, pPri1->fPRIMax, (float) exp_pri_min, (float) exp_pri_max );
             if( fOverlap_space != 0 ) {
                 overlap_ratio = UDIV( fOverlap_space * 100 , pPri1->fPRIMax - pPri1->fPRIMin );
                 if( overlap_ratio < 80 ) {
@@ -289,14 +296,10 @@ public:
         }
 
         // 추적할 것이 STAGGER 일때 새로운 에미터가 Jitter라고 하면 새로운 에미터를 송신하지 않는다.
-        else { 
-#ifdef _POCKETSONATA_
-            if( pAet1->iPRIType == _STAGGER && pAet2->vPRIType == _JITTER_RANDOM ) {
-#else
-            if( pAet1->iPRIType == _STAGGER && pAet2->vPRIType == _JITTER_RANDOM ) {
-#endif
-                if( true == CompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, (float) m_tStableMargin ) &&
-                    true == CompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, (float) m_tStableMargin ) ) {
+        else {
+            if( pAet1->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER && pAet2->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER ) {
+                if( true == TCompMeanDiff<float>( pAet2->fPRIMin, pAet1->fPRIMin, (float) m_tStableMargin ) &&
+                    true == TCompMeanDiff<float>( pAet2->fPRIMax, pAet1->fPRIMax, (float) m_tStableMargin ) ) {
                     uRet = 1;
                 }
 
@@ -337,13 +340,9 @@ public:
                 }
                 */
             }
-#ifdef _POCKETSONATA_
-            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->vPRIType == _JITTER_RANDOM ) {
-#else
-            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->vPRIType == _JITTER_RANDOM ) {
-#endif
+            else if( pAet1->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER && pAet2->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER ) {
                 nHarmonic = CheckPRIHarmonic( pAet1, pAet2 );
-                if( nHarmonic >= 2 && 0 == CalOverlapSpace<float>( pAet1->fPWMin, pAet1->fPWMax, pAet2->fPWMin, pAet2->fPWMax ) ) {
+                if( nHarmonic >= 2 && 0 == TCalOverlapSpace<float>( pAet1->fPWMin, pAet1->fPWMax, pAet2->fPWMin, pAet2->fPWMax ) ) {
                     return 0;
                 }
                 return nHarmonic;
@@ -351,22 +350,14 @@ public:
             /*! \bug  지터와 Stable 비교는 무시한다.
                 \date 2006-09-05 08:51:47, 조철희
             */
-#ifdef _POCKETSONATA_
-            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->vPRIType == _STABLE ) {
-#else
-            else if( pAet1->iPRIType == _JITTER_RANDOM && pAet2->vPRIType == _STABLE ) {
-#endif
+            else if( pAet1->iPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER && pAet2->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED ) {
                  return 0;
                     // return CheckHarmonic( pAet1->pri.mean, pAet2->pri.mean );
             }
             /*! \bug  지터와 Stable 비교는 무시한다.
                 \date 2006-09-05 08:51:47, 조철희
             */
-#ifdef _POCKETSONATA_
-            else if( pAet1->iPRIType == _STABLE && pAet2->vPRIType == _JITTER_RANDOM ) {
-#else
-            else if( pAet1->iPRIType == _STABLE && pAet2->vPRIType == _JITTER_RANDOM ) {
-#endif
+            else if( pAet1->iPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED && pAet2->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER ) {
                 uRet = 0;
                     // return CheckHarmonic( pAet1->pri.mean, pAet2->pri.mean );
             }
@@ -461,10 +452,11 @@ public:
     CKMakeAET( void *pParent, unsigned int uiCoMaxPdw );
     virtual ~CKMakeAET();
 
+    bool GetLogAnalType();
+
     int GetIdxUpdAet() const { return m_IdxUpdAet; }
 
 };
 
 #endif
 
-#endif // !defined(AFX_KMAKEAET_H__0B6C1D4B_0545_4DD1_9E8C_1FDB63EDF929__INCLUDED_)

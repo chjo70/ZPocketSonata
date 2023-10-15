@@ -6,9 +6,11 @@
 #include "../../files/Anal/SigAnal/SysPara.h"
 #include "../../files/Anal/NewSigAnal/NewSigAnal.h"
 
+#include "../../files/Include/globals.h"
+
 #include "RadarDirAlgorithm.h"
 
-#include "../../files/Include/globals.h"
+
 
 
 enum ANALYSIS_MODE { NORMAL_MDOE = 0, SIMUL_MODE };

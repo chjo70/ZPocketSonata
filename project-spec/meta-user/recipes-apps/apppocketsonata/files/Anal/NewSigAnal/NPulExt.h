@@ -27,6 +27,9 @@ class CNewSigAnal;
 */
 class CNPulExt : public CPulExt
 {
+private:
+    unsigned int m_uiCoFrqAoaPwIdx;
+
 public:
 
 
@@ -60,6 +63,10 @@ public:
 	UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );
 	void ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarMode );
     void ClearAllMark();
+
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
+#endif
 
 };
 

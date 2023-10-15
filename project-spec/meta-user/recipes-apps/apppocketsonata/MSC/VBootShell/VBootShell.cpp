@@ -40,14 +40,16 @@ int main()
             WORD wVersionRequested;
             WSADATA wsaData;
 
-            wVersionRequested = MAKEWORD( 2, 0 );
+            wVersionRequested = MAKEWORD( 2, 3 );
 
             if( WSAStartup( wVersionRequested, &wsaData ) == 0 ) {
                 Main();
             }
             else {
-                
+
             }
+
+            WSACleanup();
         }
     }
     else

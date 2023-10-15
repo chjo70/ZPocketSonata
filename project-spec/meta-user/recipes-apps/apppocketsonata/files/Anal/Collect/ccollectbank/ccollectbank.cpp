@@ -49,20 +49,132 @@ CCollectBank::CCollectBank( unsigned int uiDetectChannel, unsigned int uiTracnCh
      m_uiTotalChannels( uiDetectChannel + uiTracnChannel + uiScanChannel ),
      m_enPCIDriver( enPCIDriver )
 {
-    int i=0;
 
-    // 스캔 수집 시간 정의
-    m_uiScanCollectionTimems[i++] = 0;
-    m_uiScanCollectionTimems[i++] = 600;
-    m_uiScanCollectionTimems[i++] = 1500;
-    m_uiScanCollectionTimems[i++] = 3000;
-    m_uiScanCollectionTimems[i] = 30000;
 
     // 메모리를 할당 합니다.
     Alloc();
 
     // 구조체 및 변수를 초기화 합니다.
     Init();
+
+#if 1
+    struct STR_WINDOWCELL_TEST {
+        /**
+         * @brief 사용 여부 플레그 를 의미한다.
+         */
+        bool bUse;
+
+        //unsigned int uiMode;
+
+        // 채널 번호
+        // 탐지 채널은 0번,
+        unsigned int uiCh;
+
+        /**
+         * @brief 수집 완료 상태를 나타낸다.
+         */
+        ENUM_COLLECT_MODE enCollectMode;
+
+        /**
+         * @brief 저장된 PDW 개수
+         */
+        unsigned int uiTotalPDW;
+
+        /**
+        * @brief 최대 수집 개수 및 수집 시간
+        */
+        unsigned int uiCoCollectingPDW;
+        unsigned int uiMaxCollectTimeMssec;             // 최대 수집 시간 [ms]
+
+        //!<     펄스 상태
+        unsigned int uiStat;
+
+        /**
+        * @brief 주파수 범위
+        */
+        STR_LOWHIGH strFreq;
+
+        STR_LOWHIGH strAOA;
+        STR_LOWHIGH strPA;
+        STR_LOWHIGH strPW;
+
+        struct timespec tsCollectStart;
+
+
+        /**
+         * @brief 실제 수집 시간 정보 [ms]
+         */
+         //unsigned int uiCollectTimems;
+
+         /**
+          * @brief 빔 번호
+          */
+        unsigned int uiABTID;
+
+        /**
+         * @brief 누적 PDW 개수
+         */
+        unsigned int uiAccumulatedCoPDW;
+
+        /**
+         * @brief 누적 시간 [ms]
+         */
+        unsigned int uiAccumulatedTime;
+
+        /**
+         * @brief 누적 사용 채널 횟수
+         */
+        unsigned int uiAccumulatedCoUsed;
+
+        // 빔 정보
+        SRxABTData stABTData;                  //< 추적/스캔 채널별로 대상 위협 빔 정보
+
+        unsigned int uiScanStep;                ///< 스캔 수집 단계 정보
+        unsigned int uiABTIndex;                ///< 위협 관리의 빔 데이터 인덱스
+
+        STR_UZPOCKETPDW strPDW;
+
+        STR_WINDOWCELL_TEST() {
+        }
+
+        void Init2( unsigned int uiValueCh )
+        {
+            uiCh = uiValueCh;
+
+            bUse = false;
+            enCollectMode = enUnused;
+
+            uiABTID = 0;
+
+            uiTotalPDW = 0;
+            uiAccumulatedCoPDW = 0;
+
+            uiAccumulatedTime = 0;
+
+            uiAccumulatedCoUsed = 0;
+
+            memset( & strPDW.x, 0, sizeof( strPDW.x ) );
+
+            strPDW.SetTotalPDW( 0 );
+            strPDW.SetCollectBank( enUnknownCollectBank );
+        }
+
+        void SetChannel2( unsigned int uiValueCh )
+        {
+            uiCh = uiValueCh;
+        }
+
+        void SetCollectMode2( ENUM_COLLECT_MODE enSetCollectMode )
+        {
+            enCollectMode = enSetCollectMode;
+        }
+    };
+
+    STR_WINDOWCELL_TEST stTest;
+
+    memset( & stTest, 0, sizeof( struct STR_WINDOWCELL_TEST ) );
+
+#endif
 
 }
 
@@ -93,35 +205,36 @@ CCollectBank::~CCollectBank()
 void CCollectBank::Alloc()
 {
     unsigned int i, j;
+    unsigned int uiStart = 0;
 
     STR_WINDOWCELL* pstWindowCell;
 
     if( m_pstrCollectPCIAddress == NULL ) {
         if( m_uiTotalChannels <= MAX_CHANNELS ) {
-            m_pstrCollectPCIAddress = ( STR_COLLECT_PCIADDRESS * ) malloc( sizeof( STR_COLLECT_PCIADDRESS ) * m_uiTotalChannels );
+            m_pstrCollectPCIAddress = ( STR_COLLECT_PCIADDRESS * ) malloc( sizeof( struct STR_COLLECT_PCIADDRESS ) * m_uiTotalChannels );
         }
         else {
             Log( enError, "채널 수[%d]를 너무 많게 설정했습니다." , m_uiTotalChannels );
         }
 
         if( m_pstrCollectPCIAddress != NULL ) {
-            unsigned int uiStart=0;
+
             for( i = 0; i < m_uiTotalChannels; ++ i ) {
                 if( i < m_uiDetectChannel ) {
-                    m_pstrCollectPCIAddress[i].uiPCIAddressOffset = uiStart * sizeof( UZPOCKETPDW_PDWWORD );
+                    m_pstrCollectPCIAddress[i].uiPCIAddressOffset = uiStart * sizeof( struct UZPOCKETPDW_PDWWORD );
                     m_pstrCollectPCIAddress[i].uiPCIAddressSize = DETECT_COLLECTION_MEMORY_SIZE;
                 }
                 else if( i < m_uiDetectChannel + m_uiTrackChannel ) {
-                    m_pstrCollectPCIAddress[i].uiPCIAddressOffset = uiStart * sizeof( UZPOCKETPDW_PDWWORD );
+                    m_pstrCollectPCIAddress[i].uiPCIAddressOffset = uiStart * sizeof( struct UZPOCKETPDW_PDWWORD );
                     m_pstrCollectPCIAddress[i].uiPCIAddressSize = TRACK_COLLECTION_MEMORY_SIZE;
                 }
                 else if( i < m_uiDetectChannel + m_uiTrackChannel + m_uiScanChannel ) {
-                    m_pstrCollectPCIAddress[i].uiPCIAddressOffset = uiStart * sizeof( UZPOCKETPDW_PDWWORD );
+                    m_pstrCollectPCIAddress[i].uiPCIAddressOffset = uiStart * sizeof( struct UZPOCKETPDW_PDWWORD );
                     m_pstrCollectPCIAddress[i].uiPCIAddressSize = SCAN_COLLECTION_MEMORY_SIZE;
 
                 }
                 else {
-                    m_pstrCollectPCIAddress[i].uiPCIAddressOffset = uiStart * sizeof( UZPOCKETPDW_PDWWORD );
+                    m_pstrCollectPCIAddress[i].uiPCIAddressOffset = uiStart * sizeof( struct UZPOCKETPDW_PDWWORD );
                     m_pstrCollectPCIAddress[i].uiPCIAddressSize = USER_COLLECTION_MEMORY_SIZE;
                 }
 
@@ -129,41 +242,47 @@ void CCollectBank::Alloc()
 
                 if( uiStart > MAX_LOGIC_MEMORY_SIZE ) {
                     Log( enError, "필터 버퍼 메모리[%d]를 초과했습니다. 담당자에게 문의하세요..." , uiStart );
-                    while( 1 );
+                    while( true ) {
+                    }
+
                 }
             }
 
-            Log( enNormal, "탐지 채널 [%2d], 추적 채널 [%2d], 스캔 채널 [%2d] 개를 할당 했습니다.", m_uiDetectChannel, m_uiTrackChannel, m_uiScanChannel );
+            Log( enNormal, "탐지 채널 [%2d]개, 추적 채널 [%2d]개, 스캔 채널 [%2d] 개를 할당 했습니다.", m_uiDetectChannel, m_uiTrackChannel, m_uiScanChannel );
             for( j = 0; j < i ; ++j ) {
                 ENUM_COLLECTBANK enCollectBank;
 
                 enCollectBank = GetEnumCollectBank( j );
-                Log( enNormal, "\t[%s/%2d] 시작 베이스 어드레스 [0x%08X], 크기 [0x%08X]", g_szCollectBank[enCollectBank], j, m_pstrCollectPCIAddress[j].uiPCIAddressOffset, m_pstrCollectPCIAddress[j].uiPCIAddressSize );
+                //Log( enNormal, "[%s/%2u] 시작 베이스 어드레스 [0x%08X], 크기 [0x%08X]", g_szCollectBank[enCollectBank], j, m_pstrCollectPCIAddress[j].uiPCIAddressOffset, m_pstrCollectPCIAddress[j].uiPCIAddressSize );
+                Log( enNormal, "[%s/%2u] 시작 베이스 어드레스 [0x%08X], 크기 [0x%08X]", g_szCollectBank[(int)enCollectBank], j, m_pstrCollectPCIAddress[j].uiPCIAddressOffset, m_pstrCollectPCIAddress[j].uiPCIAddressSize );
             }
         }
 
     }
 
     if( m_uiTotalChannels <= MAX_CHANNELS ) {
-        size_t szSize = CCommonUtils::CheckMultiplyOverflow( ( int ) sizeof( STR_WINDOWCELL * ), (int) m_uiTotalChannels );
+        size_t szSize = CCommonUtils::CheckMultiplyOverflow( ( int ) sizeof( struct STR_WINDOWCELL * ), (int) m_uiTotalChannels );
         //m_pstrWindowCell = ( STR_WINDOWCELL** ) malloc( sizeof( STR_WINDOWCELL* ) * m_uiTotalChannels );
         m_pstrWindowCell = ( STR_WINDOWCELL ** ) malloc( szSize );
         if( m_pstrWindowCell == NULL ) {
-            Log( enError, "메모리 할당 에러[CCollectBank::m_pstrWindowCell] !" );
+            TRACE( "\n메모리 할당 에러[CCollectBank::m_pstrWindowCell] !" );
         }
         else {
             for( i = 0; i < m_uiTotalChannels; ++i ) {
-                m_pstrWindowCell[i] = ( STR_WINDOWCELL* ) malloc( sizeof( STR_WINDOWCELL ) );
+                m_pstrWindowCell[i] = ( STR_WINDOWCELL* ) malloc( sizeof( struct STR_WINDOWCELL ) );
                 if( m_pstrWindowCell[i] == NULL ) {
-                    Log( enError, "메모리 할당 에러[CCollectBank::m_pstrWindowCell] !" );
+                    TRACE( "\n메모리 할당 에러[CCollectBank::m_pstrWindowCell] !" );
                 }
                 else {
                     pstWindowCell = m_pstrWindowCell[i];
 
                     // m_strPDW.pstPDW = NULL;
-                    pstWindowCell->strPDW.pstPDW = ( UZPOCKETPDW * ) malloc( sizeof( UZPOCKETPDW ) * MAX_PDW );
+                    pstWindowCell->strPDW.pstPDW = ( UZPOCKETPDW * ) malloc( sizeof( union UZPOCKETPDW ) * MAX_PDW );
                     if( pstWindowCell->strPDW.pstPDW == NULL ) {
-                        Log( enError, "메모리 할당 에러[CCollectBank::pstWindowCell->strPDW.pstPDW] !" );
+                        TRACE( "\n메모리 할당 에러[CCollectBank::pstWindowCell->strPDW.pstPDW] !" );
+                    }
+                    else {
+                        // Log( enDebug, "메모리 할당 : WindowCell[%p], PDW[%p], 크기[%d]", m_pstrWindowCell[i], pstWindowCell->strPDW.pstPDW, sizeof( UZPOCKETPDW ) * MAX_PDW );
                     }
                 }
 
@@ -233,7 +352,8 @@ void CCollectBank::Init()
     for( uiCh = m_uiDetectChannel ; uiCh < m_uiDetectChannel + m_uiTrackChannel ; ++uiCh ) {
         m_theQueueTrackChannel.Push( (int) uiCh );
     }
-    for( uiCh = m_uiDetectChannel + m_uiTrackChannel ; uiCh < m_uiDetectChannel + m_uiTrackChannel + m_uiScanChannel; ++uiCh ) {
+    //for( uiCh = m_uiDetectChannel + m_uiTrackChannel ; uiCh < m_uiDetectChannel + m_uiTrackChannel + m_uiScanChannel; ++uiCh ) {
+    for( uiCh = m_uiDetectChannel + m_uiTrackChannel + m_uiScanChannel - 1 ; uiCh >= m_uiDetectChannel + m_uiTrackChannel ; --uiCh ) {
         m_theQueueScanChannel.Push( ( int ) uiCh );
     }
 
@@ -370,7 +490,7 @@ void CCollectBank::StartWindowCell( STR_WINDOWCELL *pstWindowCell )
     // 전처리 필터 세팅
     m_pThePCI->StartCollecting( pstWindowCell, & m_pstrCollectPCIAddress[pstWindowCell->uiCh] );
 
-    //memcpy( & m_strWindowCell, pSTR_WINDOWCELL, sizeof(STR_WINDOWCELL) );
+    //memcpy( & m_strWindowCell, pSTR_WINDOWCELL, sizeof(struct STR_WINDOWCELL) );
     //g_pTheSysConfig->SetWindowCell( (UINT) m_iChannelNo, & m_strWindowCell );
 }
 
@@ -527,7 +647,7 @@ bool CCollectBank::IsValidChannel()
 //     // PDW 정보 복사
 //     UINT uiTo;
 //     if( iTo > 0 ) {
-//         uiTo = (unsigned int) iTo * sizeof(_PDW);
+//         uiTo = (unsigned int) iTo * sizeof(struct _PDW);
 //
 //         memcpy( & m_strPDW.stPDW[m_strPDW.uiTotalPDW], & pPDWData->stPDW[0], uiTo );
 //     }
@@ -656,7 +776,7 @@ void CCollectBank::CalDetectWindowCell( STR_WINDOWCELL *pstWindowCell )
  * @date      2023-03-17 11:54:25
  * @warning
  */
-int CCollectBank::StartScanChennel( SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiScanStep )
+int CCollectBank::StartScanChennel( SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiReqScanPeriod, unsigned int uiScanStep, STR_SCANRESULT *pstScanResult )
 {
     int iCh=0;
 
@@ -665,16 +785,22 @@ int CCollectBank::StartScanChennel( SRxABTData *pABTData, SRadarMode *pRadarMode
     bool bRet = m_theQueueScanChannel.Pop( & iCh );
 
     if( bRet == true ) {
-        Log( enDebug, "위협(%d/%d)을 스캔 [%d]채널에 설정합니다.", pABTData->uiAETID, pABTData->uiABTID, iCh );
-
         // 윈도우 정보 얻기
         pWindowCell = GetWindowCell( (unsigned int) iCh );
 
         // 계산하기
-        CalScanWindowCell( pWindowCell, pABTData, pRadarMode, uiScanStep );
+        CalScanWindowCell( pWindowCell, pABTData, pRadarMode, uiReqScanPeriod, uiScanStep, pstScanResult );
 
         // 세팅하기
         StartWindowCell( pWindowCell );
+
+        Log( enNormal, "위협[방사체 %d/빔 %d]을 [%d]채널, 주파수[%d~%d MHz], 세기[%.1f~%.1f], 시간[%.2f 초]를 스캔 설정합니다.", pABTData->uiAETID, pABTData->uiABTID, iCh, UDIV(pWindowCell->strFreq.iLow, 1000), UDIV(pWindowCell->strFreq.iHigh, 1000), CPOCKETSONATAPDW::DecodePA( pWindowCell->strPA.iLow), CPOCKETSONATAPDW::DecodePA( pWindowCell->strPA.iHigh), FDIV( pWindowCell->uiMaxCollectTimeMssec, 1000. ) );
+
+//         Log( enDebug, "\t\t필터 설정 수집 개수\t\t%d [개]", pstrWindowCell->uiCoCollectingPDW );
+//         Log( enDebug, "\t\t필터 설정 수집 시간\t\t%3.2f [초]", FDIV( pstrWindowCell->uiMaxCollectTimeMssec, 1000. ) );
+//         Log( enDebug, "\t\t필터 설정 방위\t\t\t%.1f~%.1f [도]", CPOCKETSONATAPDW::DecodeDOA( pstrWindowCell->strAOA.iLow ), CPOCKETSONATAPDW::DecodeDOA( pstrWindowCell->strAOA.iHigh ) );
+//         Log( enDebug, "\t\t필터 설정 주파수\t\t%d~%d [MHz]", pstrWindowCell->strFreq.iLow, pstrWindowCell->strFreq.iHigh );
+
 
     }
     else {
@@ -705,7 +831,7 @@ void CCollectBank::ShowAllScanCahennelInfo()
     unsigned int uiCh;
     STR_WINDOWCELL *pstrWindowCell;
 
-    Log( enDebug, "[%s]의 스캔 수집 정보를 보여줍니다." , g_strPCIDrverDirection[m_enPCIDriver].c_str() );
+    Log( enDebug, "[%s]의 스캔 수집 정보를 보여줍니다." , g_strPCIDrverDirection[(int)m_enPCIDriver].c_str() );
 
     for( uiCh = m_uiDetectChannel + m_uiTrackChannel ; uiCh < m_uiDetectChannel + m_uiTrackChannel + m_uiScanChannel ; ++uiCh ) {
         pstrWindowCell = GetWindowCell( uiCh );
@@ -728,6 +854,7 @@ void CCollectBank::ShowAllScanCahennelInfo()
  */
 void CCollectBank::ShowScanCahennelInfo( STR_WINDOWCELL *pstrWindowCell )
 {
+#ifdef __VXWORKS__
     char szApply[2][10] = { "미적용", "적용" };
     char g_szCollectMode[enAnalysing + 1][20] = { "미사용", "수집중", "수집완료", "수집닫기", "분석중" };
 
@@ -735,7 +862,7 @@ void CCollectBank::ShowScanCahennelInfo( STR_WINDOWCELL *pstrWindowCell )
     Log( enDebug, "\t\t사용 여부\t\t\t\t%s", szApply[(unsigned int) pstrWindowCell->bUse] );
     Log( enDebug, "\t\t수집 상태\t\t\t\t%s", g_szCollectMode[( unsigned int ) pstrWindowCell->enCollectMode] );
 
-#ifdef _MFC_VER
+#ifdef _MSC_VER
     Log( enDebug, "\t\t수집중인 개수\t\t\t%d [개]", pstrWindowCell->uiTotalPDW );
 #endif
 
@@ -745,9 +872,10 @@ void CCollectBank::ShowScanCahennelInfo( STR_WINDOWCELL *pstrWindowCell )
     Log( enDebug, "\t\t필터 설정 주파수\t\t%d~%d [MHz]", pstrWindowCell->strFreq.iLow, pstrWindowCell->strFreq.iHigh );
     Log( enDebug, "\t\t누적 수집 개수\t\t\t%d [개]", pstrWindowCell->uiAccumulatedCoPDW );
     Log( enDebug, "\t\t연관 빔 번호\t\t\t%d", pstrWindowCell->uiABTID );
-    Log( enDebug, "\t\t스캔 수집 단계\t\t\t%d [단계]", pstrWindowCell->uiScanStep );
+    //Log( enDebug, "\t\t스캔 수집 단계\t\t\t%d [단계]", pstrWindowCell->uiScanStep );
 
     Log( enLineFeed, "" );
+#endif
 
 }
 
@@ -761,7 +889,7 @@ void CCollectBank::ShowScanCahennelInfo( STR_WINDOWCELL *pstrWindowCell )
  * @date		2023/02/23 10:23:43
  * @warning
  */
-void CCollectBank::CalScanWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiScanStep )
+void CCollectBank::CalScanWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiReqScanPeriod, unsigned int uiScanStep, STR_SCANRESULT *pstScanResult )
 {
     // UINT uiCollectTime;
 
@@ -776,7 +904,7 @@ void CCollectBank::CalScanWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData 
 
         // 레이더모드 식별 경우에 식별 정보를 이용하여 주파수 및 펄스폭을 설정
         if( pRadarMode != NULL ) {
-            if( IsValidMinMax<float>( pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax ) ) {
+            if( CCommonUtils::IsValidMinMax( pRadarMode->fRF_TypicalMin, pRadarMode->fRF_TypicalMax ) ) {
                 pstWindowCell->strFreq.iLow = ( int ) IFRQMhzCNV( 0, pRadarMode->fRF_TypicalMin );
                 pstWindowCell->strFreq.iHigh = ( int ) IFRQMhzCNV( 0, pRadarMode->fRF_TypicalMax );
             }
@@ -785,7 +913,7 @@ void CCollectBank::CalScanWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData 
                 pstWindowCell->strFreq.iHigh = ( int ) IFRQMhzCNV( 0, pABTData->fFreqMax );
             }
 
-            if( IsValidMinMax<float>( pRadarMode->fPD_TypicalMin, pRadarMode->fPD_TypicalMax ) ) {
+            if( CCommonUtils::IsValidMinMax( pRadarMode->fPD_TypicalMin, pRadarMode->fPD_TypicalMax ) ) {
                 pstWindowCell->strPW.iLow = IPWCNVLOW( pRadarMode->fPD_TypicalMin );
                 pstWindowCell->strPW.iHigh = IPWCNVHGH( pRadarMode->fPD_TypicalMax );
             }
@@ -796,12 +924,12 @@ void CCollectBank::CalScanWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData 
 
             //?     2차 후보 스캔을 고려해서 이 부분을 위협관리로 옮겨야 함.
             //date 	2023-04-14 09:29:39
-            if( is_zero<float>( pRadarMode->fScanPrimaryTypicalMax ) != true ) {
-                uiCollectTimems = UMUL( max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax ), 1000 );
-            }
+//             if( is_zero<float>( pRadarMode->fScanPrimaryTypicalMax ) != true ) {
+//                 uiCollectTimems = UMUL( max( pRadarMode->fScanPrimaryTypicalMax, pRadarMode->fScanSecondaryTypicalMax ), 1000 );
+//             }
         }
         else {
-            if( pABTData->vFreqType == E_AET_FRQ_FIXED ) {
+            if( pABTData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED ) {
                 pstWindowCell->strFreq.iLow = ( int) IFRQMhzCNV( 0, pABTData->fFreqMin - (float) 1.0 );
                 pstWindowCell->strFreq.iHigh = ( int ) IFRQMhzCNV( 0, pABTData->fFreqMax + (float) 1.0 );
             }
@@ -816,35 +944,75 @@ void CCollectBank::CalScanWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData 
 #ifdef _XBAND_
 
 #else
-            if( is_zero<float>(pABTData->fMeanScanPeriod ) != true ) {
-                uiCollectTimems = UMUL( pABTData->fMeanScanPeriod, 1000. );
-            }
+//             if( is_zero<float>(pABTData->fMeanScanPeriod ) != true ) {
+//                 uiCollectTimems = UMUL( pABTData->fMeanScanPeriod, 1000. );
+//             }
 
 #endif
         }
 
         // 시간 정보가 0 일때, 일반적인 스캔 수집 시간으로 설정합니다.
-        if( uiCollectTimems == 0 ) {
-            uiCollectTimems = m_uiScanCollectionTimems[uiScanStep];
-        }
+//         if( uiCollectTimems == 0 ) {
+//             uiCollectTimems = UMUL( uiReqScanPeriod, 2.5 ); // m_uiScanCollectionTimems[uiScanStep];
+//         }
 
         pstWindowCell->strPW.iLow = 0;
         pstWindowCell->strPW.iHigh = MAX_PW_BIT - 1;
 
-        pstWindowCell->strPA.iLow = 0;              // ( int ) IPACNV( PDW_PA_DB_MIN );
-        pstWindowCell->strPA.iHigh = MAX_PA_BIT - 1;    // ( int ) IPACNV( PDW_PA_DB_MAX );
+        CheckScanPAFilter( & pstWindowCell->strPA, pABTData, uiReqScanPeriod, uiScanStep, pstScanResult );
 
         pstWindowCell->strAOA.iLow = (int) ( ( IAOACNV( (float) ( pABTData->fDOAMin-10. ) ) + PDW_DOA_MAX ) % PDW_DOA_MAX );
         pstWindowCell->strAOA.iHigh = (int) ( ( IAOACNV( (float) ( pABTData->fDOAMax+10. ) ) + PDW_DOA_MAX ) % PDW_DOA_MAX );
 
         pstWindowCell->uiCoCollectingPDW = SCN_COLLECT_PDW;
 
-        pstWindowCell->uiMaxCollectTimeMssec = uiCollectTimems;
+        pstWindowCell->uiMaxCollectTimeMssec = UMUL( uiReqScanPeriod, 2.5 );
+
+        pstWindowCell->uiReqScanPeriod = uiReqScanPeriod;
+        pstWindowCell->uiScanStep = uiScanStep;
 
     }
     else {
 
     }
+}
+
+/**
+ * @brief     CheckScanPAFilter
+ * @param     STR_LOWHIGH * pstrPA
+ * @param     unsigned int uiScanStep
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-18 10:33:41
+ * @warning
+ */
+void CCollectBank::CheckScanPAFilter( STR_LOWHIGH *pstrPA, SRxABTData *pABTData, unsigned int uiReqScanPeriod, unsigned int uiScanStep, STR_SCANRESULT *pstScanResult )
+{
+    // 신호세기 최소값 설정
+    // 첫번째 스캔 신호 수집은 PA 최소값을 0 으로 해서 수집합니다.
+    if( uiScanStep == 0 ) {
+        pstrPA->iLow = 0;              // ( int ) IPACNV( PDW_PA_DB_MIN );
+
+    }
+    // 두 번째 이상 부터는, PA 최소값을 잡음 이상의 신호에서 설정하도록 한다.
+    else {
+
+        if( IsFullOfCollecting( pstScanResult->fCoScanCollectingPDW ) && !IsFullOfDuration( pstScanResult->fScanDurationms ) ) {
+            pstrPA->iLow = (int) pstScanResult->uiMedianPA;
+        }
+        else {
+            pstrPA->iLow = ( int ) IPACNV( ( float ) pABTData->fPAMin );
+        }
+        pstrPA->iLow = pstrPA->iLow + 5;
+    }
+
+    Log( enNormal, "스캔 신호 세기 최소값[%.1f]으로 설정합니다.", CPOCKETSONATAPDW::DecodePA( pstrPA->iLow ) );
+
+    // 신호세기 최대값 설정
+    pstrPA->iHigh = MAX_PA_BIT - 1;
+
 }
 
 /**
@@ -884,7 +1052,12 @@ void CCollectBank::SetCollectUpdateTime( unsigned int uiCh )
     time_t tNow;
     tNow = time( NULL );
 
-    GetPDWData(uiCh)->SetColTime( tNow, 0 );
+    if( tNow > 0 ) {
+        GetPDWData(uiCh)->SetColTime( (unsigned int) tNow, 0 );
+    }
+    else {
+        GetPDWData( uiCh )->SetColTime( 0, 0 );
+    }
 
 }
 
@@ -923,7 +1096,7 @@ void CCollectBank::SetCollectUpdateTime( unsigned int uiCh )
  * @date      2023-03-23 12:27:17
  * @warning
  */
-void CCollectBank::SaveCollectCahnnelInfo( unsigned int uiCh, SRxABTData *pABTData, unsigned int uiABTINdex, unsigned int uiScanStep )
+void CCollectBank::SaveCollectCahnnelInfo( unsigned int uiCh, SRxABTData *pABTData, unsigned int uiABTINdex, unsigned int uiReqScanPeriod )
 {
     STR_WINDOWCELL *pstrWindowCell;
 
@@ -933,19 +1106,12 @@ void CCollectBank::SaveCollectCahnnelInfo( unsigned int uiCh, SRxABTData *pABTDa
     // 빔 정보 저장
     //
     // 빔 정보
-    memcpy( & pstrWindowCell->stABTData, pABTData, sizeof( SRxABTData ) );
+    memcpy( & pstrWindowCell->stABTData, pABTData, sizeof( struct SRxABTData ) );
 
     // 위협 인덱스
     pstrWindowCell->uiABTIndex = uiABTINdex;
 
-    pstrWindowCell->uiScanStep = uiScanStep;
-
-    if( uiScanStep >= 1 && uiScanStep <= 4 ) {
-
-    }
-    else {
-        Log( enError, "스캔 단계 설정 에러 입니다." );
-    }
+    pstrWindowCell->uiReqScanPeriod = uiReqScanPeriod;
 
 }
 
@@ -962,14 +1128,14 @@ void CCollectBank::SaveCollectCahnnelInfo( unsigned int uiCh, SRxABTData *pABTDa
  */
 void CCollectBank::GetPDWData( STR_UZPOCKETPDW *pPDWData, unsigned int uiCh, unsigned int uiTotalPDW )
 {
-    time_t tColTime;
+    unsigned int tColTime;
     UINT uiColTimeMs;
 
     // Log( enDebug, "PDW 데이터 [%d] 개를 갖고 옵니다." , uiTotalPDW );
 
     //////////////////////////////////////////////////////////////////////////
     // 헤더 정보 저장
-    memset( & pPDWData->x, 0, sizeof( UNION_HEADER ) );
+    memset( & pPDWData->x, 0, sizeof( union UNION_HEADER ) );
 
     pPDWData->SetTotalPDW( uiTotalPDW );
     pPDWData->SetBoardID( g_enBoardId );
@@ -1005,9 +1171,10 @@ bool CCollectBank::IsFiltered( unsigned int uiCh, _PDW *pstPDW )
     pstrWindowCell = m_pstrWindowCell[uiCh];
 
     if( pstrWindowCell->bUse == true && pstrWindowCell->enCollectMode == enCollecting ) {
-        bRet = CompMarginDiff<int>( ( int ) pstPDW->uiFreq, pstrWindowCell->strFreq.iLow, pstrWindowCell->strFreq.iHigh, 0 ) && \
-               CompEncodeDOAMarginDiff<int>( ( int ) pstPDW->uiAOA, pstrWindowCell->strAOA.iLow, pstrWindowCell->strAOA.iHigh ) && \
-               CompMarginDiff<int>( ( int ) pstPDW->uiPW, pstrWindowCell->strPW.iLow, pstrWindowCell->strPW.iHigh, 0 );
+        bRet = TCompMarginDiff<int>( ( int ) pstPDW->uiFreq, pstrWindowCell->strFreq.iLow, pstrWindowCell->strFreq.iHigh, 0 ) && \
+               TCompEncodeDOAMarginDiff<int>( ( int ) pstPDW->uiAOA, pstrWindowCell->strAOA.iLow, pstrWindowCell->strAOA.iHigh ) && \
+               TCompMarginDiff<int>( ( int ) pstPDW->uiPA, pstrWindowCell->strPA.iLow, pstrWindowCell->strPA.iHigh, 0 ) && \
+               TCompMarginDiff<int>( ( int ) pstPDW->uiPW, pstrWindowCell->strPW.iLow, pstrWindowCell->strPW.iHigh, 0 );
     }
 
     return bRet;
@@ -1035,13 +1202,13 @@ void CCollectBank::PushPDWData( unsigned int uiCh, _PDW *pstPDW, UNION_HEADER *p
         uiTotalPDW = pWindowCell->strPDW.GetTotalPDW();
 
         if( uiTotalPDW + 1 <= pWindowCell->uiCoCollectingPDW ) {
-            // memcpy( &pWindowCell->strPDW.x, pHeader, sizeof( UNION_HEADER ) );
+            // memcpy( &pWindowCell->strPDW.x, pHeader, sizeof( union UNION_HEADER ) );
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
             pWindowCell->strPDW.SavePDWData( uiTotalPDW, pstPDW );
 
 #else
-            memcpy( &pWindowCell->strPDW.pstPDW[uiTotalPDW], pstPDW, sizeof( UZPOCKETPDW ) );
+            memcpy( &pWindowCell->strPDW.pstPDW[uiTotalPDW], pstPDW, sizeof( union UZPOCKETPDW ) );
 
 #endif
 
@@ -1074,6 +1241,8 @@ void CCollectBank::SimCollectMode( unsigned int uiCh )
 
     struct timespec tsDiff;
 
+    STR_UZPOCKETPDW *pPocketPDW;
+
     STR_WINDOWCELL *pWindowCell = GetWindowCell( uiCh );
 
     switch( pWindowCell->enCollectMode ) {
@@ -1084,7 +1253,8 @@ void CCollectBank::SimCollectMode( unsigned int uiCh )
             uiTotalPDW = GetTotalPDW( uiCh );
 
             if( uiTotalPDW >= _spTwo ) {
-                msDTOA = GetPDWData( uiCh )->pstPDW[uiTotalPDW - 1].stHwPdwDataRf.ullTOA - GetPDWData( uiCh )->pstPDW[0].stHwPdwDataRf.ullTOA;
+                pPocketPDW = GetPDWData( uiCh );
+                msDTOA = pPocketPDW->pstPDW[uiTotalPDW - 1].stHwPdwDataRf.ullTOA - pPocketPDW->pstPDW[0].stHwPdwDataRf.ullTOA;
 
                 // 개수 비교
                 if( uiTotalPDW >= pWindowCell->uiCoCollectingPDW ) {
@@ -1093,9 +1263,10 @@ void CCollectBank::SimCollectMode( unsigned int uiCh )
                 // 시간 비교
                 else if( TOAmsCNV( msDTOA ) >= ( double ) pWindowCell->uiMaxCollectTimeMssec ) {
                     pWindowCell->enCollectMode = enCompleteCollection;
+                    SetTotalPDW( uiCh, uiTotalPDW - 1 );
+
                 }
                 else {
-
                 }
 
             }
@@ -1154,7 +1325,7 @@ int CCollectBank::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 if( true == IsCompleteCollect( uiCh ) ) {
                     pTheWindowCell = GetWindowCell( uiCh );
 
-                    Log( enDebug, "[%s]에서 탐지 채널[%d]에서 [%d]개 수집 완료", g_strPCIDrverDirection[m_enPCIDriver].c_str(), uiCh, pTheWindowCell->uiTotalPDW );
+                    Log( enDebug, "[%s]에서 탐지 채널[%d]에서 [%d]개 수집 완료", g_strPCIDrverDirection[(int)m_enPCIDriver].c_str(), uiCh, pTheWindowCell->uiTotalPDW );
 
                     //pCollectBank->SetCollectMode( ui, enCompleteCollection );
                     SetCollectUpdateTime( uiCh );
@@ -1194,7 +1365,7 @@ int CCollectBank::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
                 if( true == IsCompleteCollect( uiCh ) ) {
                     pTheWindowCell = GetWindowCell( uiCh );
 
-                    Log( enDebug, "[%s]에서 위협[%d/%d] 스캔 채널[%d]에서 [%d]개 수집 완료", g_strPCIDrverDirection[m_enPCIDriver].c_str(), pTheWindowCell->stABTData.uiAETID, pTheWindowCell->stABTData.uiABTID, uiCh, pTheWindowCell->uiTotalPDW );
+                    Log( enDebug, "[%s]에서 위협[%d/%d] 스캔 채널[%d]에서 [%d]개 수집 완료", g_strPCIDrverDirection[(int)m_enPCIDriver].c_str(), pTheWindowCell->stABTData.uiAETID, pTheWindowCell->stABTData.uiABTID, uiCh, pTheWindowCell->uiTotalPDW );
                     SetCollectUpdateTime( uiCh );
                     iCh = ( int ) uiCh;
                     break;
@@ -1231,7 +1402,7 @@ int CCollectBank::CheckCollectBank( ENUM_COLLECTBANK enCollectBank )
  * @date      2023-03-27 12:57:19
  * @warning
  */
-void CCollectBank::SimFilter( STR_PDWDATA *pPDWData )
+void CCollectBank::SimFilter( STR_PDWDATA *pPDWData, bool bOnly )
 {
     unsigned int ui, uj, uiTotalPDW;
     unsigned int uiTrackCh = 0, uiScanCh = 0, uiDetectCh = ( unsigned int ) -1;
@@ -1260,10 +1431,13 @@ void CCollectBank::SimFilter( STR_PDWDATA *pPDWData )
             // 탐지 채널에 저장한다.
             if( uiTrackCh == 0 ) {
 #endif
-                for( uj = 0 ; uj < CO_DETECT_CHANNEL; ++uj ) {
-                    if( IsFiltered( uj, pstPDW ) == true ) {
-                        PushPDWData( uj, pstPDW, &pPDWData->x );
-                        uiDetectCh = uj;
+
+                if( bOnly == true ) {
+                    for( uj = 0 ; uj < CO_DETECT_CHANNEL; ++uj ) {
+                        if( IsFiltered( uj, pstPDW ) == true ) {
+                            PushPDWData( uj, pstPDW, &pPDWData->x );
+                            uiDetectCh = uj;
+                        }
                     }
                 }
 #if CO_TRACK_CHANNEL != 0
@@ -1285,20 +1459,22 @@ void CCollectBank::SimFilter( STR_PDWDATA *pPDWData )
             // 사용자 채널 설정
 
             ++pstPDW;
+
+            for( uj = 0; uj < CO_DETECT_CHANNEL + CO_TRACK_CHANNEL + CO_SCAN_CHANNEL; ++uj ) {
+                SimCollectMode( uj );
+            }
+
         }
 
-        for( uj = 0; uj < CO_DETECT_CHANNEL + CO_TRACK_CHANNEL + CO_SCAN_CHANNEL; ++uj ) {
-            SimCollectMode( uj );
-        }
 
     }
     else {
         //STR_COLLECT_INFO stCollectInfo;
 
-        //         memset( &stCollectInfo, 0, sizeof( STR_COLLECTINFO ) );
+        //         memset( &stCollectInfo, 0, sizeof( struct STR_COLLECTINFO ) );
         //         stCollectInfo.iCh = 0;
         //         stCollectInfo.uiTotalPDW = 0;
-        //         g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_DETECT_COLSTOP, &stCollectInfo, sizeof( STR_COLLECTINFO ) );
+        //         g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_DETECT_COLSTOP, &stCollectInfo, sizeof( struct STR_COLLECTINFO ) );
     }
 
 }

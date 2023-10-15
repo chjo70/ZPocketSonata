@@ -1,9 +1,21 @@
-﻿// _Define.h: interface for the 분석 소프트웨어의 정의
+﻿/**
+
+    @file      define.h
+    @brief
+    @details   ~
+    @author    Cool Guy
+    @date      18.06.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+
+#pragma once
+
+
+// _Define.h: interface for the 분석 소프트웨어의 정의
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_NDEFINE_H__454E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)
-#define AFX_NDEFINE_H__454E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -31,4 +43,4 @@
 
 
 
-#endif // !defined(AFX_NDEFINE_H__454E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)
+

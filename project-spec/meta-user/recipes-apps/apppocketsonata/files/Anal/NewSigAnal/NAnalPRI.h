@@ -36,27 +36,34 @@ public:
 
 	void Analysis();
 	int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex );
-	unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
+	unsigned int ExtractStagger(_TOA framePri, STR_EMITTER *pEmitter );
 	bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
 	void DeleteAllSeg( STR_EMITTER *pEmitter );
 	void PrintAllSeg();
 	void ExtractRefStable();
 	bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange );
-	UINT ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri );
 	unsigned int GetCoSeg();
 	STR_PULSE_TRAIN_SEG *GetPulseSeg();
 	unsigned int GetMaxPdw();
 	void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter );
-	UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
+	UINT MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
 	_TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount);
 	int GetBand();
 	void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
 
-    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge );
 
     static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
 
     CMakeAET *GetMakeAET();
+
+    void *GetParentSigAnal();
+
+    void SaveDebug( const char *pSourcefile, int iLines );
+
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
+#endif
 
 };
 

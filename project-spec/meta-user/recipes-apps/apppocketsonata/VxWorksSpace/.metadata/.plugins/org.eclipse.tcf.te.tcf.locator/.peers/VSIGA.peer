@@ -1,5 +1,5 @@
 {
-  "Host": "192.168.10.50",
+  "Host": "192.168.0.121",
   "ID": "c3d72177-0adf-4667-b1c5-5590409e9ed2",
   "KernelImage": "D:/VirtualBoxVMs/Git/ZPocketSonata1/project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/VSIGA/VSourceBuild_PPCE6500gnu_SMP/VSIGA/Debug/VSIGA.out",
   "Mode": "run",
@@ -11,6 +11,5 @@
   "TransportName": "TCP",
   "Type": "vxworks",
   "Version": "1.0.0",
-  "autoConnect": "true",
   "autoStartDebugger": "true"
 }

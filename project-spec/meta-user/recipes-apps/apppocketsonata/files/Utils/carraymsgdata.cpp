@@ -37,6 +37,26 @@ CArrayMsgData::CArrayMsgData( bool bArrayLanData )
 {
     m_bArrayLanData = bArrayLanData;
 
+
+#ifdef _MSC_VER
+
+#elif defined(__VXWORKS__)
+
+    if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
+        perror( "세마포어 실패" );
+    }
+
+#elif defined(__linux__)
+
+    if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
+        perror( "세마포어 실패" );
+    }
+
+#else
+#error 이 소스는 현재 플레폼에 지원하지 않습니다. 개발자에게 문의하세요..
+#endif
+
+
     Init();
 
     Alloc();
@@ -49,6 +69,19 @@ CArrayMsgData::CArrayMsgData( bool bArrayLanData )
 CArrayMsgData::~CArrayMsgData()
 {
     Free();
+
+#ifdef __linux__
+    sem_destroy( & m_mutex );
+
+#elif defined(_MSC_VER)
+
+#elif defined(__VXWORKS__)
+    sem_destroy( & m_mutex );
+
+
+#else
+
+#endif
 }
 
 /**
@@ -63,7 +96,7 @@ CArrayMsgData::~CArrayMsgData()
 void CArrayMsgData::Init()
 {
     m_ucPushIndex = 0;
-    m_ucPopIndex = 0;
+    //m_ucPopIndex = 0;
 
 }
 
@@ -146,43 +179,103 @@ void CArrayMsgData::SetMark( int iIndex )
  */
 int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 {
-    int iRet;
+    int ucPushIndex;
 
+    Lock();
     ++ m_ucPushIndex;
     if( m_ucPushIndex >= SIZE_OF_MSGDATA_ARRAY ) {
         m_ucPushIndex = 0;
     }
-    iRet = (int) m_ucPushIndex;
+    ucPushIndex = ( int ) m_ucPushIndex;
 
     // 메시지 처리 대기
     int i=0;
-    while( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
-        msSleep( 1000 );
 
-        if( i++ >= MAX_TRY_MARK ) {
-            break;
+#ifdef _LOG_
+    if( this != g_pTheLog ) {
+#endif
+        if( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER ) {
+#ifdef __VXWORKS__
+            //int iPriority = _GetPriority();
+            //_ChangeTaskPriority( TASK_LOWEST_PRIORITY );
+            do {
+                taskDelay( 2 * 77 );
+                TRACE( "!" );
+                if( i++ >= MAX_TRY_MARK ) {
+                    break;
+                }
+            } while( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER );
+
+            //_ChangeTaskPriority( iPriority );
+
+#elif _MSC_VER
+            do {
+                Sleep( 2 );
+
+                if( i++ >= MAX_TRY_MARK ) {
+                    break;
+                }
+            }
+            while( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER );
+#else
+
+#endif
+        }
+#ifdef _LOG_
+    }
+#endif
+
+#ifdef _LOG_
+    else {
+        if( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER ) {
+            WhereIs;
+            PrintDebug( (unsigned int) ucPushIndex );
+
+#ifdef __VXWORKS__
+
+            do {
+                taskDelay( 10L );
+                printf( "?" );
+            } while( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER );
+#else
+            do {
+                Sleep( 1 );
+                TRACE( "?" );
+
+            } while( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER );
+#endif
         }
     }
 
-    if( m_pszArray[m_ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[m_ucPushIndex][1] != ARARAY_MARK_LOWER ) {
-        //LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );
-        //Log( enError, "[%s] 가 죽었거나 메시지 처리를 못해서 타스크 관리자에게 요청 합니다[%d]. !!" , GetThreadName(), enERROR_OF_ARRAY_MARK );
-        WhereIs;
-        WhereIs;
-        SendTaskMngr( enERROR_OF_ARRAY_MARK, GetThreadName() );
+#endif
 
-        iRet = -1;
+    if( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER ) {
+        //LOGMSG( enError, "ArrayBuffer 가 손상 되었습니다 !!" );
+        TRACE( "\n[%s] 가 죽었거나 메시지 처리를 못하고 있습니다. 관리자에게 문의하세요[%d] !" , GetThreadName(), ucPushIndex );
+        //ShowTaskMessae( 0 );
+        //WhereIs;
+        SendTaskMngr( enERROR_OF_ARRAY_MARK, GetThreadName() );
+        //PrintDebug( ucPushIndex );
+
+        ucPushIndex = -1;
     }
     else {
 	    if( uiLength > _MAX_LANDATA ) {
-            //Log( enError, "************** 버퍼가 작습니다. _MAX_LANDATA 값을 늘려 주세요..." );
+            TRACE( "************** 버퍼가 작습니다. _MAX_LANDATA 값을 늘려 주세요..." );
 		    exit( 1 );
 	    }
 
-        memcpy( m_pszArray[m_ucPushIndex], pData, uiLength );
+        memcpy( m_pszArray[ucPushIndex], pData, uiLength );
+
+//         if( m_pszArray[ucPushIndex][0] == 0x0A ) {
+//             TRACE( "*" );
+//         }
+
     }
 
-    return iRet;
+    UnLock();
+
+    return ucPushIndex;
 }
 
 /**
@@ -199,8 +292,31 @@ void CArrayMsgData::PopLanData( void *pData, int iIndex, unsigned int uiLength )
         SetMark( iIndex );
     }
     else {
-        // LOGMSG1( enError, "ArrayBuffer 인덱스[%d]가 잘못 되었습니다." , iIndex );
+        TRACE( "ArrayBuffer 인덱스[%d]가 잘못 되었습니다." , iIndex );
     }
 
     return;
+}
+
+/**
+ * @brief     PrintDebug
+ * @param     unsigned int ucPushIndex
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-03 14:01:23
+ * @warning
+ */
+void CArrayMsgData::PrintDebug( unsigned int ucPushIndex )
+{
+    int i;
+    TRACE( "\n ucPushIndex=%d\n", ucPushIndex );
+    for( i = 0; i < SIZE_OF_MSGDATA_ARRAY; ++i ) {
+        TRACE( "%d=0x%x\t", i, m_pszArray[i][0] );
+//         if( m_pszArray[i][0] != ARARAY_MARK_UPPER ) {
+//             TRACE( "\n m_pszArray[%d][0]=%s", i, (char *) m_pszArray[i][0] );
+//         }
+    }
+
 }

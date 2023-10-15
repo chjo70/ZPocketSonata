@@ -12,25 +12,25 @@
 		<list key="replacement-string.combo">
 		</list>
 		<list key="search-string.combo">
+			<item value="TIMER_CONNECT_FUNC"/>
+			<item value=" enNormal, &quot;신호분석 운용 변수 설정"/>
+			<item value="bool CELSignalIdentifyAlg::CompHoppingDwell"/>
+			<item value="typedef unsigned int SOCKET"/>
+			<item value="SOCKET"/>
+			<item value="swapByteOrder"/>
+			<item value="Enable route protocols 1.0.1.6"/>
+			<item value="IDLE"/>
+			<item value="option"/>
 			<item value="adt7481_set_therm_mode"/>
 			<item value="BIT("/>
 			<item value="pAdt7481Inst"/>
-			<item value="adt7481TempPollingTask"/>
-			<item value="start("/>
-			<item value="Starting..."/>
-			<item value="VXB_ADT7481_TEMP_DRV"/>
-			<item value="if (m_pszSQLString[0] != NULL) {"/>
-			<item value="szRawDataFilename[0] = N"/>
-			<item value="root"/>
-			<item value="TransferIQ"/>
-			<item value="break"/>
 		</list>
 		<list key="scope-history">
 			<item value="Workspace"/>
-			<item value="Project VBootShell_T2MS32"/>
 			<item value="Project VSIGA"/>
-			<item value="Projects VBootShell_T2MS32, ..."/>
+			<item value="Project VBootShell_T2MS32"/>
 			<item value="Project VSourceBuild_T2MS32"/>
+			<item value="Projects VBootShell_T2MS32, ..."/>
 			<item value="Selected resources"/>
 		</list>
 		<list key="filter-pattern.combo">
@@ -39,7 +39,7 @@
 			<item value="" key="customName"/>
 			<item value="com.windriver.ide.search.ui.internal.scope.ScopeDescResourceSelection" key="scope-descriptor-class"/>
 			<list key="resources">
-				<item value="/VBootShell_T2MS32"/>
+				<item value="/VSIGA"/>
 			</list>
 		</section>
 		<section name="scope-history-Selected resources">

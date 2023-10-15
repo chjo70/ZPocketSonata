@@ -78,7 +78,11 @@ bool _TRACE(char *format, ...);
 bool _TRACE(CString strFormat, ...);
 
 #undef TRACE
+#ifdef _LOG_ANALTYPE_
 #define TRACE _TRACE
+#else
+#define TRACE printf
+#endif
 
 #ifdef _DEBUG
 

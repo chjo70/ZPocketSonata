@@ -45,7 +45,7 @@ CAnalyticCEP::CAnalyticCEP(void)
 		theX((UINT)3, (UINT)i) = (10 + i * 1) + i;
 	}
 
-#ifdef _MFC_VER
+#ifdef _MSC_VER
 	//Log( enNormal, "CAnalyticCEP" );
 	TRACE("\n CAnalyticCEP... ");
 

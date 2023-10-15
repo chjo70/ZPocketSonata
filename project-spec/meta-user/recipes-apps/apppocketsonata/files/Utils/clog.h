@@ -36,8 +36,10 @@
 
 #define MAX_SCREEN_COLUMNS  (90)
 
+#define MAX_MESSAGE_COLUMNS (80)
 
-#define LOG_DIR_SIZE        (1024)
+
+#define LOG_DIR_SIZE        (1024*5)
 
 
 // 로그 출력에 함수 라인 을 포함할때 아래를 정의 합니다.
@@ -58,7 +60,10 @@ enum LogType {
     enEnd,
 };
 
+#ifdef _LOG_ANALTYPE_
+bool GetLogAnalType();
 
+#endif
 
 
 /**
@@ -125,6 +130,8 @@ public:
     void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... );
     //void LogMsg( int nType, const char *fmt, ... );
 
+    void Start();
+
 public:
 #ifdef _LOG_
     void Run( key_t key = IPC_PRIVATE );
@@ -135,6 +142,15 @@ public:
     STR_MessageData *GetParentMessage() { return m_pMsg; }                          ///< 메시지 데이터를 리턴 합니다.
 #endif
 
+    const char *GetLogDirectory()
+    {
+        return m_szLogDir;
+    }
+
+    const char *GetLogFullName()
+    {
+        return m_szLogFullName;
+    }
 
 
 };

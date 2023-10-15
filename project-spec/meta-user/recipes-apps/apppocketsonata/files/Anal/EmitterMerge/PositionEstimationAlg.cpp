@@ -267,7 +267,7 @@ void CPositionEstimationAlg::RunPositionEstimation( STR_POSITION_ESTIMATION *pPE
 	CommonRunPositionEstimation( & stSELPE_RESULT );
 
 	// 4. 결과 변환
-	//memset( & stABTData, 0, sizeof(STR_POSITION_ESTIMATION) );
+	//memset( & stABTData, 0, sizeof(struct STR_POSITION_ESTIMATION) );
 	pPEInfo->enValid = ( stSELPE_RESULT.bResult == true ? E_EL_PESTAT_SUCCESS : E_EL_PESTAT_FAIL );
 
     pPEInfo->fLatitude = (float) stSELPE_RESULT.dLatitude;
@@ -894,7 +894,7 @@ void CPositionEstimationAlg::FilteredByCensorPosition()
 // 			\date 	2015-10-6 9:51:16
 // 	*/
 // 	if( isize < MAX_LOBS ) {
-// 		nSize = (int) sizeof(SELPE_RESULT) * isize;
+// 		nSize = (int) sizeof(struct SELPE_RESULT) * isize;
 // 		m_pSensorXY = ( SELPE_RESULT * ) malloc( (UINT) nSize );
 // 
 // 		/*! \debug  신뢰성: 메모리 크기 지정

@@ -139,6 +139,9 @@ CREATE TABLE RADARMODE (
 	DATE_LAST_SEEN 		DATETIME DEFAULT '1970-01-01 0:00:00.000',  /* 최근 접촉 날짜 */
 	
 	SIGNAL_TYPE 		TINYINT,  /* 신호 형태 */
+	
+	CATEGORY			TINYINT,  /* 플레폼 형태 */
+	
 	ERP_MIN 			FLOAT,  /* ERP 최소  */
 	ERP_MAX 			FLOAT,  /* ERP 최대 */
 	RF_TYPE				TINYINT,  /* RF 형태 */
@@ -174,8 +177,12 @@ CREATE TABLE RADARMODE (
 	SCAN_SECONDARY_RANGE_MAX FLOAT,  /* 스캔 2차 주기 최대 */
 	MODULATION_CODE VARCHAR (5) ,  /* 변환 코드 */
 	PRIORITY TINYINT,  /* 우선순위 */
-	JAMMING_PRIMARY_TECH INT,  /* 1차 재밍 기법 */
-	JAMMING_SECONDARY_TECH INT, /* 2차 재밍 기법 */
+	
+	/*
+	JAMMING_PRIMARY_TECH INT, */ /* 1차 재밍 기법 */
+	/*
+	JAMMING_SECONDARY_TECH INT, */ /* 2차 재밍 기법 */
+	
 	VALIDATION INT DEFALUT '1', /* 유효 */
 	
 	PRIMARY KEY(RADARMODE_INDEX),

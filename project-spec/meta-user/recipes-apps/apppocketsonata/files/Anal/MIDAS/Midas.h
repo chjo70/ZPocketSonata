@@ -1,10 +1,10 @@
 ﻿/*!
  * @file      Midas.h
- * @brief     
+ * @brief
  * @exception MIDAS Blue File Format 헤더 파일
  * @author    조철희
- * @date      2014-11-22 오후 8:19 
- * @warning   
+ * @date      2014-11-22 오후 8:19
+ * @warning
  */
 
 #pragma once
@@ -25,7 +25,7 @@ using namespace std;
 #include "RawFile.h"
 
 
-// #if TOOL==diab 
+// #if TOOL==diab
 // #pragma pack( 1 )
 // #else
 // #pragma pack( push, 1 )
@@ -55,7 +55,7 @@ enum EnumSCDataType
 	E_EL_SCDT_LOG				= 0x40,		// 운용 로그
 	//E_EL_SCDT_SAMPLING	= 0x80,		//Sampling
 
-	E_EL_SCDT_PDW2SP370	= 0x88,		//PDWfmf SP350변환  
+	E_EL_SCDT_PDW2SP370	= 0x88,		//PDWfmf SP350변환
 
 	E_EL_SCDT_ALL = -1					// 검색할 때 인자를 주기 위한 것
 };
@@ -87,7 +87,7 @@ enum EnumSCDataType
  * @brief     키워드에 대한 최대 길이
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-#define MAX_OF_KEYWORD		(99999)												
+#define MAX_OF_KEYWORD		(99999)
 
 // MIDAS 변환 파일에 대한 버젼 정보 저장
 //#define HEADER_VER_IF		"1.0"
@@ -99,7 +99,7 @@ enum EnumSCDataType
 
 //////////////////////////////////////////////////////////////////////////
 // MIDAS File types
-// 
+//
 
 #define MIDAS_FILE_TYPE_1000	1000		// Generic one-dimensional scalar data
 #define MIDAS_FILE_TYPE_1001	1001		// Uniformly sampled amplitude data
@@ -176,7 +176,7 @@ enum EnumSCDataType
 
 //////////////////////////////////////////////////////////////////////////
 // Midas Codes to Identify Value Units
-// 
+//
 #define VALUE_UNITS_NOT_APPLICABLE						0		// Not applicable
 #define VALUE_UNITS_TIME											1		// [s] Time ( seconds )
 #define VALUE_UNITS_DELAY											2		// [s] Delay (seconds) (less common then 1 (Time) since “delay” is usually implied by context)
@@ -188,7 +188,7 @@ enum EnumSCDataType
 #define VALUE_UNITS_JERK											8		// [m/s^3] Jerk (m/s^2 per second)
 #define VALUE_UNITS_DOPPLER										9		// [Hz] Doppler ( hertz )
 #define VALUE_UNITS_DOPPLER_RATE							10	// [Hz/s] Doppler rate (hertz per second)
-#define VALUE_UNITS_JOULES										11	// [J] Energy ( joules )	
+#define VALUE_UNITS_JOULES										11	// [J] Energy ( joules )
 #define VALUE_UNITS_WATTS											12	// [W] Power ( watts )
 #define VALUE_UNITS_GRAMS											13	// [g] Mass ( grams )
 #define VALUE_UNITS_VOLUME										14	// [dm^3] Volume (dm^3 = cubic decimeter = liter)
@@ -239,21 +239,21 @@ enum EnumSCDataType
  * @brief     MIDAS ADJUNCT MIDAS 파일 포멧 종류 정의
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
-enum E_EL_ADJUNCT_FILE_TYPE { 
+enum E_EL_ADJUNCT_FILE_TYPE {
 	// Type 1000
-	_TYPE_1000=0, 
+	_TYPE_1000=0,
 
 	// Type 2000
-	_TYPE_2000, 
-	
+	_TYPE_2000,
+
 	// Type 3000
-	_TYPE_3000, 
+	_TYPE_3000,
 
 	// Type 4000
-	_TYPE_4000, 
-	
+	_TYPE_4000,
+
 	// Type 5000
-	_TYPE_5000 
+	_TYPE_5000
 
 };
 
@@ -261,7 +261,7 @@ enum E_EL_ADJUNCT_FILE_TYPE {
  * @typedef		SELMIDAS_HCB
  * @brief			MIDAS 포멧의 고정된 Header Control Block (HCB)
  * @author    조철희
- * @date      2014-11-22 
+ * @date      2014-11-22
  */
 struct SELMIDAS_HCB {
 	char version[4];									// header version
@@ -300,7 +300,7 @@ struct SELMIDAS_HCB {
  * @typedef		SELMIDAS_BINARY_KEYWORD
  * @brief			Extended Header 에대한 구조체 정의
  * @author    조철희
- * @date      2015-03-05 
+ * @date      2015-03-05
  */
 struct SELMIDAS_BINARY_KEYWORD {
 	unsigned int lkey;								// total length of keyword
@@ -444,44 +444,8 @@ struct S_EL_PDW_RECORDS {
 
 } ;
 
-// char   형은 마지막 끝에 NULL 문자로 끝나야 함. 입력할 것이 없으면 NULL 로 저장함.
-// time_t 형은 시간 정보를 저장. 정보가 없으면 0 으로 함.
-// int 형은 정보가 없으면 -1 로 저장함.
-// int 형은 정보가 없으면 -1 로 저장함.
-struct SEL_KEYWORD_VALUE {
-	// Basic Keyword
-	char classification[50];		// 데이터의 분류
-	char writer[50];						// 생성기 장비명
 
-	char writer_version[20];		// 생성기 버젼 정보
-
-	// 사용자 키워드
-	char signal_id[20];					// 신호 ID
-	char notes[100];						// 커멘트
-
-	// 시간 정보
-	time_t tiTime;							// MIDAS 함수를 콜한 시간
-	time_t tiCollectionTime;		// 수집한 날짜와 시간 정보 저장 
-
-	// Tuning keyword & Collection Parameter
-	double dRF;									// 중심 주파수 [Hz]
-	double dBW;									// 중심 주파수에 대한 대역폭 [Hz]
-	double dSamplingPeriod;			// 샘플링 [MHz]
-	double dRecBW;							// 디지털 수신기의 대역폭 [Hz]
-	double dLockedLO;						// LO 값, 반전이면 RF+160MHz, 반전이 아니면 RF-160MHz
-	char collector[20];					// 수집소명
-	char feed[20];							// 안테나 ID
-
-	int gain_mode;							// 수동일 때 0, 자동(AGC)일 때 1
-	double dGain_value;						// 게인 값 [dB]
-
-	unsigned int uiNumberOfData;						// 데이터 개수
-
-	int mission;
-	int receiver;
-
-};
-
+#include "sel_keyword_value.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -508,12 +472,8 @@ struct S_UNI_DATA_SET {
 
     S_UNI_DATA_SET()
     {
-            memset( iqData, 0, sizeof(iqData) );
-            memset( ifData, 0, sizeof(ifData) );
-
-            //memset( samplingData, 0, sizeof(samplingData) );
-            //memset( prftoneData, 0, sizeof(prftoneData) );
-    //memset( pdwData, 0, sizeof(pdwData) );
+        memset( iqData, 0, sizeof(iqData) );
+        memset( ifData, 0, sizeof(ifData) );
 
     }
 
@@ -534,7 +494,7 @@ union UNI_ADJUNCT_TYPE {
     SELMIDAS_ADJUNCT_TYPE_6000 _6000;
 };
 
-// #if TOOL==diab 
+// #if TOOL==diab
 // #pragma pack( 4 )
 // #else
 // #pragma pack( pop )
@@ -545,21 +505,21 @@ union UNI_ADJUNCT_TYPE {
 /**
  * @class     CMIDASBlueFileFormat
  * @brief     PDW, IQ, IF 데이터를 MIDAS 포멧으로 변환해주는 클래스
- * 
+ *
  * (1)　클래스 설명
  *  - PDW, IQ, IF 데이터 파일을 MIDAS 포멧으로 변환해주는 클래스임.
- * 
+ *
  * (2)　설계결정사항
  *  - PDW, IQ, IF 데이터 파일을 MIDAS 포멧으로 변환
  *  - 이외에 추가적인 데이터 변환이 있음.
- * 
+ *
  * (3)　제한 및 예외처리
  *  - 해당사항 없음.
- * 
+ *
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2014-11-22 오후 8:50 
- * @warning   
+ * @date      2014-11-22 오후 8:50
+ * @warning
  */
 //class CMIDASBlueFileFormat : public CRawFile, public CPDW2SP370
 class CMIDASBlueFileFormat : public CRawFile
@@ -603,8 +563,8 @@ private:
 
 
     void MakePRFToneData();
-    unsigned int CalcExtStart();
-    double CalcDataSize();
+    size_t CalcExtStart();
+    size_t CalcDataSize();
     void MakeExtendedHeader();
     int WriteExtendedHeader();
     unsigned int MakeBinaryKeyword( SELMIDAS_BINARY_KEYWORD *pBinKeyword, const char *value_keyword, const char *keyword, int c, char type, int lkey=0 );
@@ -616,7 +576,7 @@ private:
     void TransferPDW2Record( _PDW *pS_EL_PDW_DATA, int iRecords );
     void TransferIQ( SRxIQDataRGroup1 *pSRxIQDataRGroup, int iByte );
     void TransferIF( SRxIFDataRGroupEEEI *pSRxIFDataRGroupEEEI, int iByte );
-    unsigned int MakeSubRecords();
+    size_t MakeSubRecords();
     void MIDASClose();
     void MakeMinMaxValue( SEL_MIN_MAX *pSEL_MIN_MAX, double dValue );
     void MakeInitMinMaxValue( SEL_MIN_MAX *pSEL_MIN_MAX );
@@ -637,5 +597,5 @@ public:
     void SaveRawDataFile( const char *pRawdataFileName, EnumSCDataType enDataType, _PDW *pPDWData, UNION_HEADER *pUNIHeader, unsigned int uiCoPDW);
 
     inline char *GetRawDataFilename() { return m_szRawDataFilename; }
-	
+
 };

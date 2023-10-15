@@ -6,14 +6,11 @@
 #include "stdafx.h"
 
 
-#if defined(_POCKETSONATA_) || defined(_XBAND_)
-
-#endif
-
 
 
 #if _MSC_VER > 1600
 
+#ifdef _LOG_ANALTYPE_
 bool _TRACE(char *format, ...)
 {
 #ifdef _DEBUG
@@ -31,23 +28,8 @@ bool _TRACE(char *format, ...)
     return true;
 
 }
-
-bool _TRACE(CString strFormat, ...)
-{
-#ifdef _DEBUG
-    const char *format = (const char*)(LPCTSTR)strFormat;
-    char buffer[2000];
-
-    va_list argptr;
-    va_start(argptr, format);
-    wvsprintf(buffer, format, argptr);
-    va_end(argptr);
-
-    OutputDebugString(buffer);
 #endif
 
-    return true;
 
-}
 
 #endif

@@ -44,7 +44,9 @@ int websDefaultHandler(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 {
 	websStatType	sbuf;
 	char_t			*lpath, *tmp, *date;
-	int				bytes, flags, nchars;
+	int				bytes, flags;
+
+    size_t nchars;
 
 	a_assert(websValid(wp));
 	a_assert(url && *url);
@@ -227,7 +229,7 @@ int websDefaultHandler(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 static int badPath(char_t* path, char_t* badPath, int badLen)
 {
    int retval = 0;
-   int len = gstrlen(path);
+   size_t len = gstrlen(path);
    int i = 0;
 
    if (len <= badLen +1)
@@ -357,7 +359,8 @@ int websValidateUrl(webs_t wp, char_t *path)
 #define kMaxUrlParts 64
 	char_t	*parts[kMaxUrlParts];	/* Array of ptr's to URL parts */
 	char_t	*token, *dir, *lpath;
-   int	      i, len, npart;
+   int	      i, npart;
+   size_t len;
 
 	a_assert(websValid(wp));
 	a_assert(path);

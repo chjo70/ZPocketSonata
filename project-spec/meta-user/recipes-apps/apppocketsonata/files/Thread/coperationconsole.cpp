@@ -34,7 +34,7 @@ COperationConsole* COperationConsole::m_pInstance[2] = { nullptr, nullptr } ;
  * @param     int iIndex
  * @param     char * pClassName
  * @param     bool bArrayLanData
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -51,7 +51,7 @@ COperationConsole::COperationConsole( int iKeyId, int iIndex, char *pClassName, 
 /**
  * @brief     ~COperationConsole
  * @param     void
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -116,7 +116,7 @@ void COperationConsole::_routine()
             perror( "QMsgRcv");
             //break;
         }
-        else {            
+        else {
             if( IsValidLanData( m_pMsg ) == true ) {
                 switch( m_pMsg->uiOpCode ) {
                     case enREQ_OP_START :
@@ -141,8 +141,8 @@ void COperationConsole::_routine()
                         break;
 
                     case enREQ_RELOAD_LIBRARY :
-                        if( g_pTheEmitterMerge != NULL ) { 
-                            g_pTheEmitterMerge->QMsgSnd( m_pMsg ); 
+                        if( g_pTheEmitterMerge != NULL ) {
+                            g_pTheEmitterMerge->QMsgSnd( m_pMsg );
                         }
                         else {
                             // LOGMSG1( enError, "Invalid the flow[0x%X] !!", m_pMsg->uiOpCode );
@@ -164,7 +164,26 @@ void COperationConsole::_routine()
                         }
                         break;
 
-                    case enREQ_SYS :
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    case enREQ_ANAL_SCAN:
+                    case enREQ_DELETE_THREAT_DATA:
+                        if( g_pTheEmitterMerge != NULL ) {
+                            g_pTheEmitterMerge->QMsgSnd( m_pMsg );
+                        }
+                        else {
+                            // LOGMSG1( enError, "Invalid the flow[0x%X] !!", m_pMsg->uiOpCode );
+                        }
+                        break;
+
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    // 운용변수 설정
+                    case enREQ_SET_SYS :
+                        if( g_pTheTaskMngr != NULL ) {
+                            g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData(), GetThreadName() );
+                        }
+                        break;
+
+                    case enREQ_SYS:
                         if( g_pTheTaskMngr != NULL ) {
                             g_pTheTaskMngr->QMsgSnd( m_pMsg, GetRecvData(), GetThreadName() );
                         }
@@ -193,7 +212,7 @@ void COperationConsole::_routine()
                 }
             }
             else {
-                //LOGMSG1( enError, "메시지 흐름에 잘못된 명령[0x%X] 입니다 !", m_pMsg->uiOpCode );
+                Log( enError, "메시지 흐름에 잘못된 명령[0x%X]을 수신했습니다 !", m_pMsg->uiOpCode );
             }
         }
     }
@@ -206,18 +225,18 @@ void COperationConsole::_routine()
 // void COperationConsole::DumpList()
 // {
 // #ifdef _MSC_VER
-// 
+//
 // #else
 //     // UINT uiStartAddress;
-// 
+//
 //     STR_LAN_HEADER strLanHeader;
 //     UNI_LAN_DATA uniLanData;
-// 
+//
 //     STR_REQ_DUMP_LIST *pData= ( STR_REQ_DUMP_LIST * ) m_pMsg->x.szData;
-// 
+//
 //     //int iRet;
 //     char *pAddress;
-// 
+//
 // #ifdef _DEBUG_
 //     char *pBuffer;
 //     pAddress = (char *) malloc( 16 * 1000 );
@@ -225,27 +244,27 @@ void COperationConsole::_routine()
 // #else
 //     pAddress = (char *) uiStartAddress;
 // #endif
-// 
+//
 //     // 랜 헤더 송신
 //     strLanHeader.uiOpCode = enRES_DUMP_LIST;
 //     strLanHeader.uiLength = DUMP_DATA_SIZE;
-// 
+//
 // #ifdef __linux__
-//     int iRet = send( m_pMsg->uiSocket, (char *) & strLanHeader, sizeof(STR_LAN_HEADER), MSG_DONTWAIT );
+//     int iRet = send( m_pMsg->uiSocket, (char *) & strLanHeader, sizeof(struct STR_LAN_HEADER), MSG_DONTWAIT );
 // #endif
-// 
+//
 //     // 랜 데이터 송신
-//     memcpy( & uniLanData.strResDumpList.strReqDumpList, pData, sizeof(STR_REQ_DUMP_LIST) );
+//     memcpy( & uniLanData.strResDumpList.strReqDumpList, pData, sizeof(struct STR_REQ_DUMP_LIST) );
 //     memcpy( uniLanData.strResDumpList.cData, pBuffer, DUMP_DATA_SIZE );
-// 
+//
 // #ifdef __linux__
 //     iRet = send( m_pMsg->uiSocket, (char *) & uniLanData, (int) strLanHeader.uiLength, MSG_DONTWAIT );
 // #endif
-// 
+//
 // #ifdef _DEBUG_
 //     free( pBuffer );
 // #endif
-// 
+//
 // #endif
 // }
 
@@ -282,7 +301,7 @@ bool COperationConsole::IsValidLanData( STR_MessageData *pMsg )
     case enREQ_IBIT:
     case enREQ_UBIT:
         //             if( enMode == enES_MODE || enMode == enEW_MODE  ) {
-        //                 
+        //
         //             }
         //             else {
         //                 bRet = false;
@@ -310,6 +329,17 @@ bool COperationConsole::IsValidLanData( STR_MessageData *pMsg )
     case enREQ_RELOAD_LIBRARY:
         break;
 
+    case enREQ_ANAL_SCAN:
+    case enREQ_DELETE_THREAT_DATA:
+        if( enMode == enREADY_MODE ) {
+            bRet = false;
+        }
+        else {
+
+        }
+        break;
+
+    case enREQ_SET_SYS :
     case enREQ_SYS:
         break;
 
@@ -318,7 +348,7 @@ bool COperationConsole::IsValidLanData( STR_MessageData *pMsg )
     case enREQ_STOP:
         break;
 
-    case enSYSERROR:
+    case enREQ_SYSERROR:
         break;
 
     case enTHREAD_DISCONNECTED :

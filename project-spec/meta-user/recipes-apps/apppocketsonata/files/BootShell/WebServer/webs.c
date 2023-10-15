@@ -70,7 +70,7 @@ static int		websOpenCount = 0;		/* count of apps using this module */
 
 
 /*static char_t 	*websErrorMsg(int code);*/
-static int 		websGetInput(webs_t wp, char_t **ptext, int *nbytes);
+static int 		websGetInput(webs_t wp, char_t **ptext, size_t *nbytes);
 static int 		websParseFirst(webs_t wp, char_t *text);
 static void 	websParseRequest(webs_t wp);
 static void		websSocketEvent(int sid, int mask, int data);
@@ -335,7 +335,9 @@ static void websSocketEvent(int sid, int mask, int iwp)
 void websReadEvent(webs_t wp)
 {
 	char_t 	*text;
-	int		rc, nbytes, len, done;
+	int		rc, /*nbytes,*/ done;
+    size_t nbytes;
+    size_t len;
 	FILE *fd;
 
 	a_assert(wp);
@@ -406,7 +408,7 @@ void websReadEvent(webs_t wp)
  */
 #ifndef __NO_CGI_BIN
 			if (wp->flags & WEBS_CGI_REQUEST) {
-				int nSend;
+                size_t nSend;
 				gstat_t sbuf;
 				if (fd == NULL) {
 					if( gstat( wp->cgiStdin, &sbuf) != 0 ) {
@@ -420,7 +422,7 @@ void websReadEvent(webs_t wp)
 				// nSend = gwrite(fd, text, nbytes );
 				nSend = gfwrite( text, 1, nbytes, fd );
 				if( nSend != nbytes )
-					printf( "\n %d: text[%s]" , nSend, text );
+					printf( "\n %zd: text[%s]" , nSend, text );
 				else {
 					// printf( "." );
 					// printf( "\n %d: text[%s]" , nSend, text );
@@ -574,11 +576,13 @@ void websReadEvent(webs_t wp)
  *	distinguish between this and EOF.
  */
 
-static int websGetInput(webs_t wp, char_t **ptext, int *pnbytes) 
+static int websGetInput(webs_t wp, char_t **ptext, size_t *pnbytes) 
 {
 	char_t	*text;
 	char	buf[WEBS_SOCKET_BUFSIZ+1];
-	int		nbytes, len, clen;
+	int		nbytes;
+
+    size_t len, clen;
 
 	a_assert(websValid(wp));
 	a_assert(ptext);
@@ -857,7 +861,7 @@ static int websParseFirst(webs_t wp, char_t *text)
 
 static void websParseRequest(webs_t wp)
 {
-	char_t	*authType, *upperKey, *cp, *browser, *lp, *key, *value;
+	char_t	*authType, *upperKey, *cp, /**browser,*/ *lp, *key, *value;
 
 	a_assert(websValid(wp));
 
@@ -871,7 +875,7 @@ static void websParseRequest(webs_t wp)
  *	We rewrite the header as we go for non-local requests.  NOTE: this
  * 	modifies the header string directly and tokenizes each line with '\0'.
  */
-	browser = NULL;
+	//browser = NULL;
 	for (lp = (char_t*) wp->header.servp; lp && *lp; ) {
 		cp = lp;
 		if ((lp = gstrchr(lp, '\n')) != NULL) {
@@ -1523,7 +1527,7 @@ static char_t* websSafeUrl(const char_t* url)
 
    int ltCount = charCount(url, kLt);
    int gtCount = charCount(url, kGt);
-   int safeLen = 0;
+   size_t safeLen = 0;
    char_t* safeUrl = NULL;
    char_t* src = NULL;
    char_t* dest = NULL;
@@ -1717,7 +1721,7 @@ int websWrite(webs_t wp, char_t *fmt, ...)
  *	behavior, use websWriteDataNonBlock.
  */
 
-int websWriteBlock(webs_t wp, char_t *buf, int nChars)
+int websWriteBlock(webs_t wp, char_t *buf, size_t nChars)
 {
 	int		len, done;
 	char	*asciiBuf, *pBuf;
@@ -1806,7 +1810,7 @@ int websWriteDataNonBlock(webs_t wp, char *buf, int nChars)
  *	Decode a URL (or part thereof). Allows insitu decoding.
  */
 
-void websDecodeUrl(char_t *decoded, char_t *token, int len)
+void websDecodeUrl(char_t *decoded, char_t *token, size_t len)
 {
 	char_t	*ip,  *op;
 	int		num, i, c;
@@ -2485,7 +2489,7 @@ void websSetTimeMark(webs_t wp)
 
 static int websGetTimeSinceMark(webs_t wp)
 {
-	return time(0) - wp->timestamp;
+	return (int) ( time(0) - wp->timestamp );
 }
 
 /******************************************************************************/

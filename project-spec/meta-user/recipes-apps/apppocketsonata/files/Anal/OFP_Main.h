@@ -33,7 +33,7 @@
 #include "./EmitterMerge/IsNumber.h"
 
 
-
+#define DELETE_THRESHOLD_OF_RECORD      (100)       // (2000)
 
 //////////////////////////////////////////////////////////////////////////
 // 전역 변수
@@ -57,7 +57,7 @@
 #define PDW_EXT									".xpdw"
 
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 #define PDW_EXT									".zpdw"
 #define MIDAS_EXT								"midas"
 

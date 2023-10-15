@@ -16,7 +16,7 @@
 #include "mssql.h"
 
 
-
+#ifdef _MSSQL_
 
 //CODBCDatabase *CMSSQL::m_pMyODBC=NULL;
 
@@ -714,3 +714,5 @@ int CMSSQL::GetINTData( char *pSQLString )
 // 	DECLARE_END_CHECKODBC
 // 	DECLARE_RETURN
 // }
+
+#endif

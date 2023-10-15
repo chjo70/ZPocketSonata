@@ -18,35 +18,18 @@ struct SELINDEX {
 	UINT uiABT;
 	UINT uiLOB;
 
-    SELINDEX() : uiAET(INVALID_INDEX), uiABT(INVALID_INDEX), uiLOB(INVALID_INDEX)
-	{
-
-	}
-
 };
 
-// typedef enum {
-// 	ENUM_ROOT_TRAVERSE= 0,
-// 	ENUM_AET_TRAVERSE= 1,
-// 	ENUM_ABT_TRAVERSE,
-// 	ENUM_LOB_TRAVERSE
-//
-// } ENUM_THREAT_TRAVERSE;
 
-// typedef enum {
-// 	ENUM_UNK_THREAT = -1,
-//
-// 	ENUM_LOB_THREAT = 0,
-// 	ENUM_ABT_THREAT,
-// 	ENUM_AET_THREAT
-//
-// } ENUM_THREAT_TYPE;
 
 
 //////////////////////////////////////////////////////////////////////////
 // 위협 관리 관련 정의문
 #ifdef _POCKETSONATA_
-#define TOTAL_ITEMS_OF_THREAT_NODE			(50)							// 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT_NODE			(100)							// 최대 위협 개수
+
+#elif _712_
+#define TOTAL_ITEMS_OF_THREAT_NODE			(1000)							// 최대 위협 개수
 
 #else
 #define TOTAL_ITEMS_OF_THREAT_NODE			(100000)						// 최대 위협 개수
@@ -76,8 +59,8 @@ private:
 	static int m_CoInstance;										///< 객체 총 개수
 	static Queue<unsigned int> m_QueIndex;								    ///< 위협의 큐 포인터
 
-    static int m_iCoABT;								            ///< 위협의 큐 포인터
-    static int m_iCoAET;								            ///< 위협의 큐 포인터
+    static int m_iTotalOfABT;								            ///< 위협의 큐 포인터
+    static int m_iTotalOfAET;								            ///< 위협의 큐 포인터
 
 
 	static CELThreat *m_pRootThreat;										///< 트리 구조의 좌측 포인터
@@ -120,10 +103,10 @@ public:
  		}
 
         if( m_Idx.uiABT == INVALID_INDEX ) {
-            ++m_iCoAET;
+            ++m_iTotalOfAET;
         }
         else {
-            ++m_iCoABT;
+            ++m_iTotalOfABT;
         }
 
 		++ m_CoInstance;
@@ -152,8 +135,24 @@ public:
 
 		if( nDepth <= nLimit ) {
 			if( m_pLeftChild != NULL ) {
+#ifdef _MSC_VER
+                if( m_Idx.uiAET != 0 ) {
+                    TRACE( "\n---- 방사체 AET[%d]", m_Idx.uiAET );
+                }
+#endif
 				m_pLeftChild->Traverse( nDepth+1, nLimit );
 			}
+            else {
+#ifdef _MSC_VER
+                if( m_Idx.uiAET != 0 ) {
+                    TRACE( "\nAET[%d], ABT[%d]", m_Idx.uiAET, m_Idx.uiABT );
+                }
+                else {
+                    TRACE( "\n위협 노드가 없습니다 !" );
+                }
+#endif
+            }
+
 			if( m_pRightChild != NULL ) {
 				m_pRightChild->Traverse( nDepth, nLimit );
 			}
@@ -452,8 +451,8 @@ public:
      * @date      2022-06-05, 14:40
      * @warning
      */
-    inline int GetCoAET() {
-        return m_iCoAET;
+    inline int GetTotalOfAET() {
+        return m_iTotalOfAET;
     }
 
     /**
@@ -465,14 +464,16 @@ public:
      * @date      2022-06-05, 14:41
      * @warning
      */
-    inline int GetCoABT() {
-        return m_iCoABT;
+    inline int GetTotalOfABT() {
+        return m_iTotalOfABT;
     }
 
 	inline unsigned int GetAETID() { return m_Idx.uiAET; }
 	inline unsigned int GetABTID() { return m_Idx.uiABT; }
 	inline unsigned int GetLOBID() { return m_Idx.uiLOB; }
 
+    inline bool RemoveThreat( int nAET ) { return m_pRootThreat->RemoveAET( nAET, m_pRootThreat ); }
+    inline bool RemoveThreat( int nAET, int nABT ) { return m_pRootThreat->RemoveABT( nAET, nABT ); }
 
 };
 

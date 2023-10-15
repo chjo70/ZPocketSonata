@@ -348,11 +348,16 @@ int ini_gets(const TCHAR *Section, const TCHAR *Key, const TCHAR *DefValue,
     }
     else {
         ini_openread(Filename, &fp);
+
         if ( fp != NULL ) {
             ok = getkeystring(&fp, Section, Key, -1, -1, Buffer, BufferSize, NULL);
             (void)ini_close(&fp);
         } /* if */
+        else {
+            printf( "\n [%s] file open error !!!" , Filename );
+        }
         if (!ok) {
+            printf( "\n The key[%s] not found ...." , Key );
             ini_strncpy(Buffer, (DefValue != NULL) ? DefValue : __T(""), BufferSize, QUOTE_NONE);
         }
 
@@ -700,6 +705,7 @@ int ini_puts(const TCHAR *Section, const TCHAR *Key, const TCHAR *Value, const T
 
   assert(Filename != NULL);
   ini_openread(Filename, &rfp);
+
   if ( rfp == NULL) {
     /* If the .ini file doesn't exist, make a new file */
     if (Key != NULL && Value != NULL) {

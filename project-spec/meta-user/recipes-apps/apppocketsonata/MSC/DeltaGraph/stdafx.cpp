@@ -228,6 +228,17 @@ int UnicodeToUtf8( char* pUtf8, TCHAR* pUnicode)
 
 #ifdef _DEBUG
 
+/**
+ * @brief     _TRACE
+ * @param     char * format
+ * @param     ...
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-05 16:04:12
+ * @warning
+ */
 bool _TRACE(char *format, ...)
 {
     char buffer[1000];
@@ -243,6 +254,17 @@ bool _TRACE(char *format, ...)
 
 }
 
+/**
+ * @brief     _TRACE
+ * @param     CString strFormat
+ * @param     ...
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-05 16:04:15
+ * @warning
+ */
 bool _TRACE(CString strFormat, ...)
 {
     char *format = (char*)(LPCTSTR)strFormat;

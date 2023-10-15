@@ -1,10 +1,13 @@
-﻿// CTaskMngr.cpp: implementation of the CTaskMngr class.
-//
-//////////////////////////////////////////////////////////////////////
+﻿/**
 
-/*
- * 모든 타스크를 관리해 주는 입니다.
- * */
+    @file      ctaskmngr.cpp
+    @brief     모든 타스크를 관리하는 타스크 입니다.
+    @details   ~
+    @author    조철희
+    @date      9.06.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
 
 #include "stdafx.h"
 
@@ -54,18 +57,23 @@ CTaskMngr::CTaskMngr( int iThreadPriority, char *pClassName, bool bArrayLanData 
 CTaskMngr::CTaskMngr( int iThreadPriority, const char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iThreadPriority, pClassName, bArrayLanData )
 #endif
 {
-    LOGENTRY;
+    //LOGENTRY;
 
-    Init();
+    g_pTheSysConfig->SetBoardID( GetBoardID() );
+
+    SetMode( enNOT_READY_MODE );
+
+    CThread::Init();
 
 #ifdef _SQLITE_
     try {
         m_pDatabase = new Kompex::CSQLiteDatabase( pFileName, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0 );
     }
     catch( Kompex::SQLiteException &sException) {
-        std::cerr << "\nException Occured" << std::endl;
-		sException.Show();
-        std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
+        //std::cerr << "\nException Occured" << std::endl;
+		//sException.Show();
+        //std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
+        Log( enError, "SQLite 에러[%d] : %s", sException.GetSqliteResultCode(), sException.GetErrorDescription().c_str() );
     }
 #elif _MSSQL_
     // MSSQL 연결
@@ -78,7 +86,14 @@ CTaskMngr::CTaskMngr( int iThreadPriority, const char *pClassName, bool bArrayLa
 }
 
 /**
- * @brief CTaskMngr::~CTaskMngr
+ * @brief     ~CTaskMngr
+ * @param     void
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-09 09:29:13
+ * @warning
  */
 CTaskMngr::~CTaskMngr(void)
 {
@@ -110,11 +125,11 @@ CTaskMngr::~CTaskMngr(void)
  */
 void CTaskMngr::Init()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     InitVar();
 
-    CThread::Init();
+    //CThread::Init();
 
     //STR_MessageData sndMsg;
 
@@ -136,13 +151,13 @@ void CTaskMngr::Init()
         i++;
         sleep(1);
 
-        if(msgsnd( theThread1.GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) <0)
+        if(msgsnd( theThread1.GetKeyId(), (void *)& sndMsg, sizeof(struct STR_MessageData)-sizeof(long), IPC_NOWAIT) <0)
         {
             perror("msg snd error" );
             printf("KeyID[%d]\n", theThread1.GetKeyId() );
 
         }
-        if(msgsnd( theThread2.GetKeyId(), (void *)& sndMsg, sizeof(STR_MessageData)-sizeof(long), IPC_NOWAIT) <0)
+        if(msgsnd( theThread2.GetKeyId(), (void *)& sndMsg, sizeof(struct STR_MessageData)-sizeof(long), IPC_NOWAIT) <0)
         {
             perror("msg snd error" );
             printf("KeyID[%d]\n", theThread2.GetKeyId() );
@@ -159,6 +174,12 @@ void CTaskMngr::Init()
 
 /**
  * @brief 변수를 초기화 한다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 15:10:17
+ * @warning
  */
 void CTaskMngr::InitVar()
 {
@@ -170,11 +191,17 @@ void CTaskMngr::InitVar()
 }
 
 /**
- * @brief CMain::Run
+ * @brief     쓰레드를 실행합니다.
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 15:10:27
+ * @warning
  */
 void CTaskMngr::Run()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     CThread::Run();
 
@@ -191,17 +218,31 @@ void CTaskMngr::Run()
  */
 void CTaskMngr::_routine()
 {
-    LOGENTRY;
+    //LOGENTRY;
+
+    SetMode( enREADY_MODE );
 
     m_pMsg = GetRecvDataMessage();
 
     while( m_bThreadLoop ) {
-        if( QMsgRcv() == -1 ) {
-            perror( "QMsgRcv() 에러");
+#ifdef _MSC_VER
+        if( QMsgRcv( enTIMER, OS_MILLISEC( 1000 ) ) == -1 ) {
+            perror( "QMsgRcv" );
         }
+#else
+        if( QMsgRcv() == -1 ) {
+            perror( "QMsgRcv" );
+        }
+
+#endif
         else {
-            //if( IsValidLanData( m_pMsg ) == true ) {
             switch( m_pMsg->uiOpCode ) {
+#ifdef _MSC_VER
+                case enTHREAD_TIMER:
+                    break;
+
+#endif
+
                 ///////////////////////////////////////////////////////////////////////////////////
                 // 운용 제어 관련 메시지 처리
                 case enREQ_OP_START:
@@ -214,7 +255,7 @@ void CTaskMngr::_routine()
 
                 case enREQ_OP_RESTART:
                     Shutdown( false, false );
-                    AnalysisStart( false );
+                    AnalysisReStart();
                     break;
 
                 // 수집 제어 관련 메시지
@@ -222,12 +263,19 @@ void CTaskMngr::_routine()
                     StopUserCollecting();
                     break;
 
+                ///////////////////////////////////////////////////////////////////////////////////
+                //  운용변수 설정
                 // 시스템 변수 관련 메시지
-                case enREQ_SYS :
+                case enREQ_SET_SYS :
+                    ReqSetSystemVar();
+                    break;
+
+                // 시스템 변수 관련 메시지
+                case enREQ_SYS:
                     ReqSystemVar();
                     break;
 
-                case enSYSERROR :
+                case enREQ_SYSERROR:
                     printf( "\n[%d]", m_pMsg->uiOpCode );
                     WhereIs;
                     break;
@@ -273,9 +321,9 @@ void CTaskMngr::Start()
 #endif
     TaskSummary();
 
-    CCommonUtils::SendLan( enRES_OP_START );
+    g_pTheCCUSocket->SendLan( enRES_OP_START, NULL, 0 );
 
-    CCommonUtils::CloseSocket();
+    g_pTheCCUSocket->CloseSocket();
 
     //g_pTheCCUSocket->Run( _MSG_CCU_KEY );
     Log( enDebug, "================================================================" );
@@ -330,6 +378,24 @@ void CTaskMngr::Start()
 // }
 
 /**
+ * @brief     AnalysisReStart
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-07-25 20:44:53
+ * @warning
+ */
+void CTaskMngr::AnalysisReStart()
+{
+    AnalysisStart( false );
+
+    BOOL bResult = TRUE;
+    g_pTheCCUSocket->SendLan( enRES_OP_RESTART, & bResult, sizeof( bResult ) );
+
+}
+
+/**
  * @brief     분석 시작 명령을 처리한다.
  * @return    void
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
@@ -342,11 +408,15 @@ void CTaskMngr::AnalysisStart( bool bOut )
 {
     char buffer[200];
 
-    sprintf( buffer, "[운용제어/시작 요청]-시작====================================" );
-    CCommonUtils::WallMakePrint( buffer, '=', MAX_SCREEN_COLUMNS );
-    Log( enNormal, buffer );
+    TRACE( "\n" );
+    sprintf( buffer, "[운용제어/시작 요청]-시작 " );
+    CCommonUtils::WallMakePrint( buffer, '#' );
+    Log( enNormal, "%s", buffer);
 
     SetMode( enOP_Mode );
+
+    g_pTheSysConfig->LoadINI();
+    g_pTheSysConfig->DisplaySystemVar();
 
 	g_pTheSysConfig->IncOpInitID();
 
@@ -374,7 +444,7 @@ void CTaskMngr::AnalysisStart( bool bOut )
     else {
         if( g_bSNTP == false ) {
             Log( enError, "SBC 시간을 부팅시에 설정하지 못했습니다 ! 네트워크 망을 확인하거나 SNTP 서비스가 서버에 실행되는지를 확인하세요." );
-            g_pTheCCUSocket->SendLan( enSYSERROR, "SBC 시간을 설정하지 못했습니다 !" );
+            g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, (const char *) "SBC 시간을 설정하지 못했습니다 !" );
         }
     }
 
@@ -398,16 +468,18 @@ void CTaskMngr::AnalysisStart( bool bOut )
 #endif
 
     // 신호 수집 시작
-    SendThreadMessage( g_pTheDetectAnalysis );
-    SendThreadMessage( g_pTheTrackAnalysis );
-    SendThreadMessage( g_pTheScanAnalysis );
-    SendThreadMessage( g_pTheEmitterMerge );
-    SendThreadMessage( g_pTheSignalCollect );
+    WhereIs;
+    g_pTheEmitterMerge->QMsgSnd( enREQ_OP_START );
+    g_pTheSignalCollect->QMsgSnd( enREQ_OP_START );
+    g_pTheTrackAnalysis->QMsgSnd( enREQ_OP_START );
+    g_pTheScanAnalysis->QMsgSnd( enREQ_OP_START );
+    g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_START );
+    g_pTheLog->QMsgSnd( enREQ_OP_START );
 
 #ifdef __VXWORKS__
     ChangeTaskPriority( iPriority );
 
-#elif defined(_MFC_VER)
+#elif defined(_MSC_VER)
     Sleep( REQ_OP_START_DELAY );
 
 #endif
@@ -416,19 +488,27 @@ void CTaskMngr::AnalysisStart( bool bOut )
     CHWIO::StartCollecting( REG_UIO_DMA_1 );
 #endif
 
+    sprintf( buffer, "[운용제어/시작 요청]-종료 " );
+    CCommonUtils::WallMakePrint( buffer, '#' );
+    Log( enNormal, "%s", buffer );
+
     if( bOut == true ) {
-        bool bResult=true;
+        BOOL bResult=TRUE;
         g_pTheCCUSocket->SendLan( enRES_OP_START, & bResult, sizeof( bResult ) );
     }
 
-    sprintf( buffer, "[운용제어/시작 요청]-종료" );
-    CCommonUtils::WallMakePrint( buffer, '=', MAX_SCREEN_COLUMNS );
-    Log( enNormal, buffer );
+    //g_pTheClockTimer->Start();
 
 }
 
 /**
- * @brief ZYNC 보드의 ID 값을 리턴한다.
+ * @brief     ZYNC 보드의 ID 값을 리턴한다.
+ * @return    ENUM_BoardID
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-09 09:28:53
+ * @warning
  */
 ENUM_BoardID CTaskMngr::GetBoardID()
 {
@@ -476,13 +556,18 @@ ENUM_BoardID CTaskMngr::GetBoardID()
  */
 void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
 {
+    char buffer[200];
+
+    TRACE( "\n" );
     // 로그 출력
     if( bAbnormalEvent ) {
-        Log( enDebug, "[비정상 처리]-시작====================================================" );
+        sprintf( buffer, "[비정상 처리]-시작 " );
     }
     else {
-        Log( enDebug, "[운용제어/운용 종료]-시작===============================================" );
+        sprintf( buffer, "[운용제어/운용 종료]-시작 " );
     }
+    CCommonUtils::WallMakePrint( buffer, '#', MAX_SCREEN_COLUMNS );
+    Log( enNormal, "%s", buffer );
 
     SetMode( enREADY_MODE );
 
@@ -494,40 +579,61 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
     Log( enDebug, "타스크 우선순위를 낮게 설정합니다." );
 
     // 모든 쓰레드에세 SHUTDOWN 메시지를 전송한다.
-    SendThreadMessage( g_pTheSignalCollect );
-    SendThreadMessage( g_pTheDetectAnalysis );
-    SendThreadMessage( g_pTheTrackAnalysis );
-    SendThreadMessage( g_pTheScanAnalysis );
-    SendThreadMessage( g_pTheEmitterMerge );
+    g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_SHUTDOWN );
+    g_pTheTrackAnalysis->QMsgSnd( enREQ_OP_SHUTDOWN );
+    g_pTheScanAnalysis->QMsgSnd( enREQ_OP_SHUTDOWN );
+    g_pTheEmitterMerge->QMsgSnd( enREQ_OP_SHUTDOWN );
+    g_pTheSignalCollect->QMsgSnd( enREQ_OP_SHUTDOWN );
 
     SetSendDisable();
 
+    // 모든 타스트의 메시지 비우기
     while( g_pTheSignalCollect->QMsgRcvSize() != 0 ) {
         Sleep( REQ_OP_STOP_DELAY );
+#ifdef _MSC_VER
+        g_pTheSignalCollect->FlushEvent();
+
+#endif
+        WhereIs;
     }
 
     while( g_pTheDetectAnalysis->QMsgRcvSize() != 0 ) {
         Sleep( REQ_OP_STOP_DELAY );
+#ifdef _MSC_VER
+        g_pTheDetectAnalysis->FlushEvent();
+
+#endif
+
+        WhereIs;
     }
 
     while( g_pTheTrackAnalysis->QMsgRcvSize() != 0 ) {
         Sleep( REQ_OP_STOP_DELAY );
+#ifdef _MSC_VER
+        g_pTheTrackAnalysis->FlushEvent();
+
+#endif
+        WhereIs;
     }
 
     while( g_pTheScanAnalysis->QMsgRcvSize() != 0 ) {
         Sleep( REQ_OP_STOP_DELAY );
+        WhereIs;
     }
 
     while( g_pTheEmitterMerge->QMsgRcvSize() != 0 ) {
         Sleep( REQ_OP_STOP_DELAY );
+        WhereIs;
     }
 
+    while( g_pTheLog->QMsgRcvSize() != 0 ) {
+        Sleep( REQ_OP_STOP_DELAY );
+        WhereIs;
+    }
+
+    TRACE( "\n\n" );
+
     Init();
-    g_pTheSignalCollect->CSignalCollect::CThread::Init();
-    g_pTheDetectAnalysis->CDetectAnalysis::CThread::Init();
-    g_pTheTrackAnalysis->CTrackAnalysis::CThread::Init();
-    g_pTheScanAnalysis->CScanAnalysis::CThread::Init();
-    g_pTheEmitterMerge->Init();
 
     Log( enDebug, "타스크 우선순위를 높게 설정합니다." );
 
@@ -536,16 +642,18 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
     SetSendEnable();
 
     if( bAbnormalEvent == false && bOut == true ) {
-        bool bResult = TRUE;
-        g_pTheCCUSocket->SendLan( enRES_OP_SHUTDOWN, &bResult, sizeof( bResult ) );
+        unsigned int uiResult = TRUE;
+        g_pTheCCUSocket->SendLan( enRES_OP_SHUTDOWN, &uiResult, sizeof( uiResult ) );
     }
 
     if( bAbnormalEvent ) {
-        Log( enDebug, "[비정상 처리]-종료=======================================================" );
+        sprintf( buffer, "[비정상 처리]-종료 " );
     }
     else {
-        Log( enDebug, "[운용제어/운용 종료]-종료================================================" );
+        sprintf( buffer, "[운용제어/운용 종료]-종료 " );
     }
+    CCommonUtils::WallMakePrint( buffer, '#', MAX_SCREEN_COLUMNS );
+    Log( enNormal, "%s", buffer );
 
 }
 
@@ -560,20 +668,24 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
  */
 void CTaskMngr::TaskSummary()
 {
-    Log( enNormal, "--------------------------------------------------------" );
+    char buffer[200] = { 0 };
+
+    CCommonUtils::WallMakePrint( buffer, '*', MAX_MESSAGE_COLUMNS );
+    Log( enNormal, "%s", buffer );
 
     Log( enNormal, "타스크(쓰레드) 총 개수\t\t: %d [개]" , GetCoThread() );
     for( const auto &cThread : g_vecThread ) {
-        cThread->ShowTaskMessae();
+        //cThread->ShowTaskMessae();
     }
 
-    Log( enNormal, "메시지 큐 총 개수\t\t : %d [개]", GetCoMsgQueue() );
+    Log( enNormal, "메시지 큐 총 개수\t\t\t: %d [개]", GetCoMsgQueue() );
 
     for( const auto &cThread : g_vecThread ) {
-        cThread->ShowQueueMessae();
+        //cThread->ShowQueueMessae();
     }
 
-    Log( enNormal, "--------------------------------------------------------" );
+    //CCommonUtils::WallMakePrint( buffer, '*', MAX_MESSAGE_COLUMNS );
+    Log( enNormal, "%s", buffer );
 
 }
 
@@ -609,9 +721,10 @@ int CTaskMngr::IsThrereELNOT( char *pszELNOT )
 
     }
     catch (Kompex::SQLiteException &sException) {
-        std::cerr << "\nException Occured" << std::endl;
-        sException.Show();
-        std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
+        //std::cerr << "\nException Occured" << std::endl;
+        //sException.Show();
+        //std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
+        Log( enError, "SQLite 에러[%d] : %s", sException.GetSqliteResultCode(), sException.GetErrorDescription().c_str() );
     }
 
 #elif _MSSQL_
@@ -636,6 +749,54 @@ void CTaskMngr::StopUserCollecting()
 }
 
 /**
+ * @brief     ReqSetSystemVar
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-09 09:21:43
+ * @warning
+ */
+void CTaskMngr::ReqSetSystemVar()
+{
+    int iRet=0;
+
+    char szDstFilename[100];
+
+    Log( enNormal, "신호분석 운용 변수 설정 요청을 수신했습니다." );
+
+    iRet = TRUE;
+
+#ifdef __VXWORKS__
+    sprintf( szDstFilename, "%s/%s/%s", ATADRV, INI_DIRECTORY, INI_FILENAME );
+
+#elif defined(_MSC_VER)
+    sprintf( szDstFilename, "%s/%s", CEDEOB_SQLITE_FOLDER, INI_FILENAME );
+
+#else
+    sprintf( szDstFilename, "%s/%s", CEDEOB_SQLITE_FOLDER, INI_FILENAME );
+
+#endif
+
+    if( m_theRawFile.RawOpenFile( szDstFilename, O_CREAT | O_RDWR ) ) {
+        m_theRawFile.Write( GetRecvData(), m_pMsg->uiArrayLength );
+        m_theRawFile.CloseFile();
+
+        iRet = TRUE;
+        Log( enDebug, "신호분석 운용 변수 설정 요청 크기[%d]를 [%s]에 정상 기록했습니다." , m_pMsg->uiArrayLength, szDstFilename );
+    }
+    else {
+        Log( enError, "TFFS 드라이브가 잘못됐거나 INI 파일 크기가 잘못 됐습니다. 관리자에게 문의하세요 !" );
+    }
+
+    g_pTheSysConfig->LoadINI();
+    g_pTheSysConfig->DisplaySystemVar();
+
+    g_pTheCCUSocket->SendLan( enRES_SETSYS, & iRet, sizeof( int ) );
+
+}
+
+/**
  * @brief		시스템 변수 정보를 회신합니다.
  * @return		void
  * @author		조철희 (churlhee.jo@lignex1.com)
@@ -645,9 +806,60 @@ void CTaskMngr::StopUserCollecting()
  */
 void CTaskMngr::ReqSystemVar()
 {
-    STR_SYSCONFIG *pstrSysConfig;
+    //STR_SYSCONFIG *pstrSysConfig;
 
-    pstrSysConfig = g_pTheSysConfig->GetSysConfig();
-    CCommonUtils::SendLan( enRES_SETSYS, pstrSysConfig, sizeof(STR_SYSCONFIG) );
+    Log( enNormal, "신호분석 운용 변수 요청했습니다." );
+
+    unsigned int uiLength = 0;
+
+    char szSrcFilename[100];
+    char *pszData= NULL;
+
+#ifdef __VXWORKS__
+    sprintf( szSrcFilename, "%s/%s/%s", ATADRV, INI_DIRECTORY, INI_FILENAME );
+
+#elif defined(_MSC_VER)
+    sprintf( szSrcFilename, "%s/%s", CEDEOB_SQLITE_FOLDER, INI_FILENAME );
+
+#else
+    sprintf( szSrcFilename, "%s/%s", CEDEOB_SQLITE_FOLDER, INI_FILENAME );
+
+#endif
+
+    if( m_theRawFile.RawOpenFile( szSrcFilename, O_TEXT | O_RDONLY ) ) {
+        unsigned long long int ullFileSize;
+
+        ullFileSize = m_theRawFile.GetRawFileSize();
+
+        uiLength = ( unsigned int ) min( ullFileSize, _MAX_LANDATA );
+
+        if( uiLength != 0 ) {
+            pszData = ( char * ) malloc( uiLength * sizeof( char ) );
+            if( pszData != NULL ) {
+                m_theRawFile.Read( pszData, uiLength );
+            }
+            else {
+
+            }
+        }
+        else {
+            pszData = NULL;
+        }
+
+        m_theRawFile.CloseFile();
+    }
+
+    if( pszData != NULL ) {
+        g_pTheCCUSocket->SendLan( enRES_SYS, pszData, uiLength, false );
+        Log( enNormal, "신호분석 운용 변수 내용을 [%d]바이트 전송합니다.", uiLength );
+        free( pszData );
+    }
+    else {
+        g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, (const char *) "INI 파일을 읽지 못했거나 드라이브가 잘못 됐습니다." );
+
+        Log( enError, "INI 파일[%s]이 손상됐거나 존재하지 않습니다. 담당자에게 문의하세요 !" , szSrcFilename );
+
+    }
+
 }
 

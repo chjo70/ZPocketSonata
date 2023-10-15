@@ -2,11 +2,11 @@
 
 #include <stdio.h>
 
-#include "../../Files/Anal/SigAnal/_Struct.h"
+#include "../../SigAnal/_Struct.h"
 
-#include "../../Files/Anal/EmitterMerge/ELMsgDefn.h"
+#include "../../EmitterMerge/ELMsgDefn.h"
 
-#include "../../Files/Anal/Collect/DataFile/DataFile.h"
+#include "../../Collect/DataFile/DataFile.h"
 
 struct STR_GENPDW_INFO {
     unsigned int uiIdex;    // 인덱스

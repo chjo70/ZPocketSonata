@@ -121,20 +121,20 @@ CRADARDIRAPPDoc* CRADARDIRAPPView::GetDocument() const // 디버그되지 않은 버전은
 
 #define _TEXT_WIDTH								(10)
 #define	_COLUMNS_OF_LIST_					(11)
-static char szList[_COLUMNS_OF_LIST_][40] = { "순서", "방위[도]         ", "신/형", "주/형", "주파수[MHz]                 ", "PRI형", "PRI[us]                     ", "신호세기[dBm]       ", "펄스폭[ns]             ", "식별   ", "개수    " } ;
+static char szList[_COLUMNS_OF_LIST_][40] = { "순서", "방위[도]         ", "신/형", "주/형", "주파수[MHz]                 ", "PRI형태[ms]", "PRI[us]                     ", "신호세기[dBm]       ", "펄스폭[ns]             ", "식별   ", "개수    " } ;
 void CRADARDIRAPPView::InitView()
 {
  	int i;
 // 	CRect rtChildWindow;
 // 	GetClientRect( rtChildWindow );
-// 
-// 
+//
+//
 // 	m_CListLOB..Create( WS_VISIBLE | WS_BORDER | LVS_REPORT, rtChildWindow, this, 100 );
-// 
+//
  	for( i=0 ; i < _COLUMNS_OF_LIST_ ; ++i ) {
- 		m_CListLOB.InsertColumn( i, szList[i], LVCFMT_LEFT, _TEXT_WIDTH*strlen(szList[i]) );
+ 		m_CListLOB.InsertColumn( i, szList[i], LVCFMT_LEFT, _TEXT_WIDTH*(int)strlen(szList[i]) );
  	}
- 
+
  	m_CoListItems = 0;
 
 }
@@ -167,22 +167,36 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
             sprintf_s( buffer, sizeof( buffer ), "%s", g_szAetSignalType[pLOB->vSignalType] );
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-            sprintf_s(buffer, sizeof(buffer), "%s", g_szAetFreqType[pLOB->vFreqType]);
+            if( pLOB->vFreqPositionCount != 0 ) {
+                sprintf_s(buffer, sizeof(buffer), "%s[%s]/%2d단", g_szAetFreqType[(int)pLOB->vFreqType], g_szAetPatternType[(int)pLOB->vFreqPatternType], pLOB->vFreqPositionCount );
+            }
+            else {
+                if( pLOB->fFreqPatternPeriod != 0. ) {
+                    sprintf_s( buffer, sizeof( buffer ), "%s[%s]/%.2f", g_szAetFreqType[( int ) pLOB->vFreqType], g_szAetPatternType[( int ) pLOB->vFreqPatternType], pLOB->fFreqPatternPeriod );
+                }
+                else {
+                    sprintf_s( buffer, sizeof( buffer ), "%s", g_szAetFreqType[( int ) pLOB->vFreqType] );
+                }
+            }
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-            sprintf_s(buffer, sizeof(buffer), " %.3f[%.3f,%.3f-%.3f]", pLOB->fFreqMean, pLOB->fFreqMode, pLOB->fFreqMin, pLOB->fFreqMax);
-            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
-
-            sprintf_s(buffer, sizeof(buffer), " %s    ", g_szAetPriType[pLOB->vPRIType]);
+            sprintf_s( buffer, sizeof( buffer ), " %.3f(%.3f-%.3f)", pLOB->fFreqMean, pLOB->fFreqMin, pLOB->fFreqMax );
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
             if( pLOB->vPRIPositionCount != 0 ) {
-                sprintf_s( buffer, sizeof( buffer ), "%0.1f(%.1f,%.1f-%.1f), %2d", pLOB->fPRIMean, pLOB->fPRIMode, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->vPRIPositionCount );
+                sprintf_s( buffer, sizeof( buffer ), "%s[%s]/%2d단", g_szAetPriType[( int ) pLOB->vPRIType], g_szAetPatternType[( int ) pLOB->vPRIPatternType], pLOB->vPRIPositionCount );
             }
             else {
-                sprintf_s( buffer, sizeof( buffer ), "%0.1f(%.1f,%.1f-%.1f), %.1f%%", pLOB->fPRIMean, pLOB->fPRIMode, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->fPRIJitterRatio );
+                if( pLOB->fFreqPatternPeriod != 0. ) {
+                    sprintf_s( buffer, sizeof( buffer ), "%s[%s]/%.2f", g_szAetPriType[( int ) pLOB->vPRIType], g_szAetPatternType[( int ) pLOB->vPRIPatternType], pLOB->fFreqPatternPeriod );
+                }
+                else {
+                    sprintf_s( buffer, sizeof( buffer ), "%s", g_szAetPriType[( int ) pLOB->vPRIType] );
+                }
             }
+            m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
+            sprintf_s( buffer, sizeof( buffer ), "%0.1f(%.1f,%.1f-%.1f), %.1f%%", pLOB->fPRIMean, pLOB->fPRIMode, pLOB->fPRIMin, pLOB->fPRIMax, pLOB->fPRIJitterRatio );
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
             sprintf_s(buffer, sizeof(buffer), " %.2f(%.2f,%.2f-%.2f)", pLOB->fPAMean, pLOB->fPAMode, pLOB->fPAMin, pLOB->fPAMax);
@@ -194,7 +208,7 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
             sprintf_s( buffer, sizeof( buffer ), " %d/%s", pLOB->uiRadarModeIndex, pLOB->szRadarModeName );
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-            sprintf_s( buffer, sizeof( buffer ), " %d/%d", pLOB->uiCoPDWOfAnalysis, pLOB->uiCoPDWOfCollection );
+            sprintf_s( buffer, sizeof( buffer ), " %d/%d", pLOB->uiNumOfAnalyzedPDW, pLOB->uiNumOfCollectedPDW );
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
 			++m_uiTotalLOB;

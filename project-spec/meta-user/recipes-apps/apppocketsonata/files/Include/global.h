@@ -24,7 +24,7 @@ int g_iMode;
 
 // 프로그램 에서 아규먼트 인자로 해석하여 저장하는 변수
 ENUM_BoardID g_enBoardId=enPRC_Unknown;
-char g_szPDWScinarioFile[100];
+
 
 //ENUM_ENDIAN_MODE g_enEndian;
 
@@ -37,8 +37,8 @@ char g_szCollectBank[enUserCollectBank+1][10] = { "미지", "탐지", "추적", 
 char g_szBitResult[2][10] = { "비정상", "정상" };
 
 #ifdef __VXWORKS__
-MSG_Q_ID g_ShmMemMsgQID;
-#define _SHM_MEMORY_KEY             g_ShmMemMsgQID
+//MSG_Q_ID g_ShmMemMsgQID;
+//#define _SHM_MEMORY_KEY             g_ShmMemMsgQID
 
 int g_iClkTickPerSecond;
 
@@ -46,17 +46,21 @@ int g_iClkTickPerSecond;
 #define _SHM_MEMORY_KEY             (333)
 #endif
 
+ENUM_ANAL_TYPE g_enLogAnalType;
+
 #else
 extern int g_iKeyId;
 extern int g_iMode;
 
 extern ENUM_BoardID g_enBoardId;
-extern char g_szPDWScinarioFile[100];
 
 extern bool g_bSaveFile;
 
-extern char g_szCollectBank[4][10];
+extern char g_szCollectBank[enUserCollectBank+1][10];
 extern char g_szBitResult[2][10];
+
+extern ENUM_ANAL_TYPE g_enLogAnalType;
+
 
 #ifdef __VXWORKS__
 extern MSG_Q_ID g_ShmMemMsgQID;
@@ -81,8 +85,6 @@ extern const char *_GetProgramVersion();
 #ifdef __cplusplus
 }
 #endif
-
-
 
 
 #endif // _SYSTEM_H

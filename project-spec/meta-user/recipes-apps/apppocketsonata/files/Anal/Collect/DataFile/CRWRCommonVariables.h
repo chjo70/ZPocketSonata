@@ -23,26 +23,10 @@
 
 #endif
 
-// #if TOOL==diab 
-// #pragma pack( 1 )
-// #else
-// #pragma pack( push, 1 )
-// #endif
 
 #pragma pack( push, 1 )
 
 
-
-
-//#include <Data/CPDWContainer.h>
-//#include <SignalProcessing/CSignalProcessingVariables.h>
-//#include <Util/Time/CStopWatch.h>
-// #include <ns_api.h>
-// #include <algorithm>
-// #include <stdio.h>
-// #include <vector>
-// #include <list>
-// #include <map>
 
 /**
 * @brief 다음상태메시지 

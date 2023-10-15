@@ -486,7 +486,7 @@ void CXInfoTip::SetIcon(HICON hIcon)
 	}
 	
 	// Get the icon sizes	
-	ZeroMemory(&IconInfo, sizeof(ICONINFO));
+	ZeroMemory(&IconInfo, sizeof( ICONINFO));
 	::GetIconInfo(m_hIcon, &IconInfo);
 
 	m_IconSize.cx = (BYTE)(IconInfo.xHotspot * 2);

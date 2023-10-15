@@ -264,6 +264,9 @@
     <ClInclude Include="..\..\files\Anal\INC\PDW.h">
       <Filter>소스 파일\Anal\INC</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\ELDecoder.h">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeltaGraph.cpp">
@@ -358,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
       <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\MIDAS\ELDecoder.cpp">
+      <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

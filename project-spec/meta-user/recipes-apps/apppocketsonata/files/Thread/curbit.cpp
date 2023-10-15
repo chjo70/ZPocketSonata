@@ -34,8 +34,9 @@ extern "C" {
 #include "../Utils/ccommonutils.h"
 #include "../Include/globals.h"
 
+#include "../BootSHell/ManSbc.h"
 
-
+extern CManSbc *g_theManSbc;
 
 #define _DEBUG_
 
@@ -53,7 +54,12 @@ extern "C" {
  */
 CUrBit::CUrBit( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
-    LOGENTRY;
+    //LOGENTRY;
+
+    m_stBIT.bTemp = true;
+    m_stBIT.bTask = true;
+
+    m_uiCoURBITTimer = 0;
 
     Init();
 
@@ -85,7 +91,7 @@ CUrBit::~CUrBit( void )
  */
 void CUrBit::Run( key_t key )
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     CThread::Run();
 
@@ -102,7 +108,7 @@ void CUrBit::Run( key_t key )
  */
 void CUrBit::_routine()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     bool bCGIRunning;
 
@@ -110,7 +116,7 @@ void CUrBit::_routine()
     m_pLanData = GeLanData();
 
     while( m_bThreadLoop ) {
-        if( QMsgRcv( enTIMER, OS_SEC( 100 ) ) == -1 ) {
+        if( QMsgRcv( enTIMER, OS_SEC( URBIT_TIMER ) ) == -1 ) {
             // if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv(CUrBit)" );
         }
@@ -137,13 +143,12 @@ void CUrBit::_routine()
                 break;
 
             case enTHREAD_TIMER:
-                Log( enNormal, "주기적으로 자체점검을 수행합니다. !!", m_pLanData->uiUnit );
+                Log( enNormal, "주기적으로 자체점검을 수행합니다. !!" );
                 RunTimer();
                 break;
 
             case enCGI_REQ_SBIT:
             case enTHREAD_REQ_SBIT:
-                RunTimer();
                 Log( enNormal, "SRBIT[%d]를 수행합니다 !!", m_pLanData->uiUnit );
                 break;
 
@@ -175,9 +180,71 @@ void CUrBit::_routine()
  */
 void CUrBit::RunTimer()
 {
+    ++ m_uiCoURBITTimer;
+    if( m_uiCoURBITTimer >= SNTP_TIMER / URBIT_TIMER ) {
+        m_uiCoURBITTimer = 0;
+
+#ifdef __VXWORKS__
+        m_stBIT.bSNMP = g_theManSbc->SetTimeBySNMP();
+
+#endif
+
+    }
+
     // 보드 온도를 체크 합니다.
     CheckSBCTemp();
 
+    // 타스크(프로세스) 상태를 체크 합니다.
+    CheckTasks();
+
+    //
+
+
+}
+
+/**
+ * @brief     CheckTasks
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-19 13:13:18
+ * @warning
+ */
+void CUrBit::CheckTasks()
+{
+
+    m_stBIT.bTask = true;
+
+#ifdef __VXWORKS__
+    TASK_DESC taskDesc;
+
+    for( const auto &cThread : g_vecThread ) {
+        cThread->GetTaskInfo( &taskDesc );
+
+        // printf( "\n [%s] task status[%d] ", cThread->GetThreadName(), taskDesc.td_status );
+        if( taskDesc.td_status == 16 ) {
+			char buffer[200];
+
+            m_stBIT.bTask = false;
+            Log( enError, "타스크[%s]에서 이상 운용됩니다. 관리자에게 문의하세요 !", cThread->GetThreadName() );
+
+            sprintf( buffer, "EW신호처리판 [#%d]에서 타스크[%s]에서 이상 동작합니다. 확인하세요 !", (int) g_enBoardId, cThread->GetThreadName() );
+            g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
+
+            break;
+        }
+
+    }
+
+    if( m_stBIT.bTask == true ) {
+        Log( enDebug, "[%d] 개의 타스크가 정상 운용 중입니다." , g_vecThread.size() );
+    }
+    else {
+
+    }
+
+#endif
 
 }
 
@@ -192,6 +259,7 @@ void CUrBit::RunTimer()
  */
 void CUrBit::CheckSBCTemp()
 {
+
 #ifdef __VXWORKS__
     // VXB_ADT7481_TEMP_DRV *pDrvCtrl = ( VXB_ADT7481_TEMP_DRV * ) vxbDevSoftcGet( pAdt7481Inst );
 
@@ -199,10 +267,26 @@ void CUrBit::CheckSBCTemp()
 
     GetTemperature( & uiBoardTemp, & uiCPUTemp );
 
-    Log( enNormal, "보드 온도 [%d]도, CPU 온도 [%d]도 체크 합니다." , uiBoardTemp, uiCPUTemp );
+    if( uiBoardTemp > g_pTheSysConfig->GetCPUTempWarning() ) {
+        char buffer[200];
 
+        sprintf( buffer, "EW신호처리판 [#%d]에서 보드 온도[%d]도, CPU 온도[%d]도 를 초과했습니다 ! 장치 전원을 차단하세요 !" , (int) g_enBoardId, uiBoardTemp, uiCPUTemp );
+        g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
+
+        Log( enNormal, "%s", buffer );
+
+        m_stBIT.bTemp = false;
+    }
+    else {
+        Log( enNormal, "보드 온도 [%d]도, CPU 온도 [%d]도 로 정상 운용 입니다.", uiBoardTemp, uiCPUTemp );
+    }
+
+#else
+    m_stBIT.bTemp = true;
 
 #endif
+
+
 }
 
 /**

@@ -6,7 +6,7 @@
 
 #include "../Anal/Collect/GenPDW/CGenPDW.h"
 
-#define NUM_OF_PDW          (100)
+#define NUM_OF_SIM_PDW          (3000)
 
 class CUserCollect : public CThread
 {
@@ -55,7 +55,7 @@ public:
     CUserCollect( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CUserCollect();
 
-    void Run( key_t key=IPC_PRIVATE ); 
+    void Run( key_t key=IPC_PRIVATE );
 
 
     void _routine();

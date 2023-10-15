@@ -32,7 +32,7 @@ namespace RadarAnlAlgotirhm
 {
     char gszHeader[100] = { "+-----------------------------------------------------------------------+" };
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
     char gszProject[20] = { "위협 관리/식별" };
 
 #elif defined(_ELINT_) || defined(_XBAND_)
@@ -260,7 +260,7 @@ namespace RadarAnlAlgotirhm
 		else {
 			pSRxLOBData = gpEmitterMergeMngr->m_VecLOBData.data();
 			for( i=0 ; i < pLOBData->stLOBHeader.uiNumOfLOB ; ++i ) {
-				memcpy( & pLOBData->stLOBData[i], pSRxLOBData, sizeof(SRxLOBData) );
+				memcpy( & pLOBData->stLOBData[i], pSRxLOBData, sizeof(struct SRxLOBData) );
 				++ pSRxLOBData;
 
 				bRet = true;
@@ -269,6 +269,20 @@ namespace RadarAnlAlgotirhm
 
 		return bRet;
 	}
+
+    /**
+     * @brief     GetLOBData
+     * @return    std::vector<SRxLOBData> *
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-06-13 09:39:15
+     * @warning
+     */
+    std::vector<SRxLOBData> *RadarAnlAlgotirhm::GetLOBData()
+    {
+        return & gpEmitterMergeMngr->m_VecLOBData;
+    }
 
 	/**
 	 * @brief     GetABTData
@@ -296,7 +310,7 @@ namespace RadarAnlAlgotirhm
 		else {
 			pSRxABTData = gpEmitterMergeMngr->m_VecABTData.data();
 			for( i=0 ; i < pABTData->stABTHeader.iNumOfABT ; ++i ) {
-				memcpy( & pABTData->stABTData[i], pSRxABTData, sizeof(SRxABTData) );
+				memcpy( & pABTData->stABTData[i], pSRxABTData, sizeof( struct SRxABTData) );
 				++ pSRxABTData;
 
 				bRet = true;
@@ -306,7 +320,71 @@ namespace RadarAnlAlgotirhm
 		return bRet;
 	}
 
-#ifdef _POCKETSONATA_
+    /**
+     * @brief     GetABTData
+     * @return    std::vector<SRxABTData> *
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-06-13 09:39:56
+     * @warning
+     */
+    std::vector<SRxABTData> *RadarAnlAlgotirhm::GetABTData()
+    {
+        return & gpEmitterMergeMngr->m_VecABTData;
+    }
+
+    /**
+     * @brief     GetAETData
+     * @param     STR_AETDATA * pAETData
+     * @return    bool
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-06-09 20:09:34
+     * @warning
+     */
+    bool RadarAnlAlgotirhm::GetAETData( STR_AETDATA *pAETData )
+    {
+        int i;
+        bool bRet = false;
+
+        vector<SRxAETData>::pointer pSRxAETData;
+
+        pAETData->stAETHeader.iNumOfAET = gpEmitterMergeMngr->m_VecAETData.size();
+
+        if( pAETData->stAETHeader.iNumOfAET > MAX_LOB_DATA ) {
+            Printf( "\n AET 데이터 개수[%d]가 초과해서 결과를 리턴하지 않습니다. 리컨값을 확인해보세요.", pAETData->stAETHeader.iNumOfAET );
+            Log( enError, "AET 데이터 개수[%d]가 초과해서 결과를 리턴하지 않습니다. 리컨값을 확인해보세요.", pAETData->stAETHeader.iNumOfAET );
+        }
+        else {
+            pSRxAETData = gpEmitterMergeMngr->m_VecAETData.data();
+            for( i = 0; i < pAETData->stAETHeader.iNumOfAET; ++i ) {
+                memcpy( & pAETData->stAETData[i], pSRxAETData, sizeof( struct SRxAETData ) );
+                ++ pSRxAETData;
+
+                bRet = true;
+            }
+        }
+
+        return bRet;
+    }
+
+    /**
+     * @brief     GetAETData
+     * @return    std::vector<SRxAETData> *
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-06-13 09:40:48
+     * @warning
+     */
+    std::vector<SRxAETData> *RadarAnlAlgotirhm::GetAETData()
+    {
+        return & gpEmitterMergeMngr->m_VecAETData;
+    }
+
+#if defined(_POCKETSONATA_) || defined(_712_)
 
 	/**
      * @brief     위협 관리/식별 함수에 대한 위협 결과를 얻을때 사용한다. Start() 후에

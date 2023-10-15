@@ -34,7 +34,10 @@ CKnownSigAnal::CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char
 	m_theGroup = new CKGroup( this, uiCoMaxPdw);
 	m_thePulExt = new CKPulExt( this, uiCoMaxPdw);
 	m_theAnalPRI = new CKAnalPRI( this, uiCoMaxPdw);
-	m_theMakeAET = new CKMakeAET( this, uiCoMaxPdw);
+
+    // 추적 개수 제한
+    unsigned int uiCoMaxLOB = g_pTheSysConfig->GetMaxCountOfLOB();
+	m_theMakeAET = new CKMakeAET( this, uiCoMaxLOB );
 
 	m_uiMaxPdw = uiCoMaxPdw;
 
@@ -97,7 +100,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, 
 
     Log( enNormal, "#### 추적 - 추적 분석 시작[%dth, Co:%d] ####" , GetStep(), m_uiCoPdw );
 
-    InsertRAWData( & m_stSavePDWData, _spZero, bDBInsert );
+    InsertRAWData( & m_stSavePDWData, _spZero, (int) -1, bDBInsert );
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
 	_PDW *pPDW = pstPDWData->stPDW;
@@ -115,7 +118,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, 
     // 잔여 펄스열에 대해서 탐지 신호 분석을 수행한다.
 	StartOfNewSignalAnalysis( bDBInsert );
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 #elif defined(_ELINT) || defined(_XBAND_)
 #else
 //         // 추적 에미터와 새로운 에미터와 상관성을 확인하여 추적 에미터 여부를 결정한다.
@@ -250,7 +253,7 @@ void CKnownSigAnal::ClearColBuffer()
 {
 #ifdef __GNUC__
     //m_pPdwBank->count = 0;
-#elif _POCKETSONATA_
+#elif defined(_POCKETSONATA_) || defined(_712_)
 
 #elif defined(_ELINT) || defined(_XBAND_)
 #else
@@ -304,7 +307,7 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 		MakeAnalDirectory( &pstPDWData->x, false );
 		CCommonUtils::DeleteAllFile( GetAnalDirectory() );
 
-        memcpy( & m_stSavePDWData.x, & pstPDWData->x, sizeof(UNION_HEADER) );
+        memcpy( & m_stSavePDWData.x, & pstPDWData->x, sizeof(union UNION_HEADER) );
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
         SetPDWID( m_pstPDWData->GetPDWID());
@@ -359,7 +362,7 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 
 }
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 #elif defined(_ELINT)
 #else
 //////////////////////////////////////////////////////////////////////
@@ -577,3 +580,49 @@ int CKnownSigAnal::GetPLOBIndex()
     iPLOBIndex = - ( iCoFrqAoaPwIdx + 1 );
     return iPLOBIndex;
 }
+
+/**
+ * @brief     SaveDebug
+ * @param     char * pSourcefile
+ * @param     char * piLines
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-06 13:45:34
+ * @warning
+ */
+void CKnownSigAnal::SaveDebug( const char *pSourcefile, int iLines )
+{
+
+}
+
+#ifdef _LOG_ANALTYPE_
+/**
+ * @brief     GetLogAnalType
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-21 11:53:48
+ * @warning
+ */
+bool CKnownSigAnal::GetLogAnalType()
+{
+    bool bRet = true;
+
+    if( g_enLogAnalType == enALL ) {
+    }
+    else {
+        if( m_enAnalType == g_enLogAnalType ) {
+
+        }
+        else {
+            bRet = false;
+        }
+    }
+
+    return bRet;
+}
+
+#endif

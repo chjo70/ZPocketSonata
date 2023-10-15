@@ -22,9 +22,18 @@
 #define _spThree	(3)
 #define _spFour	    (4)
 
-enum EN_SCANRESULT { _spAnalFail=1, _spInsuPul, _spInsuExt, _spAnalSuc, _spReCol, _spModWc, _spReqAnalScn, _spDetTyp } ;
+enum EN_SCANRESULT {
+    _spAnalFail=1,
+    _spInsuPul,
+    _spInsuExt,
+    _spAnalSuc,
+    _spReCol,
+    _spModWc,
+    _spReqAnalScn,
+    _spDetTyp,
+    _spScanUnkown
+} ;
 
-//##ModelId=452B0C550263
 enum PULSE_EXTRACT_PRI_STEP { STEP1=0, STEP2, STEP_WIDE, STEP_BY_STEP } ;
 
 // 펄스열 마킹 정의 값
@@ -48,7 +57,6 @@ enum EMITTER_MARK {
 enum AET_MARK { NORMAL_AET=0, DELETE_AET } ;
 
 // 주파수 그룹화
-//##ModelId=452B0C5502A9
 enum FREQ_GROUP_STEP { NARROW=0, _WIDE, _FULL } ;
 
 #define _spTrue									(1)
@@ -64,7 +72,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define _spTimeNsRes						(25)
 #define _spTimeres              (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 //#define _spTimeNsRes						(25)
 //#define _spTimeres                          (1000000000/_spTimeNsRes)					// 1 sec / 50 ns */
 
@@ -119,6 +127,12 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define USR_COLLECT_PDW				(1024*2)		// 사용자 분석용 최대 수집 개수
 
+#elif defined(_712_)
+#define NEW_COLLECT_PDW				(1024)			// 탐지 분석용 최대 수집 개수
+#define KWN_COLLECT_PDW				(256)			// 추적 분석용 최대 수집 개수
+#define SCN_COLLECT_PDW				(1024*2)		// 스캔 분석용 최대 수집 개수
+
+#define USR_COLLECT_PDW				(1024*2)		// 사용자 분석용 최대 수집 개수
 
 #else
 #define   _spPAoffset               (-70)           // amplitude initial value */
@@ -147,10 +161,30 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #endif
 
 
-/*! \bug  탐지 분석에 기본 지터율 추출을 최대 53% 까지 추출하게 함.
+// 메시지 크기 계산하기
+#define _DETECT_BUFFER_     ( sizeof( union UNION_HEADER ) + sizeof( _PDW ) * NEW_COLLECT_PDW )
+#define _TRACK_BUFFER_      ( sizeof( struct SRxABTData ) + ( sizeof( _PDW ) * TRK_COLLECT_PDW ) + sizeof( UNION_HEADER ) )
+#define _SCAN_BUFFER_       ( sizeof( struct SRxABTData ) + ( sizeof( _PDW ) * SCN_COLLECT_PDW ) + sizeof( UNION_HEADER ) )
+
+#define _MAX_LANDATA        _SCAN_BUFFER_
+
+
+// #if _DETECT_BUFFER_ < _TRACK_BUFFER_
+// #define _MAX_LANDATA _TRACK_BUFFER_
+//
+// #else
+// #define _MAX_LANDATA  _SCAN_BUFFER_
+//
+// #endif
+
+#define _MAX_LOBDATA        (_MAX_LANDATA/sizeof(struct SRxLOBData))
+
+
+/*! \bug  탐지 분석에 기본 지터율 추출을 최대 54% 까지 추출하게 함.
     \date 2008-10-25 18:01:37, 조철희
 */
 #define	MAX_JITTER_P				(54)				// 최대 54% 까지 존재
+#define	MAX_JITTER_P_FOR_PT			(MAX_JITTER_P+5)	// 최대 54% 까지 존재
 #define MAX_JITTER_R				(float) ( MAX_JITTER_P / 100. )
 
 //////////////////////////////////////////////////////////////////////
@@ -165,11 +199,13 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // 펄스열 최대 개수 및 가상 에미터 최대 개수
 //#define	MAX_PT      				(UINT)( 50 + 17 + 50 )  // 최대 펄스열 수, 17은 stagger 펄스열을 추출하기 위한 버퍼
 #define	MAX_SEG      				(UINT)( NEW_COLLECT_PDW )  // 최대 펄스열 수, 17은 stagger 펄스열을 추출하기 위한 버퍼
-#define	MAX_AET     				(100)		// 최대 AET 수, 04-04-12 -> 50
+#define	MAX_LOB     				(100)		// 최대 AET 수, 04-04-12 -> 50
+
+#define PRI_MAX                     (20000)             // [us]
 
 
-// 그룹화 히스트그램 최대 개수
-
+#define DTOA_HISTOGRAM_RES_US       (10)
+#define DTOA_BIN					(PRI_MAX/DTOA_HISTOGRAM_RES_US)
 
 //////////////////////////////////////////////////////////////////////////
 // 방위/주파수/펄스폭 그룹화
@@ -182,7 +218,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define TOTAL_FRQAOAPWBIN			(91000)			//(1024*4)											// 전체 히스토그램 BIN수
 
 // DTOA 히스트그램 최대 개수
-#define	DTOA_HISTOGRAM_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+#define	DTOA_HISTOGRAM_RES					ITOAusCNV(DTOA_HISTOGRAM_RES_US)								// ( 10 * _spOneMicrosec )
 
 #define MAX_AOA_BIT       			    (36000)			// 최대 방위값 2^10 (360도/1023)
 #define MAX_FREQ_BIT      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
@@ -206,7 +242,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define TOTAL_FRQAOAPWBIN			(91000)			//(1024*4)											// 전체 히스토그램 BIN수
 
 // DTOA 히스트그램 최대 개수
-#define	DTOA_HISTOGRAM_RES					ITOAusCNV(10)								// ( 10 * _spOneMicrosec )
+#define	DTOA_HISTOGRAM_RES					ITOAusCNV(DTOA_HISTOGRAM_RES_US)								// ( 10 * _spOneMicrosec )
 
 #define MAX_AOA_BIT       			    (3600)			// 최대 방위값 2^10 (360도/1023)
 #define MAX_FREQ_BIT      			    IFRQMhzCNV( 0, 18000)		// 최대 주파수sms 5000 MHz로 함.
@@ -221,15 +257,15 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define	MAX_PW_BIT						(1024*16)
 
-#elif defined(_POCKETSONATA_)
-//#define KHARM_AOA_MAR               (int) ( (float) 8. / (float) POCKETSONATA::_fDOARes + (float) 0.5 )			// 8도
-
+#elif defined(_POCKETSONATA_) || defined(_712_)
 #define TOTAL_FRQAOAPWBIN               (91000)				//(1024*4), 전체 히스토그램 BIN수
 
-#define	DTOA_HISTOGRAM_RES              UTOAusCNV((_TOA) 10)
+#define	DTOA_HISTOGRAM_RES              UTOAusCNV((_TOA) DTOA_HISTOGRAM_RES_US)
+
+#define	FREQ_WIDE_VALUE_MHZ             (2000)
 
 #define	FREQ_NARR_MHZ                   IFRQMhz(0,20)            // 20 MHz
-#define	FREQ_WIDE_MHZ                   IFRQMhz(0,100)           // 100 MHz
+#define	FREQ_WIDE_MHZ                   IFRQMhz(0, 500 )        // BIN 폭을 500 MHz 로 설정
 
 #define	MAX_FREQ_DEVIATION		        IFRQMhz(0, 1000)         // 1000 MHz, [MHz], 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
@@ -260,7 +296,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define KHARM_AOA_MAR				(14)		// 하모닉 방위 마진 (Band1)
 
-#define	DTOA_HISTOGRAM_RES					(_TOA) ( (_TOA)10 * (_TOA) _spOneMicrosec )
+#define	DTOA_HISTOGRAM_RES					(_TOA) ( (_TOA)DTOA_HISTOGRAM_RES_US * (_TOA) _spOneMicrosec )
 
 
 #define   _spRxdfAoaLow     (UDIV( 8, _spAOAres ))      // 14( 8 deg. )
@@ -301,7 +337,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define TOTAL_FRQAOAPWBIN					(1024)											// 전체 히스토그램 BIN수
 // DTOA 히스트그램 최대 개수
-#define	DTOA_HISTOGRAM_RES									( 10 * _spOneMicrosec )
+#define	DTOA_HISTOGRAM_RES									( DTOA_HISTOGRAM_RES_US * _spOneMicrosec )
 
 #define   _spRxdfAoaLow     (UDIV( 8, _spAOAres ))      // 14( 8 deg. )
 #define   _spRxdfAoaMid     (UDIV( 5., _spAOAres ))     // 9 ( 5 deg. )
@@ -329,6 +365,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #endif
 
 
+
+
+
 #define FREQ_RANGE_MARGIN		0				// 1000 MHz, 주파수 그룹 범위 margin, 이전값 0
 #define	FREQ_WIDE_SHIFT_CNT	(2*_sp.np.Freq_Shift_Cnt)
 #define	FREQ_NARR_SHIFT_CNT	(_sp.np.Freq_Shift_Cnt)
@@ -340,45 +379,43 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define MAX_MISSING_PULSE_FOR_PULSEEXTRACT		(20)
 
-#if defined(_ELINT_) || defined(_XBAND_)
+#define PW_VARIANCE_FOR_VALID_PDW       (10)
 
-#else
-
-#endif
 
 /*! \bug  소청도에서의 강경리 신호가 펄스폭으로 분리되기 때문에 이를 1에서 2로 설정해서 하나의 그룹으로 만들기 위함.
     \date 2008-01-24 14:26:28, 조철희
 */
 #if defined(_ELINT_) || defined(_XBAND_)
-#define	PW_SHIFT_CNT				(10)			//
+#define	PW_SHIFT_CNT				    (10)			//
 #else
-#define	PW_SHIFT_CNT				(7)			//
+#define	PW_SHIFT_CNT				    (7)			//
 #endif
 
-#define	PW_GROUP_DIFF				(500)
+#define	PW_GROUP_DIFF				    (500)
 
-#define	NARROW_FREQ_GROUP		0
-#define WIDE_FREQ_GROUP			1000 	// 1GHz 최대 주파수 그룹 범위
-#define	MAX_FREQ_DIFF				1000        // 1000 [MHz] 주파수 폭 설정
+#define	NARROW_FREQ_GROUP		        0
+#define WIDE_FREQ_GROUP			        1000 	// 1GHz 최대 주파수 그룹 범위
+
 
 
 // 방위 히스토그램 상에서 _sp.np.Aoa_Hist_Thr 값 이하로 연속 출현 개수
-#define MIN_CONTI_THRESHOLD_AOA				(1)
+#define AOA_HIST_THR                    (5)
+#define MIN_CONTI_THRESHOLD_AOA			(5)
 
 //////////////////////////////////////////////////////////////////////
 // 펄스열 추출
-#define MPC         				6    //010109, 이전값은 20개
-#define MJPC        				6    //000223 // Jitter 펄스열의 최소 펄스수 (Min. Jitter Pulse Count), 이전값은 20개
+#define MPC         				    6    //010109, 이전값은 20개
+#define MJPC        				    6    //000223 // Jitter 펄스열의 최소 펄스수 (Min. Jitter Pulse Count), 이전값은 20개
 /*! \bug  5 이던 것을 연속 4개 펄스로 수정함.
     \date 2008-01-24 19:32:06, 조철희
 */
 #define RPC         				4    // 기준 펄스열의 펄스수 (Reference Pule Count), 이전값은 5, 2005-09-28 11:09:29 --//
 
-#define MAX_STB_MISS    		    7   	// 최대 허용 STABLE MISS 개수, 이전 값은 6
+#define MAX_STB_MISS    		    (7)   	// 최대 허용 STABLE MISS 개수, 이전 값은 6
 #define MAX_JIT_MISS    		    (2)   	// 최대 허용 JITTER MISS 개수, 이전 값은 3
 
-#define REFLEX_ZONE     		    ( 10 * _spOneMicrosec ) // 반사파 처리 구간
-#define HPRF_FIRST_PRI  		    ( 80 * _spOneMicrosec ) // 반사파처리 이전에 High PRF부터 처리
+//#define REFLEX_ZONE     		    ( 10 * _spOneMicrosec ) // 반사파 처리 구간
+//#define HPRF_FIRST_PRI  		    ( 80 * _spOneMicrosec ) // 반사파처리 이전에 High PRF부터 처리
 
 
 
@@ -407,6 +444,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // 최소 ACF 개수
 #define MIN_CO_ACF                              (5)
 
+// 최소 ACF 값 : 호핑과 드웰 신호에 대해서...
+#define MINIMUM_ACF_FOR_HOPPING                 (0.3)
+
 // PRI 추출 경계
 #define	MID_PRI_BAND							(7)			// 펄스열 추출 중간 밴드
 
@@ -420,17 +460,17 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define MIN_STAGGER_LEVEL_PERIOD                (2)		// 스태거 레벨값 최소 반복 회수
 #define MIN_REPEAT_STAGGER_LEVEL	            (6)		// 레벨 체크에서 6주기 이상인 경우는 threshold = ( 100 * ( 2*N-1 ) ) / (2*N) 누락되어도 허용하는 최소 반복
 
-#define MIN_PRI							ITOAusCNV( 20 ) //( 20 * _spOneMicrosec )				// 최소 분석가능 PRI
+//#define MIN_PRI							ITOAusCNV( 20 ) //( 20 * _spOneMicrosec )				// 최소 분석가능 PRI
 
 //#define FIXED_TYPE_FREQ_MARGIN			        (5)    // [MHz]
-#define FIXED_FREQ_MARGIN				5
+//#define FIXED_FREQ_MARGIN				5
 #define FREQ_MEAN_MARGIN_THRESHOLD		95
 
 
 
 
 //#define DTOA_BIN									( ( 50 * _spOneMilli ) / DTOA_RES )	// 최대 수집 개수
-#define DTOA_BIN									(5000)
+//#define DTOA_BIN									(11000+10)
 
 // DTOA 히스토그램에서 찾을 수 있는 최대 Stable PRI 개수
 // 16단 까지 측정할 수 있게 한다.
@@ -438,14 +478,15 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 // 호핑 분석 데이터 관련 정의
 #define FREQ_BIN_WIDTH              (10)            // BIN 하나의 주파수 범위(10MHz)
-#define FREQ_BIN                    (12000 / FREQ_BIN_WIDTH)  // BIN 당 10MHz로 설정
+#define FREQ_BIN                    ( MAX_FREQ_MHZ / FREQ_BIN_WIDTH)  // BIN 당 10MHz로 설정
 #define MAX_FREQ_MISS_CNT           (5)             // 호핑 레벨 최대 누락 개수
-#define HOP_LEVEL_THREAT_CNT        (10)            // 호핑 레벨 최소 PDW 개수
+#define HOP_LEVEL_MIN_CNT           (5)                // 호핑 및 드웰 레벨 최소 PDW 개수
+#define HOP_RATIO                   (60)                // 호핑 및 드웰 레벨 최소 PDW 개수
+#define HOP_LEVEL_MIN_CNT_NONPRD    (2)
 #define HOP_PDW_PERCENTAGE          (85.0)            // 호핑 판정을 위한 호핑 PDW 비율
 
 // 패턴 SAW 형 임계값 정의
-#define THRESHOLD_SAW_PATTERN			(60)		// 60 % 이상
-#define	THRESHOLD_SAW_PATTERN			(60)		// 60 % 이상
+#define THRESHOLD_SAW_PATTERN			(10)		// 55 에서 550로 낮게 설정합니다 (잡음 고려해서).
 
 //////////////////////////////////////////////////////////////////////////
 // 에미터 생성 기준
@@ -459,13 +500,13 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 //////////////////////////////////////////////////////////////////////////
 // 에미터 구조체의 정의문
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_)
-#define MAX_HOPPING_LEVEL_ELEMENT           32
+#if defined(_ELINT_) || defined(_XBAND_) || defined(_POCKETSONATA_) || defined(_712_)
+#define MAX_HOPPING_LEVEL_POSITION           32
 #else
-#define MAX_HOPPING_LEVEL_ELEMENT           32
+#define MAX_HOPPING_LEVEL_POSITION           32
 #endif
 
-#define MAX_STAGGER_LEVEL_ELEMENT           (MAX_HOPPING_LEVEL_ELEMENT)
+#define MAX_STAGGER_LEVEL_POSITION           (MAX_HOPPING_LEVEL_POSITION)
 #define MAX_HOP_LEVEL_ELEMENT				(MAX_SEG)
 
 //////////////////////////////////////////////////////////////////////////

@@ -25,6 +25,10 @@ public:
 
 	unsigned int GetColPdw();
 
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
+#endif
+
     CNGroup( void *pParent, unsigned int uiCoMaxPdw );
     virtual ~CNGroup();
 

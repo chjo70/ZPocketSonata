@@ -85,7 +85,7 @@ protected:
             memset( szOut, 0, sizeof(szOut) );
 
 			//enPosition enPos=GetPosition();
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 			sprintf( szConnect, "DRIVER={SQL Server};SERVER=%s, 1433;UID=sa;PWD=devrms;DATABASE=SONATA;" , DB_SERVER_IP_ADDRESS );
 #else
             sprintf( szConnect, "DRIVER={SQL Server};SERVER=%s, 1433;UID=sa;PWD=devrms;DATABASE=ELINT;" , DB_SERVER_IP_ADDRESS );

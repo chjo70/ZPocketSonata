@@ -76,10 +76,10 @@ namespace ELDecoder
 	float DecodeAOA(const unsigned int i_iBinAoa);
 	float DecodePW(const int i_iBinPw);
 	float DecodeWindeBandPW(const int i_iBinPw);
-	float DecodePA(const int i_iBinPa);
+	float DecodePA(const unsigned int i_uiBinPa);
 	float DecodePA(const float i_fBinPa);
 	float DecodeGainPA(const int i_iBinPa);
-	float DecodeFrq(const int i_iBinFrq);
+	float DecodeFrq(const unsigned int i_uiBinFrq);
 	float DecodeFrq(const unsigned long long int i_iBinFrq);
 	float DecodeFrqChangePeriod(const int i_iBinFrqChangePeriod);
 	float DecodeFrqChangeWidth(const int i_iBinFrqChangeWidth);

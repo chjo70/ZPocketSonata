@@ -22,6 +22,12 @@
     <Filter Include="소스 파일\Utils">
       <UniqueIdentifier>{c4d7471b-5021-401e-8ff1-eb0f9760d796}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\System">
+      <UniqueIdentifier>{6e596ccc-52b4-4164-a365-dba645fd5b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Ini">
+      <UniqueIdentifier>{346c28f2-e860-413e-9162-e066e6014e12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -92,6 +98,39 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\cudpserver.h">
       <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\System\csharedmemory.h">
+      <Filter>소스 파일\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\System\csysconfig.h">
+      <Filter>소스 파일\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue.h">
+      <Filter>소스 파일\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-ccs.h">
+      <Filter>소스 파일\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-efsl.h">
+      <Filter>소스 파일\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-FatFs.h">
+      <Filter>소스 파일\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-ffs.h">
+      <Filter>소스 파일\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-mdd.h">
+      <Filter>소스 파일\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minGlue-stdio.h">
+      <Filter>소스 파일\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\minIni.h">
+      <Filter>소스 파일\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\MinIni\wxMinIni.h">
+      <Filter>소스 파일\Ini</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +256,15 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\cudpserver.cpp">
       <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csharedmemory.cpp">
+      <Filter>소스 파일\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csysconfig.cpp">
+      <Filter>소스 파일\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\MinIni\minIni.cpp">
+      <Filter>소스 파일\Ini</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

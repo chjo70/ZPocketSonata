@@ -32,13 +32,19 @@ extern "C" {
 
 #ifdef _MAIN_
 
-STR_SCANPT stScanPt;
+#ifdef SCN_COLLECT_PDW
+//STR_SCANPT stScanPt;
+#endif
 
 #else
 
-extern STR_MANAET stTrkAet;
-extern STR_SCNAET stScnAet;
-extern STR_SCANPT stScanPt;
+//extern STR_MANAET stTrkAet;
+//extern STR_SCNAET stScnAet;
+
+#ifdef SCN_COLLECT_PDW
+//extern STR_SCANPT stScanPt;
+
+#endif
 
 
 #endif	// _MAIN_

@@ -3,11 +3,11 @@
  * @brief     PDW 데이터를 SP-350 구조로 변환해주는 클래스
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-02-07, 오후 2:48 
- * @warning   
+ * @date      2017-02-07, 오후 2:48
+ * @warning
  */
 
-#include "stdafx.h"
+#include "pch.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -42,11 +42,11 @@
  * @brief     초기화 처리
  * @param     void
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-02-07, 오후 2:49 
- * @warning   
+ * @date      2017-02-07, 오후 2:49
+ * @warning
  */
 CPDW2SP370::CPDW2SP370(void)
 {
@@ -60,11 +60,11 @@ CPDW2SP370::CPDW2SP370(void)
  * @brief     메모리 해지 처리한다.
  * @param     void
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-02-07, 오후 3:00 
- * @warning   
+ * @date      2017-02-07, 오후 3:00
+ * @warning
  */
 CPDW2SP370::~CPDW2SP370(void)
 {
@@ -74,30 +74,30 @@ CPDW2SP370::~CPDW2SP370(void)
  * @brief     Init
  * @param     void
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-02-07, 오후 3:00 
- * @warning   
+ * @date      2017-02-07, 오후 3:00
+ * @warning
  */
 void CPDW2SP370::Init(void)
 {
 	m_nPDWWord = 0;
-	memset( & m_stPDWHeader, 0 , sizeof(SELSP350_PDWHEADER ) );
+	memset( & m_stPDWHeader, 0 , sizeof( struct SELSP350_PDWHEADER ) );
 
-	memset( & m_stPDWWord, 0 , sizeof(SELSP350_PDWWORDS ) );
-	
+	memset( & m_stPDWWord, 0 , sizeof( union SELSP350_PDWWORDS ) );
+
 }
 
 /**
  * @brief     SP-350 변환시 PDW 헤더를 저장한다.
  * @param     void
  * @return    bool
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-02-07, 오후 3:10 
- * @warning   
+ * @date      2017-02-07, 오후 3:10
+ * @warning
  */
 bool CPDW2SP370::MakeHeader(void)
 {
@@ -122,7 +122,7 @@ bool CPDW2SP370::MakeHeader(void)
 	length = sizeof(m_stPDWHeader.szMasterLibraryName) - index;
 	memset( & m_stPDWHeader.szMasterLibraryName[index], 0, (size_t) length );
 #endif
-	
+
 	m_stPDWHeader.ucIndexOffsetInBytes = 8;
 
 	return true;
@@ -132,11 +132,11 @@ bool CPDW2SP370::MakeHeader(void)
  * @brief     PDW 데이터를 변환한다.
  * @param     int nPDW
  * @return    bool
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-02-07, 오후 3:10 
- * @warning   
+ * @date      2017-02-07, 오후 3:10
+ * @warning
  */
 bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecords )
 {
@@ -148,9 +148,9 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 	pstPDWWord = & m_stPDWWord[0];
 	for( i=0 ; i < iRecords ; ++i ) {
 		AllEndian64( & pS_EL_PDW_DATA->ullTOA, sizeof(long long int) );
-		AllEndian32( & pS_EL_PDW_DATA->uiPulseType, sizeof(SRxPDWDataRGroup)- sizeof(long long int) );
+		AllEndian32( & pS_EL_PDW_DATA->uiPulseType, sizeof(struct SRxPDWDataRGroup)- sizeof(long long int) );
 
-		memset( pstPDWWord, 0, sizeof(SELSP350_PDWWORDS) );
+		memset( pstPDWWord, 0, sizeof( union SELSP350_PDWWORDS) );
 
 		// 1번째 Phase
 		dToa = ELDecoder::DecodeToa( pS_EL_PDW_DATA->ullTOA );			// ns 단위로 변경
@@ -191,15 +191,15 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 		pstPDWWord->x.usPW = UDIV( dPw*1000., 40 );
 		//pstPDWWord->x.usPW = pS_EL_PDW_DATA->iPW;
 
-		pstPDWWord->x.usHighFMOP = 0;			
+        pstPDWWord->x.usHighFMOP = 0;
 		pstPDWWord->x.usLowFMOP = 0;
 
-		AllEndian32( pstPDWWord, sizeof(SELSP350_PDWWORDS) );
+		AllEndian32( pstPDWWord, sizeof( union SELSP350_PDWWORDS) );
 
 		++ pstPDWWord;
 
 		++ pS_EL_PDW_DATA;
 	}
 	return true;
-	
+
 }

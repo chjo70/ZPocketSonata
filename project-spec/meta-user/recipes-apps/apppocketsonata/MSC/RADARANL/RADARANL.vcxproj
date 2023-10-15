@@ -5,9 +5,17 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -15,6 +23,7 @@
     <RootNamespace>RADARANL</RootNamespace>
     <Keyword>MFCDLLProj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>DllRADARANL</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -32,6 +41,15 @@
     <UseOfMfc>Dynamic</UseOfMfc>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v142</PlatformToolset>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -45,7 +63,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir);..\RADARDIR;$(IncludePath)</IncludePath>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
   </PropertyGroup>
@@ -54,12 +72,18 @@
     <IncludePath>..\RADARDIR;$(ProjectDir);$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir);..\RADARDIR;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir);..\RADARDIR;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;_WINDOWS;_DEBUG;_USRDLL;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_MSSQL_;_XBAND_1;_POCKETSONATA_;_SONATA1_;_UTM_POSITION_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;_WINDOWS;_DEBUG;_USRDLL;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;_MSSQL1_;_XBAND_1;_POCKETSONATA_;_712_1;_SONATA1_;_UTM_POSITION_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4828;4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -168,6 +192,27 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_MSSQL1_;_XBAND_1;_POCKETSONATA1_;_712_;_SONATA1_;_UTM_POSITION_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <StackReserveSize>
+      </StackReserveSize>
+    </Link>
+    <Link>
+      <StackCommitSize>
+      </StackCommitSize>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_MSSQL1_;_XBAND_1;_POCKETSONATA1_;_712_;_SONATA1_;_UTM_POSITION_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="RADARANL.def" />
     <None Include="ReadMe.txt" />
@@ -175,7 +220,7 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.cpp" />
-    <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.cpp" />
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastS.cpp" />
     <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEmitterMergeMngr.cpp" />
     <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.cpp" />
     <ClCompile Include="..\..\files\Anal\EmitterMerge\ELThreat.cpp" />
@@ -186,7 +231,10 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
     <ClCompile Include="..\..\files\Anal\EmitterMerge\PositionEstimationAlg.cpp" />
     <ClCompile Include="..\..\files\Anal\EmitterMerge\Quadratic\Quadratic.cpp" />
     <ClCompile Include="..\..\files\Anal\EmitterMerge\UTM\UTM.cpp" />
-    <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp" />
+    <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp" />
     <ClCompile Include="..\..\files\MinIni\minIni.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -196,8 +244,12 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\files\System\csharedmemory.cpp" />
-    <ClCompile Include="..\..\files\System\csysconfig.cpp" />
+    <ClCompile Include="..\..\files\System\csharedmemory.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\files\System\csysconfig.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
@@ -208,8 +260,9 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\clog.cpp" />
-    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp" />
-    <ClCompile Include="..\..\files\Utils\programrev.cpp" />
+    <ClCompile Include="..\..\files\Utils\programrev.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="RADARANL.cpp" />
     <ClCompile Include="RadarAnlAlgorithm.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -220,7 +273,7 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
   <ItemGroup>
     <ClInclude Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\constants.h" />
-    <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.h" />
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastS.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\ELDecoder.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEmitterDataType.h" />
     <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEmitterMergeMngr.h" />
@@ -271,7 +324,6 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
     <ClInclude Include="..\..\files\Utils\carraymsgdata.h" />
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
     <ClInclude Include="..\..\files\Utils\clog.h" />
-    <ClInclude Include="..\..\files\Utils\MulDiv64.h" />
     <ClInclude Include="..\RADARDIR\RadarDirAlgorithm.h" />
     <ClInclude Include="RADARANL.h" />
     <ClInclude Include="RadarAnlAlgorithm.h" />

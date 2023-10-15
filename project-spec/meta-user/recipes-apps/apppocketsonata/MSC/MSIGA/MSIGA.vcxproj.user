@@ -4,6 +4,10 @@
     <LocalDebuggerCommandArguments>-i1 -s../NPWMAKE/test.mak</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerCommandArguments>-i2</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
   <PropertyGroup>
     <RESOURCE_FILE>MSIGA.rc</RESOURCE_FILE>
   </PropertyGroup>

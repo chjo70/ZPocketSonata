@@ -10,4 +10,16 @@
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
 
+
+// VS2012 이상에서 TRACE를 변경하기 위함.
+#if _MSC_VER > 1600
+bool _TRACE( char *format, ... );
+bool _TRACE( CString strFormat, ... );
+
+#undef TRACE
+#define TRACE _TRACE
+
+
+#endif // _MSC_VER
+
 #endif //PCH_H

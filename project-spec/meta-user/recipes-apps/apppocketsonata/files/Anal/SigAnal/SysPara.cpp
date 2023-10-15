@@ -39,21 +39,15 @@ CSysPara::~CSysPara()
 */
 void CSysPara::LoadDefaultSysParameter()
 {
+
+
 	_sp.cm.Rpc = RPC;	// 기준 펄스열의 펄스수 (Reference Pule Count)
 	_sp.cm.Stb_Max_Miss = MAX_STB_MISS;
 	_sp.cm.Jit_Max_Miss = MAX_JIT_MISS;
 
 	// 에미터 병합의 시스템 변수
 	// 각 밴드별 방위 에러 범위
-#if defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
-    _sp.mg.aoa[0] = _spMgAoaEJ;
-    _sp.mg.aoa[1] = _spMgAoaEJ;
-    _sp.mg.aoa[2] = _spMgAoaEJ;
-    _sp.mg.aoa[3] = _spMgAoaEJ;
-    _sp.mg.aoa[4] = _spMgAoaEJ;
-    _sp.mg.aoa[5] = _spMgAoaCD;
-
-#elif defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
     float *pfRxDOAError = g_pTheSysConfig->GetAOAGroup();
 
     _sp.mg.aoa[0] = 0;
@@ -64,9 +58,16 @@ void CSysPara::LoadDefaultSysParameter()
     _sp.mg.aoa[enPRC5] = ( unsigned int ) IMUL( 2 * IAOACNV( pfRxDOAError[4] ), 1.0 );
 
 #else
-
+    _sp.mg.aoa[0] = _spMgAoaEJ;
+    _sp.mg.aoa[1] = _spMgAoaEJ;
+    _sp.mg.aoa[2] = _spMgAoaEJ;
+    _sp.mg.aoa[3] = _spMgAoaEJ;
+    _sp.mg.aoa[4] = _spMgAoaEJ;
+    _sp.mg.aoa[5] = _spMgAoaCD;
 
 #endif
+
+    _sp.np.Aoa_Hist_Thr = AOA_HIST_THR;	// 방위 히스토그램 범위 임계값 	// 00.02.09
 
 	// 규칙성 PRI 일 경우의 에러 범위
 	_sp.mg.fixpri = _spMgFixPri;
@@ -105,7 +106,7 @@ void CSysPara::LoadDefaultSysParameter()
 	_sp.mg.agipripat = _spMgAgilePriPat;
 
 	// 최소 원형 스캔 주기 정의
-	_sp.sc.thtrkprd = _spThresholdOfTrkSig;
+	//_sp.sc.thtrkprd = _spThresholdOfTrkSig;
 
 	// CW 최소 개수
 	_sp.cm.uiCw_Min_Cnt = _spCWMinPulseCount;

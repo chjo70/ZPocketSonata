@@ -44,11 +44,21 @@ void	formDefineUserMgmt(void);
 /*
  *	Change configuration here
  */
-#define				ROOT_DIR		T("/tffs1")
+//#define				ROOT_DIR		T("/tffs1")
+
+#ifdef _MSC_VER
+#define	ROOT_DIR			(char *) "../../Files/Web"
+#else
+#if defined(__LP64__)
+#define	ROOT_DIR			(char *) "/ata0"
+#else
+#define	ROOT_DIR			(char *) "/ata0:0"
+#endif
+#endif
 
 static char_t		*rootWeb = T("Web");			/* Root web directory */
 static char_t		*password = T("");				/* Security password */
-static int			port = 80;						/* Server port */
+static int			port = 8080;						/* Server port */
 static int			retries = 10;					/* Server port retries */
 static int			finished;						/* Finished flag */
 
@@ -166,7 +176,7 @@ static int initWebs()
 		error(E_L, E_LOG, T("Can't get hostname"));
 		return -1;
 	}
-    
+
 #ifdef WIN
     struct hostent *pHostEnt;
     pHostEnt = gethostbyname( host );

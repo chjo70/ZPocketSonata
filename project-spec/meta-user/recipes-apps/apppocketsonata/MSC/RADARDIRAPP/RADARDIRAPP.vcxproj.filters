@@ -168,6 +168,9 @@
     <ClInclude Include="..\..\files\Utils\ccommonutils.h">
       <Filter>소스 파일\Anal\INC</Filter>
     </ClInclude>
+    <ClInclude Include="..\RADARDIR\_CED_Define.h">
+      <Filter>소스 파일\DLL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RADARDIRAPP.cpp">

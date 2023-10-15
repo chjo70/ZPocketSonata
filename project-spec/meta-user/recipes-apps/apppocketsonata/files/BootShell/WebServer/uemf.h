@@ -380,7 +380,7 @@ typedef unsigned char		uchar_t;
 #define gfprintf	fwprintf
 #define gsscanf		swscanf
 #define gvsprintf	vswprintf
-
+1
 #define gstrcpy		wcscpy
 #define gstrncpy	wcsncpy
 #define gstrncat	wcsncat
@@ -784,7 +784,7 @@ typedef struct {
 typedef struct {
 	union {
 		void	*next;							/* Pointer to next in q */
-		int		size;							/* Actual requested size */
+		size_t		size;							/* Actual requested size */
 	} u;
 	int			flags;							/* Per block allocation flags */
 } bType;
@@ -952,7 +952,7 @@ typedef struct {
  */
 
 extern void 	 bclose();
-extern int 		 bopen(void *buf, int bufsize, int flags);
+extern int 		 bopen(void *buf, size_t bufsize, int flags);
 
 /*
  *	Define NO_BALLOC to turn off our balloc module altogether
@@ -989,10 +989,10 @@ extern char *bstrdupANoBalloc(char *s);
 #endif /* B_STATS */
 
 #define gstrdup	bstrdup
-extern void		*balloc(B_ARGS_DEC, int size);
+extern void		*balloc(B_ARGS_DEC, size_t size);
 extern void		bfree(B_ARGS_DEC, void *mp);
 extern void		bfreeSafe(B_ARGS_DEC, void *mp);
-extern void		*brealloc(B_ARGS_DEC, void *buf, int newsize);
+extern void		*brealloc(B_ARGS_DEC, void *buf, size_t newsize);
 extern char_t	*bstrdup(B_ARGS_DEC, char_t *s);
 
 #ifdef UNICODE
@@ -1055,16 +1055,16 @@ extern int		hFree(void ***map, int handle);
 
 extern int	 	ringqOpen(ringq_t *rq, int increment, int maxsize);
 extern void 	ringqClose(ringq_t *rq);
-extern int 		ringqLen(ringq_t *rq);
+extern size_t 		ringqLen(ringq_t *rq);
 
 extern int 		ringqPutc(ringq_t *rq, char_t c);
 extern int	 	ringqInsertc(ringq_t *rq, char_t c);
-extern int	 	ringqPutStr(ringq_t *rq, char_t *str);
+extern size_t	 	ringqPutStr(ringq_t *rq, char_t *str);
 extern int 		ringqGetc(ringq_t *rq);
 
-extern int		fmtValloc(char_t **s, int n, char_t *fmt, va_list arg);
-extern int		fmtAlloc(char_t **s, int n, char_t *fmt, ...);
-extern int		fmtStatic(char_t *s, int n, char_t *fmt, ...);
+extern size_t		fmtValloc(char_t **s, int n, char_t *fmt, va_list arg);
+extern size_t		fmtAlloc(char_t **s, size_t n, char_t *fmt, ...);
+extern size_t		fmtStatic(char_t *s, int n, char_t *fmt, ...);
 
 #ifdef UNICODE
 extern int 		ringqPutcA(ringq_t *rq, char c);
@@ -1078,11 +1078,11 @@ extern int 		ringqGetcA(ringq_t *rq);
 #define ringqGetcA ringqGetc
 #endif /* UNICODE */
 
-extern int 		ringqPutBlk(ringq_t *rq, unsigned char *buf, int len);
-extern int 		ringqPutBlkMax(ringq_t *rq);
+extern size_t 		ringqPutBlk(ringq_t *rq, unsigned char *buf, size_t len);
+extern size_t 		ringqPutBlkMax(ringq_t *rq);
 extern void 	ringqPutBlkAdj(ringq_t *rq, int size);
-extern int 		ringqGetBlk(ringq_t *rq, unsigned char *buf, int len);
-extern int 		ringqGetBlkMax(ringq_t *rq);
+extern size_t 		ringqGetBlk(ringq_t *rq, unsigned char *buf, size_t len);
+extern size_t 		ringqGetBlkMax(ringq_t *rq);
 extern void 	ringqGetBlkAdj(ringq_t *rq, int size);
 extern void 	ringqFlush(ringq_t *rq);
 extern void 	ringqAddNull(ringq_t *rq);
@@ -1106,9 +1106,9 @@ extern int		socketOpen();
 extern int 		socketOpenConnection(char *host, int port,
 					socketAccept_t accept, int flags);
 extern void 	socketProcess(int hid);
-extern int		socketRead(int sid, char *buf, int len);
+extern int		socketRead(int sid, char *buf, size_t len);
 extern int 		socketReady(int hid);
-extern int		socketWrite(int sid, char *buf, int len);
+extern int		socketWrite(int sid, char *buf, size_t len);
 extern int		socketWriteString(int sid, char_t *buf);
 extern int 		socketSelect(int hid, int timeout);
 extern int 		socketGetHandle(int sid);
@@ -1154,10 +1154,10 @@ extern unsigned int hextoi(char_t *hexstring);
 extern unsigned int gstrtoi(char_t *s);
 extern				time_t	timeMsec();
 
-extern char_t 	*ascToUni(char_t *ubuf, char *str, int nBytes);
-extern char 	*uniToAsc(char *buf, char_t *ustr, int nBytes);
-extern char_t	*ballocAscToUni(char  *cp, int alen);
-extern char		*ballocUniToAsc(char_t *unip, int ulen);
+extern char_t 	*ascToUni(char_t *ubuf, char *str, size_t nBytes);
+extern char 	*uniToAsc(char *buf, char_t *ustr, size_t nBytes);
+extern char_t	*ballocAscToUni(char  *cp, size_t alen);
+extern char		*ballocUniToAsc(char_t *unip, size_t ulen);
 
 extern char_t	*basicGetHost();
 extern char_t	*basicGetAddress();

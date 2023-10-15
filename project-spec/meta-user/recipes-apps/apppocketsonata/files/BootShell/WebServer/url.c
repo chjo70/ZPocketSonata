@@ -78,7 +78,9 @@ int websUrlParse(char_t *url, char_t **pbuf, char_t **phost, char_t **ppath,
 {
 	char_t		*tok, *cp, *host, *path, *port, *proto, *tag, *query, *ext;
 	char_t		*hostbuf, *portbuf, *buf;
-	int			c, len, ulen;
+	int			c;
+
+    size_t ulen, len;
 
 	a_assert(url);
 	a_assert(pbuf);
@@ -184,8 +186,8 @@ int websUrlParse(char_t *url, char_t **pbuf, char_t **phost, char_t **ppath,
 		*/
 		if ((cp = gstrrchr(path, '.')) != NULL) {
 			const char_t* garbage = T("/\\");
-			int length = gstrcspn(cp, garbage);
-			int garbageLength = gstrspn(cp + length, garbage);
+			size_t length = gstrcspn(cp, garbage);
+			size_t garbageLength = gstrspn(cp + length, garbage);
 			int ok = (length + garbageLength == (int) gstrlen(cp));
 
 			if (ok) {

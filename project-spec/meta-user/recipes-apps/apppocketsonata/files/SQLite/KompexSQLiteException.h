@@ -51,7 +51,9 @@ namespace Kompex
 
 		//! Shows all error information (filename, line, error message).\n
 		//! Output: std::cerr
-		inline void Show() const {std::cerr << "file: " << mFilename << "\nline number: " << mLineNumber << "\nerror: " << mErrorDescription << std::endl;}
+		inline void Show() const {
+            std::cerr << "file: " << mFilename << "\nline number: " << mLineNumber << "\nerror: " << mErrorDescription << std::endl;
+        }
 		
 		//! Get all error information (filename, line, error message) as std::string.
 		std::string GetString() const 
@@ -75,7 +77,9 @@ namespace Kompex
 		//! SQLite Result Codes: http://sqlite.org/c3ref/c_abort.html \n
 		//! SQLite Extended Result Codes: http://sqlite.org/c3ref/c_abort_rollback.html \n
 		//! In case that this SQLiteWrapper will throw an own exception the result code will be -1.
-		int GetSqliteResultCode() const {return mInternalSqliteResultCode;}
+		int GetSqliteResultCode() const {
+            return mInternalSqliteResultCode;
+        }
 
 	private:
 		//! Error description

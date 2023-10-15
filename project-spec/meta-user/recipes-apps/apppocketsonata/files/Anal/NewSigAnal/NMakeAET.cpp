@@ -40,7 +40,7 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-20 19:04:38
 //
-CNMakeAET::CNMakeAET( void *pParent, UINT uicoMaxPdw ) : CMakeAET(MAX_AET)
+CNMakeAET::CNMakeAET( void *pParent, UINT uicoMaxPdw ) : CMakeAET(MAX_LOB)
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
@@ -98,6 +98,9 @@ void CNMakeAET::MakeAET( bool bDBInsert )
     CMakeAET::MakeAET( bDBInsert );
 
     CMakeAET::PrintAllAET();
+
+    // 분석 완료한 개수를 재 저장합니다.
+    m_iAnaledCoLOB = m_iCoLOB;
 
 }
 
@@ -389,3 +392,20 @@ unsigned int CNMakeAET::GetOpInitID()
 {
 	return m_pNewSigAnal->GetOpInitID();
 }
+
+#ifdef _LOG_ANALTYPE_
+/**
+ * @brief     GetLogAnalType
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-21 11:56:54
+ * @warning
+ */
+bool CNMakeAET::GetLogAnalType()
+{
+    return m_pNewSigAnal->GetLogAnalType();
+}
+
+#endif

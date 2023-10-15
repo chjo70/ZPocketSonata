@@ -58,37 +58,15 @@ T TDIV( T x, T y )
     T toaRet = 0;
 
 #ifdef _MSC_VER
+    if( y > 0 ) {
+        toaRet = ( x / y );
+    }
+
+#else
     if( is_not_zero<T>( y ) ) {
         toaRet = ( x / y );
     }
 
-// 	if (strcmp(typeid(T).name(), "unsigned __int64") == 0) {
-// 		toaRet = (T) MulDiv64((unsigned __int64)x, (unsigned __int64)1, (unsigned __int64)y);
-// 	}
-// 	else if (strcmp(typeid(T).name(), "float") == 0) {
-// 		if (y < 0 || y > 0) {
-// 			toaRet = (T)((float)x / (float)y);
-//         }
-// 		else {
-// 			toaRet = (T)0;
-//         }
-// 	}
-#else
-    if (sizeof(T) == sizeof(unsigned __int64)) {
-        toaRet = (T) MulDiv64( (_TOA) x, (_TOA) 1, (_TOA) y);
-    }
-    else if (sizeof(T) == sizeof(unsigned int)) {
-        if( y < 0 || y > 0 ) {
-            toaRet = (T) ( (float)x / (float)y );
-        }
-        else {
-            toaRet = (T) 0;
-        }
-    }
-    else {
-        toaRet = 0;
-        TRACE( "잘못된 연산 입니다...." );
-    }
 
 #endif
 
@@ -113,24 +91,9 @@ T TMUL(T x, T y)
 
 #ifdef _MSC_VER
     toaRet = ( x * y );
-// 	if (strcmp(typeid(T).name(), "unsigned __int64") == 0) {
-// 		toaRet = (T) MulDiv64( (_TOA) x, (_TOA)y, (_TOA)1);
-// 	}
-// 	else if (strcmp(typeid(T).name(), "float") == 0) {
-// 		toaRet = (T)((T)x * (T)y);
-// 	}
 
 #else
-    if (sizeof(T) == sizeof(unsigned __int64)) {
-        toaRet = MulDiv64(x, y, 1);
-    }
-    else if (sizeof(T) == sizeof(float)) {
-        toaRet = (T) ( (float)x * (float)y );
-    }
-    else {
-        toaRet = 0;
-        TRACE( "잘못된 연산 입니다...." );
-    }
+    toaRet = ( x * y );
 
 #endif
 
@@ -155,7 +118,8 @@ T TMULDIV(T x, T y, T z)
     T toaRet;
 
 #ifdef _MSC_VER
-    if( is_not_zero<T>( z ) ) {
+    //if( is_not_zero<T>( z ) ) {
+    if( z > 0 ) {
         toaRet = ( ( x * y ) / z);
     }
     else {
@@ -170,17 +134,25 @@ T TMULDIV(T x, T y, T z)
 // 		toaRet = (T)(((float)x * (float)y) / (float)z);
 // 	}
 #else
-    if (sizeof(T) == sizeof(unsigned __int64)) {
-        toaRet = MulDiv64(x, y, z);
-    }
-    else if (sizeof(T) == sizeof(float)) {
-        toaRet = (T) ( ( (float) x * (float) y ) / (float) z );
-    }
 
+    if( is_not_zero<T>( z ) ) {
+        toaRet = ( ( x * y ) / z );
+    }
     else {
         toaRet = 0;
-        TRACE( "잘못된 연산 입니다...." );
     }
+
+//     if (sizeof(T) == sizeof(unsigned __int64)) {
+//         toaRet = MulDiv64(x, y, z);
+//     }
+//     else if (sizeof(T) == sizeof(float)) {
+//         toaRet = (T) ( ( (float) x * (float) y ) / (float) z );
+//     }
+//
+//     else {
+//         toaRet = 0;
+//         TRACE( "잘못된 연산 입니다...." );
+//     }
 #endif
 
 

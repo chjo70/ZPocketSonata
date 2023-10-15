@@ -407,7 +407,7 @@ struct SELAlertTime {
 // 		memset( & x.sAlertTime, 0, sizeof(x.sAlertTime) );
 // 		memset( & x.sPRFToneStutus, 0, sizeof(x.sPRFToneStutus) );
 // 		memset( & x.sOperationControl, 0, sizeof(x.sOperationControl) );
-// 		memset( & x.sLOBDataAndGroupArray, 0, sizeof(SRxLOBDataAndGroupIdArray) );
+// 		memset( & x.sLOBDataAndGroupArray, 0, sizeof(struct SRxLOBDataAndGroupIdArray) );
 // 	}
 // 
 // };

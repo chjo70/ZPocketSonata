@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #include <math.h>
 #include <time.h>
@@ -85,7 +85,7 @@ void AllEndian64( void *pData, unsigned int uiSize )
 {
 	unsigned long long int un64Value=0;
 	UINT uiStepSize=sizeof(unsigned __int64);
-	for(unsigned int i=0; i < uiSize; i+=uiStepSize) 
+	for(unsigned int i=0; i < uiSize; i+=uiStepSize)
 	{
 		memcpy(&un64Value, &((BYTE*)pData)[i], uiStepSize );
 		un64Value=_byteswap_uint64(un64Value);
@@ -110,7 +110,7 @@ void AllEndian16(void* i_pData, UINT i_nSize)
 	WORD dwValue=0;
 	UINT nStepSize=sizeof(WORD);
 
-	for(UINT i=0; i<i_nSize; i+=nStepSize) 
+	for(UINT i=0; i<i_nSize; i+=nStepSize)
 	{
 		memcpy(&dwValue, &((BYTE*)i_pData)[i], nStepSize);
 		dwValue = (WORD) ENDIAN16(dwValue);
@@ -120,7 +120,10 @@ void AllEndian16(void* i_pData, UINT i_nSize)
 
 
 static time_t _stNOW;
+
+#ifdef _MSC_VER
 static tm _stTM;
+#endif
 
 // REAL
 float ELDecoder::DecodeAOA(const unsigned int i_iBinAoa)
@@ -187,11 +190,11 @@ float ELDecoder::DecodeFreq2(const int i_iBinFreq)
  * @brief     방사체/빔 목록창에 전시하기 위해서 주파수를 변환한다.
  * @param     i_iBinFreq 입력 주파수
  * @return    float 형으로 변환 결과를 리턴함.
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-07-19, 오후 7:36 
- * @warning   
+ * @date      2016-07-19, 오후 7:36
+ * @warning
  */
 float ELDecoder::DecodeFreq3(const int i_iBinFreq)
 {
@@ -204,11 +207,11 @@ float ELDecoder::DecodeFreq3(const int i_iBinFreq)
  * @brief     방사체/빔 목록창에 전시하기 위해서 인트라 주파수를 변환한다.
  * @param     i_iBinFreq 입력 주파수
  * @return    float 형으로 변환 결과를 리턴함.
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-07-19, 오후 7:37 
- * @warning   
+ * @date      2016-07-19, 오후 7:37
+ * @warning
  */
 float ELDecoder::DecodeFreq6(const int i_iBinFreq)
 {
@@ -217,6 +220,16 @@ float ELDecoder::DecodeFreq6(const int i_iBinFreq)
 	return fFREQ;
 }
 
+/**
+ * @brief     DecodeScanPrd
+ * @param     const int i_iBinScanPrd
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 20:00:48
+ * @warning
+ */
 float ELDecoder::DecodeScanPrd(const int i_iBinScanPrd)
 {
 	float fScanPrd = 0.0;
@@ -224,6 +237,16 @@ float ELDecoder::DecodeScanPrd(const int i_iBinScanPrd)
 	return fScanPrd;
 }
 
+/**
+ * @brief     DecodeHz
+ * @param     const int i_iBinHz
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 20:00:51
+ * @warning
+ */
 float ELDecoder::DecodeHz(const int i_iBinHz)
 {
 	float fHZ = 0.0;
@@ -236,6 +259,16 @@ float ELDecoder::DecodeHz(const int i_iBinHz)
 	return fHZ;
 }
 
+/**
+ * @brief     DecodeDIRatio
+ * @param     const int i_iBinDI
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 20:00:53
+ * @warning
+ */
 float ELDecoder::DecodeDIRatio(const int i_iBinDI)
 {
 	float fDIRatio = 0.0;
@@ -243,6 +276,16 @@ float ELDecoder::DecodeDIRatio(const int i_iBinDI)
 	return fDIRatio;
 }
 
+/**
+ * @brief     DecodeWindeBandPW
+ * @param     const int i_iBinPw
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 20:00:54
+ * @warning
+ */
 float ELDecoder::DecodeWindeBandPW(const int i_iBinPw)
 {
 	float fPw = 0.0;
@@ -250,13 +293,33 @@ float ELDecoder::DecodeWindeBandPW(const int i_iBinPw)
 	return fPw;
 }
 
-float ELDecoder::DecodePA(const int i_iBinPa)
+/**
+ * @brief     DecodePA
+ * @param     const unsigned int i_uiBinPa
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 20:00:57
+ * @warning
+ */
+float ELDecoder::DecodePA(const unsigned int i_uiBinPa)
 {
-	float fPa = 0.0;	
-	fPa = ( (float)i_iBinPa * (float)DEF_OF_RES_PA) + (float)DEF_OF_BASE_PA;
+	float fPa = 0.0;
+	fPa = ( (float) i_uiBinPa * (float)DEF_OF_RES_PA) + (float)DEF_OF_BASE_PA;
 	return fPa;
 }
 
+/**
+ * @brief     DecodeGainPA
+ * @param     const int i_iBinPa
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 20:00:59
+ * @warning
+ */
 float ELDecoder::DecodeGainPA(const int i_iBinPa)
 {
 	float fPa = 0.0;
@@ -265,6 +328,16 @@ float ELDecoder::DecodeGainPA(const int i_iBinPa)
 }
 
 
+/**
+ * @brief     DecodePA
+ * @param     const float i_fBinPa
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-07 20:01:01
+ * @warning
+ */
 float ELDecoder::DecodePA(const float i_fBinPa)
 {
 	float fPa = 0.0;
@@ -277,22 +350,22 @@ float ELDecoder::DecodePA(const float i_fBinPa)
  * @param     char * pSmartTime
  * @param     char * szTime
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-05-10, 오전 10:06 
- * @warning   
+ * @date      2016-05-10, 오전 10:06
+ * @warning
  */
 // void ELDecoder::DecodeStringTime( char *szTime, char *pSmartTime )
 // {
 // 	char szToday[30]={0,};
-// 
+//
 // 	UpdateDateTime();
-// 
+//
 // 	sscanf( pSmartTime, "%s" , szToday );
-// 
+//
 // 	strcpy( szTime, pSmartTime );
-// 
+//
 // }
 
 /**
@@ -300,31 +373,31 @@ float ELDecoder::DecodePA(const float i_fBinPa)
  * @param     char * pSmartTime
  * @param     char * pszTime
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-06-17, 오후 4:47 
- * @warning   
+ * @date      2016-06-17, 오후 4:47
+ * @warning
  */
 // void ELDecoder::DecodeSmartTime( char *pSmartTime, char *pszTime )
 // {
 // 	//struct tm szTimeConvert;
 // 	struct tm szTimeConvert = tm();
 // 	unsigned int uiMillisec=0;
-// 
+//
 // 	if( pszTime[0] == NULL )
 // 	{//DTEC_NullPointCheck
 // 		pSmartTime[0] = NULL;
 // 	}
 // 	else {
 // 		UpdateDateTime();
-// 
+//
 // 		sscanf_s( pszTime, "%d/%d/%d %d:%d:%d.%d" , & szTimeConvert.tm_year, & szTimeConvert.tm_mon, & szTimeConvert.tm_mday, & szTimeConvert.tm_hour, & szTimeConvert.tm_min, & szTimeConvert.tm_sec, & uiMillisec );
 // 		//sprintf( pSmartTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d" , szTimeConvert.tm_year, szTimeConvert.tm_mon, szTimeConvert.tm_mday, szTimeConvert.tm_hour, szTimeConvert.tm_min, szTimeConvert.tm_sec, uiMillisec/1000000 );
 // 		sprintf( pSmartTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d" , szTimeConvert.tm_year, szTimeConvert.tm_mon, szTimeConvert.tm_mday, szTimeConvert.tm_hour, szTimeConvert.tm_min, szTimeConvert.tm_sec, uiMillisec );
-// 
+//
 // 	}
-// 
+//
 // }
 
 // void ELDecoder::DecodeSmartMillisec( char *pSmartTime, char *pszTime )
@@ -332,19 +405,19 @@ float ELDecoder::DecodePA(const float i_fBinPa)
 // 	//struct tm szTimeConvert;
 // 	struct tm szTimeConvert = tm();
 // 	unsigned int uiMillisec=0;
-// 
+//
 // 	if( pszTime[0] == NULL )
 // 	{//DTEC_NullPointCheck
 // 		pSmartTime[0] = NULL;
 // 	}
 // 	else {
 // 		UpdateDateTime();
-// 
+//
 // 		sscanf_s( pszTime, "%d/%d/%d %d:%d:%d.%d" , & szTimeConvert.tm_year, & szTimeConvert.tm_mon, & szTimeConvert.tm_mday, & szTimeConvert.tm_hour, & szTimeConvert.tm_min, & szTimeConvert.tm_sec, & uiMillisec );
 // 		sprintf( pSmartTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d" , szTimeConvert.tm_year, szTimeConvert.tm_mon, szTimeConvert.tm_mday, szTimeConvert.tm_hour, szTimeConvert.tm_min, szTimeConvert.tm_sec, uiMillisec/1000000 );
-// 
+//
 // 	}
-// 
+//
 // }
 
 /**
@@ -353,31 +426,31 @@ float ELDecoder::DecodePA(const float i_fBinPa)
  * @param     unsigned int * pMillisec
  * @param     char * pszTime
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-01-09, 오후 4:09 
- * @warning   
+ * @date      2017-01-09, 오후 4:09
+ * @warning
  */
 // void ELDecoder::DecodeStringTime( unsigned int *pTime_t, unsigned int *pMillisec, char *pszTime )
 // {
 // 	//struct tm tmToday;
-// 
+//
 // 	struct tm tmToday = tm();
-// 
+//
 // 	// pszTime 포멧: 01/11/01 01:54:04.112
 // 	sscanf_s( pszTime, "%d/%02d/%02d %02d:%02d:%02d.%d" , & tmToday.tm_year, & tmToday.tm_mon, & tmToday.tm_mday, & tmToday.tm_hour, & tmToday.tm_min, & tmToday.tm_sec, pMillisec );
-// 
+//
 // 	// 연도 변환
 // 	if( tmToday.tm_year > 2000 )
 // 		tmToday.tm_year -= 1900;
 // 	else { //DTEC_Else
 // 		tmToday.tm_year = ( tmToday.tm_year + 2000 - 1900 );
 // 	}
-// 
+//
 // 	// 월 변환
 // 	-- tmToday.tm_mon;
-// 
+//
 // 	*pTime_t = _mktime32( & tmToday );
 // }
 
@@ -385,33 +458,33 @@ float ELDecoder::DecodePA(const float i_fBinPa)
  * @brief     UpdateDateTime
  * @param     void
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-05-10, 오전 10:25 
- * @warning   
+ * @date      2016-05-10, 오전 10:25
+ * @warning
  */
 void ELDecoder::UpdateDateTime()
 {
 	if( _stNOW == 0 ) {
-#ifdef _MSC_VER			
+#ifdef _MSC_VER
 		_stNOW = time( NULL );
 		localtime_s( & _stTM, & _stNOW );
 
 		_stTM.tm_year -= 100;
 		_stTM.tm_mon += 1;
 #else
-		
-#endif		
+
+#endif
 	}
 }
 
-// float ELDecoder::DecodeFrq(const int i_iBinFrq)
-// {
-// 	float fFrq = 0.0;
-// 	fFrq = (float)i_iBinFrq * (float)DEF_OF_RES_FRQ;
-// 	return fFrq;
-// }
+float ELDecoder::DecodeFrq(const unsigned int i_uiBinFrq)
+{
+	float fFrq = 0.0;
+	fFrq = (float) i_uiBinFrq * (float)DEF_OF_RES_FRQ;
+	return fFrq;
+}
 
 // float ELDecoder::DecodeFrq(const unsigned long long int i_iBinFrq)
 // {
@@ -434,14 +507,14 @@ void ELDecoder::UpdateDateTime()
 // 	fMeanFrqStep = (float)i_iBinMeanFrqStep * (float)DEF_OF_RES_FRQ;
 // 	return fMeanFrqStep;
 // }
-// 
+//
 // float ELDecoder::DecodeFrqChangePeriod(const int i_iBinFrqChangePeriod)
 // {
 // 	float fFrqChangePeriod = 0.0;
 // 	fFrqChangePeriod = (float)i_iBinFrqChangePeriod * (float)DEF_OF_RES_FRQ_CHANGE_PERIOD;
 // 	return fFrqChangePeriod;
 // }
-// 
+//
 // float ELDecoder::DecodePriChangePeriod(const int i_iBinPriChangePeriod)
 // {
 // 	float fPri = 0.0;
@@ -451,14 +524,14 @@ void ELDecoder::UpdateDateTime()
 
 //////////////////////////////////////////////////////////////////////////
 /*!
- * @brief     
+ * @brief
  * @param     const int i_iBinPriChangePercent
  * @return    float
  * @version   0.0.1
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
- * @date      2013-11-24 오후 2:53 
- * @warning   
+ * @date      2013-11-24 오후 2:53
+ * @warning
  */
 // float ELDecoder::DecodePriRatioPercent(const int i_iBinPriChangePercent)
 // {
@@ -490,7 +563,7 @@ double ELDecoder::DecodeToa(unsigned long long int i_llilToa)
 // 	dToa = (double)i_llilToa * (double)DEF_OF_RES_WB_TOA;
 // 	return dToa;
 // }
-// 
+//
 // int ELDecoder::DecodeAltitude(const int i_nAltitude)
 // {
 // 	int nRtn = 0;
@@ -515,9 +588,9 @@ double ELDecoder::DecodeToa(unsigned long long int i_llilToa)
 // void ELDecoder::MakeTextTimeString( char *pString, time_t ti, unsigned int millisec )
 // {
 // 	struct tm *pToday;
-// 
+//
 // 	pToday = localtime( & ti );
-// 
+//
 // 	if( pToday != NULL ) {
 // 		sprintf( pString, "%04d_%02d_%02d %02d_%02d_%02d_%03d", pToday->tm_year+1900, pToday->tm_mon+1, pToday->tm_mday, pToday->tm_hour, pToday->tm_min, pToday->tm_sec, millisec );
 // 	}
@@ -529,18 +602,18 @@ double ELDecoder::DecodeToa(unsigned long long int i_llilToa)
  * @param     time_t ti
  * @param     unsigned int millisec
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2017-12-31, 오전 12:45 
- * @warning   
+ * @date      2017-12-31, 오전 12:45
+ * @warning
  */
 // void ELDecoder::MakeTimeString( char *pString, time_t ti, unsigned int millisec )
 // {
 // 	struct tm *pToday=nullptr;
-// 
+//
 // 	pToday = localtime( & ti );
-// 
+//
 // 	if( pToday != NULL) {
 // 		sprintf( pString, "%04d/%02d/%02d %02d:%02d:%02d.%03d", pToday->tm_year+1900, pToday->tm_mon+1, pToday->tm_mday, pToday->tm_hour, pToday->tm_min, pToday->tm_sec, millisec );
 // 	}
@@ -561,19 +634,19 @@ double ELDecoder::DecodeToa(unsigned long long int i_llilToa)
  * @return    int
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
- * @date      2016-08-10, 오후 2:58 
- * @warning   
+ * @date      2016-08-10, 오후 2:58
+ * @warning
  */
 // int ELDecoder::GetComboValue( char *pSearch, const char **pRefTable, int nRef )
 // {
 // 	int iRet=0;
-// 
+//
 // 	for( int i=0 ; i < nRef ; ++i ) {
 // 		if( strcmp( pSearch, pRefTable[i] ) == 0 ) {
 // 			iRet = i;
 // 			break;
 // 		}
 // 	}
-// 
+//
 // 	return iRet;
 // }

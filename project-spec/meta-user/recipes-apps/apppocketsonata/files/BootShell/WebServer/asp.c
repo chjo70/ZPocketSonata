@@ -283,7 +283,7 @@ int websAspWrite(int ejid, webs_t wp, int argc, char_t **argv)
 
 static char_t *strtokcmp(char_t *s1, char_t *s2)
 {
-	int		len;
+	size_t		len;
 
 	s1 = skipWhite(s1);
 	len = gstrlen(s2);

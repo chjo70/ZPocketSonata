@@ -35,7 +35,7 @@
 #define UDF_RAMDISK_FILENAME	"C:\\LMS\\EidFiles\\udf_1.udf"
 
 #define max( A, B )             ( (A) > (B) ? (A) : (B) )
-#define min( A, B )             ( (A) < (B) ? (A) : (B) )
+#define min( A, B )             (((A) < (B)) ? (A) : (B))
 
 #define OS_MILLISEC(A)          (int) (A/10.+0.5)
 #define OS_SEC(A)               (A*100)
@@ -46,6 +46,8 @@ typedef long long __time64_t;
 
 #define fscanf_s                fscanf
 #define sscanf_s                sscanf
+
+typedef unsigned int SOCKET;
 
 
 #define _difftime64( A, B)      ( A > B ? ( A - B ) : ( B - A ) )
@@ -71,7 +73,7 @@ typedef long long __time64_t;
 #define OS_SEC(A)               (A*1000)
 
 
-#define Sleep(A)                Sleep(5*1000)
+#define Sleep(A)                Sleep(A*1000)
 
 #define STATUS					unsigned int
 

@@ -15,7 +15,7 @@
 #define	MAX_DB_LOB_DATA				(1000)
 
 // LOB 검색 조회
-#define	QUERY_LOB_APPNAME			"LOBQUERY" 
+#define	QUERY_LOB_APPNAME			"LOBQUERY"
 #define	QUERY_LOB_KEYNAME			"OP_INIT_ID"
 #define	QUERY_AET_KEYNAME			"AETID"
 #define	QUERY_COLLECTOR_ID_KEYNAME	"COLLECTORID"
@@ -87,8 +87,8 @@ void CLOBTableView::Dump(CDumpContext& dc) const
  */
 void CLOBTableView::AllocMemory()
 {
-	m_pLOBData = ( SRxLOBData * ) malloc( sizeof(SRxLOBData) * MAX_DB_LOB_DATA );
-	m_pLOBExt = ( SELLOBDATA_EXT * ) malloc( sizeof(SELLOBDATA_EXT) * MAX_DB_LOB_DATA );
+	m_pLOBData = ( SRxLOBData * ) malloc( sizeof(struct SRxLOBData) * MAX_DB_LOB_DATA );
+	m_pLOBExt = ( SELLOBDATA_EXT * ) malloc( sizeof( struct SELLOBDATA_EXT) * MAX_DB_LOB_DATA );
 }
 
 /**
@@ -128,7 +128,7 @@ void CLOBTableView::OnInitialUpdate()
 
 	m_pDoc->LoadProfile( szBuffer, sizeof(szBuffer), QUERY_LOB_APPNAME , QUERY_COLLECTOR_ID_KEYNAME );
 	m_CEditCollectorID.SetWindowText( szBuffer );
-	
+
 }
 
 
@@ -173,7 +173,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 	}
 
 	m_CListLOB.DeleteAllItems();
-	
+
 	for( i=0 ; i < iVect.size() ; ++i ) {
 		iCnt = 0;
 		aetid = iVect.at(i);
@@ -222,7 +222,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 #endif
 
-			pTimeInfo = localtime( & pLOBData->tiContactTime );
+			pTimeInfo = localtime( (time_t *) & pLOBData->tiContactTime );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%02d-%02d-%02d %02d:%02d:%02d.%03d", pTimeInfo->tm_year-100, pTimeInfo->tm_mon, pTimeInfo->tm_mday, pTimeInfo->tm_hour, pTimeInfo->tm_min, pTimeInfo->tm_sec, pLOBData->tiContactTimems );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
@@ -248,10 +248,10 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiDIRatio );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetFreqType[pLOBData->vFreqType] );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetFreqType[(int)pLOBData->vFreqType] );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", strAetFreqPRIPatternType[pLOBData->vFreqPatternType] );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", strAetFreqPRIPatternType[( int ) pLOBData->vFreqPatternType] );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%f", pLOBData->fFreqPatternPeriod );
@@ -272,10 +272,10 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->vFreqPositionCount );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetPriType[pLOBData->vPRIType] );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", g_szAetPriType[(int)pLOBData->vPRIType] );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%s", strAetFreqPRIPatternType[pLOBData->vPRIPatternType] );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%s", strAetFreqPRIPatternType[( int ) pLOBData->vPRIPatternType] );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 			sprintf_s( szBuffer, sizeof(szBuffer), "%f", pLOBData->fPRIPatternPeriod );
@@ -330,7 +330,7 @@ void CLOBTableView::OnBnClickedButtonQuery()
 			k++;
 #endif
 
-			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiCoPDWOfAnalysis );
+			sprintf_s( szBuffer, sizeof(szBuffer), "%d", pLOBData->uiNumOfCollectedPDW );
 			m_CListLOB.SetItemText( nList, k++, szBuffer );
 
 #if defined(_ELINT_) || defined(_XBAND_)
@@ -405,21 +405,21 @@ void CLOBTableView::CreateListCtrl()
 	m_pDoc->GetFieldNameOfTable( & vecField, "LOBDATA");
 
 	if (vecField.size() != 0 ) {
-		m_nField_OPINITID = find(vecField.begin(), vecField.end(), "OP_INIT_ID") - vecField.begin() + 1;
-		m_nField_PDWID = find(vecField.begin(), vecField.end(), "PDWID") - vecField.begin() + 1;
-		m_nField_PLOBID = find(vecField.begin(), vecField.end(), "PLOBID") - vecField.begin() + 1;
-		m_nField_LOBID = find(vecField.begin(), vecField.end(), "LOBID") - vecField.begin() + 1;
-		m_nField_ABTID = find(vecField.begin(), vecField.end(), "ABTID") - vecField.begin() + 1;
-		m_nField_AETID = find(vecField.begin(), vecField.end(), "AETID") - vecField.begin() + 1;
+		m_nField_OPINITID = (int) ( find(vecField.begin(), vecField.end(), "OP_INIT_ID") - vecField.begin() + 1 );
+		m_nField_PDWID = ( int ) ( find(vecField.begin(), vecField.end(), "PDWID") - vecField.begin() + 1 );
+		m_nField_PLOBID = ( int ) ( find(vecField.begin(), vecField.end(), "PLOBID") - vecField.begin() + 1 );
+		m_nField_LOBID = ( int ) ( find(vecField.begin(), vecField.end(), "LOBID") - vecField.begin() + 1 );
+		m_nField_ABTID = ( int ) ( find(vecField.begin(), vecField.end(), "ABTID") - vecField.begin() + 1 );
+		m_nField_AETID = ( int ) ( find(vecField.begin(), vecField.end(), "AETID") - vecField.begin() + 1 );
 
 		m_CListLOB.GetWindowRect(&rList);
 
 		m_CListLOB.SetExtendedStyle(m_CListLOB.GetExtendedStyle() | LVS_EX_GRIDLINES | LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT);
 		m_CListLOB.SetWindowPos(NULL, 0, 70, rect.right, rect.bottom, SWP_NOZORDER);
 
-		m_CListLOB.InsertColumn(0, "순번", LVCFMT_LEFT, 10 * strlen("순번  "));
+		m_CListLOB.InsertColumn(0, "순번", LVCFMT_LEFT, 10 * (int) strlen("순번  ") );
 		for (i = 0; i < vecField.size(); ++i) {
-			m_CListLOB.InsertColumn(i + 1, vecField[i].c_str(), LVCFMT_LEFT, 10 * vecField[i].size() );
+			m_CListLOB.InsertColumn(i + 1, vecField[i].c_str(), LVCFMT_LEFT, 10 * (int) vecField[i].size() );
 		}
 	}
 	else {
@@ -551,12 +551,12 @@ void CLOBTableView::OnNMRClickListLob(NMHDR *pNMHDR, LRESULT *pResult)
 		// ID를 얻는다.
 		//str = m_user_list.GetItemText(index, 1);
 		// 에디트 박스에 ID를 설정한다.
-		//SetDlgItemText(IDC_ID_EDIT, str);     
+		//SetDlgItemText(IDC_ID_EDIT, str);
 
 		// 해당 항목에 설정되어있던 문자열 메모리를 얻는다.
 		//char *p_data = (char *)m_user_list.GetItemData(index);
 		// 문자열 메모리에 있는 비밀번호를 에디트 박스에 설정한다.
-		//SetDlgItemText(IDC_PASSWORD_EDIT, p_data); 
+		//SetDlgItemText(IDC_PASSWORD_EDIT, p_data);
 	}
 	*pResult = 0;
 }

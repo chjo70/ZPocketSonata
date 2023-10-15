@@ -109,20 +109,15 @@ CLog::CLog( int iThreadPriority, const char *pClassName, bool bArrayLanData )
     ::GetLocalTime( & tmSystem );
     sprintf( szDate, "/%d_%d_%d.log", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay );
 #else
-    struct timeval tv;
-    time_t timer;
-    struct tm *t;
 
-    gettimeofday( &tv, NULL );
-    timer = time( ( time_t * ) & tv.tv_sec );
-    t = localtime( &timer );
-
-    sprintf( szDate, "/%d_%d_%d.log", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday );
+    sprintf( szDate, "/%s" , LOG_FILENAME );
 #endif
 
     strcpy( m_szLogFullName, m_szLogDir );
     strcat( m_szLogFullName, szDate );
 
+    // 로그 타스크 활성화
+    m_bLogThread = true;
 
 }
 
@@ -162,16 +157,21 @@ void CLog::Init()
 
 #ifdef _LOG_RELATIVE_PATH_
     strcpy( m_szLogDir, m_szPresentDirectory );
-    strcat( m_szLogDir, LOG_DIRECTORY );
+    strcat( m_szLogDir, LOG_FOLDER );
 #else
-    strcpy( m_szLogDir, LOG_DIRECTORY );
+    strcpy( m_szLogDir, LOG_FOLDER );
 
 #endif
 
 #ifdef __linux__
     if( 0 == mkdir( m_szLogDir, 0766 ) || errno == EEXIST ) {
 #else
-    if( 0 == mkdir( m_szLogDir ) || errno == EEXIST ) {
+#ifdef __LP64__
+    if( 0 == mkdir( m_szLogDir, 666 ) || errno == EEXIST ) {
+#else
+	if( 0 == mkdir( m_szLogDir ) || errno == EEXIST ) {
+#endif
+
 #endif
 
     }
@@ -221,10 +221,23 @@ void CLog::_routine()
             switch( m_pMsg->uiOpCode ) {
                 case enTHREAD_LOG:
                     WriteAndPrint();
+#ifdef _MSC_VER
+                    // Sleep( 5 );
+#endif
+                    break;
+
+                case enREQ_OP_START:
+                    WhereIs;
+                    Start();
+                    break;
+
+                case enTHREAD_DISCONNECTED:
+                case enREQ_OP_SHUTDOWN:
+                case enREQ_OP_RESTART:
                     break;
 
                 default:
-                    Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                    TRACE( "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
                     break;
             }
 
@@ -251,15 +264,31 @@ void  CLog::WriteAndPrint()
     pszLog = ( char * ) GetRecvData();
     pszLog[m_pMsg->uiArrayLength] = 0;
 
+    ///////////////////////////////////////////////////////////////////////////////////
     // 1. 화면에 출력 합니다.
 #ifdef _MSC_VER
     OutputDebugString( pszLog );
+
+#elif defined(__VXWORKS__)
+
+#ifdef __LP64__
+    logMsg( "%s", (_Vx_usr_arg_t) pszLog, 0, 0, 0, 0, 0 );
+
+#else
+
+    //logMsg( "%s", (int) pszLog, 0, 0, 0, 0, 0 );
+    puts( & pszLog[1] );
+
+#endif
+
 #else
     //puts( & pszLog[1] );
     printf( pszLog );
+
     // puts 로 대체...
 #endif
 
+    ///////////////////////////////////////////////////////////////////////////////////
     // 2. 로그 파일을 생성합니다.
 #ifdef _MSC_VER
 //     fopen_s( & m_fp, m_szLogFullName, "a+" );
@@ -305,6 +334,21 @@ void  CLog::WriteAndPrint()
 
 }
 
+/**
+ * @brief     Start
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-01 09:36:22
+ * @warning
+ */
+void CLog::Start()
+{
+    //PrintDebug();
+
+}
+
 
 /**
  * @brief CLog::LogMsg
@@ -347,8 +391,6 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #endif
     }
 #endif
-
-    //nLengthTime = strlen(m_szLog);
 
     switch( nType ) {
     case enNormal :
@@ -403,8 +445,15 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
     if( nLength > 4 ) {
 #if defined(__VXWORKS__)
         if( m_bLogThread == true ) {
+
+#ifdef _LOG_
             //_func_kprintf( szLog );
-            QMsgSnd( enTHREAD_LOG, szLog, strlen(szLog), _spOne, & m_pMsg->x, sizeof( UNI_MSG_DATA ), NULL );
+            QMsgSnd( enTHREAD_LOG, szLog, strlen(szLog), _spOne, & m_pMsg->x, sizeof( union UNI_MSG_DATA ), NULL );
+
+#else
+
+#endif
+
         }
         else {
             printf( szLog );
@@ -413,7 +462,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #else
         if( m_bLogThread == true ) {
 #ifdef _LOG_
-            QMsgSnd( enTHREAD_LOG, szLog, strlen(szLog), _spOne, & m_pMsg->x, sizeof( UNI_MSG_DATA ), NULL );
+            QMsgSnd( enTHREAD_LOG, szLog, (unsigned int) strlen(szLog), _spOne, & m_pMsg->x, sizeof( union UNI_MSG_DATA ), NULL );
 #endif
         }
         else {
@@ -423,7 +472,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
     }
     else if( nType == enLineFeed ) {
-#ifdef _MFC_VER
+#ifdef _MSC_VER
         TRACE0( "\n" );
 #endif
     }
@@ -432,7 +481,6 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
     }
 
     UnLock();
-
 
 }
 
@@ -460,7 +508,7 @@ void CLog::Lock()
 
     }
     else {
-        WhereIs;
+        //WhereIs;
     }
 
     m_bcs = true;
@@ -489,9 +537,28 @@ void CLog::UnLock()
 #endif
     }
     else {
-        WhereIs;
+        //WhereIs;
     }
 
     m_bcs = false;
 
 }
+
+#ifdef _LOG_ANALTYPE_
+/**
+ * @brief     GetLogAnalType
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-21 14:03:46
+ * @warning
+ */
+bool GetLogAnalType()
+{
+
+    return true;
+
+}
+
+#endif

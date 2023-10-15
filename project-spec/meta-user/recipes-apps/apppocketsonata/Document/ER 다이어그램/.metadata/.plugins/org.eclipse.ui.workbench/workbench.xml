@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workbench progressCount="14" version="2.0">
 <workbenchAdvisor/>
-<window height="768" maximized="true" width="1024" x="152" y="248">
+<window height="768" maximized="true" minimized="true" width="1024" x="152" y="248">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
 </perspectiveBar>
 <coolbarLayout locked="0">
 <coolItem id="group.file" itemType="typeGroupMarker"/>
-<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="103" y="22"/>
+<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="99" y="22"/>
 <coolItem id="additions" itemType="typeGroupMarker"/>
 <coolItem id="com.tomato.devkit.toolbar" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="53" y="22"/>
-<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="57" y="22"/>
+<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="53" y="22"/>
 <coolItem id="group.nav" itemType="typeGroupMarker"/>
-<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="122" y="22"/>
+<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="114" y="22"/>
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
@@ -32,10 +32,10 @@
 </folder>
 </info>
 </editorArea>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="위협 라이브러리.exerd" partName="위협 라이브러리.exerd" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/위협 라이브러리.exerd" title="위협 라이브러리.exerd" tooltip="함정용전자전장비(DDH-I)/위협 라이브러리.exerd" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="위협 라이브러리.exerd" partName="위협 라이브러리.exerd" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/위협 라이브러리.exerd" title="위협 라이브러리.exerd" tooltip="함정용전자전장비(DDH-I)/위협 라이브러리.exerd" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 </editor>
-<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="위협 결과.exerd" partName="위협 결과.exerd" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/위협 결과.exerd" title="위협 결과.exerd" tooltip="함정용전자전장비(DDH-I)/위협 결과.exerd" workbook="DefaultEditorWorkbook">
+<editor id="com.tomato.exerd.editor.DiagramEditor" name="위협 결과.exerd" partName="위협 결과.exerd" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/위협 결과.exerd" title="위협 결과.exerd" tooltip="함정용전자전장비(DDH-I)/위협 결과.exerd" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
 </editor>
 </editors>
@@ -193,8 +193,8 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 </editors>
-<item historyLabel="위협 결과.exerd" index="1"/>
 <item historyLabel="용어 사전.xdic" index="2"/>
 <item historyLabel="위협 결과.exerd" index="1"/>
 <item historyLabel="위협 라이브러리.exerd" index="0"/>
@@ -243,7 +243,8 @@
 <item historyLabel="위협 라이브러리.exerd" index="16"/>
 <item historyLabel="위협 결과.exerd" index="14"/>
 <item historyLabel="위협 라이브러리.exerd" index="16"/>
-<item active="true" historyLabel="위협 결과.exerd" index="14"/>
+<item historyLabel="위협 결과.exerd" index="14"/>
+<item active="true" historyLabel="위협 라이브러리.exerd" index="17"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>

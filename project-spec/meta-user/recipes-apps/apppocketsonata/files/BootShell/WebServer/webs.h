@@ -106,7 +106,7 @@ typedef struct websRec {
 	int				state;				/* Current state */
 	int				flags;				/* Current flags -- see above */
 	int				code;				/* Request result code */
-	int				clen;				/* Content length */
+	size_t				clen;				/* Content length */
 	int				wid;				/* Index into webs */
 	char_t			*cgiStdin;			/* filename for CGI stdin */
 	int				docfd;				/* Document file descriptor */
@@ -138,7 +138,7 @@ extern int 		 websAspDefine(char_t *name,
 extern int 		 websAspRequest(webs_t wp, char_t *lpath);
 extern void		 websCloseListen();
 extern int 		 websDecode64(char_t *outbuf, char_t *string, int buflen);
-extern void		 websDecodeUrl(char_t *token, char_t *decoded, int len);
+extern void		 websDecodeUrl(char_t *token, char_t *decoded, size_t len);
 extern void  	 websDone(webs_t wp, int code);
 extern void 	 websEncode64(char_t *outbuf, char_t *string, int buflen);
 extern void  	 websError(webs_t wp, int code, char_t *msg, ...);
@@ -206,7 +206,7 @@ extern int 		 websUrlParse(char_t *url, char_t **buf, char_t **host,
 					char_t **proto, char_t **tag, char_t **ext);
 extern char_t 	*websUrlType(char_t *webs, char_t *buf, int charCnt);
 extern int 		 websWrite(webs_t wp, char_t* fmt, ...);
-extern int 		 websWriteBlock(webs_t wp, char_t *buf, int nChars);
+extern int 		 websWriteBlock(webs_t wp, char_t *buf, size_t nChars);
 extern int 		 websWriteDataNonBlock(webs_t wp, char *buf, int nChars);
 extern int 		 websValid(webs_t wp);
 extern int 		 websValidateUrl(webs_t wp, char_t *path);

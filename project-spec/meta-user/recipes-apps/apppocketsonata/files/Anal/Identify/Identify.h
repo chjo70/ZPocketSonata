@@ -11,7 +11,6 @@
 
 #pragma once
 
-
 #include "define.h"
 #include "structs.h"
 #include "../SigAnal/_Macro.h"
@@ -124,7 +123,7 @@ struct STR_H000 {
 
 #include "../../Utils/clog.h"
 
-#if defined(_POCKETSONATA_)
+#if defined(_POCKETSONATA_) || defined(_712_)
 #define FLIB_FREQ_RES_MHZ               (1)
 
 #else
@@ -133,6 +132,10 @@ struct STR_H000 {
 
 #endif
 
+struct STR_HOPPINGDWELL_INDEX {
+    unsigned char index[MAX_FREQ_PRI_STEP];
+
+};
 
 /**
 * [식별자 : CLS-GMU-EL-L-SIM]
@@ -168,12 +171,13 @@ class CELSignalIdentifyAlg
     char m_szSQLString[MAX_SQL_SIZE];
 
 #endif
+
     static bool m_bInitTable;											///< 식별 테이블 로딩하기 위한 플레그
 
-    static STR_HOWTO_IDENTIFY m_HowToId[E_AET_MAX_FRQ_TYPE][E_AET_MAX_PRI_TYPE];		///< 식별 함수 테이블
+    static STR_HOWTO_IDENTIFY m_HowToId[(int)ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][( int ) ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE];		///< 식별 함수 테이블
 
-    static unsigned char m_FrqIdCallFunc[E_AET_MAX_FRQ_TYPE][E_AET_MAX_FRQ_TYPE];		///< 주파수 식별 함수 테이블
-    static unsigned char m_PriIdCallFunc[E_AET_MAX_PRI_TYPE][E_AET_MAX_PRI_TYPE];		///< PRI 식별 함수 테이블
+    static unsigned char m_FrqIdCallFunc[( int ) ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][( int ) ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE];		///< 주파수 식별 함수 테이블
+    static unsigned char m_PriIdCallFunc[( int ) ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][( int ) ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE];		///< PRI 식별 함수 테이블
 
     static bool m_bLoadedDB;											///< CED/EOB 테이블 로딩 여부 플레스
 
@@ -194,33 +198,42 @@ class CELSignalIdentifyAlg
     static std::vector<SThreat> m_vecThreat;			                ///< EOB 식별하기 위한 장비 목록 값
 
     STR_EOB_RESULT *m_pEOBResult;			                            ///< EOB 식별 결과를 저장하기 위한 임시 저장소
-    STR_LIB_IDRESULT *m_pIdResult;			///< CED 식별 결과를 저장하기 위한 임시 저장소
-    STR_CEDEOB_RESULT *m_pCEDEOBResult;			///< CED/EOB 식별 결과
+
+    STR_LIB_IDRESULT *m_pIdResult;			                                        ///< CED 식별 결과를 저장하기 위한 임시 저장소
+    //vector< STR_LIB_IDRESULT> m_vecIdResult;
+
+    STR_CEDEOB_RESULT *m_pCEDEOBResult;			                                   ///< CED/EOB 식별 결과
+
+    vector<STR_HOPPINGDWELL_INDEX> m_vecMatchIndex;
 
 private:
     // EOB 식별 결과 저장소
     int m_nCoIdEOB;																	///< EOB 개수
 
     // CED 식별 결과 저장소
-    int m_nCoIdResult;															///< CED 개수
+    int m_nCoIdResult;															    ///< CED 개수
 
     // CED/EOB 메칭 결과 저장소
     int m_nCoCEDEOB;																///< CED/EOB 메칭 갯수
 
-
     // 최종 CED/EOB 식별 결과
-    STR_CEDEOB_FINAL_RESULT m_CEDEOBResult;					///< 최종 CED/EOB 식별 결과
+    STR_CEDEOB_FINAL_RESULT m_CEDEOBResult;					                        ///< 최종 CED/EOB 식별 결과
 
     UINT m_fromLib;																	///< 식별시 시작 인덱스
-    UINT m_toLib;																		///< 식별시 종료 인덱스
+    UINT m_toLib;																	///< 식별시 종료 인덱스
 
     CInverseMethod m_theInverseMethod;
+
+    SRxLOBData *m_pLOBData;
+    SRxABTData *m_pABTData;
+
+    STR_IDENTIFY *m_pstIdentify;                                                    ///< 식별 데이터 결과
+
+    SELABTDATA_EXT *m_pABTDataExt;                                                  ///< LOB 데이터 확장
 
  public:
     UINT m_total_ced;																///< CED의 레이더 모드 총 갯수
     UINT m_total_eob;																///< EOB의 위협 총 갯수
-
-    SRxLOBData *m_pLOBData;
 
     void (CELSignalIdentifyAlg::*IdentifyFrq[EndOfIdentifyFrq])( void *pLOBData, bool bLOB );
     void (CELSignalIdentifyAlg::*IdentifyPri[EndOfIdentifyPri])( void *pLOBData, bool bLOB );
@@ -229,9 +242,10 @@ private:
     float CalcFreqMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode);
     float CalcPRIMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode);
 
+
  public:
-    void Identify( SRxLOBData *pLOBData, SELLOBDATA_EXT *pThreatDataExt, SPosEstData *pstPosData, bool bMakeH0000 );
-    void Identify( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, SELLOBDATA_EXT *pLOBDataExt, bool bIDExecute=true, bool bMakeH0000=true );
+    void IdentifyLOB( STR_IDENTIFY *pstIdentify, SRxLOBData *pLOBData );
+    void IdentifyABT( STR_IDENTIFY *pstABTIdentify, SRxABTData *pABTData, STR_IDENTIFY *pstLOBIdentify );
 
     // 식별 함수 정의
  	void PIdentifyPRI(void *pData, bool bLOB);
@@ -249,12 +263,14 @@ private:
 	void FIdentifyPatPat(void *pData, bool bLOB);
 	// void ConvertToIdentifyAet( SRxLOBData *pLOBData );
 	void FIdentifyHopHop(void *pData, bool bLOB);
-	void FIdentifyFixPat(void *pData, bool bLOB );
+	//void FIdentifyFixPat(void *pData, bool bLOB );
 	void FIdentifyFixHop(void *pData, bool bLOB );
  	void FIdentifyFixFix( void *pData, bool bLOB );
  	void FIdentifyFreq(void *pData, bool bLOB);
- 	bool IdentifyPatternRange( SRadarMode *pRadarMode, SRxLOBData *pLOBData );
-    bool IdentifyPatternRange( SRadarMode *pRadarMode, SRxABTData *pABTData );
+ 	bool IdentifyPRI_PatternRange( SRadarMode *pRadarMode, SRxLOBData *pLOBData );
+    bool IdentifyPRI_PatternRange( SRadarMode *pRadarMode, SRxABTData *pABTData );
+    bool IdentifyRF_PatternRange( SRadarMode *pRadarMode, SRxLOBData *pLOBData );
+    bool IdentifyRF_PatternRange( SRadarMode *pRadarMode, SRxABTData *pABTData );
  	void CallFreqFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyFrq[nCall])( pLOBData, true ); }		//!< http://izeph.com/tt/blog/155 참조.
  	void CallPriFunc( unsigned char nCall, SRxLOBData *pLOBData ) { (this->*IdentifyPri[nCall])( pLOBData, true); }
 
@@ -272,7 +288,7 @@ private:
 
 
  	void Init();
- 	void CopyAmbiguity( I_AET_ANAL *pIAetAnal );
+ 	//void CopyAmbiguity( SRxABTData *pABTData );
  	void IdentifyFreqPRI( SRxLOBData *pLOBData );
 	void IdentifyFreqPRI( SRxABTData *pABTData );
 
@@ -283,7 +299,7 @@ private:
  	UINT BandSelect( int from, int to, int searchVal );
  	void MakeFreqLibTable();
  	void MakeFreqBand();
-    void IdentifyScan( unsigned char ucScanType, float fScanPeriod );
+    void IdentifyScan( ENUM_AET_SCAN_TYPE enScanType, float fScanPeriod, float fThreshold );
     void IdentifyPW( float fPWMin, float fPWMax );
 
     // EOB 데이터 로딩 관련 함수
@@ -307,11 +323,262 @@ private:
  	bool CompSwitchLevel( float fVal, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
     bool CompSwitchLevel( float fVal, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, UINT coSeries, SRadarMode *pRadarMode );
     bool CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, SRadarPRI_SequenceNumIndex *pPRI_SequenceNumIndex, int coNumIndex );
-    bool CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values );
+    bool CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, float fMarginError, unsigned char *pidxHopping );
+    bool CompSwitchLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarPRI_Values, unsigned int uiSizeOfRadarMode_Sequence, float fMarginError, unsigned char *pidxHopping );
+    bool CompSwitchLevel( float fVal, vector <SRadarMode_Sequence_Values> *pvecRadar_Values, float fMarginFrqError, unsigned char *pidxHopping );
 
+    bool CompHoppingDwellLevel( float *series, unsigned int uiCoSeries, vector <SRadarMode_Sequence_Values> *pvecRadarRF_Values, float fMarginError, unsigned char *pidxHopping=NULL );
 	bool CheckThereFreqRange( vector<SRadarMode *> *pVecMatchRadarMode, UINT uiFreqMin, UINT uiFreqMax );
 
     char *GetFunctionCode( EnumFunctionCodes eFunctionCode );
+
+    template <typename T>
+    void Identify( T *pData, bool bIdentifyScan=true )
+    {
+        // 3. 위협 데이터의 신호 식별
+        IdentifyFreqPRI( pData );
+
+        // 5. 펄스폭 식별
+        IdentifyPW( pData->fPWMin, pData->fPWMax );
+
+        // 6. 스캔 식별
+        if( bIdentifyScan == true ) {
+#if defined(_POCKETSONATA_) || defined(_712_)
+            IdentifyScan( pData->vScanType, pData->fMeanScanPeriod, FDIV( pData->fPRIMean * (float) 2., 1000. ) );
+#else
+            IdentifyScan( pData->iScanType, pData->fMeanScanPeriod, FDIV( pData->fPRIMean * ( float ) 2., 1000. ) );
+#endif
+        }
+
+        // 8. 일치율 식별
+        IdentifyMatchRatio();
+
+        // 9. 후보를 정렬한다.
+        SortThreatLevel();
+
+    }
+
+    template <typename T>
+    void CopyAmbiguity( T *pData )
+    {
+        STR_CEDEOBID_INFO *pCEDEOBInfo;
+
+        pCEDEOBInfo = & m_pstIdentify->idInfo;
+
+        memset( pCEDEOBInfo, _spZero, sizeof( struct STR_CEDEOBID_INFO ) );
+        pCEDEOBInfo->eIdResult = E_EL_PE_UNK_ID;
+
+        //pIAetAnal->bCompFreq = true;
+        //pIAetAnal->bCompPRI = true;
+
+        // 2. 식별 정보 저장
+        // 식별이 안 되었을 때, 아래 사항을 처리
+        if( m_toLib == _spZero ) {
+            //pLOBDataIdInfo->eIdResult = E_EL_UNK_ID;
+
+            //pIAetAnal->chELNOT[0] = 0;
+            //pIAet->stAet.usThreatId = pIAet->stAet.usEmitterId = pIAet->stAet.usBeamId = 0;
+            //pIAetData->usThreatId = 0;
+            //pIAetData->usEmitterId = 0;
+            //pIAetData->usBeamId = 0;
+
+            // 식별 후보 초기화
+            m_nCoIdResult = 0;
+            //pIAetAnal->usCoCandidate = 0;
+
+            m_pstIdentify->bOverCount = false;
+
+            pCEDEOBInfo->nThreatIndex = m_pEOBResult->nThreatIndex;
+            pCEDEOBInfo->nDeviceIndex = m_pEOBResult->nDeviceIndex;
+
+            //memset( & pIAetAnal->iIdRatio[0], _spZero, sizeof( pIAetAnal->iIdRatio ) );
+
+            //m_IdAet.ext.id.usCoCandidate = 0;
+
+            // 위협 레벨 초기화
+            //pIAetAnal->usPriorityLevel = 0;
+
+        }
+        else {
+            int i, j, k;
+            SRadarMode *pRadarMode, *pRadarModeLevel;
+
+            unsigned int uiRadarModeIndex;
+            //unsigned int *p3LevelRadarModeIndex;
+            //STR_CEDEOB_RESULT *pCEDEOBResult;
+
+            m_pstIdentify->bOverCount = ( m_toLib > MAX_IDCANDIDATE );
+            /*! \bug  	condition에 직접적인 assignment operator를 사용하지 말아야 한다.
+                    \author 조철희 (churlhee.jo@lignex1.com)
+                    \date 	2014-01-24 17:08:42
+            */
+            //pIAetAnal->usCoCandidate = (int) min( m_toLib, MAX_IDCANDIDATE );
+            m_nCoIdResult = min( (int) m_toLib, MAX_IDCANDIDATE );
+
+            //m_IdAet.ext.id.usCoCandidate = pIAetAnal->usCoCandidate;
+            pCEDEOBInfo->uiCoRadarModeIndex = ( unsigned int ) m_nCoIdResult;
+
+            for( i = 0; i < m_nCoIdResult; ++i ) {
+                pCEDEOBInfo->uiRadarModeIndex[i] = m_pIdResult[i].pIdxRadarMode->uiRadarModeIndex;
+            }
+
+            // 3순위 식별 후보 선정 합니다.
+            k = 1;
+            memset( pCEDEOBInfo->ui3LevelRadarModeIndex, 0, sizeof( pCEDEOBInfo->ui3LevelRadarModeIndex ) );
+            pCEDEOBInfo->ui3LevelRadarModeIndex[0] = pCEDEOBInfo->uiRadarModeIndex[0];
+            for( i = 1; i < m_nCoIdResult && k < THREE_LEVEL_IDCANDIDATE; ++i ) {
+                uiRadarModeIndex = pCEDEOBInfo->uiRadarModeIndex[i];
+
+                pRadarMode = GetRadarMode( uiRadarModeIndex );
+
+                for( j = 0; j < THREE_LEVEL_IDCANDIDATE; ++j ) {
+                    pRadarModeLevel = GetRadarMode( pCEDEOBInfo->ui3LevelRadarModeIndex[j] );
+                    if( pRadarModeLevel != NULL ) {
+                        if( pRadarModeLevel->uiRadarIndex != pRadarMode->uiRadarIndex ) {
+                            pCEDEOBInfo->ui3LevelRadarModeIndex[k] = uiRadarModeIndex;
+                            ++ k;
+                            break;
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+
+            // 위협 관리를 하기위한 식별 정보를 추가 저장하도록함.
+            //pIAetAnal->usEnemyIdentify = false;
+
+            // 위협 ID
+            //pIAetAnal->usNoThreat = 0;
+
+            // 호핑 레벨 인덱스 생성
+            MakeHoppingLevelIndex<T>( pData );
+
+            // 드웰 레벨 인덱스 생성
+            MakeDwellLevelIndex<T>( pData );
+        }
+
+    }
+
+    template <typename T>
+    void MakeHoppingLevelIndex( T *pData )
+    {
+        SRadarMode *pRadarMode;
+
+        if( m_toLib != _spZero ) {
+            pRadarMode = m_pIdResult[0].pIdxRadarMode;
+
+            if( pData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED ) {
+                //TODO: 32비트 Alignment 하기 위해서 temp 변수로 복사하여 콜한다.
+                //date 	2023-08-11 19:08:58
+#ifdef __VXWORKS__
+                float fVal = pData->fFreqMean;
+                CompHoppingDwellLevel( & fVal, _spOne, & pRadarMode->vecRadarMode_RFSequenceValues, m_pSEnvironVariable->fMarginFrqError, m_pstIdentify->idxHopping );
+#else
+                CompHoppingDwellLevel( & pData->fFreqMean, _spOne, & pRadarMode->vecRadarMode_RFSequenceValues, m_pSEnvironVariable->fMarginFrqError, m_pstIdentify->idxHopping );
+#endif
+
+            }
+
+            else if( pData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING ) {
+                unsigned int i;
+                unsigned char iMinValue, iIdxMin;
+
+                float fSeq[MAX_FREQ_PRI_STEP];
+                unsigned char idxHoppingDwell[MAX_FREQ_PRI_STEP];
+
+                memcpy( fSeq, pData->fFreqSeq, sizeof( float ) * MAX_FREQ_PRI_STEP );
+
+                if( true == CompHoppingDwellLevel( fSeq, ( unsigned int ) pData->vFreqPositionCount, & pRadarMode->vecRadarMode_RFSequenceValues, m_pSEnvironVariable->fMarginFrqError, m_pstIdentify->idxHopping ) ) {
+                    iMinValue = UINT8_MAX;
+                    iIdxMin = 0;
+                    for( i = 0; i < (unsigned int) pData->vFreqPositionCount; ++i ) {
+                        if( m_pstIdentify->idxHopping[i] < iMinValue ) {
+                            iMinValue = m_pstIdentify->idxHopping[i];
+                            iIdxMin = i;
+                        }
+                    }
+
+                    memset( fSeq, 0, sizeof( fSeq ) );
+                    memset( idxHoppingDwell, 0, sizeof( idxHoppingDwell ) );
+                    for( i = 0; i < ( unsigned int ) pData->vFreqPositionCount; ++i ) {
+                        fSeq[i] = pData->fFreqSeq[(i+iIdxMin) % pData->vFreqPositionCount];
+                        idxHoppingDwell[i] = m_pstIdentify->idxHopping[( i + iIdxMin ) % pData->vFreqPositionCount];
+                    }
+                    memcpy( pData->fFreqSeq, fSeq, sizeof( float ) * pData->vFreqPositionCount );
+                    memcpy( m_pstIdentify->idxHopping, idxHoppingDwell, sizeof( char ) * pData->vFreqPositionCount );
+                    //qsort( m_pstIdentify->idxHopping, ( size_t ) pData->vFreqPositionCount, sizeof( unsigned char ), incIndexCompare );
+                }
+
+            }
+
+            else {
+
+            }
+
+        }
+
+    }
+
+    template <typename T>
+    void MakeDwellLevelIndex( T *pData )
+    {
+        SRadarMode *pRadarMode;
+
+        if( m_toLib != _spZero ) {
+            pRadarMode = m_pIdResult[0].pIdxRadarMode;
+
+            if( pData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED ) {
+                //TODO: 32비트 Alignment 하기 위해서 temp 변수로 복사하여 콜한다.
+                //date 	2023-08-11 19:08:58
+#ifdef __VXWORKS__
+                float fVal = pData->fPRIMean;
+                CompHoppingDwellLevel( & fVal, _spOne, & pRadarMode->vecRadarMode_PRISequenceValues, m_pSEnvironVariable->fMarginPriError, m_pstIdentify->idxDwell );
+#else
+                CompHoppingDwellLevel( & pData->fPRIMean, _spOne, & pRadarMode->vecRadarMode_PRISequenceValues, m_pSEnvironVariable->fMarginPriError, m_pstIdentify->idxDwell );
+#endif
+
+            }
+
+            else if( pData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH ) {
+                unsigned int i;
+                unsigned char iMinValue, iIdxMin;
+
+                float fSeq[MAX_FREQ_PRI_STEP];
+                unsigned char idxHoppingDwell[MAX_FREQ_PRI_STEP];
+
+                memcpy( fSeq, pData->fFreqSeq, sizeof( float ) * MAX_FREQ_PRI_STEP );
+                if( true == CompHoppingDwellLevel( fSeq, ( unsigned int ) pData->vPRIPositionCount, & pRadarMode->vecRadarMode_PRISequenceValues, m_pSEnvironVariable->fMarginPriError, m_pstIdentify->idxDwell ) ) {
+                    iMinValue = UINT8_MAX;
+                    iIdxMin = 0;
+                    for( i = 0; i < ( unsigned int ) pData->vPRIPositionCount; ++i ) {
+                        if( m_pstIdentify->idxDwell[i] < iMinValue ) {
+                            iMinValue = m_pstIdentify->idxDwell[i];
+                            iIdxMin = i;
+                        }
+                    }
+
+                    memset( fSeq, 0, sizeof( fSeq ) );
+                    memset( idxHoppingDwell, 0, sizeof( idxHoppingDwell ) );
+                    for( i = 0; i < ( unsigned int ) pData->vPRIPositionCount; ++i ) {
+                        fSeq[i] = pData->fPRISeq[( i + iIdxMin ) % pData->vPRIPositionCount];
+                        idxHoppingDwell[i] = m_pstIdentify->idxDwell[( i + iIdxMin ) % pData->vPRIPositionCount];
+                    }
+                    memcpy( pData->fPRISeq, fSeq, sizeof( float ) * pData->vPRIPositionCount );
+                    memcpy( m_pstIdentify->idxDwell, idxHoppingDwell, sizeof( char ) * pData->vPRIPositionCount );
+                    //qsort( m_pstIdentify->idxHopping, ( size_t ) pData->vFreqPositionCount, sizeof( unsigned char ), incIndexCompare );
+                }
+
+            }
+
+            else {
+
+            }
+
+        }
+
+    }
 
 	template <typename T>
 	bool CompSwitchLevel( T *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries )
@@ -369,11 +636,11 @@ private:
 					pSeries = pSeries2;
 					for( k=j ; k < coSeries+j ; ++k ) {
 						index1 = k % coSeries;
-						bRet = CompMeanDiff<T>( pSeries1[index1], *pSeries, margin );
+						bRet = TCompMeanDiff<T>( pSeries1[index1], *pSeries, margin );
 						if( false == bRet ) {
 							break;
 						}
-						tDiff += _diffabs( pSeries1[index1], *pSeries );
+						tDiff += _diffabs<T>( pSeries1[index1], *pSeries );
 						++ pSeries;
 					}
 				}

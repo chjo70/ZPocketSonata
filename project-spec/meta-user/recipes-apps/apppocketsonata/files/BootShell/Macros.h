@@ -5,6 +5,7 @@
 
 #pragma once
 
+// 아래는 부트 프로그렘에서 정의한 define 문 입니다.
 
 #include <stdio.h>
 
@@ -14,11 +15,11 @@
 #define OS_ONE_MILLISEC								(0.1)
 
 #ifndef WhereIs
-#define WhereIs									printf( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
+#define WhereIs									    TRACE( "...in %s 파일 %d 라인" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/') : __FILE__ , __LINE__ )
 #endif
 
 #ifndef PrintErr
-#define PrintErr(A)							{ printf A; WhereIs; }
+#define PrintErr(A)							        { printf A; WhereIs; }
 #endif
 
 

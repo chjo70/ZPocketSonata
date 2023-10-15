@@ -140,7 +140,7 @@ void CUserCollect::InitVar()
 void CUserCollect::AllocMemory()
 {
 
-    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof( SIGAPDW )*NUM_OF_PDW+sizeof(UNION_HEADER) );
+    m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof( SIGAPDW )*NUM_OF_SIM_PDW+sizeof(UNION_HEADER) );
 
     m_pTheGenPDW = new CGenPDW( MAX_PDW );
 
@@ -372,7 +372,7 @@ void CUserCollect::ColStart()
                 m_strResColStart.uiBoardID = (unsigned int) g_pTheSysConfig->GetBoardID();
 
                 // 실제 PDW 수집한 개수는 현재는 그냥 100 으로 한다.
-                m_strResColStart.uiCoPulseNum = NUM_OF_PDW; // PDW_GATHER_SIZE / sizeof(DMAPDW);
+                m_strResColStart.uiCoPulseNum = NUM_OF_SIM_PDW; // PDW_GATHER_SIZE / sizeof(DMAPDW);
 
                 if( pUIO->iFd > 0 ) {
                     memcpy( m_pSIGAPDW, (void *)(pMem->ullogical), PDW_GATHER_SIZE );

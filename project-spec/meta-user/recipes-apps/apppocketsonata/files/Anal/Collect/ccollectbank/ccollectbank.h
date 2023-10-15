@@ -29,8 +29,8 @@
 
 #define MAX_LOGIC_MEMORY_SIZE                   ( 8192 )
 
-// 스캔 최대 수집 단계 개수
-#define SCANCOLLECTION_STEP                     (4)
+// 원형/고정형 경걔값
+#define STEADY_SCAN_STEP                        (2)
 
 class CCollectBank
 {
@@ -48,8 +48,6 @@ private:
     Queue<int> m_theQueueScanChannel;
 
     SRxABTData* m_ABTData;       // 추적/스캔 채널에 대한 대상 위협 정보
-
-    unsigned int m_uiScanCollectionTimems[SCANCOLLECTION_STEP+1];
 
 public:
     CPCIDriver *m_pThePCI;
@@ -78,7 +76,8 @@ private:
 
 
     // 스캔 신호 수집 설정
-    void CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiScanStep );
+    void CalScanWindowCell( STR_WINDOWCELL *pstrWindowCell, SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiReqScanPeriod, unsigned int uiScanStep, STR_SCANRESULT *pstScanResult );
+    void CheckScanPAFilter( STR_LOWHIGH *pstrPA, SRxABTData *pABTData, unsigned int uiReqScanPeriod, unsigned int uiScanStep, STR_SCANRESULT *pstScanResult );
 
     // 공통 관련 함수 설정
     unsigned int GetStat( SRxABTData *pABTData );
@@ -109,7 +108,7 @@ public:
 
 
     // 스캔 신호 수집 설정
-    int StartScanChennel( SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiScanStep );
+    int StartScanChennel( SRxABTData *pABTData, SRadarMode *pRadarMode, unsigned int uiReqScanPeriod, unsigned int uiScanStep, STR_SCANRESULT *pstScanResult );
 
     void CloseTrackWindowCell();
 
@@ -125,6 +124,9 @@ public:
     inline void SetCollectMode( unsigned int uiCh, ENUM_COLLECT_MODE enMode ) { GetWindowCell( uiCh )->enCollectMode = enMode; }
 //     inline int GetChannelNo() { return m_iChannelNo; }
     inline unsigned int GetTotalPDW( unsigned int uiCh ) { return GetWindowCell( uiCh )->uiTotalPDW; }
+
+    inline void SetTotalPDW( unsigned int uiCh, unsigned int uiTotalPDW ) { GetWindowCell( uiCh )->uiTotalPDW = uiTotalPDW; }
+
 //     inline STR_WINDOWCELL *GetWindowCell() { return & m_strWindowCell; }
     inline STR_UZPOCKETPDW *GetPDWData( unsigned int uiCh ) { return &GetWindowCell( uiCh )->strPDW; }
     inline bool IsSave( unsigned int uiCh ) { return GetWindowCell(uiCh)->enCollectMode == enCollecting; }
@@ -137,12 +139,24 @@ public:
         return GetWindowCell( uiCh )->uiABTIndex;
     }
 
+
+    inline bool IsFullOfCollecting( float fCoScanCollectingPDW )
+    {
+        return fCoScanCollectingPDW > 0.8;
+    }
+
+    inline bool IsFullOfDuration( float fScanDurationms )
+    {
+        return fScanDurationms > 0.8;
+    }
+
+
 #ifdef _SIM_PDW_
     // 모의 관련 함수
     void SimCollectMode( unsigned int uiCh );
     bool IsFiltered( unsigned int uiCh, _PDW *pstPDW );
     int CheckCollectBank( ENUM_COLLECTBANK enCollectBank );
-    void SimFilter( STR_PDWDATA *pPDWData );
+    void SimFilter( STR_PDWDATA *pPDWData, bool bOnly );
 
     //void PushPDWData( STR_PDWDATA *pstrArrayPDW );
     void PushPDWData( unsigned int uiCh, _PDW *pstPDW, UNION_HEADER *pHeader );

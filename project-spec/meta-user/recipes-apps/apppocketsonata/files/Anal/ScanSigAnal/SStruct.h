@@ -26,27 +26,29 @@ struct STR_LOWHIGH
 
 /**
     @struct STR_SCANPT
-    @brief  
+    @brief
 **/
+#ifdef SCN_COLLECT_PDW
 struct STR_SCANPT {
     UINT uiCount;
-    int iPA[SCN_COLLECT_PDW+10];				// 신호세기
-    _TOA tTOA[SCN_COLLECT_PDW+10];				// 시간
+    int iPA[SCN_COLLECT_PDW];				// 신호세기
+    _TOA tTOA[SCN_COLLECT_PDW];				// 시간
 
     STR_LOWHIGH _pa;
 
 } ;
+#endif
 
 /**
     @struct STR_SAMPLE
-    @brief  
+    @brief
 **/
 struct STR_SAMPLE {
 	UINT uiCount;
-	_TOA tTOA[_spMaxSample];
-	int iPA[_spMaxSample];	
+	_TOA tTOA[SCN_COLLECT_PDW];
+	int iPA[SCN_COLLECT_PDW];
 
-	float normPa[_spMaxSample];					// normalize of pa
+	float fNormPa[SCN_COLLECT_PDW];					// normalize of pa
 
 	float fMeanY;
 
@@ -59,37 +61,21 @@ struct STR_SAMPLE {
 } ;
 
 // Auto-Correlation Function 용 변수
-//##ModelId=452B0C440359
 struct STR_AUTOCOR {
     UINT uiCount;
 
-    float acf[_spMaxSample];
+    float fACF[SCN_COLLECT_PDW];
 
     UINT inPeak;
     UINT idPeak;
-    float fThreshold[_spMaxSample];
+    float fThreshold[SCN_COLLECT_PDW];
 
-    float meanAcf;
+    float fMeanACF;
 
-    float ccf_fix;
-    float ccf_con;
-    float	ccf_saw;
-    float	ccf_ret;
+    float fCCF_Fix;
+    float fCCF_Con;
 }  ;
 
-#ifndef SRxScanData_STRUCT
-#define SRxScanData_STRUCT
-struct STR_SCANRESULT {
-    UINT uiABTID;
-    UINT uiAETID;
-
-    UINT enResult;
-
-    float fScnPrd;     //! 스캔 주기값
-    UINT uiScnTyp;     //! 스캔 형태
-};
-
-#endif
 
 
 #endif // !defined(AFX_SSTRUCT_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)

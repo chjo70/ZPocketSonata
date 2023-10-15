@@ -12,23 +12,15 @@
 #include "pch.h"
 
 
-// #ifdef _WIN32
-// #include "../../A50SigAnal/stdafx.h"
-// #else
-//
-// #endif
-
-
 #include "FileTar.h"
 
 //#include <io.h>
 #include <string.h>
 #include <stdio.h>
 
-//#include "../../Anal/SigAnal/_Type.h"
 
 #ifdef __VXWORKS__
-IMPORT CFileTar *theFileTar;
+IMPORT CFileTar *g_theFileTar;
 #endif
 
 #ifdef __cplusplus
@@ -119,7 +111,7 @@ char *strfind(char *s, char *t)
 void untar( char *filename, char *destfolder )
 {
 #ifdef __VXWORKS__
-	theFileTar->UnTar(filename, destfolder);
+	g_theFileTar->UnTar(filename, destfolder);
 #endif
 
 }
@@ -253,12 +245,12 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 		_close(fdout);
 		return 1;
 	}
-	ret=_write(fdout,(char *) &m_TarHeader,sizeof(UNI_BLOCK));
-	long ssize=m_TarHeader.GetCount()*sizeof (TarIndex)+sizeof(UNI_BLOCK);
+	ret=_write(fdout,(char *) &m_TarHeader,sizeof(union UNI_BLOCK));
+	long ssize=m_TarHeader.GetCount()*sizeof (TarIndex)+sizeof(union UNI_BLOCK);
 	for(i=1;i<=m_TarHeader.GetCount();i++)
 	{
 		m_pTarIndex[i]->Start= ssize;
-		ret=_write(fdout,(char *) m_pTarIndex[i],sizeof(TarIndex));
+		ret=_write(fdout,(char *) m_pTarIndex[i],sizeof(struct TarIndex));
 		ssize += m_pTarIndex[i]->Size;
 	}
 	for(i=1;i<=m_TarHeader.GetCount();i++)
@@ -276,7 +268,7 @@ int CFileTar::CreateTar(char *TarFName, char *TarPath)
 int CFileTar::AppendFile(int fdout, char *fpath)
 {
 	int fdin=0;
-	size_t len;
+	unsigned int len;
 
 #ifdef __VXWORKS__
 	if((fdin=open(fpath,_O_RDONLY|_O_BINARY, 0666))<0)
@@ -327,8 +319,8 @@ bool CFileTar::GetTarInfo( char *pTarFile, TarHeader *pTarHeader )
 		}
 	}
 
-	memset( pTarHeader, 0, sizeof(UNI_BLOCK) );
-	int nRead=_read( m_TarFile, (char *) pTarHeader, sizeof(UNI_BLOCK) );
+	memset( pTarHeader, 0, sizeof(union UNI_BLOCK) );
+	int nRead=_read( m_TarFile, (char *) pTarHeader, sizeof(union UNI_BLOCK) );
 
 	pTarHeader->m_filesize = Octal2Deciaml( pTarHeader->m_block.header.size, sizeof(pTarHeader->m_block.header.size) );
 	GetDate( & pTarHeader->m_time, pTarHeader->m_block.header.mtime, sizeof(pTarHeader->m_block.header.mtime) );
@@ -372,25 +364,25 @@ bool CFileTar::UnTar( char *pDestFile, TarHeader *pTarHeader )
 	pBlock = & pTarHeader->m_block;
 
 	unsigned long rem;
-	char buff[sizeof(UNI_BLOCK)];
+	char buff[sizeof(union UNI_BLOCK)];
 	rem = pTarHeader->m_filesize;
 
-	while( rem > sizeof(UNI_BLOCK) ) {
-		nRead = _read( m_TarFile, buff, sizeof(UNI_BLOCK) );
+	while( rem > sizeof(union UNI_BLOCK) ) {
+		nRead = _read( m_TarFile, buff, sizeof(union UNI_BLOCK) );
 		nWrite = _write( fdout, buff, nRead );
-		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != nRead ) {
+		if( nRead != sizeof(union UNI_BLOCK) || nRead <= 0 || nWrite != nRead ) {
 			_close( fdout );
 			printf( "\n*can't read or write the file" );
 			return false;
 		}
 
-		rem -= sizeof(UNI_BLOCK);
+		rem -= sizeof(union UNI_BLOCK);
 	}
 
 	if( rem > 0 ) {
-		nRead = _read( m_TarFile, buff, sizeof(UNI_BLOCK) );
+		nRead = _read( m_TarFile, buff, sizeof(union UNI_BLOCK) );
 		nWrite = _write( fdout, buff, rem );
-		if( nRead != sizeof(UNI_BLOCK) || nRead <= 0 || nWrite != (int) rem ) {
+		if( nRead != sizeof(union UNI_BLOCK) || nRead <= 0 || nWrite != (int) rem ) {
 			_close( fdout );
 			printf( "\n*can't read or write the file" );
 			return false;
@@ -581,7 +573,16 @@ bool CFileTar::MkDir( char *directory )
         if( ('\\' == *p) || ('/'==*p)) {
             if( ':' != *(p-1) ) {
                 if( dirName[0] != 0 && strcmp( dirName, "\\" ) != 0 ) {
+#ifdef __VXWORKS__
+#if defined(__LP64__)
+					_mkdir( dirName, 0666 );
+#else
+					_mkdir( dirName );
+#endif
+
+#else
                     _mkdir( dirName );
+#endif
                 }
             }
         }
@@ -589,7 +590,16 @@ bool CFileTar::MkDir( char *directory )
         *q++ = *p++;
         *q = '\0';
     }
+#ifdef __VXWORKS__
+#if defined(__LP64__)
+    bRet = _mkdir( dirName, 0666 );
+#else
     bRet = _mkdir( dirName );
+#endif
+#else
+    bRet = _mkdir( dirName );
+
+#endif
 
     if( bRet == 0 ) {
         // bRet = ( GetLastError() == ERROR_ALREADY_EXISTS );

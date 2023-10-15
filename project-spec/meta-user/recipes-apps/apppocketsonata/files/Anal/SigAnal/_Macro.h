@@ -8,13 +8,21 @@
 #pragma once
 
 
-#include "../INC/PDW.h"
-#include "_Define.h"
-
 #ifdef __VXWORKS__
+#include <vxworks.h>
 #include <private/kwriteLibP.h>
 
 #endif
+
+
+
+
+
+
+#include "../INC/PDW.h"
+#include "_Define.h"
+
+
 
 
 #define _spSONATAPAoffset			(-70)				// amplitude initial value
@@ -244,7 +252,7 @@ T _diffabs( T x, T y)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 #define FFRQCNV( A, B )         CPOCKETSONATAPDW::DecodeFREQMHz( B )
 //#define FRQMhzCNV( A, B )		FDIV( ( FMUL( gFreqRes[(A)].fRes, (B) ) + gFreqRes[(A)].iOffset ), 1000 )  //CPOCKETSONATAPDW::DecodeFREQMHz( B )
 #define I_FRQMhzCNV( A, B )		IMUL( CPOCKETSONATAPDW::DecodeFREQMHz( B ), 1 )
@@ -271,7 +279,7 @@ T _diffabs( T x, T y)
 
 #define PWCNV( A )				CPOCKETSONATAPDW::DecodePWus( A )
 #define I_PWCNV( A )			IMUL( CPOCKETSONATAPDW::DecodePWus( A ), 1.0 )
-#define IPWCNV( A )			    IMUL( CPOCKETSONATAPDW::DecodePWus( A ), 1.0 )
+#define IPWCNV( A )			    CPOCKETSONATAPDW::EncodePWns( A )
 
 
 #define IPWCNVLOW( A )			CPOCKETSONATAPDW::EncodePWFloor( A )
@@ -287,8 +295,9 @@ T _diffabs( T x, T y)
 
 
 #define PACNV( A )				CPOCKETSONATAPDW::DecodePA( A )
+#define I_IPACNV( A )			IMUL( CPOCKETSONATAPDW::DecodePA( A ), 1.0 )
 #define IPACNV( A )				CPOCKETSONATAPDW::EncodePA( A )  // ( (A), _spAMPres )
-#define I_IPACNV( A )			IDIV( (A), _spAMPres )
+
 #define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 
 #define F_FRQMhzCNV( A, B )		FMUL( (B), 0 )
@@ -420,47 +429,80 @@ extern "C"
 //  Convert AET res. to IPL res.
 //
 */
-#define AET2IPL_PW( A )       ( A * 50 )
-#define AET2IPL_PRI( A )      ( A * 50 )
-#define AET2IPL_FREQ( A )     ( A * 1000 )
-#define AET2IPL_PRD( A )      (UINT) ( ( ( 50. / 1000. ) * (float) A ) + 0.5 )
-#define IPL2AET_PRD( A )      (UINT) ( ( 20. * (float) A ) + 0.5 )
-#define IPL2AET_FREQ( A )     UDIV( A, 1000 )
+//#define AET2IPL_PW( A )       ( A * 50 )
+//#define AET2IPL_PRI( A )      ( A * 50 )
+//#define AET2IPL_FREQ( A )     ( A * 1000 )
+//#define AET2IPL_PRD( A )      (UINT) ( ( ( 50. / 1000. ) * (float) A ) + 0.5 )
+//#define IPL2AET_PRD( A )      (UINT) ( ( 20. * (float) A ) + 0.5 )
+//#define IPL2AET_FREQ( A )     UDIV( A, 1000 )
 
-#define _HEADER_PRINT( A )    printf( "A" );
+//#define _HEADER_PRINT( A )    printf( "A" );
 
-#if defined(M68K) && !defined(_MBIT)
-#define WhereIs       printf( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
-#define Hold          printf( "\n Press Any Key...." ), WhereIs, sc_getc()
-#endif
 
-#if defined(M68K) && defined(_MBIT)
-#define WhereIs       RC_Print( "...in %s file, %d line(s)" , __FILE__, __LINE__ )
-#define Hold          RC_Print( "\n Press Any Key...." ), WhereIs, sc_getc()
-#endif
 
-#if !defined(M68K) && !defined(_MBIT)
-#ifndef WhereIs
 
-#ifdef _WIN32
-// 신뢰성 때문에 '+1' 을 생략함.
-#define WhereIs									TRACE( "...in %s 파일, %d 라인" , strrchr(__FILE__,'\\') ? strrchr(__FILE__,'\\') : __FILE__ , __LINE__ )
+#define chSTR2(x) #x
+#define chSTR(x)  chSTR2(x)
 
-#else
-#ifdef __VXWORKS__
-#define WhereIs									_func_kprintf( "...in %s file, %d line(s)" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/')+1 : __FILE__ , __LINE__ )
-#else
-#define WhereIs									printf( "...in %s file, %d line(s)" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/')+1 : __FILE__ , __LINE__ )
+#define chMSG(desc) message(__FILE__ "(" chSTR(__LINE__) "): --------" #desc "--------")
+#define chFixLater message(__FILE__ "(" chSTR(__LINE__) "): --------Fix this later--------")
 
-#endif
+#define FixLater \
+    do { \
+    __pragma(chFixLater) \
+    __pragma (warning(push)) \
+    __pragma (warning(disable:4127)) \
+    } while(0) \
+    __pragma (warning(pop))
 
-#endif
+#define _MSG(desc) \
+    do { \
+    __pragma(chMSG(desc)) \
+    __pragma (warning(push)) \
+    __pragma (warning(disable:4127)) \
+    } while(0) \
+    __pragma (warning(pop))
 
-#endif
 
-#define Hold          printf( "\n Press Any Key...." ), WhereIs, sc_getc()
-
-#endif
+// 
+// 
+// #if defined(M68K) && !defined(_MBIT)
+// 1
+// #define WhereIs       printf( "...in %s file, %d line(s)1" , strrchr(__FILE__,'\\'), __LINE__ )
+// #define Hold          printf( "\n Press Any Key...." ), WhereIs, sc_getc()
+// #endif
+// 
+// #if defined(M68K) && defined(_MBIT)
+// 1
+// #define WhereIs       RC_Print( "...in %s file, %d line(s)2" , strrchr(__FILE__,'\\'), __LINE__ )
+// #define Hold          RC_Print( "\n Press Any Key...." ), WhereIs, sc_getc()
+// #endif
+// 
+// #if !defined(M68K) && !defined(_MBIT)
+// #ifndef WhereIs
+// 1
+// #ifdef _WIN32
+// // 신뢰성 때문에 '+1' 을 생략함.
+// 1
+// #define WhereIs									TRACE( "...in %s 파일, %d 라인" , strrchr(__FILE__,'\\') ? strrchr(__FILE__,'\\') : __FILE__ , __LINE__ )
+// 
+// #else
+// #ifdef __VXWORKS__
+// 1
+// #define WhereIs									_func_kprintf( "파일: [%s], 라인 [%d]" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/')+1 : __FILE__ , __LINE__ )
+// #else
+// 1
+// #define WhereIs									printf( "...in %s file, %d line(s)" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/')+1 : __FILE__ , __LINE__ )
+// 
+// #endif
+// 
+// #endif
+// 
+// #endif
+// 
+// #define Hold          printf( "\n Press Any Key...." ), WhereIs, sc_getc()
+// 
+// #endif
 
 void _InitResolution();
 
@@ -488,7 +530,7 @@ float _frqRes[_701::enUnknown_BW + 1] = { (float) 0.001, (float) 0.001, (float) 
 float _frqRes[XBAND::enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
 //float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 1.875 } ;
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 float _frqRes[POCKETSONATA::enUnknown_BW + 1] = { (float) 0.117, (float) 65.104167, (float) 0.0 } ;
 
 #else

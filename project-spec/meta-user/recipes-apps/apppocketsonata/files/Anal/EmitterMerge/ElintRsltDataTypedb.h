@@ -455,9 +455,9 @@ struct SELAETDATA {
     unsigned int uiCoLOB;
     unsigned int uiCoABT;
 
-    time_t tiFirstSeenTime;
+    unsigned int tiFirstSeenTime;
     //UINT firstSeenMillisec;
-    time_t tiLastSeenTime;
+    unsigned int tiLastSeenTime;
     //UINT lastSeenMillisec;
 
     int iValidity;
@@ -473,7 +473,7 @@ struct SELAETDATA {
     // 위치 산출 정보
     STR_POSITION_ESTIMATION peInfo;
 
-    time_t tiFinalAlarmTime;
+    unsigned int tiFinalAlarmTime;
 
 }  ;
 

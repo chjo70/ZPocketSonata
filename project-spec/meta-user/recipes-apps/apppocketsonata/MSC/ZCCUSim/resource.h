@@ -28,14 +28,29 @@
 #define IDC_BUTTON_REQ_OPVAR            1012
 #define IDC_BUTTON_REQ_DISCONNECT       1013
 #define IDC_LIST1                       1014
+#define IDC_LIST2                       1015
+#define IDC_LIST3                       1016
+#define IDC_STATIC_ERRORMESSAGE         1017
+#define IDC_BUTTON_REQ_SCAN             1018
+#define IDC_BUTTON_REQ_SCAN2            1019
+#define IDC_BUTTON_REQ_DELETE           1019
+#define IDC_LIST_ABT                    1020
+#define IDC_LIST_AET                    1021
+#define IDC_SPIN1                       1022
+#define IDC_SPIN2                       1023
+#define IDC_BUTTON_REQ_DELETE2          1024
+#define IDC_LIST_LOB                    1025
+#define IDC_EDIT_ERRORMESSAGE           1028
+#define IDC_EDIT_AETID                  1029
+#define IDC_EDIT_ABTID                  1030
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        138
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1015
+#define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

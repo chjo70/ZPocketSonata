@@ -46,3 +46,4 @@ Release*
 #vxworks space
 project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/*
 project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace64/*
+/project-spec/meta-user/recipes-apps/apppocketsonata/MSC/.vs

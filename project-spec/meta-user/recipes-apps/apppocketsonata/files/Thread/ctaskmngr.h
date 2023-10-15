@@ -18,7 +18,7 @@ using namespace std;
 #include "../Utils/cthread.h"
 #include "../Utils/clog.h"
 #include "../System/csysconfig.h"
-
+#include "../Anal/MIDAS/RawFile.h"
 
 #ifdef _MSSQL_
 #include "../ODBC/mssql.h"
@@ -48,6 +48,8 @@ private:
 
     ENUM_MODE m_enMode;
 
+    CRawFile m_theRawFile;
+
 #ifdef _SQLITE_
     char m_szSQLString[MAX_SQL_SIZE];
     wchar_t m_szSQLString16[MAX_SQL_SIZE];
@@ -69,6 +71,8 @@ private:
     //void SetMode();
     void Start();
     void AnalysisStart( bool bOut=true );
+    void AnalysisReStart();
+    void ReqSetSystemVar();
     void ReqSystemVar();
 
     // 데이터베이스 처리

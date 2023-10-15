@@ -4,6 +4,8 @@
 
 #include "stdafx.h"
 
+//#include <memory.h>
+
 #include "cemittermerge.h"
 
 #include "csignalcollect.h"
@@ -38,7 +40,7 @@ int CEmitterMerge::_uiCoManageDatabase = 0;
  CEmitterMerge::CEmitterMerge( int iThreadPriority, const char *pClassName, bool bArrayLanData ) : CThread( iThreadPriority, pClassName, bArrayLanData )
  #endif
 {
-    LOGENTRY;
+    //LOGENTRY;
 
 #ifdef _SQLITE_
     // SQLITE 파일명 생성하기
@@ -46,7 +48,15 @@ int CEmitterMerge::_uiCoManageDatabase = 0;
 
     strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
     strcat( szSQLiteFileName, "/" );
-    strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
+
+#ifdef _MSC_VER
+    char szSrcSQLiteFileName[100];
+
+    sprintf( szSrcSQLiteFileName, "%s_%d.sqlite3", EMITTER_SQLITE_FILENAME, g_enBoardId );
+    strcat( szSQLiteFileName, szSrcSQLiteFileName );
+#else
+    strcat( szSQLiteFileName, EMITTER_SQLITE_FILEEXTNAME );
+#endif
 
     try {
         m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( true, szSQLiteFileName );
@@ -129,7 +139,7 @@ void CEmitterMerge::Init()
  */
 void CEmitterMerge::Run(key_t key)
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     CThread::Run();
 
@@ -146,7 +156,7 @@ void CEmitterMerge::Run(key_t key)
  */
 void CEmitterMerge::_routine()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     m_pMsg = GetRecvDataMessage();
 
@@ -166,14 +176,18 @@ void CEmitterMerge::_routine()
 
                 case enTHREAD_DISCONNECTED:
                 case enREQ_OP_SHUTDOWN:
-                    QMsgClear();
-                    InitEmitterMerge();
+                    //QMsgClear();
+                    //InitEmitterMerge();
                     break;
 
 				case enREQ_OP_RESTART:
-					QMsgClear();
+					//QMsgClear();
                     InitEmitterMerge();
 					break;
+
+                case enREQ_DELETE_THREAT_DATA:
+                    RemoveThreat();
+                    break;
 
                 ///////////////////////////////////////////////////////////////////////////////////
                 // 위협 정보 관련 메시지
@@ -184,6 +198,11 @@ void CEmitterMerge::_routine()
                     break;
 
 #if CO_SCAN_CHANNEL > 0
+                case enREQ_ANAL_SCAN:
+                    InitOfMessageData();
+                    UserRequestScan();
+                    break;
+
                 // 스캔 분석 관련 메시지
                 case enTHREAD_SCANANAL_RESULT :
                     InitOfMessageData();
@@ -199,6 +218,7 @@ void CEmitterMerge::_routine()
                     InitOfMessageData();
                     UpdateScanError();
                     break;
+
 #endif
 
                 //
@@ -217,7 +237,7 @@ void CEmitterMerge::_routine()
 
                 case enTHREAD_TIMER:
                     DeleteThreat();
-                    ManageDatabase();
+                    // ManageDatabase();
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
@@ -274,6 +294,9 @@ void CEmitterMerge::InitOfMessageData()
         m_pLOBData = NULL;
     }
 
+    // 위협 관리의 LOBDATA 초기화를 설정합니다.
+    m_pTheEmitterMergeMngr->InitOfLOBData();
+
 }
 
 /**
@@ -303,7 +326,7 @@ void CEmitterMerge::InitEmitterMerge()
  */
 void CEmitterMerge::MergeEmitter()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     unsigned int i;
 
@@ -331,8 +354,8 @@ void CEmitterMerge::MergeEmitter()
 
 #if CO_SCAN_CHANNEL > 0
             // 2.3 LOB의 스캔 관리를 수행한다.
-            m_pTheEmitterMergeMngr->ManageScan( m_pRecvDetectAnalInfo->enCollectBank, pLOBData, & m_sLOBOtherInfo );
-            RequestScanCollect( pLOBData );
+            m_pTheEmitterMergeMngr->ManageScan( m_pRecvDetectAnalInfo->enCollectBank, NULL, pLOBData );
+            RequestScanCollect( pLOBData->uiAETID, pLOBData->uiABTID );
 #endif
 
             // 2.3 빔 정보를 제어조종 및 재밍신호관리 장치에게 전송한다.
@@ -358,7 +381,7 @@ void CEmitterMerge::MergeEmitter()
     STR_COLLECT_INFO strCollectInfo;
 
     strCollectInfo.Set( 0, 0, 0, 0, m_pMsg->x.strDetAnalInfo.enPCIDriver, m_pMsg->x.strDetAnalInfo.enCollectBank, 0 );
-    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, & strCollectInfo, sizeof( STR_COLLECT_INFO ), GetThreadName() );
+    g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_DETECTWINDOWCELL, & strCollectInfo, sizeof( struct STR_COLLECT_INFO ), GetThreadName() );
 
 #endif
 
@@ -381,14 +404,57 @@ void CEmitterMerge::DeleteThreat()
     enMode = g_pTheTaskMngr->GetMode();
 
     if ( enMode == enOP_Mode ) {
-
         // 삭제 처리를 한다.
-        SELINDEX stELINDEX = m_pTheEmitterMergeMngr->DeleteThreat();
+        SELDELETE stELINDEX = m_pTheEmitterMergeMngr->DeleteThreat();
 
-        if (stELINDEX.uiAET != 0 && stELINDEX.uiABT != 0 ) {
-            Log(enDebug, "위협[%d/%d] 삭제 처리를 수행합니다.", stELINDEX.uiAET, stELINDEX.uiABT);
+        if (stELINDEX.uiAET != 0 ) {
+            if( stELINDEX.uiABT != 0 ) {
+                g_pTheCCUSocket->SendLan( enDEL_THREAT_DATA, & stELINDEX, sizeof( stELINDEX ) );
+
+                Log(enDebug, "위협[%d/%d] 삭제 처리를 수행합니다.", stELINDEX.uiAET, stELINDEX.uiABT);
+            }
+            else {
+                g_pTheCCUSocket->SendLan( enDEL_THREAT_DATA, & stELINDEX.uiAET, sizeof(int) );
+
+                Log( enDebug, "위협[%d] 삭제 처리를 수행합니다.", stELINDEX.uiAET );
+            }
         }
 
+    }
+
+}
+
+/**
+ * @brief     DeleteThreat
+ * @param     unsigned int uiAETID
+ * @param     unsigned int uiABTID
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-25 17:21:21
+ * @warning
+ */
+void CEmitterMerge::RemoveThreat()
+{
+    ENUM_MODE enMode;
+
+    enMode = g_pTheTaskMngr->GetMode();
+
+    if( enMode == enOP_Mode ) {
+#ifdef _MSC_VER
+        CCommonUtils::AllSwapData32( & m_pMsg->x.stDelete, sizeof( struct SELDELETE ) );
+
+#endif
+
+        // 삭제 처리를 한다.
+        m_pTheEmitterMergeMngr->RemoveThreat( ( int ) m_pMsg->x.stDelete.uiAET, (int) m_pMsg->x.stDelete.uiABT );
+
+        g_pTheCCUSocket->SendLan( enRES_USER_DELETE_THREAT_DATA, & m_pMsg->x.stDelete, sizeof( SELDELETE ) );
+
+    }
+    else {
+        Log( enError, "대기 모드이어서 위협 삭제 명령을 삭제합니다 !" );
     }
 
 }
@@ -415,7 +481,7 @@ void CEmitterMerge::RequestTrackCollect( SRxLOBData *pLOBData )
 //         STR_DETANAL_INFO strAnalInfo;
 //
 //         // PDW 헤더 정보 저장
-//         //memcpy(&strAnalInfo.uniPDWHeader, &m_pMsg->x.strAnalInfo.uniPDWHeader, sizeof(UNION_HEADER));
+//         //memcpy(&strAnalInfo.uniPDWHeader, &m_pMsg->x.strAnalInfo.uniPDWHeader, sizeof(union UNION_HEADER));
 //
 //         if (pLOBData != NULL) {
 //             if (bTrack == true) {
@@ -428,12 +494,12 @@ void CEmitterMerge::RequestTrackCollect( SRxLOBData *pLOBData )
 //                 strAnalInfo.uiAETID = pLOBData->uiAETID;
 //                 strAnalInfo.uiABTID = pLOBData->uiABTID;
 //
-//                 g_pTheSignalCollect->QMsgSnd(enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), &strAnalInfo, sizeof(STR_DETANAL_INFO), GetThreadName());
+//                 g_pTheSignalCollect->QMsgSnd(enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(struct SRxABTData), &strAnalInfo, sizeof(STR_DETANAL_INFO), GetThreadName());
 //             }
 //         }
 //         else {
 //             if (bTrack == false) {
-//                 g_pTheSignalCollect->QMsgSnd(enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(SRxABTData), &m_strDetAnalInfo, sizeof(STR_DETANAL_INFO), GetThreadName());
+//                 g_pTheSignalCollect->QMsgSnd(enTHREAD_REQ_SET_TRACKWINDOWCELL, pABTData, sizeof(struct SRxABTData), &m_strDetAnalInfo, sizeof(STR_DETANAL_INFO), GetThreadName());
 //             }
 //         }
 //     }
@@ -470,7 +536,7 @@ void CEmitterMerge::RequestTrackReCollect()
     //pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData(uiAETID, uiABTID);
 
     if( pSRxABTData != NULL ) {
-        //g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pSRxABTData, (UINT) sizeof(SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
+        //g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SET_TRACKWINDOWCELL, pSRxABTData, (UINT) sizeof(struct SRxABTData), & strAnalInfo, sizeof(STR_ANALINFO) );
 
         //SendLan( enAET_LST_CCU, & strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData );
     }
@@ -478,8 +544,8 @@ void CEmitterMerge::RequestTrackReCollect()
         Log( enNormal, " 위협[%d/%d] 이 이미 삭제되어 추적 채널을 닫도록 요청합니다. !", m_pMsg->x.strCollectInfo.uiAETID, m_pMsg->x.strCollectInfo.uiABTID );
 
         // 해당 추적 채널을 닫도록 요청합니다.
-        //g_pTheSignalCollect->QMsgSnd(enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pSRxABTData, (UINT)sizeof(SRxABTData), &strAnalInfo, sizeof(STR_ANALINFO));
-        //g_pTheSignalCollect->QMsgSnd(enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, &strAnalInfo, sizeof(STR_ANALINFO));
+        //g_pTheSignalCollect->QMsgSnd(enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, pSRxABTData, (UINT)sizeof(struct SRxABTData), &strAnalInfo, sizeof(STR_ANALINFO));
+        //g_pTheSignalCollect->QMsgSnd(enTHREAD_REQ_CLOSE_TRACKWINDOWCELL, &strAnalInfo, sizeof(struct STR_ANALINFO));
 
         //SendLan(enAET_DEL_CCU, &strAnalInfo.uiABTID, sizeof(strAnalInfo.uiABTID), pABTExtData);
     }
@@ -495,28 +561,30 @@ void CEmitterMerge::RequestTrackReCollect()
  * @date      2022-03-10, 20:34
  * @warning
  */
-void CEmitterMerge::RequestScanCollect( SRxLOBData *pLOBData )
+void CEmitterMerge::RequestScanCollect( unsigned int uiAETID, unsigned int uiABTID )
 {
-    unsigned int uiScanStep;
+    unsigned int uiScanStep, uiReqScanPeriod;
     ENUM_SCAN_PROCESS enScanProcess;
 
     enScanProcess = m_pTheEmitterMergeMngr->EnScanProcess();
 
     uiScanStep = m_pTheEmitterMergeMngr->GetABTScanStep();
-    if( ( enScanProcess == enSCAN_Requesting || enScanProcess == enSCAN_Retrying ) && uiScanStep != _spZero ) {
+    if( ( enScanProcess == enSCAN_Requesting || enScanProcess == enSCAN_Retrying ) && uiScanStep != UINT32_MAX ) {
         m_pTheEmitterMergeMngr->EnScanProcess( enSCAN_Collecting );
 
+        uiReqScanPeriod = m_pTheEmitterMergeMngr->GetReqScanPeriod( uiScanStep );
+
         // 신규 스캔 수집 채널시
-        if( pLOBData != NULL ) {
-            m_pstrScanAnalInfo->Set( g_enBoardId, ( unsigned int ) -1, enUnknownCollectBank, pLOBData->uiAETID, pLOBData->uiABTID, m_pTheEmitterMergeMngr->GetABTIndex(), uiScanStep );
+        if( uiAETID != 0 ) {
+            m_pstrScanAnalInfo->Set( ( unsigned int ) -1, enUnknownCollectBank, uiAETID, uiABTID, m_pTheEmitterMergeMngr->GetABTIndex(), uiReqScanPeriod, uiScanStep );
         }
         // 스캔 분석 실패로 재시도 일 때
         else {
-            m_pstrScanAnalInfo->Set( g_enBoardId, ( unsigned int ) -1, enUnknownCollectBank, m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiABTIndex, uiScanStep );
+            m_pstrScanAnalInfo->Set( ( unsigned int ) -1, enUnknownCollectBank, m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiABTIndex, uiReqScanPeriod, uiScanStep, & m_pRecvScanAnalInfo->stScanResult );
         }
 
         // 위협 정보는 해당 쓰레드에서 실행시 해당 방사체/빔 번호를 갖고 와서 스캔 수집을 수행합니다.
-        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SCAN_START, GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
+        g_pTheSignalCollect->QMsgSnd( enTHREAD_REQ_SCAN_START, GetUniMessageData(), sizeof( union UNI_MSG_DATA ), GetThreadName() );
     }
     else if( enScanProcess == enSCAN_CANTProcessing ) {
         Log( enDebug, "위협[%d/%d]에 대해서 스캔 분석 불가 합니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID );
@@ -553,9 +621,7 @@ void CEmitterMerge::RequestScanReCollect()
 void CEmitterMerge::SendNewUpd()
 {
 
-#ifdef _POCKETSONATA_
-    //char *pString;
-
+#if defined(_POCKETSONATA_) || defined(_712_)
     SAETData stAET;
     SRxLOBData *pSRxLOBData;
     SRxABTData *pSRxABTData;
@@ -567,24 +633,102 @@ void CEmitterMerge::SendNewUpd()
     pSRxAETData = m_pTheEmitterMergeMngr->GetAETData();
     pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData();
 
-	if (pSRxABTData != NULL && pSRxAETData != NULL ) {
-		// 랜 메시지 전달한다.
+#ifdef _MSC_VER
+    memset( & stAET, 0, sizeof( stAET ) );
 
+#endif
+
+	// 랜 메시지 전달한다.
 #ifdef _TESTSBC_
 #else
-        memcpy( & stAET.stLOBData, pSRxLOBData, sizeof( SRxLOBData ) );
-        memcpy( & stAET.stABTData, pSRxABTData, sizeof( SRxABTData ) );
-        memcpy( & stAET.stAETData, pSRxAETData, sizeof( SRxAETData ) );
-
-		SendLan( enNUP_THREAT_DATA, & stAET, sizeof(stAET), pABTExtData);
-#endif
-
-#endif
-	}
+    if( pSRxLOBData != NULL ) {
+        memcpy( & stAET.stLOBData, pSRxLOBData, sizeof( struct SRxLOBData ) );
+    }
     else {
         Log( enError, "위협 정보가 잘못 됐습니다 !!" );
     }
 
+    if( pSRxABTData != NULL ) {
+#ifdef _MSC_VER
+        memcpy_s( & stAET.stABTData, sizeof( struct SRxABTData ), pSRxABTData, sizeof( struct SRxABTData ) );
+#else
+        memcpy( & stAET.stABTData, pSRxABTData, sizeof( struct SRxABTData ) );
+#endif
+
+    }
+    else {
+        Log( enError, "위협 정보가 잘못 됐습니다 !!" );
+    }
+
+    if( pSRxAETData != NULL ) {
+#ifdef _MSC_VER
+        memcpy_s( & stAET.stAETData, sizeof( struct SRxAETData ), pSRxAETData, sizeof( struct SRxAETData ) );
+#else
+        memcpy( & stAET.stAETData, pSRxAETData, sizeof( struct SRxAETData ) );
+#endif
+    }
+    else {
+        Log( enError, "위협 정보가 잘못 됐습니다 !!" );
+    }
+
+#ifdef _MSC_VER
+    SwapAETData( & stAET );
+#endif
+	SendLan( enNUP_THREAT_DATA, & stAET, sizeof(stAET), pABTExtData );
+#endif
+
+
+#endif
+
+}
+
+/**
+ * @brief     SwapAETData
+ * @param     SAETData * pstAET
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-25 13:52:56
+ * @warning
+ */
+void CEmitterMerge::SwapAETData( SAETData *pstAET )
+{
+    // LOB 데이터 변환
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.uiPDWID, sizeof( UINT ) * 6 );
+    CCommonUtils::AllSwapData16( & pstAET->stLOBData.tiContactTimems, sizeof( short ) );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.fDOAMean, sizeof( UINT ) * 6 );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.fFreqPatternPeriod, sizeof( UINT ) * 6 );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.fFreqSeq, sizeof( UINT ) * MAX_FREQ_PRI_STEP );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.fPRIPatternPeriod, sizeof( UINT ) * 7 );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.fPRISeq, sizeof( UINT ) * MAX_FREQ_PRI_STEP );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.fPWMean, sizeof( UINT ) * 10 );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.fMeanScanPeriod, sizeof( UINT ) * 1 );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.fMOPMaxFreq, sizeof( UINT ) * 4 );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.uiNumOfCollectedPDW, sizeof( UINT ) * 2 );
+    CCommonUtils::AllSwapData32( & pstAET->stLOBData.uiRadarModeIndex, sizeof( UINT ) * 3 );
+
+    // 빔 데이터 변환
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.uiABTID, sizeof( UINT ) * 2 );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.uiCoLOB, sizeof( UINT ) * 5 );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.fDOAMean, sizeof( UINT ) * 4 );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.fFreqPatternPeriodMean, sizeof( UINT ) * 7 );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.fFreqSeq, sizeof( UINT ) * MAX_FREQ_PRI_STEP );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.fPRIPatternPeriodMean, sizeof( UINT ) * 8 );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.fPRISeq, sizeof( UINT ) * MAX_FREQ_PRI_STEP );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.fPWMean, sizeof( UINT ) * 8 );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.fMeanScanPeriod, sizeof( UINT ) * 3 );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.fMaxIntraMod, sizeof( UINT ) * 2 );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.fLatitude, sizeof( UINT ) * 8 );
+    CCommonUtils::AllSwapData32( & pstAET->stABTData.uiTotaOfPDW, sizeof( UINT ) * 4 );
+
+    // 방사체 데이터 변환
+    CCommonUtils::AllSwapData32( & pstAET->stAETData.uiAETID, sizeof( UINT ) * 3 );
+    CCommonUtils::AllSwapData32( & pstAET->stAETData.uiPinNum, sizeof( UINT ) * 1 );
+    CCommonUtils::AllSwapData32( & pstAET->stAETData.uiRadarModePriority, sizeof( UINT ) * 5 );
+    CCommonUtils::AllSwapData32( & pstAET->stAETData.fDOAMean, sizeof( UINT ) * 4 );
+    CCommonUtils::AllSwapData32( & pstAET->stAETData.fFreqMean, sizeof( UINT ) * 19 );
+    CCommonUtils::AllSwapData32( & pstAET->stAETData.fLatitude, sizeof( UINT ) * 8 );
 
 }
 
@@ -601,19 +745,19 @@ void CEmitterMerge::SendNewUpd()
  * @date      2022-02-27, 23:00
  * @warning
  */
-void CEmitterMerge::SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData )
+void CEmitterMerge::SendLan( unsigned int uiOpcode, SAETData *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData )
 {
     time_t now;
 
     now = time(NULL);
     if( pABTExtData != NULL && ( ( pABTExtData->enBeamEmitterStat == E_ES_NEW || pABTExtData->enBeamEmitterStat == E_ES_REACTIVATED ) || difftime(now, pABTExtData->tiSendLan) > 1.0 || ( pABTExtData->uiOpcode != uiOpcode ) ) ) {
-        g_pTheCCUSocket->SendLan( enNUP_THREAT_DATA, pData, uiDataSize );
+        g_pTheCCUSocket->SendLan( enNUP_THREAT_DATA, pData, uiDataSize, false );
 
         pABTExtData->uiOpcode = uiOpcode;
         pABTExtData->tiSendLan = time( NULL );
     }
     else {
-        Log( enNormal, "위협 결과[%d/%d] 랜 송신을 무시 합니다." , m_pLOBData->uiAETID, m_pLOBData->uiABTID );
+        //Log( enNormal, "위협 결과[%d/%d/%d] 랜 송신을 무시 합니다." , m_pLOBData->uiAETID, m_pLOBData->uiABTID, m_pLOBData->uiLOBID );
     }
 
 }
@@ -648,22 +792,38 @@ void CEmitterMerge::ReloadLibrary()
 
     char szSrcFilename[100], szDstFilename[100];
 
-    Log( enDebug, "CEDEOB 라이브러리 변경됨을 수신했습니다." );
+    Log( enNormal, "CEDEOB 라이브러리 변경됨을 수신했습니다." );
 
     sprintf( szSrcFilename, "%s/%s", SHARED_DATA_DIRECTORY, CEDEOB_SQLITE_FILENAME );
-    sprintf( szDstFilename, "%s%s/%s", RAMDRV, RAMDRV_NO, CEDEOB_SQLITE_FILENAME );
+#ifdef __VXWORKS__
+    sprintf( szDstFilename, "%s%s/%s/%s", RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
 
+#else
+    sprintf( szDstFilename, "%s/%s", SHARED_DATA_DIRECTORY, CEDEOB_TEST_SQLITE_FILENAME );
+
+#endif
+
+    Log( enNormal, "원본[%s] 위협 라이브러리를 경로[%s]에 백업 합니다.", szSrcFilename, szDstFilename );
     iRet = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
 
     if( iRet <= 0 ) {
         Log( enError, "원본[%s] 위협 라이브러리를 목적지[%s]로 복사하지 못했습니다." , szSrcFilename, szDstFilename );
-        g_pTheCCUSocket->SendLan( enSYSERROR, "SBC 시간을 설정하지 못했습니다 !" );
+        g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, (const char *) "위협 라이브러리를 복사하지 못했습니다 !" );
     }
     else {
+#ifdef __VXWORKS__
+        sprintf( szDstFilename, "%s/%s/%s", ATADRV, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
+        Log( enNormal, "원본[%s] 위협 라이브러리를 경로[%s]에 백업 합니다.", szSrcFilename, szDstFilename );
+
+        iRet = CCommonUtils::CopySrcToDstFile( szSrcFilename, szDstFilename, 1, 0077 );
+
+#endif
+
         m_pTheEmitterMergeMngr->UpdateCEDEOBLibrary();
         m_pTheEmitterMergeMngr->LoadCEDEOBLibrary();
 
-        //g_pTheCCUSocket->SendLan( enRES_RELOAD_LIBRARY,
+        iRet = TRUE;
+        g_pTheCCUSocket->SendLan( enRES_RELOAD_LIBRARY, & iRet, sizeof(int) );
     }
 
 }
@@ -683,7 +843,7 @@ void CEmitterMerge::UpdateScanResult()
     SRxLOBHeader strLOBHeader;
 
     if( m_pLOBData != NULL ) {
-        Log( enDebug, "빔 번호[%d] 에 대해서 스캔 결과[%d/%.4f] 변경합니다.", m_pLOBData->uiABTID, m_pLOBData->ucScanType, m_pLOBData->fScanPeriod );
+        Log( enNormal, "빔 번호[%d] 에 대해서 스캔 결과[%d/%.4f ms] 변경합니다.", m_pLOBData->uiABTID, m_pLOBData->vScanType, m_pLOBData->fMeanScanPeriod );
 
         // 1. LOB 헤더 데이터를 초기 설정합니다.
         strLOBHeader.uiNumOfLOB = 1;
@@ -692,10 +852,21 @@ void CEmitterMerge::UpdateScanResult()
         m_pTheEmitterMergeMngr->ManageThreat( &strLOBHeader, m_pLOBData, &m_sLOBOtherInfo, true );
 
         // 3. 스캔 상태를 업데이트 합니다.
-        m_pTheEmitterMergeMngr->ManageScan( m_pRecvScanAnalInfo->enCollectBank, m_pLOBData, &m_sLOBOtherInfo );
+        m_pTheEmitterMergeMngr->ManageScan( m_pRecvScanAnalInfo->enCollectBank, & m_pRecvScanAnalInfo->stScanResult, m_pLOBData );
 
         // 4. 빔 정보를 제어조종장치로 전송한다.
-        SendNewUpd();
+        if( m_pTheEmitterMergeMngr->IsUserReqScan() == true ) {
+            //TODO: 스캔 분석을 반영하여 신호 식별을 수행해야 합니다.
+            //date 	2023-08-22 10:15:21
+            //
+            // IdentifyScan();
+
+            SendUserReqScan();
+
+        }
+        else {
+            SendNewUpd();
+        }
     }
     else {
         Log( enError, "m_pLOBData 값이 NULL 입니다." );
@@ -718,13 +889,20 @@ void CEmitterMerge::UpdateScanFail()
     m_pTheEmitterMergeMngr->ABTPreSetting( m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID );
 
     // 2. 스캔 상태를 업데이트 합니다.
-    m_pTheEmitterMergeMngr->ManageScan( m_pRecvScanAnalInfo->enCollectBank, m_pLOBData, &m_sLOBOtherInfo );
+    m_pTheEmitterMergeMngr->ManageScan( m_pRecvScanAnalInfo->enCollectBank, & m_pRecvScanAnalInfo->stScanResult, m_pLOBData );
 
     // 3. 스캔 상태에 따라 스캔 수집 요청을 합니다.
-    RequestScanCollect( m_pLOBData );
+    RequestScanCollect( 0, 0 );
 
-    // 5. 빔 정보를 제어조종장치로 전송한다.
-    // SendNewUpd();
+    // 4. 빔 정보를 제어조종장치로 전송한다.
+    if( m_pTheEmitterMergeMngr->EnScanProcess() == enSCAN_Stopping ) {
+        m_pTheEmitterMergeMngr->UpdateABTScanResult();
+
+        if( m_pTheEmitterMergeMngr->IsUserReqScan() == true ) {
+            SendUserReqScan();
+        }
+
+    }
 
 }
 
@@ -741,9 +919,114 @@ void CEmitterMerge::UpdateScanError()
 {
     m_pTheEmitterMergeMngr->ABTPreSetting( m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID );
 
-    m_pTheEmitterMergeMngr->ManageScan( m_pRecvScanAnalInfo->enCollectBank, m_pLOBData, &m_sLOBOtherInfo );
+    m_pTheEmitterMergeMngr->ManageScan( m_pRecvScanAnalInfo->enCollectBank, & m_pRecvScanAnalInfo->stScanResult, m_pLOBData );
 
 }
+
+/**
+ * @brief     UserRequestScan
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-20 17:48:41
+ * @warning
+ */
+void CEmitterMerge::UserRequestScan()
+{
+    char buffer[200];
+    ENUM_AET_USER_SCAN_STAT enUserScanStat;
+
+    BOOL bRet;
+
+#ifdef _MSC_VER
+    CCommonUtils::AllSwapData32( & m_pMsg->x.stReqScan, sizeof( struct SELREQSCAN ) );
+
+#endif
+
+    m_pTheEmitterMergeMngr->ABTPreSetting( m_pMsg->x.stReqScan.uiAET, m_pMsg->x.stReqScan.uiABT );
+
+    bRet = m_pTheEmitterMergeMngr->IsAliveABT();
+    if( bRet == FALSE ) {
+        sprintf( buffer, "사용자 스캔 분석 요구할 방사체/빔[%d/%d]이 이미 삭제되었거나 아직 생성되지 않았습니다 !", m_pMsg->x.stReqScan.uiAET, m_pMsg->x.stReqScan.uiABT );
+        g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
+        enUserScanStat = ENUM_AET_USER_SCAN_STAT::E_AET_USER_SCAN_CANT;
+    }
+    else {
+        if( m_pTheEmitterMergeMngr->IsUserReqScan() == false ) {
+            m_pTheEmitterMergeMngr->ManageScan( enUnknownCollectBank, NULL, NULL );
+            RequestScanCollect( m_pMsg->x.stReqScan.uiAET, m_pMsg->x.stReqScan.uiABT );
+            enUserScanStat = ENUM_AET_USER_SCAN_STAT::E_AET_USER_SCAN_PROCESSING;
+        }
+        else {
+            int iGetEstimatedTimeScanAnal = m_pTheEmitterMergeMngr->GetEstimatedTimeScanAnal( m_pMsg->x.stReqScan.uiAET, m_pMsg->x.stReqScan.uiABT );
+
+            sprintf( buffer, "사용자 스캔 분석 요구할 방사체/빔[%d/%d]이 이미 중복 요청 되어 이미 분석 중이고 최대 [%d]초 소요 예상 됩니다 !", m_pMsg->x.stReqScan.uiAET, m_pMsg->x.stReqScan.uiABT, iGetEstimatedTimeScanAnal );
+            g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
+            enUserScanStat = ENUM_AET_USER_SCAN_STAT::E_AET_USER_SCAN_ALREADYPROCESSING;
+        }
+
+    }
+
+    g_pTheCCUSocket->SendLan( enRES_USERSCAN, & enUserScanStat, sizeof( ENUM_AET_USER_SCAN_STAT ) );
+
+}
+
+/**
+ * @brief     SendUserReqScan
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-20 19:11:54
+ * @warning
+ */
+void CEmitterMerge::SendUserReqScan()
+{
+    SELUSERSCANRESULT stUserScanResult;
+
+    SRxABTData *pABTData;
+
+    // 1. 사용자 리셋 플레그 클리어 합니다.
+    m_pTheEmitterMergeMngr->ResetUserReqScan();
+
+    // 2. 스캔 결과 메시지를 랜으로 전송 합니다.
+    stUserScanResult.uiAET = m_pRecvScanAnalInfo->uiAETID;
+    stUserScanResult.uiABT = m_pRecvScanAnalInfo->uiABTID;
+    stUserScanResult.enScanType = m_pRecvScanAnalInfo->stScanResult.enScanType;
+
+    pABTData = m_pTheEmitterMergeMngr->GetABTData();
+    stUserScanResult.enScanStat = pABTData->vScanStat;
+
+    stUserScanResult.fScanPeriod = FDIV( m_pRecvScanAnalInfo->stScanResult.uiScanPeriod, _spOneMilli );
+
+#ifdef _MSC_VER
+    SwapScanResult( & stUserScanResult );
+
+#endif
+
+    g_pTheCCUSocket->SendLan( enRES_SCAN_DATA, & stUserScanResult, sizeof( SELUSERSCANRESULT ), false );
+
+}
+
+/**
+ * @brief     SwapScanResult
+ * @param     SELUSERSCANRESULT * pstUserScanResult
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-21 09:51:35
+ * @warning
+ */
+void CEmitterMerge::SwapScanResult( SELUSERSCANRESULT *pstUserScanResult )
+{
+
+    CCommonUtils::AllSwapData32( & pstUserScanResult->uiAET, sizeof( UINT ) * 2 );
+    CCommonUtils::AllSwapData32( & pstUserScanResult->fScanPeriod, sizeof( float ) );
+
+}
+
 #endif
 
 /**
@@ -759,7 +1042,7 @@ void CEmitterMerge::ManageDatabase()
 {
     if( g_pTheTaskMngr->GetMode() == enOP_Mode ) {
         if( _uiCoManageDatabase % 200 ) {
-            m_pTheEmitterMergeMngr->ManageDatabase();
+            m_pTheEmitterMergeMngr->CleanupDatabase();
         }
     }
 

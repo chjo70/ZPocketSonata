@@ -57,7 +57,7 @@ void Log( int nType, const char *fmt, ... )
         va_end( args );
 
         if( stbLocal == true ) {
-            strPath.Format( "%s\\%s", ( LPSTR ) ( LPCSTR ) GetFilePath(), LOG_DIRECTORY );
+            strPath.Format( "%s\\%s", ( LPSTR ) ( LPCSTR ) GetFilePath(), LOG_FOLDER );
         }
         else {
             strPath.Format( "%s\\%s", GLOBAL_LOG_DIRECTORY, LOG_SUBDIRECTORY );
@@ -347,7 +347,7 @@ CString GetIpAddress()
 bool _TRACE(char *format, ...)
 {
 #ifdef _DEBUG
-    char buffer[1000];
+    char buffer[2000];
     va_list argptr;
 
     va_start(argptr, format);

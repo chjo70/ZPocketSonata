@@ -49,13 +49,17 @@ namespace XBAND {
 #endif
 }
 
+
+#pragma pack( push, 1 )
+
+
 #ifndef _SRxLOBHeader
 #define _SRxLOBHeader
-typedef struct 
+typedef struct
 {
 	int iNumOfLOB;
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned int uiEWRecProc;   // EW수신처리판 번호
 #endif
 
@@ -85,135 +89,317 @@ struct SRxABTHeader
 };
 #endif
 
+#ifndef _SRxAETHeader
+#define _SRxAETHeader
+struct SRxAETHeader {
+    int iNumOfAET;
+
+};
+#endif
+
 
 // CED 레이더모드의 문자열 길이 정의 호출
 // 아래 파일은 ../../files/Anal/SigAnal/_CED_Define.h 에 있는 파일을 복사해야 합니다.
 
-#include "_CED_Define.h"
+
+#ifdef _USRDLL
+#include "../../files/Anal/SigAnal/_CED_Define.h"
+
+#else
+#include "./_CED_Define.h"
+
+#endif
 
 
 
-
-
-
+// 빔 데이터 구조체 입니다.
 #ifndef _SRxABTData
 #define _SRxABTData
-struct SRxABTData { // 레이더 분석
-	unsigned int uiABTID;
-	unsigned int uiAETID;
+struct SRxABTData {
+    unsigned int uiABTID;
+    unsigned int uiAETID;
 
-	int vSignalType;
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned char vSignalType;
+#else
+    unsigned int vSignalType;
+#endif
 
-	unsigned int uiCoLOB;
+    unsigned int uiCoLOB;
 
-	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
-	time_t tiLastSeenTime;
+    unsigned int tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+    unsigned int tiLastSeenTime;
 
-	int uiRadarModePriority;
-	int uiRadarPriority;
+    unsigned int uiRadarModePriority;
+    unsigned int uiRadarPriority;
 
 #if defined(_ELINT_)
-	int iPolarization;
+    int iPolarization;
 
 #endif
 
-	float fDOAMean;                                 // [0.1도]
-	float fDOAMax;
-	float fDOAMin;
-	float fDOADeviation;				// [0.1도]
+    float fDOAMean;                                 // [0.1도]
+    float fDOAMax;
+    float fDOAMin;
+    float fDOADeviation;				// [0.1도]
 
-	int vFreqType;
-	int vFreqPatternType;
-	float fFreqPatternPeriodMean;	  // [us]
-	float fFreqPatternPeriodMin;	  // [us]
-	float fFreqPatternPeriodMax;	  // [us]
-	float fFreqMean;										// [10KHz]
-	float fFreqMax;
-	float fFreqMin;
-	float fFreqDeviation;
-	int vFreqPositionCount;
-	int vFreqElementCount;
-	float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
-
-	int vPRIType;
-	int vPRIPatternType;
-	float fPRIPatternPeriodMean;							// [us]
-	float fPRIPatternPeriodMin;							// [us]
-	float fPRIPatternPeriodMax;							// [us]
-	float fPRIMean;											// [1ns]
-	float fPRIMax;
-	float fPRIMin;
-	float fPRIDeviation;			// [1ns]
-	float fPRIJitterRatio;							// [%]
-	int vPRIPositionCount;
-	int vPRIElementCount;
-	float fPRISeq[MAX_FREQ_PRI_STEP];
-
-	float fPWMean;											// 1ns
-	float fPWMax;
-	float fPWMin;
-	float fPWDeviation;
-
-	float fPAMean;											// 기존대로
-	float fPAMax;
-	float fPAMin;
-	float fPADeviation;
-
-#if defined(_POCKETSONATA_) || defined(_ELINT_)
-	int vScanType;
-	float fMeanScanPeriod;			// [usec]
-	float fMaxScanPeriod;			// [usec]
-	float fMinScanPeriod;			// [usec]
-
-	int bHasIntraMod;
-	float fMaxIntraMod;
-	float fMinIntraMod;
+#if defined(_POCKETSONATA_) || defined(_712_)
+    ENUM_AET_FRQ_TYPE vFreqType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE vFreqPatternType;
+#else
+    int vFreqType;
+    int vFreqPatternType;
 #endif
 
-	int ucPEValid;
-	float fLatitude;							// [deg]
-	float fLongitude;							// [deg]
-	float fAltitude;
-	float fCEP;										// [m]
-	float fMajorAxis;							// [m]
-	float fMinorAxis;							// [m]
-	float fTheta;									// [0.1도]
-	float fDistanceErrorOfThreat;	// [m]
+    float fFreqPatternPeriodMean;	  // [us]
+    float fFreqPatternPeriodMin;	  // [us]
+    float fFreqPatternPeriodMax;	  // [us]
+    float fFreqMean;										// [10KHz]
+    float fFreqMax;
+    float fFreqMin;
+    float fFreqDeviation;
 
-	int bValidity;
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned char vFreqPositionCount;
+    unsigned char vFreqElementCount;
+#else
+    int vFreqPositionCount;
+    int vFreqElementCount;
+#endif
 
-	unsigned int uiTotalPDWOfAnalysis;
+    float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
-	int uiRadarModeIndex;
-	int uiThreatIndex;
+#if defined(_POCKETSONATA_) || defined(_712_)
+    ENUM_AET_PRI_TYPE vPRIType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE vPRIPatternType;
+#else
+    int vPRIType;
+    int vPRIPatternType;
+#endif
+
+    float fPRIPatternPeriodMean;							// [us]
+    float fPRIPatternPeriodMin;							// [us]
+    float fPRIPatternPeriodMax;							// [us]
+    float fPRIMean;											// [1ns]
+    float fPRIMax;
+    float fPRIMin;
+    float fPRIDeviation;			// [1ns]
+    float fPRIJitterRatio;							// [%]
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned char vPRIPositionCount;
+    unsigned char vPRIElementCount;
+#else
+    int vPRIPositionCount;
+    int vPRIElementCount;
+#endif
+
+    float fPRISeq[MAX_FREQ_PRI_STEP];
+
+    float fPWMean;
+    float fPWMax;
+    float fPWMin;
+    float fPWDeviation;
+
+    float fPAMean;
+    float fPAMax;
+    float fPAMin;
+    float fPADeviation;
+
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_701_) || defined(_SONATA_) || defined(_712_)
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    ENUM_AET_SCAN_TYPE vScanType;
+#else
+    int vScanType;
+#endif
+
+    float fMeanScanPeriod;
+    float fMaxScanPeriod;
+    float fMinScanPeriod;
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    ENUM_AET_SCAN_STAT vScanStat;
+#endif
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    bool bHasIntraMod;
+#else
+    bool iHasIntraMod;
+#endif
+
+    float fMaxIntraMod;
+    float fMinIntraMod;
+#endif
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned char ucPEValid;
+#else
+    int iPEValid;
+#endif
+
+    float fLatitude;							// [deg]
+    float fLongitude;							// [deg]
+    float fAltitude;
+    float fCEP;										// [m]
+    float fMajorAxis;							// [m]
+    float fMinorAxis;							// [m]
+    float fTheta;									// [0.1도]
+    float fDistanceErrorOfThreat;	// [m]
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    bool bValidity;
+#else
+    int bValidity;
+#endif
+
+    unsigned int uiTotaOfPDW;
+
+    unsigned int uiRadarIndex;                  // 레이더 인덱스 : ELNOT
+
+    unsigned int uiRadarModeIndex;              // 레이더모드 인덱스
+    unsigned int uiThreatIndex;                 // 위협 인덱스
 
 #if defined(_ELINT_)
-	int iIsManualInput;
+    int iIsManualInput;
 
-	time_t tiFinalAlarmTime;
+    unsigned int tiFinalAlarmTime;
 #endif
 
-	int iStat;
+#if defined(_POCKETSONATA_) || defined(_712_)
+#else
+    int iStat;
+#endif
 
 #if defined(_XBAND_) || defined(_ELINT_)
-	char szRadarName[_MAX_RADARNAME_SIZE];
+    char szRadarName[_MAX_RADARNAME_SIZE];
+
 #endif
 
-	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
-	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
-	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
 
 #if defined(_XBAND_) || defined(_ELINT_)
-	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
-	char szPlatform[_MAX_PLATFORM_NAME_SIZE];
+    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+    char szPlatform[_MAX_PLATFORM_NAME_SIZE];
+#endif
+
+    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+    char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
+
+};
 #endif
 
 
-	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
-	char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
-}  ;
+// 방사체 구조체 입니다.
+#ifndef _STR_AETDATA_STRUCT
+#define _STR_AETDATA_STRUCT
+struct SRxAETData {
+    unsigned int uiAETID;
+
+    unsigned int uiCoABT;
+    unsigned int uiCoLOB;
+
+    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+
+    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+    char szRadarName[_MAX_RADARNAME_SIZE];
+
+#if defined(_XBAND_) || defined(_ELINT_)
+    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+#endif
+
+    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+    char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned char vCategory;
+#else
+    int vCategory;
+#endif
+
+    unsigned int uiPinNum;
+
+#if defined(_XBAND_) || defined(_ELINT_)
+    char szThreatFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+#endif
+
+    unsigned int uiRadarModePriority;
+    unsigned int uiRadarPriority;
+    unsigned int uiThreatPriority;
+
+    unsigned int tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
+    unsigned int tiLastSeenTime;
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned char ucValidity;
+#else
+    int ucValidity;
+#endif
+
+#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_) || defined(_SONATA_) || defined(_712_)
+    float fDOAMean;                                 // [0.1도]
+    float fDOAMax;
+    float fDOAMin;
+    float fDOADeviation;				// [0.1도]
+#endif
+
+    float fFreqMean;
+    float fFreqMax;
+    float fFreqMin;
+    float fFreqDeviation;
+
+    float fPRIMean;											// [1ns]
+    float fPRIMax;
+    float fPRIMin;
+    float fPRIDeviation;// [%]
+
+    float fPWMean;											// 1ns
+    float fPWMax;
+    float fPWMin;
+    float fPWDeviation;
+
+    float fPAMean;											// 기존대로
+    float fPAMax;
+    float fPAMin;
+    float fPADeviation;
+
+    unsigned int uiRadarIndex;
+    unsigned int uiRadarModeIndex;
+    unsigned int uiThreatIndex;
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned char ucPEValid;
+#else
+    int ucPEValid;
+#endif
+
+    float fLatitude;							// [deg]
+    float fLongitude;							// [deg]
+    float fAltidude;							// [deg]
+    float fCEP;										// [m]
+    float fMajorAxis;							// [m]
+    float fMinorAxis;							// [m]
+    float fTheta;									// [0.1도]
+    float fDistanceErrorOfThreat;	// [m]
+
+    char szIDInfo[_MAX_SIZE_OF_IDINFO];
+
+#if defined(_XBAND_) || defined(_ELINT_)
+    unsigned int tiFinalAlarmTime;
+
+#endif
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+#else
+    int iStat;
+#endif
+
+};
 #endif
 
 #define MAX_ABT_DATA			(100)
@@ -221,109 +407,36 @@ struct SRxABTData { // 레이더 분석
 #ifndef _STR_ABTDATA
 #define _STR_ABTDATA
 typedef struct {
-	SRxABTHeader stABTHeader;
+    SRxABTHeader stABTHeader;
 
-	SRxABTData stABTData[MAX_ABT_DATA];
+    SRxABTData stABTData[MAX_ABT_DATA];
 
-} STR_ABTDATA ;
+} STR_ABTDATA;
 #endif
 
+#define MAX_AET_DATA			(MAX_ABT_DATA)
 
 
-#ifndef _STR_AETDATA_STRUCT
-#define _STR_AETDATA_STRUCT
-struct SRxAETData {
-	unsigned int uiAETID;
-
-	unsigned int uiCoABT;
-	unsigned int uiCoLOB;
-
-	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
-
-	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
-	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-
-#if defined(_XBAND_) || defined(_ELINT_)
-	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
-#endif
-
-	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
-	char szPlaceNameKor[_MAX_SIZE_OF_KOREASITENAME_];
-
-	int vPlatformType;
-	int uiPinNum;
-
-#if defined(_XBAND_) || defined(_ELINT_)
-	char szThreatFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
-#endif
-
-	int uiRadarModePriority;
-	int uiRadarPriority;
-	int uiThreatPriority;
-
-	time_t tiFirstSeenTime;				// 64비트 time_t 로 선언해야 함.
-	time_t tiLastSeenTime;
-
-	int ucValidity;
-
-#if defined(_POCKETSONATA_) || defined(_ELINT_) || defined(_XBAND_)
-	float fDOAMean;                                 // [0.1도]
-	float fDOAMax;
-	float fDOAMin;
-	float fDOADeviation;				// [0.1도]
-#endif
-
-	float fFreqMean;
-	float fFreqMax;
-	float fFreqMin;
-	float fFreqDeviation;
-
-	float fPRIMean;											// [1ns]
-	float fPRIMax;
-	float fPRIMin;
-	float fPRIDeviation;// [%]
-
-	float fPWMean;											// 1ns
-	float fPWMax;
-	float fPWMin;
-	float fPWDeviation;
-
-	float fPAMean;											// 기존대로
-	float fPAMax;
-	float fPAMin;
-	float fPADeviation;
-
-	int uiRadarIndex;
-
-	int uiRadarModeIndex;
-	int uiThreatIndex;
-
-	int ucPEValid;
-	float fLatitude;							// [deg]
-	float fLongitude;							// [deg]
-	float fAltidude;							// [deg]
-	float fCEP;										// [m]
-	float fMajorAxis;							// [m]
-	float fMinorAxis;							// [m]
-	float fTheta;									// [0.1도]
-	float fDistanceErrorOfThreat;	// [m]
-
-	char szIDInfo[_MAX_SIZE_OF_IDINFO];
-
-#if defined(_XBAND_) || defined(_ELINT_)
-	__time32_t tiFinalAlarmTime;
-
-#endif
-
-	int iStat;
-    
+#ifndef _SRxAETHeader
+#define _SRxAETHeader
+struct SRxAETHeader {
+    int iNumOfAET;
 
 };
 #endif
 
+#ifndef _STR_AETDATA
+#define _STR_AETDATA
+typedef struct {
+    SRxAETHeader stAETHeader;
+
+    SRxAETData stAETData[MAX_AET_DATA];
+
+} STR_AETDATA;
+#endif
 
 
+#pragma pack( pop )
 
 //////////////////////////////////////////////////////////////////////////
 // 실행 방법
@@ -341,7 +454,7 @@ struct SRxAETData {
 
 STR_LOBDATA stLOBData;
 
-typedef struct 
+typedef struct
 {
 	int iNumOfLOB;													<---- LOB 개수, 최대 100개 까지이다.
 } SRxLOBHeader;
@@ -355,7 +468,7 @@ typedef struct {
 RadarAnlAlgotirhm::RadarAnlAlgotirhm::Start( & stLOBData );
 
 		4. 분석 결과는 아래 함수를 호출하여 LOB 개수와 데이터를 얻는다.
-		
+
 		STR_LOBDATA stResLOBData;
 		STR_ABTDATA stResABTData;
 
@@ -381,10 +494,10 @@ RadarAnlAlgotirhm::RadarAnlAlgotirhm::Start( & stLOBData );
 
 namespace RadarAnlAlgotirhm
 {
-	
+
 	class RadarAnlAlgotirhm
 	{
-	public: 
+	public:
         // 운용 소프트웨어 실행시 위협 병합 및 식별 라이브러리를 초기화하기 위해서 아래 함수를 호출해야 합니다.
 		static MATHFUNCSDLL_API void Init( HWND hWnd=0, bool bDBThread=false, bool bLocal=false );
 
@@ -401,21 +514,27 @@ namespace RadarAnlAlgotirhm
 		static MATHFUNCSDLL_API void UpdateCEDEOBLibrary();
 
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
         // 운용 소프트웨어에서 입력한 LOB 데이터에 대한 결과 정보를 얻는다.
         static MATHFUNCSDLL_API bool GetResult( std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxABTData> *pVecABTData, std::vector<SRxAETData> *pVecAETData );
 
 		static MATHFUNCSDLL_API bool GetLOBData( STR_LOBDATA *pLOBData );
 		static MATHFUNCSDLL_API bool GetABTData( STR_ABTDATA *pABTData );
+        static MATHFUNCSDLL_API bool GetAETData( STR_AETDATA *pAETData );
 
         static MATHFUNCSDLL_API unsigned int GetOpInitID();
+
+        static MATHFUNCSDLL_API std::vector<SRxLOBData> *GetLOBData();
+        static MATHFUNCSDLL_API std::vector<SRxABTData> *GetABTData();
+        static MATHFUNCSDLL_API std::vector<SRxAETData> *GetAETData();
 #else
 		static MATHFUNCSDLL_API bool GetLOBData( STR_LOBDATA *pLOBData );
 		static MATHFUNCSDLL_API bool GetABTData( STR_ABTDATA *pABTData );
+        static MATHFUNCSDLL_API bool GetAETData( STR_AETDATA *pAETData );
 
         static MATHFUNCSDLL_API unsigned int GetOpInitID();
 
-#endif        
+#endif
 
 #pragma data_seg( ".ioshare" )
         // static CLog *g_pTheLog;

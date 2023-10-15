@@ -18,7 +18,7 @@
 
 /*
  * 16 Sep 03 -- added option to use memcpy() instead of strncpy() in the
- * ascToUni and uniToAsc functions. 
+ * ascToUni and uniToAsc functions.
  */
 #define kUseMemcopy
 
@@ -36,7 +36,7 @@ typedef struct {
 	char_t	*s;							/* Pointer to buffer */
 	int		size;						/* Current buffer size */
 	int		max;						/* Maximum buffer size */
-	int		count;						/* Buffer count */
+	size_t		count;						/* Buffer count */
 	int		flags;						/* Allocation flags */
 } strbuf_t;
 
@@ -56,17 +56,18 @@ enum flag {
 
 /************************** Forward Declarations ******************************/
 
-static int 	dsnprintf(char_t **s, int size, char_t *fmt, va_list arg,
+static size_t 	dsnprintf(char_t **s, size_t size, char_t *fmt, va_list arg,
 				int msize);
-#ifndef WIN
+#if defined(WIN) || defined(__VXWORKS__)
+#else
 static int	strnlen(char_t *s, unsigned int n);
 #endif
 
 static void	put_char(strbuf_t *buf, char_t c);
-static void	put_string(strbuf_t *buf, char_t *s, int len,
+static void	put_string(strbuf_t *buf, char_t *s, size_t len,
 				int width, int prec, enum flag f);
 static void	put_ulong(strbuf_t *buf, unsigned long int value, int base,
-				int upper, char_t *prefix, int width, int prec, enum flag f);
+				int upper, char_t *prefix, size_t width, int prec, enum flag f);
 
 /************************************ Code ************************************/
 /*
@@ -106,14 +107,14 @@ char_t *basename(char_t *name)
 char_t *dirname(char_t *buf, char_t *name, int bufsize)
 {
 	char_t *cp;
-	int		len;
+	size_t		len;
 
 	a_assert(name);
 	a_assert(buf);
 	a_assert(bufsize > 0);
 
 #if (defined (WIN) || defined (NW))
-	if ((cp = gstrrchr(name, '/')) == NULL && 
+	if ((cp = gstrrchr(name, '/')) == NULL &&
 		(cp = gstrrchr(name, '\\')) == NULL)
 #else
 	if ((cp = gstrrchr(name, '/')) == NULL)
@@ -147,7 +148,7 @@ char_t *dirname2( char_t *path )
 {
 	char_t *newpath;
 	char_t *slash;
-	int length;           /* Length of result, not including NUL.  */
+	size_t length;           /* Length of result, not including NUL.  */
 
 	slash = gstrrchr (path, '/');
 
@@ -180,10 +181,10 @@ char_t *dirname2( char_t *path )
  *	point, like %e, %f, %g...
  */
 
-int fmtAlloc(char_t **s, int n, char_t *fmt, ...)
+size_t fmtAlloc(char_t **s, size_t n, char_t *fmt, ...)
 {
 	va_list	ap;
-	int		result;
+	size_t		result;
 
 	a_assert(s);
 	a_assert(fmt);
@@ -200,10 +201,10 @@ int fmtAlloc(char_t **s, int n, char_t *fmt, ...)
  *	Support a static buffer version for small buffers only!
  */
 
-int fmtStatic(char_t *s, int n, char_t *fmt, ...)
+size_t fmtStatic(char_t *s, int n, char_t *fmt, ...)
 {
 	va_list	ap;
-	int		result;
+	size_t		result;
 
 	a_assert(s);
 	a_assert(fmt);
@@ -224,10 +225,10 @@ int fmtStatic(char_t *s, int n, char_t *fmt, ...)
  *	reallocing if required.
  */
 
-int fmtRealloc(char_t **s, int n, int msize, char_t *fmt, ...)
+size_t fmtRealloc(char_t **s, int n, int msize, char_t *fmt, ...)
 {
 	va_list	ap;
-	int		result;
+	size_t		result;
 
 	a_assert(s);
 	a_assert(fmt);
@@ -246,7 +247,7 @@ int fmtRealloc(char_t **s, int n, int msize, char_t *fmt, ...)
  *	A vsprintf replacement.
  */
 
-int fmtValloc(char_t **s, int n, char_t *fmt, va_list arg)
+size_t fmtValloc(char_t **s, int n, char_t *fmt, va_list arg)
 {
 	a_assert(s);
 	a_assert(fmt);
@@ -265,7 +266,7 @@ int fmtValloc(char_t **s, int n, char_t *fmt, va_list arg)
  *	the first call, msize can be set to -1.
  */
 
-static int dsnprintf(char_t **s, int size, char_t *fmt, va_list arg, int msize)
+static size_t dsnprintf(char_t **s, size_t size, char_t *fmt, va_list arg, int msize)
 {
 	strbuf_t	buf;
 	char_t		c;
@@ -297,16 +298,16 @@ static int dsnprintf(char_t **s, int size, char_t *fmt, va_list arg, int msize)
 			int width = 0;
 			int prec = -1;
 			for ( ; c != '\0'; c = *fmt++) {
-				if (c == '-') { 
-					f |= flag_minus; 
-				} else if (c == '+') { 
-					f |= flag_plus; 
-				} else if (c == ' ') { 
-					f |= flag_space; 
-				} else if (c == '#') { 
-					f |= flag_hash; 
-				} else if (c == '0') { 
-					f |= flag_zero; 
+				if (c == '-') {
+					f |= flag_minus;
+				} else if (c == '+') {
+					f |= flag_plus;
+				} else if (c == ' ') {
+					f |= flag_space;
+				} else if (c == '#') {
+					f |= flag_hash;
+				} else if (c == '0') {
+					f |= flag_zero;
 				} else {
 					break;
 				}
@@ -379,10 +380,10 @@ static int dsnprintf(char_t **s, int size, char_t *fmt, va_list arg, int msize)
 				} else {
 					if (f & flag_hash && value != 0) {
 						if (c == 'x') {
-							put_ulong(&buf, value, 16, 0, T("0x"), width, 
+							put_ulong(&buf, value, 16, 0, T("0x"), width,
 								prec, f);
 						} else {
-							put_ulong(&buf, value, 16, 1, T("0X"), width, 
+							put_ulong(&buf, value, 16, 1, T("0X"), width,
 								prec, f);
 						}
 					} else {
@@ -457,14 +458,19 @@ static int dsnprintf(char_t **s, int size, char_t *fmt, va_list arg, int msize)
 /*
  *	Return the length of a string limited by a given length
  */
-#ifndef WIN
-static int strnlen(char_t *s, unsigned int n)
+#if defined(__VXWORKS__)
+#if defined(__LP64__)
+#else
+static int strnlen( char_t *s, unsigned int n )
 {
-	unsigned int 	len;
+    unsigned int 	len;
 
-	len = gstrlen(s);
-	return min(len, n);
+    len = gstrlen( s );
+    return min( len, n );
 }
+#endif
+#else
+
 #endif
 
 /******************************************************************************/
@@ -474,7 +480,7 @@ static int strnlen(char_t *s, unsigned int n)
 
 static void put_char(strbuf_t *buf, char_t c)
 {
-	if (buf->count >= (buf->size - 1)) {
+	if ( (int) buf->count >= ( int ) (buf->size - 1)) {
 		if (! (buf->flags & STR_REALLOC)) {
 			return;
 		}
@@ -503,27 +509,27 @@ static void put_char(strbuf_t *buf, char_t c)
  *	Add a string to a string buffer
  */
 
-static void put_string(strbuf_t *buf, char_t *s, int len, int width,
+static void put_string(strbuf_t *buf, char_t *s, size_t len, int width,
 		int prec, enum flag f)
 {
-	int		i;
+	size_t		i;
 
-	if (len < 0) { 
-		len = strnlen(s, prec >= 0 ? prec : ULONG_MAX); 
-	} else if (prec >= 0 && prec < len) { 
-		len = prec; 
+	if ( (int) len < 0) {
+		len = strnlen(s, prec >= 0 ? prec : ULONG_MAX);
+	} else if (prec >= 0 && prec < len) {
+		len = prec;
 	}
 	if (width > len && !(f & flag_minus)) {
-		for (i = len; i < width; ++i) { 
-			put_char(buf, ' '); 
+		for (i = len; i < width; ++i) {
+			put_char(buf, ' ');
 		}
 	}
-	for (i = 0; i < len; ++i) { 
-		put_char(buf, s[i]); 
+	for (i = 0; i < len; ++i) {
+		put_char(buf, s[i]);
 	}
 	if (width > len && f & flag_minus) {
-		for (i = len; i < width; ++i) { 
-			put_char(buf, ' '); 
+		for (i = len; i < width; ++i) {
+			put_char(buf, ' ');
 		}
 	}
 }
@@ -534,38 +540,38 @@ static void put_string(strbuf_t *buf, char_t *s, int len, int width,
  */
 
 static void put_ulong(strbuf_t *buf, unsigned long int value, int base,
-		int upper, char_t *prefix, int width, int prec, enum flag f)
+		int upper, char_t *prefix, size_t width, int prec, enum flag f)
 {
 	unsigned long	x, x2;
 	int				len, zeros, i;
 
 	for (len = 1, x = 1; x < ULONG_MAX / base; ++len, x = x2) {
 		x2 = x * base;
-		if (x2 > value) { 
-			break; 
+		if (x2 > value) {
+			break;
 		}
 	}
 	zeros = (prec > len) ? prec - len : 0;
 	width -= zeros + len;
-	if (prefix != NULL) { 
-		width -= strnlen(prefix, ULONG_MAX); 
+	if (prefix != NULL) {
+		width -= strnlen(prefix, ULONG_MAX);
 	}
 	if (!(f & flag_minus)) {
 		if (f & flag_zero) {
-			for (i = 0; i < width; ++i) { 
-				put_char(buf, '0'); 
+			for (i = 0; i < (int) width; ++i) {
+				put_char(buf, '0');
 			}
 		} else {
-			for (i = 0; i < width; ++i) { 
-				put_char(buf, ' '); 
+			for (i = 0; i < ( int ) width; ++i) {
+				put_char(buf, ' ');
 			}
 		}
 	}
-	if (prefix != NULL) { 
-		put_string(buf, prefix, -1, 0, -1, flag_none); 
+	if (prefix != NULL) {
+		put_string(buf, prefix, -1, 0, -1, flag_none);
 	}
-	for (i = 0; i < zeros; ++i) { 
-		put_char(buf, '0'); 
+	for (i = 0; i < zeros; ++i) {
+		put_char(buf, '0');
 	}
 	for ( ; x > 0; x /= base) {
 		int digit = (value / x) % base;
@@ -573,8 +579,8 @@ static void put_ulong(strbuf_t *buf, unsigned long int value, int base,
 			digit));
 	}
 	if (f & flag_minus) {
-		for (i = 0; i < width; ++i) { 
-			put_char(buf, ' '); 
+		for (i = 0; i < width; ++i) {
+			put_char(buf, ' ');
 		}
 	}
 }
@@ -586,7 +592,7 @@ static void put_ulong(strbuf_t *buf, unsigned long int value, int base,
  *	size of the destination buffer (ubuf) in _bytes_.
  */
 
-char_t *ascToUni(char_t *ubuf, char *str, int nBytes)
+char_t *ascToUni(char_t *ubuf, char *str, size_t nBytes)
 {
 #ifdef UNICODE
 	if (MultiByteToWideChar(CP_ACP, 0, str, nBytes / sizeof(char_t), ubuf,
@@ -611,11 +617,11 @@ char_t *ascToUni(char_t *ubuf, char *str, int nBytes)
  *	N.B. nBytes is the number of _bytes_ in the destination buffer, buf.
  */
 
-char *uniToAsc(char *buf, char_t *ustr, int nBytes)
+char *uniToAsc(char *buf, char_t *ustr, size_t nBytes)
 {
 #ifdef UNICODE
-   if (WideCharToMultiByte(CP_ACP, 0, ustr, nBytes, buf, nBytes, 
-    NULL, NULL) < 0) 
+   if (WideCharToMultiByte(CP_ACP, 0, ustr, nBytes, buf, nBytes,
+    NULL, NULL) < 0)
    {
       return (char*) ustr;
    }
@@ -638,7 +644,7 @@ char *uniToAsc(char *buf, char_t *ustr, int nBytes)
  *	get buffer.  The buffer returned is NULL terminated.
  */
 
-char_t *ballocAscToUni(char *cp, int alen)
+char_t *ballocAscToUni(char *cp, size_t alen)
 {
 	char_t *unip;
 	int ulen;
@@ -661,7 +667,7 @@ char_t *ballocAscToUni(char *cp, int alen)
  *	to get buffer.  The buffer returned is NULL terminated.
  */
 
-char *ballocUniToAsc(char_t *unip, int ulen)
+char *ballocUniToAsc(char_t *unip, size_t ulen)
 {
 	char * cp;
 

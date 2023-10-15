@@ -1,13 +1,26 @@
-﻿#ifndef _H_EL_EMITTER_DATATYPE
-#define _H_EL_EMITTER_DATATYPE
+﻿/**
+
+    @file      ELEmitterDataType.h
+    @brief
+    @details   ~
+    @author    Cool Guy
+    @date      18.06.2023
+    @copyright © Cool Guy, 2023. All right reserved.
+
+**/
+#pragma once
+
 
 #ifndef __VXWORKS__
+#include <stdio.h>
+#include <string.h>
 #include <memory.h>
 #endif
 
 
-#include <string>
+//#include <string>
 #include <list>
+
 using namespace std;
 
 #include "ELMsgDefn.h"
@@ -269,22 +282,21 @@ enum E_EMITTER_OPCODE
 // };
 
 
-struct I_AET_ANAL {
-	int uiSeqNum;
+struct STR_IDENTIFY {
+	//int uiSeqNum;
 
 	//////////////////////////////////////////////////////////////////////////
 	// LOB 관리에 필요한 변수
-        //int iLinkNum;																								// 수신한 위협 에미터의 링크 번호
+    //int iLinkNum;																								// 수신한 위협 에미터의 링크 번호
 
 	bool isFiltered;																						// 수집 필터 여부
-	bool isManualEdited;																				// 수동 편집 여부
+	//bool isManualEdited;																				// 수동 편집 여부
 
 	unsigned int uiAETID;
 	unsigned int uiABTID;
-	unsigned int uiLOBID;
+	//unsigned int uiLOBID;
 
-	time_t tiAcqTime;																						// 항공에서 분석 시간, LOB 메시지에 time_t 로 되어 있으면 삭제함.
-
+	unsigned int tiAcqTime;																						// 항공에서 분석 시간, LOB 메시지에 time_t 로 되어 있으면 삭제함.
 	unsigned int tiContactTimems;																				// 항공에서 분석 시간
 
 	E_BEAM_EMITTER_STAT enEmitterStat;													// LOB 상태
@@ -299,7 +311,13 @@ struct I_AET_ANAL {
 	// 식별 후보 정보
 	bool bOverCount;
 	//int usCoCandidate;
-	int usThreatId[MAX_IDCANDIDATE];
+	//int usThreatId[MAX_IDCANDIDATE];
+
+    // 주파수 호핑의 레벨의 인덱스
+    unsigned char idxHopping[MAX_FREQ_PRI_STEP];
+
+    // 주파수 호핑의 레벨의 인덱스
+    unsigned char idxDwell[MAX_FREQ_PRI_STEP];
 
 	// 위협 레벨
 	//unsigned short usPriorityLevel;
@@ -326,8 +344,8 @@ struct I_AET_ANAL {
 
 	E_BEAM_CODE eBeamCode;
 
-	bool bCompFreq;
-	bool bCompPRI;
+	//bool bCompFreq;
+	//bool bCompPRI;
 
 } ;
 
@@ -339,7 +357,8 @@ struct I_AET_ANAL {
  * @author    조철희 (churlhee.jo@lignex1.com)
  */
 struct SELLOBDATA_EXT {
-	I_AET_ANAL aetAnal;
+	STR_IDENTIFY stIdentify;
+
 	I_AET_DATA aetData;
 
 } ;
@@ -396,14 +415,28 @@ enum ENUM_SCAN_PROCESS {
     enSCAN_Collecting,					// 스캔 수집 진행 상태
     enSCAN_Success,						// 스캔 분석 성공으로 종료 상태
 	enSCAN_Retrying,					// 스캔 실패로 재시도 할 경우
-	enSCAN_Stopping,					// 스캔 재시도로 스캔 분석 중지
+	enSCAN_Stopping,					// 스캔 완전 실패로 스캔 분석 중지
     enSCAN_Canceling,
+
+    enSCAN_AlreadyDeleting,             // 이미 빔이 삭제 된 상태
 
 	enSCAN_Initializing,				// 초기화 요청
 
 	enSCAN_CANTProcessing,
 
 } ;
+
+enum ENUM_CHECK_SCAN_COLLECTING {
+    enNEXT_SCAN =0,
+    enRETRY_SCAN,
+    enSTOP_SCAN,
+
+    enMISSING_SCAN
+
+};
+
+// 스캔 최대 수집 단계 개수
+#define SCANCOLLECTION_STEP                     (5)
 
 /**
  * @typedef   SELABTDATA_EXT
@@ -419,14 +452,14 @@ struct SELABTDATA_EXT {
     //bool bIntraMop;
 
     // 위치 산출 정보-Covariace 값
-    double dPECoVar[4];
+    //double dPECoVar[4];
 
-    float fLastAOA;
-    float fRadarLatitude;
-    float fRadarLongitude;
+    //float fLastAOA;
+    //float fRadarLatitude;
+    //float fRadarLongitude;
 
     // 수동 편집 여부
-    bool bIsManualEdited;
+    //bool bIsManualEdited;
 
     // 방사체의 활동 상태를 저장
     enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
@@ -444,33 +477,33 @@ struct SELABTDATA_EXT {
 //
 //     unsigned int uiSeqNum;
 
-#elif defined(_POCKETSONATA_) || defined(_SONATA_)
+#elif defined(_POCKETSONATA_) || defined(_SONATA_) || defined(_712_)
 	bool bTracking;
 
 #endif
 
 	// 수동/자동 위치 결과 정보 여부
-    bool bManualPosEstPreferred;
-    float fManualLatitude;
-    float fManualLongitude;
+    //bool bManualPosEstPreferred;
+    //float fManualLatitude;
+    //float fManualLongitude;
 
     //SLOBOtherInfo stLOBOtherInfo;
 
     unsigned int uiLOBPoolIndex;
 
-    STR_ID_TYPE stIDType;
+    //STR_ID_TYPE stIDType;
 
     ENUM_THREAT_PLATFORM enPlatform;
 
-    int nCoIdEOB;
+    //int nCoIdEOB;
     //STR_EOB_RESULT stEOBResult[MAX_CANDIDATE_EOB];
 
     // 빔 병합 정보
-    bool bCompFreq;
-    bool bCompPRI;
+    //bool bCompFreq;
+    //bool bCompPRI;
 
     // 신규 CED 및 EOB로 식별한 정보
-    STR_CEDEOBID_INFO idInfo;
+    //STR_CEDEOBID_INFO idInfo;
 
     ENUM_PE_STAT enValid;
     bool bApplayOfLOBClustering;// TRUE: 적용, FALSE: 미적용
@@ -485,15 +518,24 @@ struct SELABTDATA_EXT {
     // 스캔 분석 추가 정보
     ENUM_SCAN_PROCESS enScanProcess;
     unsigned int uiScanTry;											///< 스캔 시도 횟수
-    unsigned int uiScanStep;										///< 스캔 수집 시간 스텝수
+
+    unsigned int uiScanCollectingStep;								///< 스캔 수집 시간 스텝수
+    unsigned int uiLastScanCollectingStep;							///< 스캔 수집 시간 스텝수
+    unsigned int uiRetryScanCollectingStep;							///< 스캔 수집 시간 스텝수
+
+    bool bUserReqScan;                                              ///< 사용자 요구 스캔 플레그
+
+    unsigned int uiReqScanPeriod[SCANCOLLECTION_STEP + 1];
 
     //bool bIsFISINTTask;
     // UINT uiOpInitID;
 
-    unsigned int uiSeqNum;
+    //unsigned int uiSeqNum;
 
     unsigned uiOpcode;
     time_t tiSendLan;
+
+    STR_IDENTIFY stIdentify;
 
 } ;
 
@@ -1676,4 +1718,4 @@ struct SELRANGE {
 *   ELINT View -> Logic에 사용되는 자료형 구조체
 *************************************************************************************/
 
-#endif
+

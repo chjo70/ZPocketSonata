@@ -71,7 +71,7 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
 	if (ar.IsStoring())
 	{
 		// TODO: 여기에 저장 코드를 추가합니다.
-        
+
 	}
 	else {
         STR_PDWDATA *pstPDWData;
@@ -89,22 +89,18 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
 		if (true == ReadDataFile((char*)(LPCTSTR)ar.m_strFileName, (char*)(LPCTSTR)ar.m_strFileName)) {
 			pstPDWData = (STR_PDWDATA *)m_theDataFile.GetData();
 
-			//pstPDWData->SetPDWID(m_uiPDWID++);
-
 			RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData);
 
 			int nCoLOB = RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
 
 			pLOBData = RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
 
-			//pView = (CRADARDIRAPPView *)pMainFrame->GetActiveView();
-
-			//pView->UpdateLOBData(nCoLOB, pLOBData);
-
 		}
 		else {
 			AfxMessageBox(_T("분석하지 못할 파일 포멧 입니다."));
 		}
+
+        RadarDirAlgotirhm::RadarDirAlgotirhm::Close();
 
 	}
 }
@@ -181,7 +177,7 @@ void CRADARDIRAPPDoc::Dump(CDumpContext& dc) const
 
 bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 {
-	CString strMainTitle;    
+	CString strMainTitle;
 
 	m_pMainFrame=(CMainFrame *) AfxGetApp()->m_pMainWnd;
 

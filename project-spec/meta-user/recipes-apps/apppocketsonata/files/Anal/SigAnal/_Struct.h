@@ -26,11 +26,14 @@ struct FREQ_RESOL {
 
 
 
+
 // PDW  펄스열 플레그
 enum PULSE_MARK {
     enUnMark=0,
     enSTABLE_MARK,
     enREFSTB_MARK,
+    enREFJIT_MARK,
+
     enJITTER_MARK,
     enDWELL_MARK,
     enUNKNOWN_MARK,
@@ -39,6 +42,11 @@ enum PULSE_MARK {
     enLIBRARY_MARK,
 
 } ;
+
+enum ENUM_HOPPINGDWELL {
+    enFREQ_HOPPING = 0,
+    enPRI_DWELL
+};
 
 /**
     @typedef PDWINDEX
@@ -69,6 +77,7 @@ struct STR_FRQAOAPWHISTOGRAM {
 
 // DTOA 히스토그램 구조체
 struct STR_DTOA_HISTOGRAM {
+    unsigned int uiItems;
 	unsigned int uiBinCount;
 	PDWINDEX hist[ DTOA_BIN ];
 
@@ -90,9 +99,66 @@ struct STR_HOPPING_DATA {
     UINT pt_pdw_count[MAX_PDW];
     PDWINDEX pt_pdw_idx[MAX_PDW][MAX_PDW];
     UINT hop_level_cnt;
-    int hop_level[MAX_HOPPING_LEVEL_ELEMENT];
+    int hop_level[MAX_HOPPING_LEVEL_POSITION];
 
 } ;
+
+/**
+    @struct SHoppingSteps
+    @brief  호핑/드웰 분석 구조체
+**/
+struct SHoppingDwell {
+    unsigned int uiAccumulated;
+
+    unsigned int uiSampleDataIndex;
+
+    unsigned int uiCoSteps;
+    int iSteps[NEW_COLLECT_PDW/ HOP_LEVEL_MIN_CNT];
+
+    bool IsValid()
+    {
+        return uiCoSteps >= 2;
+    }
+
+    void AddSteps( int iStep )
+    {
+        unsigned int uiMax = NEW_COLLECT_PDW / HOP_LEVEL_MIN_CNT;
+        if( uiCoSteps < uiMax && iStep != 0 ) {
+            iSteps[uiCoSteps] = iStep;
+            ++ uiCoSteps;
+        }
+    }
+
+    bool operator==( const SHoppingDwell &c )
+    {
+        bool bRet = false;
+
+        if( c.uiCoSteps == uiCoSteps ) {
+            unsigned int i;
+
+            for( i = 0; i < uiCoSteps ; ++i ) {
+                if( iSteps[i] != c.iSteps[i] ) {
+                    break;
+                }
+            }
+            if( i == uiCoSteps ) {
+                bRet = true;
+            }
+
+        }
+        return bRet;
+    }
+
+    void operator=( const int &i )
+    {
+
+        if( uiCoSteps == 0 || iSteps[0] != i ) {
+            AddSteps( i );
+        }
+        return ;
+    }
+
+};
 
 // 방위(AOA) 그룹
 struct STR_AOA_GROUP {
@@ -100,7 +166,7 @@ struct STR_AOA_GROUP {
     UINT uiStat;
     PDWINDEX *pPDWIndex;
     int iCount;
-    bool bOverAoa;
+    bool bCrossDOA0;
     int iFromAOA;
     int iToAOA;
     UINT uiFromBin;
@@ -131,7 +197,6 @@ struct STR_FRQ_GROUP {
 }  ;
 
 // 주파수 그룹범위 테이블
-//##ModelId=452B0C540348
 struct STR_FRQ_GROUPS {
 	STR_FRQ_GROUP stFreq[ MAX_FGRT ];
 	unsigned int uiCount;
@@ -139,7 +204,6 @@ struct STR_FRQ_GROUPS {
 
 }  ;
 
-//##ModelId=452B0C54035C
 struct STR_PW_GROUP {
     int	frq_idx;			// 주파수 그룹화 인덱스
 
@@ -151,7 +215,6 @@ struct STR_PW_GROUP {
 }  ;
 
 // 주파수 그룹범위 테이블
-//##ModelId=452B0C540366
 struct STR_PW_GROUPS {
 	STR_PW_GROUP pw[ MAX_PGRT ];
 	unsigned int uiCount;
@@ -159,8 +222,8 @@ struct STR_PW_GROUPS {
 
 }  ;
 
+#ifdef SCN_COLLECT_PDW
 // ISODATA 클러스터링 테이블
-//##ModelId=452B0C540371
 struct STR_CLUSTER {
 	int iCount;
     PDWINDEX pIndex[SCN_COLLECT_PDW];
@@ -174,9 +237,9 @@ struct STR_CLUSTER {
 	STR_LOWHIGH stAOA;
 
 }  ;
+#endif
 
 // 탐지의 펄스열이 존재함에도 분석이 되지 않는 문제
-//##ModelId=452B0C54038E
 struct STR_FIRST_FRQAOA_PEAK {
 	STR_LOWHIGH	stAOA;
 	STR_LOWHIGH	stFrq;
@@ -187,53 +250,79 @@ struct STR_FIRST_FRQAOA_PEAK {
 
 }  ;
 
-// 펄스열 단 정보
+/**
+    @struct STR_PULSE_TRAIN_SEG
+    @brief  펄스열 단 정보
+**/
 struct STR_PULSE_TRAIN_SEG {
-	STR_PDWINDEX stPDW;				// 펄스열 인덱스, 이 구조체는 제일 앞에 있어야 함.
+    UINT uiID;                          // 펄스열 고유 ID
+	STR_PDWINDEX stPDW;				    // 펄스열 인덱스, 이 구조체는 제일 앞에 있어야 함.
 
-	UINT uiMiss;					// missing 개수, <- 이 앞에 변수를 삽입하지 말아야함. CPulExt::MemcpySeg() 때문임.
-	UINT uiPRI_Band;				// 펄스열 추출할 때의 PRI 밴드
-	UINT uiExtractStep;			// 기준 펄스열, STABLE, Jitter PRI
+	UINT uiMiss;					    // missing 개수, <- 이 앞에 변수를 삽입하지 말아야함. CPulExt::MemcpySeg() 때문임.
+	UINT uiPRI_Band;				    // 펄스열 추출할 때의 PRI 밴드
+	UINT uiExtractStep;			        // 기준 펄스열, STABLE, Jitter PRI
 
-	PDWINDEX idxGrRef;				// 기준펄스, 기준펄스열 최초 펄스
-	PDWINDEX idxFirst;			// 펄스열 최초 펄스 인덱스, pdw.pIndex의 인덱스를 가리킨다.
-	PDWINDEX idxLast;			// 펄스열 최후 펄스, pdw.pIndex의 인덱스를 가리킨다.
+    PDWINDEX *pPDWIndex;                // 기준 펄스의 인덱스 위치
 
-	_TOA tFirst;					// 펄스열 첫번째 TOA
-	_TOA tLast;					// 펄스열 마지막 TOA
-	UINT uiStat;							// PDW 상태
+	PDWINDEX idxGrRef;				    // 기준펄스, 기준펄스열 최초 펄스
+	PDWINDEX idxGrFirst;			    // 펄스열 최초 펄스 인덱스, pdw.pIndex의 인덱스를 가리킨다.
+	PDWINDEX idxGrLast;			        // 펄스열 최후 펄스, pdw.pIndex의 인덱스를 가리킨다.
+    PDWINDEX idxGrRefLast;			    // 펄스열 최후 펄스, pdw.pIndex의 인덱스를 가리킨다.
+
+	_TOA tFirst;					    // 펄스열 첫번째 TOA
+	_TOA tLast;					        // 펄스열 마지막 TOA
+    //_TOA tStaggerTOA;                   // Normalize된 TOA 값(framePIR로 모듈화한 값)
+	UINT uiStat;						// PDW 상태
 
 	UINT uiFreqType;					// 주파수 타입
 	STR_MINMAX stAOA;					// 방위 제원
-	STR_MINMAX_MEDIAN stFreq;				// 주파수 제원
+	STR_MINMAX_MEDIAN stFreq;			// 주파수 제원
 	STR_MINMAX stPA;					// 신호세기 제원
 	STR_MINMAX stPW;					// 펄스폭 제원
-    enANAL_PRI_TYPE enPriType;					// PRI 타입
-	STR_MINMAX_TOA stPRI;					// PRI 제원
+    enANL_PRI_TYPE enPriType;			// PRI 타입
+	STR_MINMAX_TOA stPRI;				// PRI 제원
 
-	_TOA tMinDtoa;					// DTOA 간격 중에서 최소가 되는 값
+#ifdef _DEBUG
+    STR_MINMAX_TOA stExtPRI;			// PRI 제원
+
+#endif
+
+	_TOA tMinDtoa;					    // DTOA 간격 중에서 최소가 되는 값
 	float fJitterRatio;					// 지터율
-	UINT uiContinuity;				// 펄스열 연속성(%)
-	UINT uiBand;							// 주파수 Band Code
-	UINT peak_idx;					// peak PA의 펄스 index
+	UINT uiContinuity;				    // 펄스열 연속성(%)
+	UINT uiBand;						// 주파수 Band Code
+	UINT peak_idx;					    // peak PA의 펄스 index
 
-	//UINT cd;								// Correct Detection
-	//UINT steady;						// steady 스캔특성
-
-	SEG_MARK enSegMark;							// 펄스열의 상태
-													// 삭제=0, 정상상태=1, 에미터로 체크된 상태=2
-	UINT uiPRIPatternPeriod;		// PRI  패턴 주기
-	UINT uiFreqPatternPeriod;		// FREQ 패턴 주기
+	SEG_MARK enSegMark;					// 펄스열의 상태
+										// 삭제=0, 정상상태=1, 에미터로 체크된 상태=2
+	UINT uiPRIPatternPeriod;		    // PRI  패턴 주기
+	UINT uiFreqPatternPeriod;		    // FREQ 패턴 주기
 
 }  ;
 
 // PRI Table
-//##ModelId=452B0C5403B6
 struct STR_PRI_RANGE_TABLE {
 	_TOA tMinPRI;		// 하한 범위
 	_TOA tMaxPRI;		// 상한 범위
 
 }  ;
+
+/**
+    @enum  ENUM_SAMPLING_OPTION
+    @brief 샘플링 옵션
+**/
+enum ENUM_SAMPLING_OPTION {
+    enAVERAGE = 0,
+    enMAXHOLD,
+    enVALUE
+
+};
+
+typedef struct {
+    _TOA tStaggerTOA;
+    STR_PULSE_TRAIN_SEG *pSeg;
+
+} STR_STAGGER_SEG;
 
 // 에미터 정보
 #ifndef _GRAPH_
@@ -249,26 +338,29 @@ struct STR_EMITTER {
 	unsigned int uiCoSeg;							// seg[] 수, 펄스열 수, seg_count
 
     enANL_FREQ_TYPE enFreqType;
-    PATTERN_TYPE enFreqPatternType;
-    STR_TYPEMINMAX stFreq;				// 에미터 간의 병합시에 판단할 주파수 통계량
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE enFreqPatternType;
+    STR_MINMAX stFreq;				// 에미터 간의 병합시에 판단할 주파수 통계량
     float fFreqPeriod;
-    int iFreqLevel[MAX_FREQ_PRI_STEP];
-    int iCoFreqLevel;
 
-	enANAL_PRI_TYPE enPRIType;							// PRI 형태
-	_TOA tFramePri;								// 스태거일 때의 frmae PRI 값
-	STR_MINMAX_TOA stPRI;							// 에미터 펄스열의 PRI 범위
-    PATTERN_TYPE enPRIPatternType;
+    unsigned int uiFreqLevelCount;					// Hop level 수
+    unsigned int uiFreqLevel[MAX_FREQ_PRI_STEP];					// Hopping level
+
+
+	enANL_PRI_TYPE enPRIType;							// PRI 형태
+	_TOA tFramePRI;								// 스태거일 때의 frmae PRI 값
+    STR_MINMAX_TOA stPRI;							// 에미터 펄스열의 PRI 범위
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE enPRIPatternType;
 	float fPRIPeriod;
 
-	unsigned int uiStagDwellElementCount;					// stagger level 수
-	_TOA tStaggerDwellElement[ MAX_FREQ_PRI_STEP ];		// Stagger level
+	//unsigned int uiStagDwellElementCount;					// stagger level 수
+	//_TOA tStaggerDwellElement[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
-	unsigned int uiStagDwellLevelCount;					// stagger level 수
+	unsigned int uiCoStagDwellLevelCount;					// stagger level 수
 	_TOA tStaggerDwellLevel[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
-	int iHopLevel[ MAX_FREQ_PRI_STEP ];					// Hopping level
-	int iCoHoppingLevel;					// Hop level 수
+    //unsigned int uiFreqElementCount;
+    //unsigned int uiFreqElement[MAX_FREQ_PRI_STEP];					// Hopping level
+
 
 	STR_MINMAX stPW;							// 에미터 펄스열의 PRI 범위
 
@@ -282,7 +374,6 @@ struct STR_EMITTER {
 } ;
 
 // 펄스열의 제원을 계산하기 위한 변수
-//##ModelId=452B0C5403D5
 struct STR_PDWPARAM {
 	_TOA *pTOAParam;
 	UINT *puiParam;
@@ -301,18 +392,15 @@ struct STR_PDWPARAM {
 /////////////////////////////////////////////////////////////////////////////////////////
 //  system parameter data structure
 //
-//##ModelId=452B0C4E030E
 struct STR_CT {
   UINT mode;
 }  ;
 
-//##ModelId=452B0C4E032C
 struct STR_SP {
   UINT aoadiff[ ALL_BAND ];
   UINT frqdiff[ ALL_BAND ];
 } ;
 
-//##ModelId=452B0C4E0354
 struct STR_ID {
 	// 주파수 고정 임계값
   UINT fixfrq[ ALL_BAND ];
@@ -327,7 +415,6 @@ struct STR_ID {
 
 }  ;
 
-//##ModelId=452B0C4E035F
 struct STR_MG {
     //  UINT  mode;
     UINT aoa[ ALL_BAND ];
@@ -359,7 +446,6 @@ struct STR_MG {
     UINT mdyMethod;   // Method of modify parameter, debug, 00-08-31 10:19:35
 }  ;
 
-//##ModelId=452B0C4E0373
 struct STR_FT {
     UINT aoa[ ALL_BAND ];
 
@@ -475,7 +561,7 @@ struct STR_SC
   UINT st[ _spMaxTryScan ];
   UINT offst[ _spMaxTryScan ];
 
-  UINT thtrkprd;
+  //UINT thtrkprd;
 } ;
 
 //##ModelId=452B0C4E03D6
@@ -620,15 +706,15 @@ struct STR_DWELL_LEVEL {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 
 #define PDW_FREQ_RES        (1.953125)
     char g_szPulseType[MAX_STAT][3] = { "NP" , "CW" , "PM" , "CP" , "Fu", "FD", "FU", "Cu", "CD", "CU", "SP" };
     char g_szAetSignalType[ST_MAX][3] = { "NP" , "CW" , "Fu" , "FD", "FU", "Cu", "CD", "CU", "PM", "CP", "SH", "DO", "HI" };
-    char g_szAetFreqType[E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK" };
-    char g_szAetPriType[E_AET_MAX_PRI_TYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "UK" };
-    char g_szAetPatternType[MAX_FRQPATTYPE][3] = { "UK" , "SI", "S+" , "S-" , "TR" };
-    char g_szAetScanType[E_AET_MAX_SCAN_TYPE][3] = { "UK" , "CI", "UN" , "BI" , "CO", "ST", "FA" };
+    char g_szAetFreqType[(int)ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK" };
+    char g_szAetPriType[(int)ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "UK" };
+    char g_szAetPatternType[(int)ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_MAX_FREQ_PRI_PATTERN_TYPE][3] = { "UK" , "SI", "S+" , "S-" , "TR" };
+    char g_szAetScanType[(int)ENUM_AET_SCAN_TYPE::E_AET_MAX_SCAN_TYPE][3] = { "UK" , "CI", "UN" , "BI" , "CO", "ST", "FA", "TF", "DF", "LF" };
 
     FREQ_RESOL gFreqRes[ enMAXPRC ] = {	// min, max, offset, res
           {     0,     0, 0, (float) PDW_FREQ_RES } ,
@@ -652,16 +738,8 @@ struct STR_DWELL_LEVEL {
 
 #else
   char g_szAetSignalType[5][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
-  char g_szAetFreqType[E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
-  char g_szAetPriType[E_AET_MAX_PRI_TYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
-
-//   FREQ_RESOL gFreqRes[ TOTAL_BAND ] =
-//   {
-//       {    0,  2560, 0, 0.625 },   /* LOW  FREQUENCY */
-//       { 1280,  6400, 1260, 1.25  },   /* MID  FREQUENCY */
-//       { 5866, 18740, 5866, 1.5   }
-//   } ;
-
+  char g_szAetFreqType[(int)ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK", "IF" };
+  char g_szAetPriType[(int) ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "IP" } ;
 
   PA_RESOL gPaRes[ 6 ] =
   {	// min, max, offset, res
@@ -682,10 +760,10 @@ extern float _spFreqMax;
 #ifndef _GRAPH_
 extern STR_SYS _sp;
 
-extern char g_szAetFreqType[E_AET_MAX_FRQ_TYPE][3];
-extern char g_szAetPriType[E_AET_MAX_PRI_TYPE][3];
-extern char g_szAetPatternType[MAX_FRQPATTYPE][3];
-extern char g_szAetScanType[E_AET_MAX_SCAN_TYPE][3];
+extern char g_szAetFreqType[(int)ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][3];
+extern char g_szAetPriType[( int ) ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][3];
+extern char g_szAetPatternType[( int ) ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_MAX_FREQ_PRI_PATTERN_TYPE][3];
+extern char g_szAetScanType[(int)ENUM_AET_SCAN_TYPE::E_AET_MAX_SCAN_TYPE][3];
 
 #endif
 
@@ -699,7 +777,7 @@ extern PA_RESOL gPaRes[ 6 ];
 extern double dRCLatitude[RADARCOL_MAX];
 extern double dRCLongitude[RADARCOL_MAX];
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 extern char g_szPulseType[MAX_STAT][3];
 extern char g_szAetSignalType[ST_MAX][3];
 

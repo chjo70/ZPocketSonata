@@ -154,9 +154,10 @@ struct STR_WINDOWCELL {
     unsigned int uiAccumulatedCoUsed;
 
     // 빔 정보
-    SRxABTData stABTData;                  //< 추적/스캔 채널별로 대상 위협 빔 정보
+    SRxABTData stABTData;                   ///< 추적/스캔 채널별로 대상 위협 빔 정보
 
-    unsigned int uiScanStep;                ///< 스캔 수집 단계 정보
+    unsigned int uiScanStep;
+    unsigned int uiReqScanPeriod;           ///< 스캔 수집 시간 정보
     unsigned int uiABTIndex;                ///< 위협 관리의 빔 데이터 인덱스
 
     STR_UZPOCKETPDW strPDW;

@@ -111,9 +111,6 @@
     <ClCompile Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.cpp">
       <Filter>소스 파일\Anal\EmitterMerge\CEP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.cpp">
-      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Anal\EmitterMerge\GeoCoordConv\GeoCoordConv.cpp">
       <Filter>소스 파일\Anal\EmitterMerge\GeoCoordConv</Filter>
     </ClCompile>
@@ -147,14 +144,14 @@
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
-      <Filter>소스 파일\Anal\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\clog.cpp">
       <Filter>소스 파일\Anal\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastS.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,9 +232,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\EmitterMerge\CEP\AnalyticCEP.h">
       <Filter>소스 파일\Anal\EmitterMerge\CEP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.h">
-      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\EmitterMerge\GeoCoordConv\GeoCoordConv.h">
       <Filter>소스 파일\Anal\EmitterMerge\GeoCoordConv</Filter>
@@ -326,9 +320,6 @@
     <ClInclude Include="..\..\files\Utils\ccommonutils.h">
       <Filter>소스 파일\Anal\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Utils\MulDiv64.h">
-      <Filter>소스 파일\Anal\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="RADARANL.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
@@ -337,6 +328,9 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\clog.h">
       <Filter>소스 파일\Anal\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastS.h">
+      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

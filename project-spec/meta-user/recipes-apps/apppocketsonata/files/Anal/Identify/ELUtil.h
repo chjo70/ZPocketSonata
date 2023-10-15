@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include <typeinfo>
 
 #include "../SigAnal/_Macro.h"
 
@@ -32,13 +33,62 @@ void SetUnitType();
 
 
 void UTF8ToMultibyte(char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t *p);
+void MultibyteToUTF8( char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t *p );
 int MultiByteToUTF8(wchar_t *pszUniCode, char *pszMultiByte);
+int UTF8ToANSI( char *pszAnsiCode, char *pszUTF8 );
+int ANSIToUTF8( char *pszUTF8, char *pszAnsiCode );
 
 UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold);
+UINT ExpectedMissingPulses( int ext_type, _TOA priMean1, STR_MINMAX_TOA *pstPRI, _TOA tThreshold );
+//UINT CheckMissingPulse( _TOA priMean1, STR_MINMAX_TOA *pPRI, _TOA tThreshold );
 
 
 ///////////////////////////////////////////////////////////////////////////////////
 // 템플릿 함수 모음
+
+
+template <typename T>
+UINT TCheckHarmonic( T priMean1, T priMean2, T tThreshold )
+{
+    UINT ret = 0;
+
+    T r;
+    T harmonic;
+    T max_mean, min_mean;
+
+    if( priMean1 > priMean2 ) {
+        max_mean = priMean1;
+        min_mean = priMean2;
+    }
+    else {
+        max_mean = priMean2;
+        min_mean = priMean1;
+    }
+
+    if( min_mean != 0 ) {
+        harmonic = max_mean % min_mean;
+
+        // 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
+        T margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
+
+        // 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
+        if( harmonic <= tThreshold + margin_th || min_mean - harmonic <= tThreshold + margin_th ) {
+            r = TDIV<T>( max_mean, min_mean );
+            // r = (T) MulDiv64((T)1, (T) max_mean, (T) min_mean);
+            if( r >= INT_MAX ) {
+                ret = INT_MAX;
+            }
+            else {
+                ret = ( UINT ) r;
+            }
+        }
+    }
+    else {
+
+    }
+
+    return ret;
+}
 
 /**
  * @brief     방위[도]에 대한 임계값을 고려한 방탐 비교
@@ -53,7 +103,7 @@ UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold);
  * @warning
  */
 template <typename T>
-bool CompDOADiff(T x, T y, T thresh_value )
+bool TCompDOADiff(T x, T y, T thresh_value )
 {
     T tdiff;
     bool bRet;
@@ -71,8 +121,20 @@ bool CompDOADiff(T x, T y, T thresh_value )
 
 }
 
+/**
+ * @brief     CompEncodeDOADiff
+ * @param     T x
+ * @param     T y
+ * @param     T thresh_value
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-28 20:59:55
+ * @warning
+ */
 template <typename T>
-bool CompEncodeDOADiff( T x, T y, T thresh_value )
+bool TCompEncodeDOADiff( T x, T y, T thresh_value )
 {
     T tdiff;
     bool bRet;
@@ -104,7 +166,7 @@ bool CompEncodeDOADiff( T x, T y, T thresh_value )
  * @warning
  */
 template <typename T>
-bool CompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
+bool TCompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
 {
     //T tDiff; // , tY1, tY2;
     bool bRet;
@@ -123,8 +185,20 @@ bool CompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
 
 }
 
+/**
+ * @brief     CompDOAMarginDiff
+ * @param     T x
+ * @param     T y1
+ * @param     T y2
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-28 21:00:16
+ * @warning
+ */
 template <typename T>
-bool CompDOAMarginDiff( T x, T y1, T y2 )
+bool TCompDOAMarginDiff( T x, T y1, T y2 )
 {
     //T tDiff; // , tY1, tY2;
     bool bRet;
@@ -157,7 +231,7 @@ bool CompDOAMarginDiff( T x, T y1, T y2 )
  * @warning
  */
 template <typename T>
-bool IsSamePulse( T x1, T x2, T priMean, T margin )
+bool TIsSamePulse( T x1, T x2, T priMean, T margin )
 {
     T diffToa;
     bool bRet=true;
@@ -188,7 +262,7 @@ bool IsSamePulse( T x1, T x2, T priMean, T margin )
  * @warning
  */
 template <typename T>
-bool CompMeanDiff( T x, T y, T thresh )
+bool TCompMeanDiff( T x, T y, T thresh )
 {
     T diff;
     bool bRet;
@@ -217,17 +291,17 @@ bool CompMeanDiff( T x, T y, T thresh )
  * @warning
  */
 template <typename T>
-float MeanInArray( T *series, UINT co)
+float TMeanInArray( T *series, UINT uiCo )
 {
     UINT i;
-    T sum;
+    T tSum;
 
-    sum = _spZero;
-    for (i = 0; i < co; ++i) {
-        sum += *series++;
+    tSum = _spZero;
+    for (i = 0; i < uiCo ; ++i) {
+        tSum += *series++;
     }
 
-    return ( (float)sum / (float)co);
+    return ( (float) tSum / (float) uiCo );
 }
 
 /**
@@ -243,26 +317,27 @@ float MeanInArray( T *series, UINT co)
  * @warning
  */
 template <typename T>
-float SDevInArray(T *series, UINT co, float mean)
+float TSDevInArray(T *tSeries, UINT uiCo, float fMean)
 {
     unsigned int i;
 
-    double sdiff;
+    double dDiff;
 
-    float diff;
-    float fRet;
+    float fDiff;
+    float fRet= (float) 0;
 
-    if (co <= _spOne) {
-        fRet = _spZero;
+    if ( uiCo <= _spOne ) {
+
     }
     else {
-        sdiff = _spZero;
-        for (i = 0; i < co; ++i) {
-            diff = *series++ - mean;
-            sdiff += ((float)diff * (float)diff / (float)co);
+        dDiff = _spZero;
+        for (i = 0; i < uiCo ; ++i) {
+            fDiff = *tSeries++ - fMean;
+            //dDiff += ( ((float)diff * (float)diff ) / (float) uiCo );
+            dDiff += ( fDiff * fDiff );
         }
 
-        fRet = (float)sqrt(sdiff);
+        fRet = (float) sqrt( dDiff / (float) uiCo );
     }
 
     return fRet;
@@ -283,7 +358,7 @@ float SDevInArray(T *series, UINT co, float mean)
  * @warning
  */
 template <typename T>
-bool ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
+bool TELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
 {
     int j, k;
     T iDiff;
@@ -303,7 +378,7 @@ bool ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
             iDiff = 0;
             for( k=j ; k < coSeries+j ; ++k ) {
                 index1 = k % coSeries;
-                bRet = CompMeanDiff<T>( pSeries1[index1], *pSeries, margin );
+                bRet = TCompMeanDiff<T>( pSeries1[index1], *pSeries, margin );
                 if( false == bRet ) {
                     break;
                 }
@@ -323,6 +398,48 @@ bool ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
     return bRet;
 
 }
+//
+//template <typename T>
+//bool TELCompSwitchLevel( T *pSeries1, T *pSeries2Low, T *pSeriesHigh, int coSeries )
+//{
+//    int j, k;
+//    //T iDiff;
+//    int index1;
+//
+//    T *pSeriesLow, *pSeriesHigh;
+//
+//    bool bRet = false;
+//
+//    if( coSeries == 0 ) {
+//    }
+//    else {
+//        for( j = 0; j < coSeries; ++j ) {
+//            pSeriesLow = pSeries2Low;
+//            pSeriesHigh = pSeries2High;
+//            bRet = true;
+//            //iDiff = 0;
+//            for( k = j; k < coSeries + j; ++k ) {
+//                index1 = k % coSeries;
+//                bRet = TCompMarginDiff<T>( pSeries1[index1], *pSeriesLow, *pSeriesHigh, 0 );
+//                if( false == bRet ) {
+//                    break;
+//                }
+//                //iDiff += _diffabs<T>( pSeries1[index1], *pSeries );
+//                ++ pSeries;
+//            }
+//
+//            if( true == bRet ) {
+//                // bRet = true;
+//                break;
+//            }
+//
+//        }
+//
+//    }
+//
+//    return bRet;
+//
+//}
 
 /**
  * @brief     CompSwitch2Level
@@ -332,65 +449,67 @@ bool ELCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
  * @param     int coSeries2
  * @param     T margin
  * @return    bool
- * @exception
+ * @exception 두단은 정렬이 되어 있다는 가정하에 비교가 정상적으로 수행할 수 있습니다.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-01-10, 14:36
  * @warning
  */
 template <typename T>
-bool CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T margin )
+bool TCompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T margin )
 {
-    int i, j;
-    int index1;
+    int i;
+    int iIndex;
 
     T *pSeries;
 
     bool bRet=false;
 
     if( coSeries1 == 0 || coSeries2 == 0 ) {
-        // bRet = false;
     }
 
     else {
         if( coSeries1 == coSeries2 ) {
-            bRet = ELCompSwitchLevel<T>( pSeries1, pSeries2, coSeries1, margin );
+            bRet = TELCompSwitchLevel<T>( pSeries1, pSeries2, coSeries1, margin );
         }
         else if( coSeries1 < coSeries2 ) {
-            for( i=0 ; i < coSeries2-coSeries1 ; ++i ) {
-                pSeries = pSeries2;
-                index1 = i;
-                for( j=0 ; j < coSeries1 ; ++j ) {
-                    bRet = CompMeanDiff( pSeries1[index1], *pSeries, margin );
-                    if( bRet == false ) {
+            iIndex = 0;
+            pSeries = pSeries1;
+            for( i=0 ; i < coSeries1 ; ++i, ++pSeries ) {
+                bRet = false;
+                for( ; iIndex < coSeries2 ; ++iIndex  ) {
+                    if( TCompMeanDiff<T>( pSeries2[iIndex], *pSeries, margin ) == true ) {
+                        ++ iIndex;
+                        bRet = true;
                         break;
                     }
-                    ++ pSeries;
-                    ++ index1;
                 }
 
-                if( bRet == true ) {
+                if( bRet == false ) {
                     break;
                 }
+
             }
         }
         else {
-            for( i=0 ; i < coSeries1-coSeries2 ; ++i ) {
-                pSeries = pSeries2;
-                index1 = i;
-                for( j=0 ; j < coSeries2 ; ++j ) {
-                    bRet = CompMeanDiff( pSeries1[index1], *pSeries, margin );
-                    if( bRet == false ) {
+            iIndex = 0;
+            pSeries = pSeries2;
+            for( i = 0; i < coSeries2 ; ++i, ++pSeries ) {
+                bRet = false;
+                for( ; iIndex < coSeries1 ; ++iIndex ) {
+                    if( TCompMeanDiff<T>( pSeries1[iIndex], *pSeries, margin ) == true ) {
+                        ++ iIndex;
+                        bRet = true;
                         break;
                     }
-                    ++ pSeries;
-                    ++ index1;
                 }
 
-                if( bRet == true ) {
+                if( bRet == false ) {
                     break;
                 }
+
             }
+
         }
 
     }
@@ -398,6 +517,70 @@ bool CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
     return bRet;
 
 }
+
+//template <typename T>
+//bool TCompSwitch2Level( T *pSeries1, T *pSeries2Low, T *pSeries2High, int coSeries1, int coSeries2 )
+//{
+//    int i;
+//    int iIndex;
+//
+//    T *pSeries;
+//
+//    bool bRet = false;
+//
+//    if( coSeries1 == 0 || coSeries2 == 0 ) {
+//    }
+//
+//    else {
+//        if( coSeries1 == coSeries2 ) {
+//            bRet = TELCompSwitchLevel<T>( pSeries1, pSeries2Low, pSeries2Low, coSeries1 );
+//        }
+//        else if( coSeries1 < coSeries2 ) {
+//            iIndex = 0;
+//            pSeries = pSeries1;
+//            for( i = 0; i < coSeries1; ++i, ++pSeries ) {
+//                bRet = false;
+//                for( ; iIndex < coSeries2; ++iIndex ) {
+//                    if( TCompMarginDiff<T>( *pSeries, pSeries2Low[iIndex], pSeries2High[iIndex], 0 ) == true ) {
+//                        ++ iIndex;
+//                        bRet = true;
+//                        break;
+//                    }
+//                }
+//
+//                if( bRet == false ) {
+//                    break;
+//                }
+//
+//            }
+//        }
+//        else {
+//            iIndex = 0;
+//            pSeriesLow = pSeries2Low;
+//            pSeriesHigh = pSeries2High;
+//            for( i = 0; i < coSeries2; ++i, ++pSeriesLow, ++pSeriesHigh ) {
+//                bRet = false;
+//                for( ; iIndex < coSeries1; ++iIndex ) {
+//                    if( TCompMarginDiff<T>( pSeries1[iIndex], *pSeriesLow, *pSeriesHigh, margin ) == true ) {
+//                        ++ iIndex;
+//                        bRet = true;
+//                        break;
+//                    }
+//                }
+//
+//                if( bRet == false ) {
+//                    break;
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    return bRet;
+//
+//}
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    입력 값 범위에 임계값을 고려한 입력 값이 이내이면 true, 그렇지 않으면 false를 리턴한다.
@@ -412,15 +595,49 @@ bool CompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, T
     \warning
 */
 template <typename T>
-bool CompMarginDiff( T x, T iy1, T iy2, T thresh )
+bool TCompMarginDiff( T x, T iy1, T iy2, T thresh )
 {
-    bool bRet;
+    bool bRet=false;
 
-    if( ( x >= iy1- thresh) && ( x <= iy2+ thresh) ) {
-        bRet = true;
+    const char *pType = typeid( T ).name();
+
+    if( ( strcmp( pType, "y" ) == 0 || strcmp( pType, "unsigned __int64" ) == 0 || strcmp( pType, "unsigned long long int" ) == 0 || strcmp( pType, "unsigned int" ) == 0 ) ) {
+        if( iy1 >= thresh ) {
+            if( ( x >= iy1- thresh) && ( x <= iy2+ thresh) ) {
+                bRet = true;
+            }
+            else {
+                bRet = false;
+            }
+        }
+        else {
+            if( x <= iy2 + thresh ) {
+                bRet = true;
+            }
+            else {
+                bRet = false;
+            }
+
+        }
     }
     else {
-        bRet = false;
+        if( ( strcmp( pType, "f" ) == 0 || strcmp( pType, "__int64" ) == 0 || strcmp( pType, "long long int" ) == 0 || strcmp( pType, "int" ) == 0 || strcmp( pType, "float" ) == 0 ) ) {
+            if( ( x >= iy1 - thresh ) && ( x <= iy2 + thresh ) ) {
+                bRet = true;
+            }
+            else {
+                bRet = false;
+            }
+
+        }
+        else {
+            while( true ) {
+                TRACE( "\n std::typeid( T )=%s", pType );
+            }
+
+        }
+
+
     }
     return bRet;
 }
@@ -477,7 +694,7 @@ float TCalcJitterRatio(T tRange, T tMean)
  * @warning
  */
 template <typename T>
-T CalOverlapSpace( T low1, T hgh1, T low2, T hgh2 )
+T TCalOverlapSpace( T low1, T hgh1, T low2, T hgh2 )
 {
 	T ret=0;
 
@@ -529,11 +746,11 @@ T CalOverlapSpace( T low1, T hgh1, T low2, T hgh2 )
  * @warning
  */
 template <typename T>
-bool IsOverlapSpace( T low1, T hgh1, T low2, T hgh2, T tRatio )
+bool TIsOverlapSpace( T low1, T hgh1, T low2, T hgh2, T tRatio )
 {
     T tOverlapSpace;
 
-    tOverlapSpace = CalOverlapSpace<T>( low1, hgh1, low2, hgh2 );
+    tOverlapSpace = TCalOverlapSpace<T>( low1, hgh1, low2, hgh2 );
     return tOverlapSpace >= tRatio;
 
 }
@@ -555,7 +772,7 @@ bool IsOverlapSpace( T low1, T hgh1, T low2, T hgh2, T tRatio )
  * @warning
  */
 template <typename T>
-bool CompJitJit(T tMean1, T tMin1, T tMax1, T tMean2, T tMin2, T tMax2, unsigned int uiDivide=1 )
+bool TCompJitJit(T tMean1, T tMin1, T tMax1, T tMean2, T tMin2, T tMax2, unsigned int uiDivide=1 )
 {
 	bool bRet=false;
 
@@ -566,7 +783,7 @@ bool CompJitJit(T tMean1, T tMin1, T tMax1, T tMean2, T tMin2, T tMax2, unsigned
 	if ( tMean1 < tMean2 ) {
 		tMin = TMUL<T>( tMin1, (T) uiDivide);
 		tMax = TMUL<T>( tMax1, (T) uiDivide);
-		tOverlap = CalOverlapSpace<T>( tMin, tMax, tMin2, tMax2);
+		tOverlap = TCalOverlapSpace<T>( tMin, tMax, tMin2, tMax2);
 		tOverlap = TMUL<T>(tOverlap, (T) 100);
 
 		/*! \debug  분모가 0인 경우가 발생함. (stPRI.tMax = stPRI.tMin 일때)
@@ -579,7 +796,7 @@ bool CompJitJit(T tMean1, T tMin1, T tMax1, T tMean2, T tMin2, T tMax2, unsigned
 	else {
 		tMin = TMUL<T>(tMin2, (T) uiDivide);
 		tMax = TMUL<T>(tMax2, (T)uiDivide);
-		tOverlap = CalOverlapSpace<T>(tMin, tMax, tMin1, tMax1);
+		tOverlap = TCalOverlapSpace<T>(tMin, tMax, tMin1, tMax1);
 		tOverlap = TMUL<T>(tOverlap, (T)100);
 
 		iOverlap1 = (int)TDIV<T>(tOverlap, (tMax1 - tMin1) + 1);
@@ -597,5 +814,106 @@ bool CompJitJit(T tMean1, T tMin1, T tMax1, T tMean2, T tMin2, T tMax2, unsigned
 	return bRet;
 }
 
+/**
+ * @brief     SortLevel
+ * @param     int iSwtLev
+ * @param     T * pSwtLev
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-21 16:15:03
+ * @warning
+ */
+template <typename T>
+int TSortLevel( int iSwtLev, T *pSwtLev, bool bDataUpdate=true )
+{
+    unsigned int i;
 
+    int iret;
+    int min_index, stagger_min_index;
 
+    T tMin_stagger_level;
+    T tLevel[MAX_FREQ_PRI_STEP];
+
+    /*! \todo	스태거 레벨을 가장 작은 값부터 레벨값을 시작하게 한다. */
+    // 스태거 레벨 에서 가장 작은 레벨값과 인덱스 값을 얻는다.
+    min_index = 0;
+    tMin_stagger_level = pSwtLev[0];
+    for( i = 1; i < ( unsigned int ) iSwtLev && i < MAX_FREQ_PRI_STEP; ++i ) {
+        if( false == TCompMeanDiff<T>( tMin_stagger_level, pSwtLev[i], ( T ) _spOneMicrosec ) ) {
+            if( tMin_stagger_level > pSwtLev[i] ) {
+                min_index = ( int ) i;
+                tMin_stagger_level = pSwtLev[i];
+            }
+        }
+
+    }
+    /*! \bug  역방향으로 작은 레벨값을 검색해서 제일 작은 레벨 값을 시작으로 한다.
+        \date 2006-08-16 20:18:43, 조철희
+    */
+    //
+    iret = min_index;
+    for( i = 1; i < ( unsigned int ) iSwtLev && i < MAX_FREQ_PRI_STEP; ++i ) {
+        stagger_min_index = ( int ) ( ( iSwtLev + ( min_index - ( int ) i ) ) % iSwtLev );
+        if( true == TCompMeanDiff<T>( pSwtLev[stagger_min_index], tMin_stagger_level, ( T ) _spOneMicrosec ) ) {
+            iret = stagger_min_index;
+        }
+        else {
+            break;
+        }
+    }
+
+    if( bDataUpdate == true ) {
+        memcpy( tLevel, pSwtLev, sizeof( T ) * MAX_FREQ_PRI_STEP );
+
+        for( i = 0; i < (unsigned int) iSwtLev && i < MAX_FREQ_PRI_STEP; ++i ) {
+            pSwtLev[i] = tLevel[( ( UINT ) iret + i ) % ( UINT ) iSwtLev];
+        }
+    }
+
+    return iret;
+
+}
+
+/**
+ * @brief     IsInElement
+ * @param     std::vector<T> * pVector
+ * @param     T * pstHopping
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-18 15:27:16
+ * @warning
+ */
+// template <typename T>
+// bool IsInElement( std::vector<T> vecVector, T stHopping )
+// {
+//     bool bRet;
+//
+//     for( const auto &stElement : vecVector ) {
+//         if( stHopping == *stElement ) {
+//             bRet = true;
+//             break;
+//         }
+//     }
+//
+//     return bRet;
+// }
+
+template <typename T>
+T TModular( T a, T b )
+{
+    T ret=0;
+
+    if( b != 0 ) {
+        ret = a % b;
+    }
+    else {
+
+    }
+
+    return ret;
+
+}

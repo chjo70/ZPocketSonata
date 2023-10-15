@@ -47,11 +47,13 @@ void UpdateCPUMode();
 class CMain {
 
 private:
+    void *m_pParent;
+
 public:
     CMain();
     virtual ~CMain();
 
-    void Run( int iArgc, char *iArgv[] );
+    void Run( int iArgc, char *iArgv[], void *pParent=NULL );
 
 private:
     void ParsingArgument( int iArgc, char *iArgv[] );

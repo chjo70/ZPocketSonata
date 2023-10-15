@@ -16,6 +16,8 @@
 
 //#include "../ShuDeltaGraph/Log/LogDebug.h"
 
+#define IPACNV(A)    (unsigned int) ( ( A + ( float ) PDW_PA_RANGE ) / POCKETSONATA::_fPARes + A )
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -177,7 +179,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 			m_CListRawData.InsertColumn( j++, _T("DTOA[us]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("     DTOA[s]")), -1 );
 			m_CListRawData.InsertColumn( j++, _T("DV"), LVCFMT_CENTER, TEXT_WIDTH*strlen(_T("  DV")), -1 );
 			m_CListRawData.InsertColumn( j++, _T("방위[도]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("방위[도]")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("주파수[MHz]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("주파수[MHz]")), -1 );
+			m_CListRawData.InsertColumn( j++, _T("주파수[MHz]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("주파수[MHz]  ")), -1 );
 			m_CListRawData.InsertColumn( j++, _T("신호세기[dBm]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호세기[dBm]")), -1 );
 			m_CListRawData.InsertColumn( j++, _T("펄스폭[ns]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("펄스폭[ns]")), -1 );
 
@@ -338,10 +340,10 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 					strVal.Format( _T("%4.1f") , *pfAOA );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
-					strVal.Format( _T("%8.3f") , *pfFreq/1000000. );
+					strVal.Format( _T("%8.3f/%u") , *pfFreq/1000000., (unsigned int) FDIV( *pfFreq, 1000. ) );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
-					strVal.Format( _T("%5.2f") , *pfPA );
+					strVal.Format( _T("%5.2f/%d") , *pfPA, IPACNV( *pfPA ) );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%5.1f") , *pfPW*1000000000. );

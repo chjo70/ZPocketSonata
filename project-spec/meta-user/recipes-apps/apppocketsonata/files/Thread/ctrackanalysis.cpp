@@ -34,7 +34,14 @@ CTrackAnalysis::CTrackAnalysis( int iThreadPriority, const char *pClassName, boo
 
     strcpy( szSQLiteFileName, EMITTER_SQLITE_FOLDER );
     strcat( szSQLiteFileName, "/" );
-    strcat( szSQLiteFileName, EMITTER_SQLITE_FILENAME );
+#ifdef _MSC_VER
+    char szSrcSQLiteFileName[100];
+
+    sprintf( szSrcSQLiteFileName, "%s_%d.sqlite3", EMITTER_SQLITE_FILENAME, g_enBoardId );
+    strcat( szSQLiteFileName, szSrcSQLiteFileName );
+#else
+    strcat( szSQLiteFileName, EMITTER_SQLITE_FILEEXTNAME );
+#endif
 
     m_pTheKnownSigAnal = new CKnownSigAnal( KWN_COLLECT_PDW, false, szSQLiteFileName );
 #else
@@ -66,7 +73,7 @@ CTrackAnalysis::~CTrackAnalysis(void)
  */
 void CTrackAnalysis::Run(key_t key)
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     CThread::Run();
 
@@ -86,17 +93,29 @@ void CTrackAnalysis::Run(key_t key)
  */
 void CTrackAnalysis::_routine()
 {
-    LOGENTRY;
+    //LOGENTRY;
     //bool bWhile=true;
 
     m_pMsg = GetRecvDataMessage();
 
     while( m_bThreadLoop ) {
-        if( QMsgRcv() == -1 ) {
-            perror( "QMsgRcv(CTrackAnalysis)" );
+#ifdef _MSC_VER
+        if( QMsgRcv( enTIMER, OS_MILLISEC( 1000 ) ) == -1 ) {
+            perror( "QMsgRcv" );
         }
+#else
+        if( QMsgRcv() == -1 ) {
+            perror( "QMsgRcv" );
+        }
+
+#endif
         else {
             switch( m_pMsg->uiOpCode ) {
+#ifdef _MSC_VER
+                case enTHREAD_TIMER:
+                    break;
+
+#endif
                 case enREQ_OP_START:
                     // QMsgClear();
                     InitTrackAnalysis();
@@ -104,12 +123,12 @@ void CTrackAnalysis::_routine()
 
                 case enTHREAD_DISCONNECTED:
                 case enREQ_OP_SHUTDOWN:
-                    QMsgClear();
-                    InitTrackAnalysis();
+                    //QMsgClear();
+                    //InitTrackAnalysis();
                     break;
 
 				case enREQ_OP_RESTART:
-					QMsgClear();
+					//QMsgClear();
 					InitTrackAnalysis();
 					break;
 
@@ -141,7 +160,7 @@ void CTrackAnalysis::_routine()
  */
 void CTrackAnalysis::AnalysisStart()
 {
-    LOGENTRY;
+    //LOGENTRY;
     int iCoLOB;
 
     STR_TRKSCNPDWDATA *pTrkPDWData;
@@ -160,18 +179,18 @@ void CTrackAnalysis::AnalysisStart()
     iCoLOB = m_pTheKnownSigAnal->GetCoLOB();
 
     // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
-    iCoLOB = min( (int) (_MAX_LANDATA / sizeof(SRxLOBData) - 1), iCoLOB);
+    iCoLOB = min( (int) (_MAX_LANDATA / sizeof( struct SRxLOBData) - 1), iCoLOB);
 
     strAnalInfo.Set( enLEFT_PCI_DRIVER, ( unsigned int ) iCoLOB, m_pMsg->x.strCollectInfo.uiReqStatus, enTrackCollectBank, m_pMsg->x.strDetAnalInfo.uiAETID, m_pMsg->x.strDetAnalInfo.uiABTID, 0 );
     //strAnalInfo.uiAETID = m_pMsg->x.strDetAnalInfo.uiAETID;
     //strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
 
     // PDW 헤더 정보 저장
-    //memcpy(&strAnalInfo.uniPDWHeader, &pTrkPDWData->strPDW.x, sizeof(UNION_HEADER));
+    //memcpy(&strAnalInfo.uniPDWHeader, &pTrkPDWData->strPDW.x, sizeof(union UNION_HEADER));
 
     //SRxLOBData *pLOBData = m_pTheKnownSigAnal->GetLOBData();
 
-    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof(SRxLOBData), (unsigned int) iCoLOB, & strAnalInfo, sizeof(STR_DETANAL_INFO), GetThreadName() );
+    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof( struct SRxLOBData), (unsigned int) iCoLOB, & strAnalInfo, sizeof(STR_DETANAL_INFO), GetThreadName() );
 
 }
 
@@ -187,5 +206,7 @@ void CTrackAnalysis::AnalysisStart()
 void CTrackAnalysis::InitTrackAnalysis()
 {
 
+    Log( enNormal, "테이블을 삭제합니다." );
+    m_pTheKnownSigAnal->DeleteDB_RAW( "RAWDATA" );
 
 }

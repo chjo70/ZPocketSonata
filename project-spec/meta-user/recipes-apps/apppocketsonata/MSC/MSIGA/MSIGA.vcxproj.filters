@@ -100,9 +100,6 @@
     <Filter Include="설정 파일">
       <UniqueIdentifier>{64458260-29c8-48b4-bdda-6d7567d9647b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\INI">
-      <UniqueIdentifier>{27b14810-826a-442e-bb34-ea93191de315}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -138,9 +135,6 @@
     </ClInclude>
     <ClInclude Include="..\..\files\cmain.h">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\Utils\carraymsgdata.h">
-      <Filter>소스 파일\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\ccommonutils.h">
       <Filter>소스 파일\Utils</Filter>
@@ -394,9 +388,6 @@
     <ClInclude Include="..\..\files\Anal\EmitterMerge\Coordinate\MatrixConverter.h">
       <Filter>소스 파일\Anal\EmitterMerge\Coordinate</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.h">
-      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\CRWRCommonVariables.h">
       <Filter>소스 파일\Anal\Collect\DataFile</Filter>
     </ClInclude>
@@ -499,32 +490,26 @@
     <ClInclude Include="..\..\files\Utils\PCIDriver.h">
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue.h">
-      <Filter>소스 파일\INI</Filter>
+    <ClInclude Include="..\..\files\Anal\SigAnal\Hopping.h">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-ccs.h">
-      <Filter>소스 파일\INI</Filter>
+    <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastS.h">
+      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-efsl.h">
-      <Filter>소스 파일\INI</Filter>
+    <ClInclude Include="..\..\files\Utils\timer.h">
+      <Filter>소스 파일\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-FatFs.h">
-      <Filter>소스 파일\INI</Filter>
+    <ClInclude Include="..\..\files\Thread\cclocktimer.h">
+      <Filter>소스 파일\Thread</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-ffs.h">
-      <Filter>소스 파일\INI</Filter>
+    <ClInclude Include="..\..\files\Utils\carraymsgdata.h">
+      <Filter>소스 파일\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-mdd.h">
-      <Filter>소스 파일\INI</Filter>
+    <ClInclude Include="..\..\files\gen-versioninfo.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minGlue-stdio.h">
-      <Filter>소스 파일\INI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\minIni.h">
-      <Filter>소스 파일\INI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\files\MinIni\wxMinIni.h">
-      <Filter>소스 파일\INI</Filter>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -539,9 +524,6 @@
     </ClCompile>
     <ClCompile Include="..\..\files\cmain.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp">
-      <Filter>소스 파일\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\ccommonutils.cpp">
       <Filter>소스 파일\Utils</Filter>
@@ -696,9 +678,6 @@
     <ClCompile Include="..\..\files\Anal\EmitterMerge\Coordinate\Coordinate.cpp">
       <Filter>소스 파일\Anal\EmitterMerge\Coordinate</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastSquare.cpp">
-      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Anal\Collect\ccollectbank\ccollectbank.cpp">
       <Filter>소스 파일\Anal\Collect\CollectBank</Filter>
     </ClCompile>
@@ -738,8 +717,20 @@
     <ClCompile Include="..\..\VxWorksSpace\VSIGA\dkm.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\MinIni\minIni.cpp">
-      <Filter>소스 파일\INI</Filter>
+    <ClCompile Include="..\..\files\Anal\SigAnal\Hopping.cpp">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastS.cpp">
+      <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\timer.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Thread\cclocktimer.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp">
+      <Filter>소스 파일\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,13 +6,16 @@
 #pragma once
 
 
-#ifndef _WIN32
-#include "moduleLib.h"
+#ifdef __VXWORKS__
+#include <vxworks.h>
+#include <memLib.h>
+#include <moduleLib.h>
+
 
 #endif
 
 
-#include "..//Anal/INC/OS.h"
+#include "../Anal/INC/OS.h"
 
 #include "Macros.h"
 
@@ -22,10 +25,11 @@
 
 // 부트 쉘 명령어 정의
 enum {
-	DOWNLOAD_APP=0,         // 운용 프로그램 다운로드
+    RUN_APP=0,
+	DOWNLOAD_APP,           // 운용 프로그램 다운로드
 
 	WRITE_APP_FLASH,
-	RUN_APP,
+
 	INSTALL_WEB,            // SBC 환경 설정
 
 	DOWNLOAD_UTEST_PROG,
@@ -49,7 +53,16 @@ enum {
 #define	RAMDRV										(char *) "/RAMDRV"
 #define	RAMDRV_NO									(char *) ":0"
 #define	TFFSDRV										(char *) "/tffs1"
+
+#if defined(__LP64__)
+#define	ATADRV										(const char *) "/ata0"
+#else
+#ifdef _MSC_VER
 #define	ATADRV										(char *) "/ata0:0"
+#else
+#define	ATADRV										(const char *) "/ata0:0"
+#endif
+#endif
 
 #define	LOGDISK										"LOGDISK:"
 
@@ -69,7 +82,7 @@ enum {
 //#define INI_FOLDER                  				((char *) "INI")
 //#define INI_FILENAME                				((char *) "sysconfig.ini")
 
-
+#define IMAGE_FOLDER                                "/BIN"
 
 #ifdef __VXWORKS__
 #if defined(__LP64__)
@@ -129,6 +142,9 @@ class CBootShell
 {
 private:
 	MODULE *m_pModuleId;				// 시작 포인터
+
+private:
+	void KeyHook();
 
 public:
 	void Run();

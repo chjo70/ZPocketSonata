@@ -46,11 +46,12 @@ static int	tryAlternateSendTo(int sock, char *buf, int toWrite, int i,
  *	of bytes written.
  */
 
-int	socketWrite(int sid, char *buf, int bufsize)
+int	socketWrite(int sid, char *buf, size_t bufsize)
 {
 	socket_t	*sp;
 	ringq_t		*rq;
-	int			len, bytesWritten, room;
+	int			bytesWritten, room;
+    size_t len;
 
 	a_assert(buf);
 	a_assert(bufsize >= 0);
@@ -129,7 +130,7 @@ int	socketWriteString(int sid, char_t *buf)
  *
  */
 
-int	socketRead(int sid, char *buf, int bufsize)
+int	socketRead(int sid, char *buf, size_t bufsize)
 {
 	socket_t	*sp;
 	ringq_t		*rq;

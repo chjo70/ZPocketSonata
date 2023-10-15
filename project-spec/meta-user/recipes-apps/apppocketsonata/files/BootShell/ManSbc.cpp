@@ -11,6 +11,9 @@
 
 #include "pch.h"
 
+
+#include <stdio.h>
+
 #ifdef __VXWORKS__
 #include <taskLib.h>
 #include <ioLib.h>
@@ -24,6 +27,7 @@
 #include <usrLib.h>
 #include <tftpLib.h>
 #include <ifLib.h>
+#include <rebootLib.h>
 #include "moduleLib.h"
 
 #include <xbdBlkDev.h>
@@ -47,9 +51,11 @@
 
 #include "./pciDiag.h"
 
+#elif defined(_MSC_VER)
+#include <io.h>
+
 #endif
 
-//#include <io.h>
 #include <time.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -63,6 +69,8 @@
 
 
 #include "./Untar/FileTar.h"
+
+#include "../System/csysconfig.h"
 
 //#include "../Anal/INC/OS.h"
 //#include "../Anal/INC/System.h"
@@ -84,7 +92,6 @@ IMPORT TIMELOCALE *__loctime;
 
 #endif
 
-void Formatting();
 
 extern STATUS sysTffsFormat (void);
 
@@ -92,46 +99,107 @@ extern STATUS sysTffsFormat (void);
 }
 #endif
 
-extern CFileTar *theFileTar;
+extern CFileTar *g_theFileTar;
+
+extern CManSbc *g_theManSbc;
+
+extern CSysConfig *g_pTheSysConfig;
 
 
-void Formatting()
+CUDPServer *CManSbc::m_pUDPServer=NULL;
+
+
+#ifdef __VXWORKS__
+
+/**
+ * @brief     KeyboardHandler
+ * @param     int i
+ * @param     int ch
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-05 12:53:35
+ * @warning
+ */
+BOOL CManSbc::KeyboardHandler( int i, int ch )
 {
+    BOOL bRet = FALSE;
+
+    if( ch == REBOOT ) {
+        //TRACE( "\n\n\n reboting...", 0, 0, 0, 0, 0, 0 );
+
+        // m_pUDPServer->SendAllUDPServer();
+
+#if 1
+        // logMsg( "\n send reboot message to the taskMngr...", 0, 0, 0, 0, 0, 0 );
+        //g_theManSbc->m_pUDPServer->SendAllUDPServer();
+        //taskDelay( 10 );
+//         for( int i = 0; i < 1000; ++i ) {
+//             for( int j = 0; j < 1000; ++j );
+//         }
+        reboot( BOOT_CLEAR );
+#else
+        reboot( BOOT_CLEAR );
+
+#endif
+
+        bRet = TRUE;
+    }
+    //else if( ch == CTRL_Z ) {
+    //         if( m_Log == FALSE ) {
+    //             ConsoleStandardOut();
+    //         }
+    //         else {
+    //             ConsoleStandardFile();
+    //         }
+    //
+    //         m_Log = !m_Log;
+    //         return TRUE;
+    //}
+    else {
+        // printf( "\n ch[%d]", ch );
+    }
+
+    return bRet;
 
 }
 
+#endif
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
+/**
+ * @brief     CManSbc
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-05-30 09:25:28
+ * @warning
+ */
 CManSbc::CManSbc()
 {
+    char szSelfIPAddress[100];
+
     m_uiBoardID = 0;
+
+    GetIPAddress( szSelfIPAddress );
 
 #ifdef _NETMEM_
     m_pTheNetMem = new NetworkMemory( (char *) "127.0.0.1", NET_MEM_PORT );
 
     m_netCommand.offset = 0;
-    m_netCommand.data = ( unsigned char * ) malloc( sizeof( STR_NETMEM ) );
+    m_netCommand.data = ( unsigned char * ) malloc( sizeof( struct STR_NETMEM ) );
 #endif
 
 #ifdef __VXWORKS__
     STATUS status;
 
-    char ip_addr[100];
-
 	// VMEBusSystemReset();
 
     //ifMaskSet( "memac0" , 0xffffff00 );
     //ifAddrSet( "memac0" , "192.168.1.50" );
-    ifAddrGet( (char *) "memac0", ip_addr );
+    //ifAddrGet( (char *) "memac0", ip_addr );
 
-    //#error	"network device 명을 알아서 위와 같이 설정해야함."
-
-    //////////////////////////////////////////////////////////////////////////
-    //
-    // printf( "\n IP Address\t: [%s]\n" , ip_addr );
     sysClkRateSet( TICK_COUNT );
     if( sysClkRateGet() != TICK_COUNT ) {
         printf( "\n [W] 토네이도의 Component에서 tick count를 100 으로 설정하세요." );
@@ -141,41 +209,20 @@ CManSbc::CManSbc()
     }
 
     // SNTP 를 이용해서 현재 시간을 읽어온다.
-    SetTimeBySNMP();
-
-    //////////////////////////////////////////////////////////////////////////
-    // PCI 초기화
-    PCIConfigSetting();
+    // SetTimeBySNMP();
 
     //////////////////////////////////////////////////////////////////////////
     // NFS 드라이브 마운트
     MountDrive();
 
-    // 램 드라이브를 생성 합니다.
-	if( FALSE == CreateRamDisk( RAMDRV, 1024, 20000, 20000 ) ) { // 14336, 14336, 22000
-		printf( "\n[W] Application/UDF용 램 디스크가 생성하지 못했습니다." );
-		WhereIs;
-	}
+    //////////////////////////////////////////////////////////////////////////
+    // NFS 드라이브 마운트
+    MakeDrive();
 
-    // TFFS 드라이브를 생성 합니다.
-    if( FALSE == CreateTffsDisk( TFFSDRV ) ) {
-        printf( "\n[W] Application/UDF용 롬 디스크가 생성하지 못했습니다." );
-        WhereIs;
-    }
-    else {
-
-    }
-
-#ifdef ATADRV
-    // ATA 드라이브를 생성 합니다.
-    if( FALSE == CreateAtaDisk( ATADRV ) ) {
-        printf( "\n[W] Application/UDF용 롬 디스크가 생성하지 못했습니다." );
-        WhereIs;
-    }
-    else {
-
-    }
-#endif
+    //////////////////////////////////////////////////////////////////////////
+    // PCI 초기화
+    // 로직과 PCI 버스간이 아직 동기화 되지 않아서 늦게 호출하도록 합니다.
+    PCIConfigSetting();
 
 
 	//memcpy( & m_ProgInfo, (char *) FLASH_PRGINFO_ADRS, sizeof( STR_PRG_INFO ) );
@@ -219,9 +266,11 @@ CManSbc::CManSbc()
 
 #endif
 
-    m_pUDPServer = new CUDPServer( 3000 );
+    // UDP 서버 포트
+    m_pUDPServer = new CUDPServer( szSelfIPAddress, 3000 );
 
-    m_pUDPServer->CheckServer();
+    KeyboardHooking();
+
 
 }
 
@@ -235,8 +284,88 @@ CManSbc::CManSbc()
  */
 CManSbc::~CManSbc()
 {
+
 #ifdef _NETMEM_
     delete m_pTheNetMem;
+
+#endif
+
+#ifdef _MSC_VER
+    delete m_pUDPServer;
+
+#endif
+
+}
+
+/**
+ * @brief     MakeDrive
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-12 16:09:02
+ * @warning
+ */
+void CManSbc::MakeDrive()
+{
+    // 램 드라이브를 생성 합니다.
+    if( FALSE == CreateRamDisk( RAMDRV, 1024, 20000, 20000 ) ) { // 14336, 14336, 22000
+        printf( "\n[W] Application/UDF용 램 디스크가 생성하지 못했습니다." );
+        WhereIs;
+    }
+
+    // TFFS 드라이브를 생성 합니다.
+    if( FALSE == CreateTffsDisk( TFFSDRV ) ) {
+        printf( "\n[W] Application/UDF용 롬 디스크가 생성하지 못했습니다." );
+        WhereIs;
+    }
+    else {
+
+    }
+
+#ifdef ATADRV
+    // ATA 드라이브를 생성 합니다.
+    if( FALSE == CreateAtaDisk( ATADRV ) ) {
+        printf( "\n[W] Application/UDF용 롬 디스크가 생성하지 못했습니다." );
+        WhereIs;
+    }
+    else {
+
+    }
+#endif
+
+}
+
+/**
+ * @brief     GetIPAddress
+ * @param     char * pszIPAddress
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-04 11:35:51
+ * @warning
+ */
+void CManSbc::GetIPAddress( char *pszIPAddress )
+{
+
+    pszIPAddress[0] = 0;
+
+#ifdef __VXWORKS__
+    ifAddrGet( ( char * ) "memac0", pszIPAddress );
+
+#else
+    char name[255];
+    PHOSTENT hostinfo;
+    CString strIpAddress = "";
+
+    if( gethostname( name, sizeof( name ) ) == 0 ) {
+        if( ( hostinfo = gethostbyname( name ) ) != NULL ) {
+            strIpAddress = inet_ntoa( *( struct in_addr * ) *hostinfo->h_addr_list );
+            strcpy( pszIPAddress, ( LPSTR ) ( LPCTSTR ) strIpAddress );
+        }
+
+    }
 
 #endif
 
@@ -252,58 +381,95 @@ CManSbc::~CManSbc()
  */
 UCHAR CManSbc::GetCommand()
 {
-    UCHAR key, uRet=RUN_APP;
+    UCHAR uRet = RUN_APP;
+    UCHAR key;
 
+    unsigned int uiTFFSBoot;
+
+#if 0
     key = Getche( KEYBOARD_TIMEOUT );
-    printf( "\nGetche key[%d]" , key );
 
-	switch( tolower( key ) ) {
-		case 'w' :
-			uRet = INSTALL_WEB;
+#else
+
+    while( true ) {
+        Sleep( 1 );
+        printf( "." );
+        key = m_pUDPServer->GetKey();
+        if( key >= KEY_TIMEOUT ) {
+            break;
+        }
+    }
+
+#endif
+
+    printf( "\nGetche key[%d;%1c]", key, key );
+
+    switch( tolower( key ) ) {
+        case 'w':
+            WhereIs;
+            uRet = INSTALL_WEB;
             break;
 
-		case '1' :
-			WhereIs;
-			uRet = WRITE_APP_FLASH;
+        case '!':
+            WhereIs;
+            uRet = WRITE_APP_FLASH;
             break;
 
-		case 'z' :
-			uRet = DOWNLOAD_UTEST_PROG;
-		case 'x' :
-			uRet = WRITE_UTEST_PROG;
-		case 'c' :
-			uRet = RUN_UTEST_PROG;
+        case 'z':
+            uRet = DOWNLOAD_UTEST_PROG;
+        case 'x':
+            uRet = WRITE_UTEST_PROG;
+        case 'c':
+            uRet = RUN_UTEST_PROG;
 
-		case 'n' :
-			uRet = WRITE_BOOT_PROG;
+        case 'n':
+            uRet = WRITE_BOOT_PROG;
             break;
 
-		case '0' :
+        case '0':
             uRet = DOWNLOAD_APP;
             break;
 
-		case 'd' :
+        case 'd':
             uRet = DEBUG_APP;
             break;
 
-		default :
-			// printf( "\n stBootParams[%s]" , stBootParams.bootDev );
+        case '1':
+            uRet = RUN_APP;
+            WhereIs;
+            break;
 
-			/*! \bug  명령어 디버깅용으로 사용함.
-					\date 2008-07-03 10:42:35, 조철희
-			*/
-			//if( strcmp( stBootParams.bootDev, "fei" ) == 0 )
-			uRet = DOWNLOAD_APP;
+        default:
+            /*! \bug  명령어 디버깅용으로 사용함.
+                    \date 2008-07-03 10:42:35, 조철희
+            */
+            uiTFFSBoot = g_pTheSysConfig->GetTFFSBoot();
 
-			break;
-			//;
+            g_pTheSysConfig->SetTFFSBoot( uiTFFSBoot );
 
-	}
+            if( uiTFFSBoot == RUN_APP ) {
+                uRet = RUN_APP;
+            }
+            else {
+                uRet = DOWNLOAD_APP;
+            }
+            break;
+    }
 
 	return uRet;
 
 }
 
+/**
+ * @brief     Getche2
+ * @param     int sec
+ * @return    UCHAR
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-03 14:19:51
+ * @warning
+ */
 UCHAR CManSbc::Getche2( int sec )
 {
 	char cChar=0;
@@ -343,93 +509,43 @@ UCHAR CManSbc::Getche2( int sec )
 */
 UCHAR CManSbc::Getche( int sec )
 {
-    char cChar=0;
-
-	int stdInFd, numReady;
-	struct timeval tclSelectTimeout;
-    fd_set original_socket;
-    fd_set original_stdin;
-    fd_set readFds;
-    fd_set writeFds;
-
-    int numfd;
-
-    unsigned int address_length;
-
-    struct sockaddr_in server_address, client_address;
+    char cChar;
 
 #ifdef __VXWORKS__
+	int stdInFd, numReady;
+	struct timeval tclSelectTimeout;
+    fd_set readFds;
+    int save_options;
+
+    TY_DEV_ID pTyDev;
+    RING_ID ringId;
+    char  ccc;
+
     int tShell_priority;
 
-    taskPriorityGet( 0, & tShell_priority );
+    char buffer[200];
+
+    //taskPriorityGet( 0, &tShell_priority );
+    //printf( "\n tShell_priority priority[%d]" , tShell_priority );
 
 	stdInFd = ioTaskStdGet( taskNameToId( (char *) "tShell0" ), 0 );
 
-#else
-    stdInFd = _fileno( stdin );
-
-#endif
-
-    tclSelectTimeout.tv_sec = ( long ) 100; //  sec;
-    tclSelectTimeout.tv_usec = ( long ) 0;
-
-
-#ifdef __VXWORKS__
 	/* Save options */
-	int save_options = ioctl(stdInFd,FIOGETOPTIONS,0); /* current console */
-
+    save_options = ioctl( stdInFd, FIOGETOPTIONS, 0 ); /* current console */
 	// printf( "\n save_options[%x], new_option[%x]" , save_options, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
 	ioctl( stdInFd, FIOSETOPTIONS, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
-#endif
 
-    int socket_fd;
+    /* Enter raw mode */
+    // ioctl (stdInFd, FIOSETOPTIONS, OPT_TERMINAL & ~OPT_LINE & ~OPT_ECHO );
 
-    if( ( socket_fd = socket( AF_INET, SOCK_DGRAM, 0 ) ) == -1 ) {
-        printf( "[W] socket() 함수에서 소켓을 할당하지 못했습니다 !" );
-    }
+    tclSelectTimeout.tv_sec = ( long ) sec;
+    tclSelectTimeout.tv_usec = ( long ) 0;
 
-#ifdef _MSC_VER
-    unsigned long nonblock_enabled = TRUE;
-    ioctlsocket( socket_fd, FIONBIO, & nonblock_enabled );
-
-#else
-    int flags = fcntl( socket_fd, F_GETFL );
-    flags |= O_NONBLOCK;
-
-#endif
-
-    // clear the set ahead of time
-    FD_ZERO( &original_socket );
-    FD_ZERO( &original_stdin );
     FD_ZERO( & readFds );
-    FD_ZERO( & writeFds );
+    FD_SET( stdInFd, &readFds );
 
-	// FD_SET( stdInFd, & readFds);
-    FD_SET( socket_fd, & original_socket );
-    FD_SET( socket_fd, & readFds );
-    FD_SET( stdInFd, & original_stdin );
-    FD_SET( 0, & writeFds );
+    cChar = 0;
 
-    server_address.sin_family = AF_INET;
-    server_address.sin_port = htons( 5000 );
-    server_address.sin_addr.s_addr = INADDR_ANY;
-
-#ifdef _MSC_VER
-    memset( ( char * ) &server_address.sin_zero, 0, sizeof( server_address.sin_zero ) );
-
-#else
-    bzero( &( server_address.sin_zero ), 8 );
-
-#endif
-
-    if( bind( socket_fd, ( struct sockaddr * ) &server_address, sizeof( server_address ) ) == -1 ) {
-        printf( "[W] bind() 함수에서 IP 와 바인딩하지 못했습니다 !" );
-    }
-
-    address_length = sizeof( struct sockaddr );
-
-
-#ifdef __VXWORKS__
 #ifdef INCLUDE_SHELL
 	TASK_ID taskID=taskNameToId( (char *) "tShell0" );
 	taskSuspend( taskID );
@@ -439,30 +555,22 @@ UCHAR CManSbc::Getche( int sec )
     //printf( "\n tShell0 priority[%d]" , tShell_priority );
 	//taskPrioritySet( taskNameToId( (char *) "tShell0" ), 255 );
 #endif
+
     ioctl( stdInFd, FIORFLUSH, 0 );
 
-#endif
+    numReady = select( FD_SETSIZE, &readFds, NULL, NULL, &tclSelectTimeout );
 
-    numfd = socket_fd + 1;
+    if( numReady > 0 ) {
+        //tyIRd( pTyDev, cChar );
+        //printf( "\n cChar[%d]\n" , cChar );
 
-    readFds = original_socket;
-    writeFds = original_stdin;
-
-	// numReady = select( FD_SETSIZE, & readFds, NULL, NULL, & tclSelectTimeout );
-    numReady = select( numfd, &readFds, NULL,/*NULL,*/ NULL, &tclSelectTimeout );
-
-	if( numReady > 0 ) {
-		read( stdInFd, & cChar, 1 );           /* read the key just hit */
-
+        read( stdInFd, & cChar, 1 );           /* read the key just hit */
 		//printf( "\n cChar[%d]\n");
 	}
 
-#ifdef __VXWORKS__
 	/* Leave raw mode */
 	ioctl( stdInFd, FIOSETOPTIONS, save_options );
 	ioctl( stdInFd, FIOFLUSH, 0 );
-
-#endif
 
 
 #ifdef INCLUDE_SHELL
@@ -470,8 +578,13 @@ UCHAR CManSbc::Getche( int sec )
 	taskResume( taskID );
 #endif
 
-	return (UCHAR) cChar;
 
+#else
+    cChar = 0;
+
+#endif
+
+	return (UCHAR) cChar;
 }
 
 /**
@@ -490,7 +603,7 @@ bool CManSbc::CreateTffsDisk( char *szDiskName )
     lFreeSpace = DiskFreeSpace( szDiskName );
 
     if( lFreeSpace >= 0 ) {
-		printf( "\n\n\n [%s] 드라이브에 남은 공간이 [%ld KByte] 있습니다.", szDiskName, lFreeSpace );
+		printf( "\n\n\n [%s] 드라이브에 남은 공간이 [%4ld MByte] 있습니다.", szDiskName, lFreeSpace/1024/1024 );
     }
     else {
         //////////////////////////////////////////////////////////////////////////
@@ -534,7 +647,7 @@ bool CManSbc::CreateAtaDisk( char *szDiskName )
     lFreeSpace = DiskFreeSpace( szDiskName );
 
     if( lFreeSpace >= 0 ) {
-        printf( "\n\n\n [%s] 드라이브에 남은 공간이 [%ld KByte] 있습니다.", szDiskName, lFreeSpace );
+        printf( "\n\n\n [%s] 드라이브에 남은 공간이 [%ld MByte] 있습니다.", szDiskName, lFreeSpace/1024/1024 );
     }
     else {
         //printf( "\n\n\n rebotting please...\n" );
@@ -589,7 +702,7 @@ bool CManSbc::CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack
 	// VxWorks 에서 shell component 를 추가하지 않으면 에러가 발생함.
 	long lFreeSpace;
 	lFreeSpace = DiskFreeSpace( szRamDevs );
-    printf( "\n\n\n [%s] 드라이브에 남은 공간이 [%ld KByte] 있습니다.", szDiskName, lFreeSpace );
+    printf( "\n\n\n [%s] 드라이브에 남은 공간이 [%ld MByte] 있습니다.", szDiskName, lFreeSpace/1024/1024 );
 
 #endif
 
@@ -614,11 +727,11 @@ long CManSbc::DiskFreeSpace( char *szDiskName )
 	struct statfs SStatFs;
 
 	if( statfs( szDiskName, & SStatFs )==OK ) {
-		lDiskFreeSpace = (long) ( (float) SStatFs.f_bsize * (float) SStatFs.f_bavail / (float) 1024. );
+		lDiskFreeSpace = (long) ( (float) SStatFs.f_bsize * (float) SStatFs.f_bavail );
 	}
 	else {
 		perror( "szDiskName" );
-		printf( "\n [W] 드라이브가 잘못됐습니다. " );
+		printf( "\n [W] [%s] 드라이브가 잘못됐습니다. ", szDiskName );
 	}
 #endif
 
@@ -633,8 +746,10 @@ long CManSbc::DiskFreeSpace( char *szDiskName )
  * @date		2008-11-11 10:25:36
  * @warning
  */
-void CManSbc::SetTimeBySNMP()
+bool CManSbc::SetTimeBySNMP()
 {
+    bool bRet = true;
+
 #ifdef __VXWORKS__
     int iTry;
 	UINT _date, _time;
@@ -647,14 +762,30 @@ void CManSbc::SetTimeBySNMP()
 	// InitSystemVariable();
 	putenv( (char *) "TIMEZONE=KST::-540.000000:000000" );
 
-    printf( "\n\n ##### SNTP 프로토콜을 사용해서 시간을 설정합니다..." );
+    printf( "\n\n ##### SNTP 프로토콜을 사용해서 타임 서버[%s]로 SBC 현재 시간을 설정합니다.\n" , g_pTheSysConfig->GetPrimeServerOfNetwork() );
     // 이놈의 vxworks 7은 왜 2번을 수행해야 얻어 오는지....
     iTry = 0;
     do {
-        sntpc_status = sntpcTimeGet( g_stBootParams.had, 3*OS_ONE_SEC, & tspec );
-        printf( "SNTP를[%s:%d] 요청..." , g_stBootParams.had, sntpc_status );
+        sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetPrimeServerOfNetwork(), 3*OS_ONE_SEC, & tspec );
+        //printf( "SNTP를[%s:%d] 요청..." , g_stBootParams.had, sntpc_status );
+        printf( "*" );
+
         ++ iTry;
+
     } while( iTry <= TRY_GETSNTP && sntpc_status != OK );
+
+    if( sntpc_status != OK ) {
+        printf( "\n\n ##### SNTP 프로토콜을 사용해서 타임 서버[%s]로 SBC 현재 시간을 설정합니다.\n", g_pTheSysConfig->GetSecondServerOfNetwork() );
+        iTry = 0;
+        do {
+            sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetSecondServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
+            //printf( "SNTP를[%s:%d] 요청..." , g_stBootParams.had, sntpc_status );
+            printf( "*" );
+
+            ++ iTry;
+
+        } while( iTry <= TRY_GETSNTP && sntpc_status != OK );
+    }
 
 	if( sntpc_status != OK ) {
 		time_t result, recent_time=0;
@@ -662,7 +793,7 @@ void CManSbc::SetTimeBySNMP()
 		DIR *pSystemLogDir;
 		struct dirent *pLogEntry;
 
-		printf( "\n [W] SNTPctimeGet failed...%s" , g_stBootParams.had );
+		printf( "\n [W] SNTPctimeGet failed...%s" , g_pTheSysConfig->GetPrimeServerOfNetwork() );
 		printf( "\n Returned sntpc_status: %i errno: %s", sntpc_status, strerror(errno) );
 
 		/*
@@ -734,13 +865,17 @@ void CManSbc::SetTimeBySNMP()
 			time_t ti=time(NULL);
 
             pstTime = localtime( & ti );
-            strftime( buffer, 100, "%Y-%m-%d %H:%M:%S[%ld]", pstTime );
+            strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime );
 
 			printf( "완료[%s, %d].\n" , buffer, ti );
         }
 	}
 
+    bRet = ( sntpc_status == OK );
+
 #endif
+
+    return bRet;
 
 }
 
@@ -770,23 +905,32 @@ void CManSbc::InstallWeb()
 
     sprintf( szDstFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY );
 #ifdef __VXWORKS__
+#if defined(__LP64__)
+    mkdir( szDstFilename, 0666 );
+#else
     mkdir( szDstFilename );
 #endif
+#endif
 
-    sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
+    sprintf( szSrcFilename, "%s/%s/%s" , ATADRV, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
     sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY, CEDEOB_SQLITE_FILENAME );
     stat = CopyToFile( szSrcFilename, szDstFilename );
     // INI 파일을 백업한다.
     sprintf( szDstFilename, "%s%s/%s" , RAMDRV, RAMDRV_NO, INI_DIRECTORY );
 #ifdef __VXWORKS__
+#if defined(__LP64__)
+    mkdir( szDstFilename, 0666 );
+
+#else
     mkdir( szDstFilename );
 #endif
-    sprintf( szSrcFilename, "%s/%s/%s" , TFFSDRV, INI_DIRECTORY, INI_FILENAME );
+#endif
+    sprintf( szSrcFilename, "%s/%s/%s" , ATADRV, INI_DIRECTORY, INI_FILENAME );
     sprintf( szDstFilename, "%s%s/%s/%s" , RAMDRV, RAMDRV_NO, INI_DIRECTORY, INI_FILENAME );
     stat = CopyToFile( szSrcFilename, szDstFilename );
 
     // 포멧 ...
-    printf( "\n\n 2. TFFS 드아리브를 포멧합니다..." );
+    printf( "\n\n 2. TFFS 드라이브를 포멧합니다..." );
 
 #if defined(__VXWORKS__) || defined(__linux__)
     dosFsVolFormat( TFFSDRV, DOS_OPT_DEFAULT, (FORMAT_PTR) 0 );
@@ -801,11 +945,12 @@ void CManSbc::InstallWeb()
     char sztffs0Webfolder[100];
 
     if( true == DownloadfromTftp( WEB_FILENAME, (char *) szRamDrvFilename ) ) {
-        sprintf( szRamDrvWebfolder, "%s%s" , RAMDRV, RAMDRV_NO );
+        //sprintf( szRamDrvWebfolder, "%s%s" , RAMDRV, RAMDRV_NO );
+        sprintf( szRamDrvWebfolder, "%s", ATADRV );
         printf("\n TAR 파일[%s]을 풀어서 설치합니다." , szRamDrvWebfolder );
 
-        sprintf( sztffs0Webfolder, "%s" , TFFSDRV );
-        theFileTar->UnTar( szRamDrvFilename, sztffs0Webfolder );
+        sprintf( sztffs0Webfolder, "%s" , ATADRV );
+        g_theFileTar->UnTar( szRamDrvFilename, sztffs0Webfolder );
 
         unlink( szRamDrvFilename );
     }
@@ -876,14 +1021,14 @@ int CManSbc::CopyToFile( const char *src_file, const char *dest_file )
  */
 void CManSbc::DownloadAndROMWriteApp()
 {
-    char szTffsDrvFilename[100];
+    char szImageFilename[100];
 
-    sprintf( szTffsDrvFilename, "%s/%s" , TFFSDRV, APP_FILENAME );
+    sprintf( szImageFilename, "%s%s/%s" , ATADRV, IMAGE_FOLDER, APP_FILENAME );
 
-    printf( "\n Installing the App program in the drive[%s]...", szTffsDrvFilename );
+    printf( "\n 운용 소프트웨어 이미지를 SATA 드라이브[%s]에 저장합니다.", szImageFilename );
 
 #ifdef __VXWORKS__
-    if( true == DownloadfromTftp( APP_FILENAME, (char *) szTffsDrvFilename ) ) {
+    if( true == DownloadfromTftp( APP_FILENAME, (char *) szImageFilename ) ) {
     	printf("\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
 
     }
@@ -916,13 +1061,13 @@ void CManSbc::DownloadApp()
     printf( "\n tftp 를 이용해서 App 프로그램을 램 드라이브[%s]에 설치 합니다..", szRAMDrvFilename );
 #ifdef __VXWORKS__
     if( true == DownloadfromTftp( APP_FILENAME, (char *) szRAMDrvFilename ) ) {
-    	printf("\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
+    	//printf("\n\n *** 운용 소프트웨어를 메모리에 다운로드 완료 했습니다. ***" );
     }
     else {
-        printf("\n [W] 운용 소프트웨어를 설치하지 못 했습니다 !!!" );
+        printf("\n [W] 운용 소프트웨어를 메모리에 다운로드하지 못 했습니다 !!!" );
     }
 #else
-    printf( "\n\n *** 운용 소프트웨어를 설치 완료 했습니다. ***" );
+    printf( "\n\n *** 운용 소프트웨어를 메모리에 다운로드 완료 했습니다. ***" );
 
 #endif
 
@@ -944,7 +1089,7 @@ bool CManSbc::DownloadfromTftp( char *tftpfilename, char *pFilename )
 	bool bret=true;
 
 #ifdef __VXWORKS__
-	int	iFdWrite;
+	int iFdWrite;
 	int	iStatus;
 
     TFTP_DESC *spTftpDesc;
@@ -954,33 +1099,47 @@ bool CManSbc::DownloadfromTftp( char *tftpfilename, char *pFilename )
 		return FALSE;
 	}
 
-	bret = true;
+    // tftpInfoShow( spTftpDesc );
 
-#if TOOL==diab
-	printf( "\n Host IP  : [ %s ]", TFTP_SERVER_IP );
-	printf( "\n ROM Fle  : [ %s ]", tftpfilename );
-#else
-	printf( "\n 호스트 IP  : [ %s ]", TFTP_SERVER_IP );
-	printf( "\n 롬 파일명  : [ %s ]", tftpfilename );
-#endif
+	printf( "\n 호스트 IP #1  : [ %s ]", g_pTheSysConfig->GetPrimeServerOfNetwork() );
+	printf( "\n 롬 파일명     : [ %s ]", tftpfilename );
 
 	/*	tftp 설정을 초기화 */
-	if( ( tftpPeerSet (spTftpDesc, TFTP_SERVER_IP, TFTP_PORT ) == ERROR ) ||
+	if( ( tftpPeerSet (spTftpDesc, g_pTheSysConfig->GetPrimeServerOfNetwork(), TFTP_PORT ) == ERROR ) ||
 		( tftpModeSet (spTftpDesc, TFTP_MODE ) == ERROR ) ) {
 		(void) tftpQuit (spTftpDesc);
+
+        printf( "\n 호스트 IP #2  : [ %s ]", g_pTheSysConfig->GetSecondServerOfNetwork() );
+        printf( "\n 롬 파일명     : [ %s ]", tftpfilename );
+
+        if( ( tftpPeerSet( spTftpDesc, g_pTheSysConfig->GetSecondServerOfNetwork(), TFTP_PORT ) == ERROR ) ||
+            ( tftpModeSet( spTftpDesc, TFTP_MODE ) == ERROR ) ) {
+            ( void ) tftpQuit( spTftpDesc );
+
+        }
+
 		return FALSE;
 	}
 
 	/* 파일 Open */
     unlink( pFilename );
 
-	iFdWrite = open( pFilename, O_CREAT | O_RDWR, 0644 );
+#if 1
+	iFdWrite = open( pFilename, O_CREAT | O_RDWR | O_BINARY, 0666 );
     if (iFdWrite == ERROR) {
         PrintErr( ( "\n [W] 파일[%s] 에러입니다.", pFilename ) );
         return FALSE;
     }
+#else
+    iFdWrite = fopen( pFilename, "wb" );
+    if( iFdWrite == NULL ) {
+        PrintErr( ( "\n [W] 파일[%s] 에러입니다.", pFilename ) );
+        return FALSE;
+    }
 
-	//printf( "\n spTftpDesc[%p], iFdWrite[%d], tftpfilename[%s]" , spTftpDesc, iFdWrite, tftpfilename );
+#endif
+
+	// printf( "\n spTftpDesc[%p], iFdWrite[%d], tftpfilename[%s]" , spTftpDesc, iFdWrite, tftpfilename );
 	if(	( iStatus = tftpGet( spTftpDesc, tftpfilename, iFdWrite, TFTP_CLIENT ) ) == ERROR ) {
 		bret = false;
 		switch( errnoGet() ) {
@@ -1054,7 +1213,13 @@ bool CManSbc::DownloadfromTftp( char *tftpfilename, char *pFilename )
 
 	}
 
+#if 1
 	close( iFdWrite );
+#else
+	fclose( iFdWrite );
+
+#endif
+
 	(void) tftpQuit( spTftpDesc );
 
 	printf( "\n\n" );
@@ -1081,7 +1246,7 @@ void CManSbc::RunApp( enWhatDrvAPP enApp )
         sprintf( szDrvAppFilename, "%s%s/%s", RAMDRV, RAMDRV_NO, APP_FILENAME );
     }
     else {
-        sprintf( szDrvAppFilename, "%s/%s", TFFSDRV, APP_FILENAME );
+        sprintf( szDrvAppFilename, "%s%s/%s", ATADRV, IMAGE_FOLDER, APP_FILENAME );
     }
 
 #ifdef __VXWORKS__
@@ -1197,53 +1362,62 @@ void CManSbc::InitDataBase()
 void CManSbc::PCIConfigSetting()
 {
 
-
 #if defined(_PCI)
 
+    TRACE( "\n\n" );
+
     if( PCIeMemInit( ) == ERROR ) {
-        printf( "\n ERROR! PCIe BAR Initialize !" );
+        printf( "\n SBC 상에서 PCI 초기화를 수행하지 못했습니다. SBC 장착을 다시 해보거나 담당자에거 문의하세요..!" );
+        while( true );
     }
+    else {
+        // PCI 와 로직 간의 동기화 오류로 시간을 대기하고 호출하도록 합니다.
+        Sleep( 5 );
 
-	// SBC 보드 ID 읽기
-	unsigned int uiPSBoardID;
-	uiPSBoardID = PCIeLeftCtrlRead32( 0x208 );
-	uiPSBoardID = swapByteOrder( uiPSBoardID );
+	    // SBC 보드 ID 읽기
+	    unsigned int uiPSBoardID;
+	    uiPSBoardID = PCIeLeftCtrlRead32( IBRDID );
+	    uiPSBoardID = swapByteOrder( uiPSBoardID );
 
-	// 왜 이렇게 만들었을까요 ? 나도 모르지...
-	switch( uiPSBoardID ) {
-        case 8:
-            m_uiBoardID = 1;
-            break;
+	    // 왜 이렇게 만들었을까요 ? 나도 모르지...
+	    switch( uiPSBoardID ) {
+            case 8:
+                m_uiBoardID = 1;
+                break;
 
-		case 6 :
-		case 7 :
-			m_uiBoardID = 2;
-			break;
+		    case 6 :
+		    case 7 :
+			    m_uiBoardID = 2;
+			    break;
 
-        case 0:
-        case 1:
-            m_uiBoardID = 3;
-            break;
+            case 0:
+            case 1:
+                m_uiBoardID = 3;
+                break;
 
-		case 2:
-        case 3:
-            m_uiBoardID = 4;
-            break;
+		    case 2:
+            case 3:
+                m_uiBoardID = 4;
+                break;
 
-        case 4:
-        case 5:
-            m_uiBoardID = 5;
-            break;
+            case 4:
+            case 5:
+                m_uiBoardID = 5;
+                break;
 
-		default:
-			m_uiBoardID = 1;
-			break;
-	}
+		    default:
+			    m_uiBoardID = 1;
+			    break;
+	    }
 
-	printf( "\n SBC Board ID : %d, PS Board ID : %d", m_uiBoardID, uiPSBoardID );
+	    printf( "\n SBC Board ID : %d, PS Board ID : %d", m_uiBoardID, uiPSBoardID );
+    }
 
 	// Print_PCIeLeftCtrlRead32( 0x208 );
 	// Print_PCIeRightCtrlRead32( 0x208 );
+
+#else
+    m_uiBoardID = 1;
 
 #endif
 
@@ -1263,8 +1437,8 @@ void CManSbc::MountDrive()
 #ifdef __VXWORKS__
 	STATUS status;
 
-	printf( "\nHOST[%s:%s]" , g_stBootParams.hostName, g_stBootParams.had );
-	nfsAuthUnixSet ( (char *) "host", 0, 0, 0, (int *) 0 );
+	// printf( "\nHOST[%s:%s]" , g_stBootParams.hostName, g_stBootParams.had );
+	nfsAuthUnixSet ( (char *) g_stBootParams.hostName, 0, 0, 0, (int *) 0 );
 
     // 호스트명 추가
     //status = hostAdd( "NFSDRV", stBootParams.had );
@@ -1273,7 +1447,7 @@ void CManSbc::MountDrive()
     if( status == OK ) {
         status = nfsMount( "host", NFS_DRIVE, NFS_DRIVE );
         if( status == OK ) {
-            printf( "\nNFS 드라이브[%s]를 정상 연결했습니다 !", NFS_DRIVE );
+            printf( "\nNFS 드라이브[%s:%s]를 정상 연결했습니다 !", g_stBootParams.had, NFS_DRIVE );
         }
         else {
             printf( "\n[W] 마운트를 하지 못 했습니다 !!!" );
@@ -1316,6 +1490,40 @@ void CManSbc::ShowNetMemory()
             printf( "\n [#%d] NET 공유 에러 입니다.", i );
         }
     }
+#endif
+
+}
+
+/**
+ * @brief     CComHook
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-05 12:45:37
+ * @warning
+ */
+void CManSbc::KeyboardHooking()
+{
+#ifdef __VXWORKS__
+    int status;
+    int stdinFd;
+
+    stdinFd = ioTaskStdGet( 0, 0 );
+    printf( "\n\n Key board hooking[%d]..." , stdinFd );
+
+    status = ioctl( stdinFd, FIOPROTOHOOK, KeyboardHandler );
+    if( status == ERROR ) {
+        printf( "\n ioctl error !" );
+    }
+
+    status = ioctl( stdinFd, FIOPROTOARG, 1 );
+    if( status == ERROR ) {
+        printf( "\n ioctl error !" );
+    }
+#else
+    printf( "\n\n Key board hooking..." );
+
 #endif
 
 }

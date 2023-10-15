@@ -127,7 +127,7 @@ void ringqClose(ringq_t *rq)
  *	a high water mark of at most one less than the queue size.
  */
 
-int ringqLen(ringq_t *rq)
+size_t ringqLen(ringq_t *rq)
 {
 	a_assert(rq);
 	a_assert(rq->buflen == (rq->endbuf - rq->buf));
@@ -230,9 +230,9 @@ int ringqInsertc(ringq_t *rq, char_t c)
  *	Add a string to the queue. Add a trailing null (maybe two nulls)
  */
 
-int ringqPutStr(ringq_t *rq, char_t *str)
+size_t ringqPutStr(ringq_t *rq, char_t *str)
 {
-	int		rc;
+	size_t		rc;
 
 	a_assert(rq);
 	a_assert(str);
@@ -348,9 +348,10 @@ int ringqPutStrA(ringq_t *rq, char *str)
  *	Grow the q as required.
  */
 
-int ringqPutBlk(ringq_t *rq, unsigned char *buf, int size)
+size_t ringqPutBlk(ringq_t *rq, unsigned char *buf, size_t size)
 {
-	int		this, bytes_put;
+	size_t		bytes_put;
+    size_t this;
 
 	a_assert(rq);
 	a_assert(rq->buflen == (rq->endbuf - rq->buf));
@@ -388,9 +389,9 @@ int ringqPutBlk(ringq_t *rq, unsigned char *buf, int size)
  *	Get a block of data from the ringq. Return the number of bytes returned.
  */
 
-int ringqGetBlk(ringq_t *rq, unsigned char *buf, int size)
+size_t ringqGetBlk(ringq_t *rq, unsigned char *buf, size_t size)
 {
-	int		this, bytes_read;
+	size_t		this, bytes_read;
 
 	a_assert(rq);
 	a_assert(rq->buflen == (rq->endbuf - rq->buf));
@@ -427,9 +428,9 @@ int ringqGetBlk(ringq_t *rq, unsigned char *buf, int size)
  *	block copy. Useful if the user is doing their own data insertion.
  */
 
-int ringqPutBlkMax(ringq_t *rq)
+size_t ringqPutBlkMax(ringq_t *rq)
 {
-	int		space, in_a_line;
+	size_t		space, in_a_line;
 
 	a_assert(rq);
 	a_assert(rq->buflen == (rq->endbuf - rq->buf));
@@ -446,9 +447,9 @@ int ringqPutBlkMax(ringq_t *rq)
  *	block copy. Useful if the user is doing their own data retrieval.
  */
 
-int ringqGetBlkMax(ringq_t *rq)
+size_t ringqGetBlkMax(ringq_t *rq)
 {
-	int		len, in_a_line;
+	size_t		len, in_a_line;
 
 	a_assert(rq);
 	a_assert(rq->buflen == (rq->endbuf - rq->buf));
@@ -534,7 +535,7 @@ void ringqFlush(ringq_t *rq)
 static int ringqGrow(ringq_t *rq)
 {
 	unsigned char	*newbuf;
-	int 			len;
+    size_t 			len;
 
 	a_assert(rq);
 

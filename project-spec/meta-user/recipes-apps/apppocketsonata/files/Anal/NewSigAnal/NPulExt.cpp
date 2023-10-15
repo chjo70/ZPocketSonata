@@ -63,6 +63,7 @@ CNPulExt::~CNPulExt()
 //
 void CNPulExt::Init()
 {
+    m_uiCoFrqAoaPwIdx =  m_pNewSigAnal->GetCoFrqAoaPwIdx();
     //m_CoPulseTrains = 0;
 
     //m_enBandWidth = m_pNewSigAnal->GetBandWidth();
@@ -191,26 +192,39 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
     // 펄스열 저장소를 정리한다.
     CleanPulseTrains();
 
-    // 규칙성 펄스열을 찾은 펄스열 인덱스 저장
+    ClearAllMark();
+
+    // 불규칙성 펄스열을 찾은 펄스열 인덱스 저장
     SetRefEndSeg();
+
+    // 불규칙성 펄스열의 기준 PRI 값을 찾는다. 모든 전 구간에서 찾는다.
+    FindRefJitter();
+
+    // 기준 PRI 로 펄스열 추출
+    ExtractRefJitter();
 
     ClearAllMark();
 
     //////////////////////////////////////////////////////////////////////////
     // 불규칙성 펄스열 찾기
     //
+    //TODO: Stable 펄스열 추출 처럼 기분 펄스열을 모두 찾고 펄스열을 추출해야 되나 ?
+    //date 	2023-07-16 19:40:36
+
     // 펄스열 구간마다 규칙성 펄스열과 불규칙성 펄스열을 같이 추출한다.
     // 펄스열은 각 단계마다 규칙성 펄스열과 불규칙성 펄스열을 동시에 수행한다.
     //-- 조철희 2005-12-09 16:11:27 --//
-    ExtractJitter( _STABLE + _JITTER_RANDOM );
+    //ExtractJitter( _STABLE + _JITTER_RANDOM );
 
     // 펄스열의 인덱스를 조사해서 겹쳐져 있으면 그 중 한개를 버린다.
     DiscardPulseTrain();
 
-    sprintf( buffer, "================ 기준 펄스열 추출 : %d[ns]", ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
-    CCommonUtils::WallMakePrint( buffer, '=' );
-    Log( enDebug, buffer );
+#ifdef _MSC_VER
+    sprintf( buffer, "---------------- 기준 펄스열 추출 : %d[ns]", ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
+    CCommonUtils::WallMakePrint( buffer, '-' );
+    Log( enDebug, "%s", buffer );
 
+#endif
 
     //////////////////////////////////////////////////////////////////////////
     // 2차 펄스열 추출
@@ -227,7 +241,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
     }
 
 #else
-        #pragma message( "펄스열 추적 알고리즘을 선택해야 합니다." __FILE__ )
+    _MSG( "펄스열 추적 알고리즘을 선택해야 합니다." );
 
 #endif
 
@@ -250,6 +264,11 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
  */
 void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarMode )
 {
+#ifdef _MSC_VER
+
+#elif __VXWORKS__
+
+#else
     UINT i, uiCoSeg=0;
 
     STR_PRI_RANGE_TABLE extRange;
@@ -263,7 +282,7 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
 
     // 위협 라이브러리의 주파수 범위로 필터링...
 
-    if( pVecMatchRadarMode->size() > 0 && false ) {
+    if( pVecMatchRadarMode->size() > 0 ) {
         pRadarMode = pVecMatchRadarMode->at(0);
 
         // 시작 펄스열 추출 얻기
@@ -307,6 +326,8 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
     }
 
     m_uiAnalSeg = m_uiCoSeg;
+
+#endif
 
 }
 
@@ -453,3 +474,19 @@ void CNPulExt::ClearAllMark()
     CPulExt::ClearAllMark();
 
 }
+
+#ifdef _LOG_ANALTYPE_
+/**
+ * @brief     GetLogAnalType
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-21 11:57:45
+ * @warning
+ */
+bool CNPulExt::GetLogAnalType()
+{
+    return m_pNewSigAnal->GetLogAnalType();
+}
+#endif

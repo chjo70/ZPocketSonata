@@ -48,6 +48,10 @@ public:
 
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
+#endif
+
 };
 
 #endif

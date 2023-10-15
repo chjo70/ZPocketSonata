@@ -58,8 +58,7 @@
 #define CEDEOB_SQLITE_FOLDER        (const char *) "/home/chjo70"
 
 #elif defined(__VXWORKS__)
-// #define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
-#ifdef _POCKETSONATA_
+#if defined( _POCKETSONATA_ ) || defined( _712_ )
 #define CEDEOB_SQLITE_FOLDER        (const char *) "/d/rawdata"
 #else
 #define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
@@ -69,10 +68,13 @@
 #define CEDEOB_SQLITE_FOLDER        (const char *) "d:/rawdata"  // "\\\\192.168.0.168/ea_sjp_test/sqlite3"
 
 #endif
-#define SQLITE_DIRECTORY			((char *) "LIB")
+#define SQLITE_DIRECTORY			(const char *) "LIB"
 #define CEDEOB_SQLITE_FILENAME      (const char *) "cedeob.sqlite3"
 
+#define CEDEOB_TEST_SQLITE_FILENAME (const char *) "cedeob_test.sqlite3"
+
 #define BLK_CEDEOB_SQLITE_FILENAME	(const char *) "cedeob_blank.sqlite3"
+
 
 // 위협정보 폴더 위치
 #ifdef __ZYNQ_BOARD__
@@ -84,7 +86,9 @@
 #else
 #define EMITTER_SQLITE_FOLDER       (const char *) "d:/rawdata"
 #endif
-#define EMITTER_SQLITE_FILENAME     (const char *) "emitter.sqlite3"
+#define EMITTER_SQLITE_FILEEXTNAME     (const char *) "emitter.sqlite3"
+
+#define EMITTER_SQLITE_FILENAME     (const char *) "emitter"
 
 // 위협정보 원본 파일
 #define BLK_EMITTER_SQLITE_FILENAME (const char *) "emitter_blank.sqlite3"
@@ -93,7 +97,7 @@
 #ifdef __ZYNQ_BOARD__
 #define INI_FOLDER                  (const char *) "/home/root"
 #elif defined(__VXWORKS__)
-#define INI_FOLDER                  (const char *) "/tffs1/INI"
+#define INI_FOLDER                  (const char *) "/ata0:0/INI"
 #elif defined(__linux__)
 #define INI_FOLDER                  (const char *) "/home/chjo70"
 #else
@@ -116,18 +120,23 @@
 
 // 실행 파일이 있는 위치에서 로그 디렉토리
 #ifdef __linux__
-#define LOG_DIRECTORY               (const char *) "/tmp/LOG"
+#define LOG_FOLDER               (const char *) "/tmp/LOG"
 #elif _MSC_VER
-#define LOG_DIRECTORY               (const char *) "\\Debug\\LOG"
+#define LOG_FOLDER               (const char *) "\\Debug\\LOG"
 #elif defined(__VXWORKS__)
-#define LOG_DIRECTORY               (const char *) "/RAMDRV:0/LOG"
+#define LOG_FOLDER               (const char *) "/RAMDRV:0/LOG"
 #else
-#define LOG_DIRECTORY               (const char *) "c:/temp"
+#define LOG_FOLDER               (const char *) "c:/temp"
 #endif
 
 
+#define LOG_DIRECTORY            (const char *) "/LOG"
+#define LOG_FILENAME            (const char *) "LOG.log"
 
-#define INIT_CW_PULSEWIDTH					(130.0)
+
+#define DDR_DIRECTORY            (const char *) "/DDR"
+
+//#define INIT_CW_PULSEWIDTH					(130.0)
 
 
 
@@ -352,7 +361,7 @@
 #define _spMgFixFrqBoundEJ	                IFRQMhzCNV( 0, 10 )			// UMUL(6,1.25)					// res. 1.25 MHz
 #define _spMgFixFrqBoundCD	                IFRQMhzCNV( 0, 10 )			// UMUL(10,1.25)					// res. 1.25 MHz
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 #define	MAX_FREQ_MHZ					    (18000)                     //!< 주파수 최대 값, Hz
 #define MIN_FREQ_MHZ 					    (500)						//!< 주파수 최소 값
 
@@ -582,18 +591,19 @@
 #define _spMaxCoRsaAmbi     (30)
 #define	_spMaxTryScan				(5)
 
-
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 #ifdef _XBAND_
+
 enum PDW_MARK { STAT_CW=0, STAT_NORMAL=1, STAT_FMOP=5, STAT_SHORTP=7, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, MAX_STAT } ;
 const int stStat2GrStat[16] = { STAT_CW, STAT_NORMAL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 #elif defined(_SONATA_)
+2
 enum PDW_MARK { STAT_CW = 0, STAT_NORMAL, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, STAT_BIT, MAX_STAT };
 const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, 0, 0, STAT_CHIRPDN, STAT_CHIRPUP, STAT_PMOP, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 enum PDW_MARK { STAT_NORMAL = 0,
                 STAT_CW,
 

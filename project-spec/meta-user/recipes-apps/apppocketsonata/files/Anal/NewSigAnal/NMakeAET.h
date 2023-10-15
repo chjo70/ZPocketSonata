@@ -76,6 +76,10 @@ public:
     char *GetTaskID();
 #endif
 
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
+#endif
+
 };
 
 #endif

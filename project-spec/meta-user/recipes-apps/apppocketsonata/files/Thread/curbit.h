@@ -11,6 +11,10 @@
 
 #define _AXI_DATATEST_          (0xAABBEEF0)
 
+#define URBIT_TIMER             (2*60)
+
+#define SNTP_TIMER              (60*60*4)
+
 /**
  *
  * @brief	  신호분석 CSC의 자체점검을 담당합니다.
@@ -26,9 +30,13 @@ class CUrBit : public CThread
 private:
     int m_nBoardID;																	///< 보드 ID 입니다.
 
+    unsigned int m_uiCoURBITTimer;
+
 #ifdef __ZYNQ_BOARD__
     CGPIO m_theGPIO;
 #endif
+
+    STR_BIT m_stBIT;
 
     //UNI_ES_IBIT m_stESIbit;														///< 초기자체점검 결과 저장소 입니다.
     //STR_ES_CBIT m_stESCbit;														///< 연속자체점검 결과 저장소 입니다.
@@ -49,6 +57,7 @@ private:
     void RunTimer();
 
     void CheckSBCTemp();
+    void CheckTasks();
 
 #ifdef __ZYNQ_BOARD__
     // 모듈 자체점검 함수

@@ -34,6 +34,10 @@ public:
 
     //inline unsigned int GetFrqAoaGroupedPdwIndex() { return CGroup::m_uiCoFrqAoaPwIdx; }
 
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
+#endif
+
 };
 
 #endif

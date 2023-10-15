@@ -66,6 +66,7 @@ private:
     void InitEmitterMerge();
     void MergeEmitter();
     void DeleteThreat();
+    void RemoveThreat();
 
     void InitOfMessageData();
 
@@ -73,19 +74,24 @@ private:
     void UpdateScanResult();
     void UpdateScanFail();
     void UpdateScanError();
+    void UserRequestScan();
+    void SendUserReqScan();
+    void SwapScanResult( SELUSERSCANRESULT *pstUserScanResult );
+
 #endif
 
     // 수집 쓰레드에 추적/스캔 요청을 전송한다.
     void RequestTrackCollect( SRxLOBData *pLOBData );
     void RequestTrackReCollect();
-    void RequestScanCollect( SRxLOBData *pLOBData );
+    void RequestScanCollect( unsigned int uiAETID, unsigned int uiABTID );
     void RequestScanReCollect();
 
     void ReloadLibrary();
 
     void SendNewUpd();
     void SendDelete( unsigned int uiAETID );
-    void SendLan( unsigned int uiOpcode, void *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData );
+    void SendLan( unsigned int uiOpcode, SAETData *pData, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData );
+    void SwapAETData( SAETData *pstAET );
 
     void ManageDatabase();
 

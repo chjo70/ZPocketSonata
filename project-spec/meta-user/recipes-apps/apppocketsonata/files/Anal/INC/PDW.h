@@ -24,6 +24,19 @@
 
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
+enum ENUM_ANAL_TYPE {
+    enDET_ANAL = 0,
+    enTRK_ANAL,
+    enSCN_ANAL,
+
+    enALL,
+
+};
+
+
+
+#ifndef ENUM_BOARDID
+#define ENUM_BOARDID
 enum ENUM_BoardID {
     enPRC_Unknown = 0,
 
@@ -37,6 +50,7 @@ enum ENUM_BoardID {
     enMaster = enPRC3
 
 };
+#endif
 
 
 #ifdef _MAIN_GLOBALS_
@@ -78,8 +92,12 @@ typedef unsigned long long int _TOA;
 
 #endif
 
+typedef unsigned int _TOA2;
+
 // 수집 뱅크 종류 정의
-enum ENUM_COLLECTBANK {
+#ifndef _ENUM_COLLECTBANK
+#define _ENUM_COLLECTBANK
+enum ENUM_COLLECTBANK : unsigned int {
     enUnknownCollectBank = 0,
 
     enDetectCollectBank = 1,
@@ -88,6 +106,7 @@ enum ENUM_COLLECTBANK {
     enUserCollectBank,
 
 };
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -133,10 +152,10 @@ struct UZPOCKETPDW_PDWWORD {
 #else
     struct UZPOCKETPDW_PDWWORD {
     // 1-2번 : 32비트
-    unsigned long long int  uiPA : 16;
-    unsigned long long int  Reserved2 : 3;
-    unsigned long long int  Di : 1;
-    unsigned long long int  uiAOA : 12;         // Doa
+    unsigned long long int uiPA : 16;
+    unsigned long long int Reserved2 : 3;
+    unsigned long long int Di : 1;
+    unsigned long long int uiAOA : 12;         // Doa
 
     // 1-1번 : 32비트
     unsigned long long int FmopBw : 16;
@@ -150,20 +169,20 @@ struct UZPOCKETPDW_PDWWORD {
     unsigned long long int CwPulse : 1;
 
     // 2번 : 64비트
-    unsigned long long int  Reserved3 : 12;
-    unsigned long long int  uiFreq : 28;		            // 16 --> 36 (IF --> RF) --> 28, Freq
-    unsigned long long int  uiPW : 24;
+    unsigned long long int Reserved3 : 12;
+    unsigned long long int uiFreq : 28;		            // 16 --> 36 (IF --> RF) --> 28, Freq
+    unsigned long long int uiPW : 24;
 
 
     // 3번 : 64비트
-    unsigned long long int  Index : 16;
-    unsigned long long int  Reserved4 : 3;
-    unsigned long long int  Edge : 1;
+    unsigned long long int Index : 16;
+    unsigned long long int Reserved4 : 3;
+    unsigned long long int Edge : 1;
     unsigned long long int ullTOA : 44;
 
     // 4번 : 64비트
-    unsigned long long int  uiReserved5 : 32;
-    unsigned long long int  uiReserved6 : 32;
+    unsigned long long int uiReserved5 : 32;
+    unsigned long long int uiReserved6 : 32;
 
 } ;
 
@@ -650,6 +669,8 @@ union UNI_PDW_ETC {
     } el;
 #endif
 
+
+#if defined(_GRAPH_) || ( defined(_POCKETSONATA_) || defined(_712_) )
     struct {
         int iChannel;
 
@@ -660,6 +681,8 @@ union UNI_PDW_ETC {
 
 
     } ps;
+
+#endif
 
 #if defined(_GRAPH_) || defined(_701_)
     struct {
@@ -688,7 +711,13 @@ typedef struct _PDW {
 
     UNI_PDW_ETC x;
 
-    _TOA ullTOA;
+    //_TOA ullTOA;
+    _TOA tTOA;
+
+    _PDW()
+    {
+
+    }
 
     /**
      * @brief     _PDW 구조체에서 TOA 값을 리턴한다.
@@ -701,7 +730,7 @@ typedef struct _PDW {
      */
     _TOA GetTOA()
     {
-        return ullTOA;
+        return tTOA;
 
     }
 
@@ -922,7 +951,7 @@ namespace _701 {
 #elif defined(_XBAND_)
 
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 namespace POCKETSONATA {
 #ifndef _ENUM_BANDWIDTH_
 #define _ENUM_BANDWIDTH_
@@ -1308,16 +1337,12 @@ struct TNEW_IQ {
 // 아래는 공용 정보
 struct STR_COMMON_HEADER {
     UINT uiTotalPDW;
-    time_t tColTime;
+    unsigned int uiColTime;
     UINT uiColTimeMs;
     UINT uiPDWID;
 
     void CheckColTime()
     {
-        if( tColTime < 0 ) {
-            tColTime = 0;
-        }
-
         if( uiColTimeMs > 1000 ) {
             uiColTimeMs = 0;
         }
@@ -1556,6 +1581,7 @@ struct STR_SONATA_HEADER {
 
 #ifndef _UNION_HEADER_
 #define _UNION_HEADER_
+
 union UNION_HEADER {
 #if defined(_GRAPH_) || defined(_ELINT_)
     // 인천공항 ELINT 구조체
@@ -1567,8 +1593,10 @@ union UNION_HEADER {
     STR_XBAND_HEADER xb;
 #endif
 
+#if defined(_GRAPH_) || ( defined(_POCKETSONATA_) || defined(_712_) )
     // 소형 전자전장비 구조체
     STR_POCKETSONATA_HEADER ps;
+#endif
 
 #if defined(_GRAPH_) || defined(_SONATA_)
     // SONATA 전자전장비 구조체
@@ -1862,28 +1890,28 @@ union UNION_HEADER {
      * @date      2022-05-10, 10:30
      * @warning
      */
-    void SetColTime( time_t tColTime, UINT uiColTimeMs )
+    void SetColTime( unsigned int tColTime, UINT uiColTimeMs )
     {
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-            ps.stCommon.tColTime = tColTime;
+            ps.stCommon.uiColTime = tColTime;
             ps.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
-            el.stCommon.tColTime = tColTime;
+            el.stCommon.uiColTime = tColTime;
             el.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
 #if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
-            xb.stCommon.tColTime = tColTime;
+            xb.stCommon.uiColTime = tColTime;
             xb.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
 #if defined(_GRAPH_) || defined(_SONATA_)
         else if( g_enUnitType == en_SONATA ) {
-            so.stCommon.tColTime = tColTime;
+            so.stCommon.uiColTime = tColTime;
             so.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
@@ -2061,16 +2089,16 @@ struct STR_PDWDATA {
         unsigned int uiHeader;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-            uiHeader = sizeof( STR_POCKETSONATA_HEADER );
+            uiHeader = sizeof( struct STR_POCKETSONATA_HEADER );
         }
         else if( g_enUnitType == en_ELINT ) {
-            uiHeader = sizeof( STR_ELINT_HEADER );
+            uiHeader = sizeof( struct STR_ELINT_HEADER );
         }
         else if( g_enUnitType == en_XBAND ) {
-            uiHeader = sizeof( STR_XBAND_HEADER );
+            uiHeader = sizeof( struct STR_XBAND_HEADER );
         }
         else {
-            uiHeader = sizeof( STR_SONATA_HEADER );
+            uiHeader = sizeof( struct STR_SONATA_HEADER );
         }
 
         return uiHeader;
@@ -2455,28 +2483,28 @@ struct STR_PDWDATA {
      * @date      2022-03-03, 13:48
      * @warning
      */
-    void SetColTime( time_t tColTime, UINT uiColTimeMs )
+    void SetColTime( unsigned int tColTime, UINT uiColTimeMs )
     {
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-            x.ps.stCommon.tColTime = tColTime;
+            x.ps.stCommon.uiColTime = tColTime;
             x.ps.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
-            x.el.stCommon.tColTime = tColTime;
+            x.el.stCommon.uiColTime = tColTime;
             x.el.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
 #if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
-            x.xb.stCommon.tColTime = tColTime;
+            x.xb.stCommon.uiColTime = tColTime;
             x.xb.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
 #if defined(_GRAPH_) || defined(_SONATA_)
         else if( g_enUnitType == en_SONATA ) {
-            x.so.stCommon.tColTime = tColTime;
+            x.so.stCommon.uiColTime = tColTime;
             x.so.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
@@ -2495,26 +2523,26 @@ struct STR_PDWDATA {
      * @date      2022-03-03, 13:48
      * @warning
      */
-    time_t GetColTime()
+    unsigned int GetColTime()
     {
-        time_t retTime;
+        unsigned int retTime;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-            retTime = x.ps.stCommon.tColTime;
+            retTime = x.ps.stCommon.uiColTime;
         }
 #if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
-            retTime = x.el.stCommon.tColTime;
+            retTime = x.el.stCommon.uiColTime;
         }
 #endif
 #if defined(_GRAPH_) || defined(_XABND_)
         else if( g_enUnitType == en_XBAND ) {
-            retTime = x.xb.stCommon.tColTime;
+            retTime = x.xb.stCommon.uiColTime;
         }
 #endif
 #if defined(_GRAPH_) || defined(_SONATA_)
         else if( g_enUnitType == en_SONATA ) {
-            retTime = x.so.stCommon.tColTime;
+            retTime = x.so.stCommon.uiColTime;
         }
 #endif
         else {
@@ -2630,6 +2658,16 @@ struct STR_PDWDATA {
         return pTaskID;
     }
 
+    /**
+     * @brief     SetTaskID
+     * @param     char * pString
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-09-01 16:17:37
+     * @warning
+     */
     void SetTaskID( char *pString )
     {
 
@@ -2690,7 +2728,7 @@ struct STR_PDWDATA {
             do {
                 iIndex = ( iLeft + iRight ) / 2;
 
-                tDiff = pstPDW[iIndex].ullTOA - tPDW;
+                tDiff = pstPDW[iIndex].tTOA - tPDW;
                 if( tDiff == 0 ) {
                     iLeft = -iIndex - 1;
                     break;
@@ -2863,21 +2901,21 @@ struct STR_STATIC_PDWDATA {
         time_t retTime;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-            retTime = x.ps.stCommon.tColTime;
+            retTime = (time_t) x.ps.stCommon.uiColTime;
         }
 #if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
-            retTime = x.el.stCommon.tColTime;
+            retTime = x.el.stCommon.uiColTime;
         }
 #endif
 #if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
-            retTime = x.el.stCommon.tColTime;
+            retTime = x.el.stCommon.uiColTime;
         }
 #endif
 #if defined(_GRAPH_) || defined(_SONATA_)
         else if( g_enUnitType == en_SONATA ) {
-            retTime = x.so.stCommon.tColTime;
+            retTime = x.so.stCommon.uiColTime;
         }
 #endif
         else {
@@ -2974,8 +3012,8 @@ struct STR_UZPOCKETPDW {
     {
         UZPOCKETPDW_PDWWORD *pstHwPdwDataRf = & pstPDW[uiIndex].stHwPdwDataRf;
 
-#ifdef _POCKETSONATA_
-        memset( & o_pstPDW->x, 0, sizeof( UNI_PDW_ETC ) );
+#if defined(_POCKETSONATA_) || defined(_712_)
+        memset( & o_pstPDW->x, 0, sizeof( union UNI_PDW_ETC ) );
 
         if( pstHwPdwDataRf->CwPulse == 0 ) {
             o_pstPDW->iStat = STAT_NORMAL;
@@ -3031,7 +3069,7 @@ struct STR_UZPOCKETPDW {
 #else
 
 #endif
-        o_pstPDW->ullTOA = pstHwPdwDataRf->ullTOA;
+        o_pstPDW->tTOA = pstHwPdwDataRf->ullTOA;
         o_pstPDW->uiAOA = pstHwPdwDataRf->uiAOA;
         o_pstPDW->uiFreq = pstHwPdwDataRf->uiFreq;
         o_pstPDW->uiPA = pstHwPdwDataRf->uiPA;
@@ -3057,7 +3095,7 @@ struct STR_UZPOCKETPDW {
         UZPOCKETPDW *puzPDW;
 
         puzPDW = & pstPDW[uiIndex];
-        memset( puzPDW, 0, sizeof( UZPOCKETPDW ) );
+        memset( puzPDW, 0, sizeof( union UZPOCKETPDW ) );
 
         // STAT 값 변환
         STR_STAT_BITMAP *pStatBitmap;
@@ -3069,7 +3107,7 @@ struct STR_UZPOCKETPDW {
         //puzPDW->stHwPdwDataRf.CwPulse = i_pstPDW->iStat;
 
         // PDW 정보
-        puzPDW->stHwPdwDataRf.ullTOA = i_pstPDW->ullTOA;
+        puzPDW->stHwPdwDataRf.ullTOA = i_pstPDW->tTOA;
         puzPDW->stHwPdwDataRf.uiAOA = i_pstPDW->uiAOA;
         puzPDW->stHwPdwDataRf.uiFreq = i_pstPDW->uiFreq;
         puzPDW->stHwPdwDataRf.uiPA = i_pstPDW->uiPA;
@@ -3170,28 +3208,28 @@ struct STR_UZPOCKETPDW {
      * @date      2023-04-10 19:30:54
      * @warning
      */
-    void SetColTime( time_t tColTime, UINT uiColTimeMs )
+    void SetColTime( unsigned int uiColTime, UINT uiColTimeMs )
     {
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
-            x.ps.stCommon.tColTime = tColTime;
+            x.ps.stCommon.uiColTime = uiColTime;
             x.ps.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #if defined(_GRAPH_) || defined(_ELINT_)
         else if( g_enUnitType == en_ELINT ) {
-            x.el.stCommon.tColTime = tColTime;
+            x.el.stCommon.uiColTime = uiColTime;
             x.el.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
 #if defined(_GRAPH_) || defined(_XBAND_)
         else if( g_enUnitType == en_XBAND ) {
-            x.xb.stCommon.tColTime = tColTime;
+            x.xb.stCommon.uiColTime = uiColTime;
             x.xb.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
 #if defined(_GRAPH_) || defined(_SONATA_)
         else if( g_enUnitType == en_SONATA ) {
-            x.so.stCommon.tColTime = tColTime;
+            x.so.stCommon.uiColTime = uiColTime;
             x.so.stCommon.uiColTimeMs = uiColTimeMs;
         }
 #endif
@@ -3324,9 +3362,21 @@ struct STR_UZPOCKETPDW {
 
     }
 
+    unsigned int GetColDuration()
+    {
+        unsigned uiTOA=0;
+        unsigned int uiColPDW = GetTotalPDW();
+
+        if( uiColPDW >= 1 ) {
+            uiTOA = (unsigned int) ( pstPDW[uiColPDW-1].stHwPdwDataRf.ullTOA - pstPDW[0].stHwPdwDataRf.ullTOA );
+        }
+
+        return uiTOA;
+    }
+
 };
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 // 하드웨어 PDW 맵에 저장한다.
 typedef DMAPDW SIGAPDW;
 //typedef STR_PDWDATA SIGAPDW;

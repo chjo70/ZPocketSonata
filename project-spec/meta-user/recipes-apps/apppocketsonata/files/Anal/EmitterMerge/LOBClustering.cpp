@@ -341,14 +341,14 @@ bool CLOBClustering::AllocMemory()
 
 	// 교차점 메모리 할당
 	m_uiInterSect = CalcIntersectionPoints( (unsigned int) QUEUE_LOB_POOL_SIZE );
-	m_pIntersect = ( SELINTERSECTION * ) malloc( sizeof(SELINTERSECTION) * m_uiInterSect );
+	m_pIntersect = ( SELINTERSECTION * ) malloc( sizeof( struct SELINTERSECTION) * m_uiInterSect );
 	if( m_pIntersect == NULL ) { //DTEC_NullPointCheck
 		bRet = false;
 	}
 
 	m_pOptimalLOBID = ( int * ) malloc( sizeof(int) * QUEUE_LOB_POOL_SIZE );
 
-	m_pCluster = ( STR_LOBCLUSTER * ) malloc( sizeof(STR_LOBCLUSTER) * m_uiInterSect );
+	m_pCluster = ( STR_LOBCLUSTER * ) malloc( sizeof( struct STR_LOBCLUSTER) * m_uiInterSect );
 	if( m_pCluster == NULL ) { //DTEC_NullPointCheck
 		bRet = false;
 	}
@@ -445,7 +445,7 @@ bool CLOBClustering::IsThereCluster( STR_LOBCLUSTER *pCluster )
 	STR_LOBCLUSTER *pCompCluster;
 
 	// 중복된 클러스터링 제거
-	// qsort( m_pCluster, (size_t) m_nClusters, sizeof( STR_LOBCLUSTER ), incClusterCompare );
+	// qsort( m_pCluster, (size_t) m_nClusters, sizeof( struct STR_LOBCLUSTER ), incClusterCompare );
 
 	pQueueIndex1 = m_pCluster->pQueueIndex;
 	pCompCluster = & m_pCluster[0];
@@ -1118,7 +1118,7 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 		pLOBData = m_pQueLOBData->GetPointerByIndex( (UINT) i );
 
         fTheta = (float) m_theInverseMethod.GCAzimuth( pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, (double) pPEInfo->fLatitude, (double) pPEInfo->fLongitude );
-		if( TRUE == CompDOADiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2() */ ) ) {
+		if( TRUE == TCompDOADiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff2() */ ) ) {
 			AddOptimalLOBID( pLOBData->uiLOBID );
 
 			AddPEData( pLOBData );
@@ -1132,7 +1132,7 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 			++ m_pOptimalCluster[nOptimalIndex]->iCount;
 		}
 
-		if( TRUE == CompDOADiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff1() */ ) ) {
+		if( TRUE == TCompDOADiff<float>( fTheta, pLOBData->fMeanDOA, (float) 10 /* GP_MGR_PARAM->GetEffectiveDOADiff1() */ ) ) {
 			++ iCoGetEffectiveDOADiff1;
 		}
 

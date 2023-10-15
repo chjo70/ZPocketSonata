@@ -16,6 +16,9 @@
     <Filter Include="소스 파일\Utils">
       <UniqueIdentifier>{6a854d5c-d762-438b-90c6-657e5eff4a05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\RawFile">
+      <UniqueIdentifier>{40f8a28e-c51c-4aac-8261-8e2d82be2f8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZCCUSim.h">
@@ -51,6 +54,15 @@
     <ClInclude Include="..\..\files\Utils\clog.h">
       <Filter>소스 파일\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Anal\MIDAS\RawFile.h">
+      <Filter>소스 파일\RawFile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\Identify\ELUtil.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="csbc.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ZCCUSim.cpp">
@@ -76,6 +88,15 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\clog.cpp">
       <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\MIDAS\RawFile.cpp">
+      <Filter>소스 파일\RawFile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\Identify\ELUtil.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="csbc.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

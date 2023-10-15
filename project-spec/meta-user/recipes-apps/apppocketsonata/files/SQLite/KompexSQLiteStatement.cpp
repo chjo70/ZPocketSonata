@@ -865,7 +865,7 @@ void SQLiteStatement::CommitDifferentDataTypes()
 	TTransactionSQL::iterator transIter;
 	TTransactionSQL16::iterator trans16Iter;
 
-	unsigned short transactions = mTransactionSQL.size() + mTransactionSQL16.size();
+	unsigned short transactions = (unsigned short) ( mTransactionSQL.size() + mTransactionSQL16.size() );
 
 	while (us < transactions)
 	{

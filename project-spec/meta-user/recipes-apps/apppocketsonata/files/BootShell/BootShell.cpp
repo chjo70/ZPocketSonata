@@ -48,12 +48,16 @@
 
 #include "../Anal/INC/PDW.h"
 
+#include "../System/csysconfig.h"
+
 //////////////////////////////////////////////////////////////////////////
 // 전역 변수 및 객체 정의
-CManSbc *theManSbc=0;
+CManSbc *g_theManSbc=0;
 //CManFlash *theManFlash=0;
 CBootShell *theBootShell=0;
-CFileTar *theFileTar=0;
+CFileTar *g_theFileTar=0;
+
+CSysConfig *g_pTheSysConfig;
 
 #ifdef _NETMEM_
 ServerSocket *theServerSocket=0;
@@ -80,7 +84,6 @@ void GetKey();
 }
 #endif
 
-
 ENUM_UnitType g_enUnitType;
 char g_szBitResult[2][10] = { "비정상", "정상" };
 
@@ -94,7 +97,7 @@ void _TRACE( char *format, ... )
     vsprintf( buffer, format, argptr );
     va_end( argptr );
 
-    OutputDebugString( buffer );
+    printf( buffer );
 
     //return true;
 
@@ -114,17 +117,14 @@ void _TRACE( char *format, ... )
 void BootShellMain()
 {
 
-    time_t rawtime;
-    struct tm * timeinfo;
-
-    theFileTar = new CFileTar;
-    if( theFileTar == NULL ) {
+    g_theFileTar = new CFileTar;
+    if( g_theFileTar == NULL ) {
         PrintErr( ( "\n [W] 기본 메모리(theFileTar)가 부족합니다 !" ) );
         WhereIs;
     }
 
 #ifdef _NETMEM_
-    theServerSocket = new ServerSocket( enMAXPRC, sizeof(STR_NETMEM) );
+    theServerSocket = new ServerSocket( enMAXPRC, sizeof( struct STR_NETMEM) );
     if( theServerSocket == NULL ) {
         PrintErr( ( "\n [W] 기본 메모리(theServerSocket)가 부족합니다 !" ) );
         WhereIs;
@@ -144,11 +144,22 @@ void BootShellMain()
     }
 #endif
 
-	theManSbc = new CManSbc;
-	if( theManSbc == NULL ) {
+    g_theManSbc = new CManSbc;
+    if( g_theManSbc == NULL ) {
         PrintErr( ( "\n [W] 기본 메모리(theManSbc)가 부족합니다 !" ) );
-		WhereIs;
-	}
+        WhereIs;
+    }
+
+    g_pTheSysConfig = new CSysConfig();
+    if( g_pTheSysConfig == NULL ) {
+        PrintErr( ( "\n [W] 기본 메모리(g_pTheSysConfig)가 부족합니다 !" ) );
+        WhereIs;
+    }
+    else {
+        g_pTheSysConfig->DisplaySystemVar();
+    }
+
+    g_theManSbc->SetTimeBySNMP();
 
 	theBootShell = new CBootShell;
 	if( theBootShell == NULL ) {
@@ -156,17 +167,25 @@ void BootShellMain()
 		WhereIs;
 	}
 
-    time( & rawtime );
-    timeinfo = localtime ( & rawtime );
-    printf( "\n\n ---------------------------------------------------------------------" );
-    printf ( "\n 실행 시간: %s", asctime (timeinfo) );
-    printf( "\n\n ---------------------------------------------------------------------" );
+//     time_t rawtime;
+//     struct tm *timeinfo;
+//     time( & rawtime );
+//     timeinfo = localtime ( & rawtime );
+//     char *pStr = asctime( timeinfo );
+//     printf( "\n 실행 시간: %s", pStr );
 
 	theBootShell->Run();
 
-    delete theFileTar;
+    delete g_theFileTar;
     delete theBootShell;
-    delete theManSbc;
+
+#ifdef _MSC_VER
+    delete g_theManSbc;
+#endif
+
+    // 시스템 환경 설정은 살려둡니다.
+    // delete g_pTheSysConfig;
+
 
 #ifdef _NETMEM_
     Sleep( 10 );
@@ -179,7 +198,7 @@ void BootShellMain()
 void GetKey()
 {
     int key;
-    key = theManSbc->GetCommand();
+    key = g_theManSbc->GetCommand();
     printf( "\n key=[%d]" , key );
 
 }
@@ -205,9 +224,17 @@ void re()
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+/**
+ * @brief     CBootShell
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-05 12:53:52
+ * @warning
+ */
 CBootShell::CBootShell()
 {
-
 
 }
 
@@ -237,29 +264,31 @@ void CBootShell::Run()
 	UCHAR key;
 
     // 네트워크 메모리 값 전시합니다.
-    theManSbc->ShowNetMemory();
+    g_theManSbc->ShowNetMemory();
 
-	printf( "\n\n 키 값 (기본=OFP Download/TFFS 파일 설치[w]/응용 프로그램 업데이트[1]/Run OFP in Flash) ? " );
-    key = theManSbc->GetCommand();
+	printf( "\n\n 키 값 (기본=이미지 실행[1]/기본 파일 설치[w]/소프트웨어 업데이트[!]) ? " );
+    key = g_theManSbc->GetCommand();
 
+    printf( "\n\n" );
     switch( key ) {
-        case INSTALL_WEB :      // w 키
-            theManSbc->InstallWeb();
+        case INSTALL_WEB :
+            g_theManSbc->InstallWeb();
             break;
 
         case RUN_APP :
-        	theManSbc->InitDataBase();
-            theManSbc->RunApp( enTffsApp );
+        	g_theManSbc->InitDataBase();
+            g_theManSbc->RunApp( enATAApp );
             break;
 
-        case WRITE_APP_FLASH :  // 1 키
-            theManSbc->DownloadAndROMWriteApp();
+        case WRITE_APP_FLASH :
+            g_theManSbc->DownloadAndROMWriteApp();
+            g_theManSbc->RunApp( enATAApp );
             break;
 
         case DOWNLOAD_APP :
-        	theManSbc->InitDataBase();
-            theManSbc->DownloadApp();
-            theManSbc->RunApp( enDownloadApp );
+        	g_theManSbc->InitDataBase();
+            g_theManSbc->DownloadApp();
+            g_theManSbc->RunApp( enDownloadApp );
             break;
 
         default :

@@ -28,8 +28,6 @@
 
 using namespace std;
 
-
-
 #else
 #include <pthread.h>
 #include <unistd.h>
@@ -69,8 +67,9 @@ using namespace std;
 
 
 // VxWorks 용 타스크 전용 정의
-#define TASK_DEFAULT_PRIORITY   (100)
-#define TASK_LOWEST_PRIORITY    (TASK_DEFAULT_PRIORITY+20)
+#define TASK_DEFAULT_PRIORITY               (100)
+#define TASK_LOWEST_PRIORITY                (TASK_DEFAULT_PRIORITY+50)
+
 
 enum TASK_PRIORITY {
     en_LOG_PRIORITY = TASK_DEFAULT_PRIORITY,
@@ -172,7 +171,7 @@ struct STR_MessageData {
     unsigned char ucSrcDest;
 
     //랜 송신시 이 값이 0 이 아니면 이 소켓 값으로 데이터를 전송한다.
-    unsigned int uiSocket;
+    SOCKET soSocket;
 
     // 데이터 길이
     unsigned int uiDataLength;
@@ -186,7 +185,8 @@ struct STR_MessageData {
 
     STR_MessageData()
     {
-        memset( & x, 0, sizeof( UNI_MSG_DATA ) );
+        memset( & x, 0, sizeof( union UNI_MSG_DATA ) );
+        uiArrayLength = 0;
     };
 
 } ;
@@ -223,6 +223,8 @@ private:
 
     bool m_bLog;
 
+    int m_iPriority;
+
 #ifdef _MSC_VER
     CThreadContext m_MainThread;
 
@@ -244,7 +246,7 @@ private:
 
     // 타스크 관련 멤버 변수
     TASK_ID m_TaskID;
-    int m_iPriority;
+    //int m_iPriority;
     bool m_bTaskRunStat;
 
     // 메시지 큐 관련 멤버 변수
@@ -305,6 +307,7 @@ public:
     void Run();
 
     void SendThreadMessage( CThread *pThread, bool bWait=true );
+    void SendThreadMessage( CThread *pThread, unsigned int uiOpCode, bool bWait=true );
 
     void ShowTaskMessae( int iLevel = 0 );
     void ShowQueueMessae( int iLevel = 0 );
@@ -314,6 +317,8 @@ public:
 #ifdef _MSC_VER
     void Run( void *(*pFunc)(void*) );
     DWORD Start( void *pArg=NULL );
+
+    void FlushEvent();
 
 #elif defined(__VXWORKS__)
     void Run( void *(*pFunc)(void*) );
@@ -325,11 +330,14 @@ public:
     inline bool GetTaskRunStat() { return m_bTaskRunStat; }
     inline void SetTaskSuspend() { taskSuspend( m_TaskID ), m_bTaskRunStat=false; }
     inline void SetTaskResume() { taskResume( m_TaskID ), m_bTaskRunStat=true; }
+    inline STATUS GetTaskInfo( TASK_DESC *pTaskDesc ) {
+        return taskInfoGet( m_TaskID, pTaskDesc );
+    }
 
-#define TASK_DEFAULT_STACKSIZE   (0x30000)
+#define TASK_DEFAULT_STACKSIZE   (0x40000)
 
     size_t GetStackSize() {
-        int iStackSize=TASK_DEFAULT_STACKSIZE;
+        size_t iStackSize=TASK_DEFAULT_STACKSIZE;
 
         if( strcmp( "CTaskMngr" , m_szThreadName ) == 0 ) {
             iStackSize = 0x10000;
@@ -361,6 +369,8 @@ public:
         else if( strcmp( "CScanAnalysis" , m_szThreadName ) == 0 ) {
             iStackSize = 0x10000;
         }
+        else {
+        }
 
         return iStackSize;
     }
@@ -373,19 +383,18 @@ public:
     void StopThread();
     void msSleep( unsigned int mssleep );
     int QMsgRcv( ENUM_RCVMSG enFlag=enWAIT_FOREVER, DWORD dwMilliSec=0 );
-    void QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName=NULL );
+    void QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName=NULL, int iOption=WAIT_FOREVER );
     void QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const char *pszThreadName );
-    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName );
-    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData=NULL, unsigned int uiDataLength=0, const char *pszClassName=NULL );
-    void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength, const char *pszClassName );
-    void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL );
+    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName, int iOption=WAIT_FOREVER );
+    void QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData=NULL, unsigned int uiDataLength=0, const char *pszClassName=NULL, int iOptions=WAIT_FOREVER );
+    void QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength, const char *pszClassName, int iOption=WAIT_FOREVER );
+    void QMsgSnd( unsigned int uiOpCode, const char *pszClassName=NULL, int iOptio=WAIT_FOREVER );
 
     void QMsgClear();
 
     //int GetThreadID() { return m_iThreadID; }
 
     void SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName=NULL );
-
 
 #ifdef _MSC_VER
     inline key_t GetKeyId() { return 0; }
@@ -483,17 +492,18 @@ public:
 
     inline void BackupRecvUNIDataMessage( UNI_MSG_DATA *pUniMsgData )
     {
-        memcpy( & m_RcvBackupUniMsg, & m_RcvMsg, sizeof( UNI_MSG_DATA ) );
-        memcpy( &m_RcvMsg.x, pUniMsgData, sizeof( UNI_MSG_DATA ) );
+        memcpy( & m_RcvBackupUniMsg, & m_RcvMsg, sizeof( union UNI_MSG_DATA ) );
+        memcpy( &m_RcvMsg.x, pUniMsgData, sizeof( union UNI_MSG_DATA ) );
     }
 
     inline void RestoreRecvUNIDataMessage()
     {
-        memcpy( & m_RcvMsg.x, & m_RcvBackupUniMsg, sizeof( UNI_MSG_DATA ) );
+        memcpy( & m_RcvMsg.x, & m_RcvBackupUniMsg, sizeof( union UNI_MSG_DATA ) );
 
     }
 
     inline UNI_LAN_DATA* GeLanData() { return ( UNI_LAN_DATA  * ) &m_RcvMsg.x.szData[0]; }
+    inline UNI_MSG_DATA *GeUniMsgData() { return ( UNI_MSG_DATA * ) &m_RcvMsg.x.szData[0]; }
 
     inline int GetCoThread() { return m_iCoThread; }
     inline int GetCoMsgQueue() { return m_iCoMsgQueue; }

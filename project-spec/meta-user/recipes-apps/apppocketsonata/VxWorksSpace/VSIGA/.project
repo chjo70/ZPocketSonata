@@ -45,11 +45,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>files/MinIni</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>files/SQLite</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -165,56 +160,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Include/thrmsg.h</locationURI>
 		</link>
 		<link>
-			<name>files/MinIni/minGlue-FatFs.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/minGlue-FatFs.h</locationURI>
-		</link>
-		<link>
-			<name>files/MinIni/minGlue-ccs.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/minGlue-ccs.h</locationURI>
-		</link>
-		<link>
-			<name>files/MinIni/minGlue-efsl.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/minGlue-efsl.h</locationURI>
-		</link>
-		<link>
-			<name>files/MinIni/minGlue-ffs.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/minGlue-ffs.h</locationURI>
-		</link>
-		<link>
-			<name>files/MinIni/minGlue-mdd.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/minGlue-mdd.h</locationURI>
-		</link>
-		<link>
-			<name>files/MinIni/minGlue-stdio.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/minGlue-stdio.h</locationURI>
-		</link>
-		<link>
-			<name>files/MinIni/minGlue.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/minGlue.h</locationURI>
-		</link>
-		<link>
-			<name>files/MinIni/minIni.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/minIni.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/MinIni/minIni.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/minIni.h</locationURI>
-		</link>
-		<link>
-			<name>files/MinIni/wxMinIni.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/MinIni/wxMinIni.h</locationURI>
-		</link>
-		<link>
 			<name>files/SQLite/.project</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/SQLite/.project</locationURI>
@@ -300,16 +245,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/System/csharedmemory.h</locationURI>
 		</link>
 		<link>
-			<name>files/System/csysconfig.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/System/csysconfig.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/System/csysconfig.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/System/csysconfig.h</locationURI>
-		</link>
-		<link>
 			<name>files/Thread/ccgi.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/ccgi.cpp</locationURI>
@@ -318,6 +253,16 @@
 			<name>files/Thread/ccgi.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/ccgi.h</locationURI>
+		</link>
+		<link>
+			<name>files/Thread/cclocktimer.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cclocktimer.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Thread/cclocktimer.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/cclocktimer.h</locationURI>
 		</link>
 		<link>
 			<name>files/Thread/cdetectanalysis.cpp</name>
@@ -400,16 +345,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Thread/curbit.h</locationURI>
 		</link>
 		<link>
-			<name>files/Utils/MulDiv64.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/MulDiv64.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Utils/MulDiv64.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/MulDiv64.h</locationURI>
-		</link>
-		<link>
 			<name>files/Utils/PCIDriver.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/PCIDriver.cpp</locationURI>
@@ -485,12 +420,17 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/stdstring.h</locationURI>
 		</link>
 		<link>
-			<name>files/Anal/Collect/DataFile</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
+			<name>files/Utils/timer.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/timer.cpp</locationURI>
 		</link>
 		<link>
-			<name>files/Anal/Collect/GenPDW</name>
+			<name>files/Utils/timer.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/timer.h</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/Collect/DataFile</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -1000,6 +940,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/SigAnal/Group.h</locationURI>
 		</link>
 		<link>
+			<name>files/Anal/SigAnal/Hopping.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/SigAnal/Hopping.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/SigAnal/Hopping.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/SigAnal/Hopping.h</locationURI>
+		</link>
+		<link>
 			<name>files/Anal/SigAnal/MakeAET.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/SigAnal/MakeAET.cpp</locationURI>
@@ -1098,16 +1048,6 @@
 			<name>files/Anal/Collect/DataFile/DataFile.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/DataFile/DataFile.h</locationURI>
-		</link>
-		<link>
-			<name>files/Anal/Collect/GenPDW/CGenPDW.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/GenPDW/CGenPDW.cpp</locationURI>
-		</link>
-		<link>
-			<name>files/Anal/Collect/GenPDW/CGenPDW.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/Collect/GenPDW/CGenPDW.h</locationURI>
 		</link>
 		<link>
 			<name>files/Anal/Collect/ccollectbank/ccollectbank.cpp</name>

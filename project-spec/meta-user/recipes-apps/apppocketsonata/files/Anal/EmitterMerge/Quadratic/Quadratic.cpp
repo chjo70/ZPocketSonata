@@ -80,7 +80,7 @@ bool CQuadratic::Run( SELPE_RESULT *pResult, double *pUTMX, double *pUTMY, doubl
 
     m_nLob = nLob;
 
-	memset( pResult, 0, sizeof(SELPE_RESULT) );
+	memset( pResult, 0, sizeof( struct SELPE_RESULT) );
 	pResult->dEEP_theta = -1;
 
 	m_pUTMX = pUTMX;

@@ -80,7 +80,7 @@ bool CDistanceLeastSquare::Run( SELPE_RESULT *pResult, double *pUTMX, double *pU
 
     m_nLob = nLob;
 
-	memset( pResult, 0, sizeof(SELPE_RESULT) );
+	memset( pResult, 0, sizeof( struct SELPE_RESULT) );
 	pResult->dEEP_theta = -1;
 
 // 	for( i=0 ; i < nLob ; ++i ) {

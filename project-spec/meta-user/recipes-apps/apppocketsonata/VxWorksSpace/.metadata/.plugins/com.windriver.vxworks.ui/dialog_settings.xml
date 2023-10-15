@@ -4,8 +4,20 @@
 		<item value="true" key="showChoiceItems"/>
 		<item value="false" key="showAll"/>
 		<item value="false" key="autoReszeColumns"/>
-		<item value="" key="selected"/>
+		<item value="Enable Networking stack core 1.4.2.0" key="selected"/>
 		<list key="expanded">
+			<item value="os"/>
+			<item value="core"/>
+			<item value="CORE_KERNEL_1_2_5_1 Menu"/>
+			<item value="VxWorks Kernel Component Configuration"/>
+			<item value="Enable VxWorks RTP support layer 1.1.4.1"/>
+			<item value="security"/>
+			<item value="Enable OpenSSL library 1.2.1.0"/>
+			<item value="Enable VxWorks Hash, HMAC and PBKDF2 API 1.0.2.2"/>
+			<item value="net"/>
+			<item value="Enable IP Networking stack 1.1.1.2"/>
+			<item value="Enable FTP client and server 1.0.4.5"/>
+			<item value="ipc"/>
 			<item value="myQspiFlash"/>
 			<item value="vip_profiles"/>
 			<item value="VxWorks User Library Configuration"/>

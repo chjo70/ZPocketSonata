@@ -7,10 +7,9 @@
  * @warning
  */
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef __linux__
-
 
 #elif _MSC_VER
 #include <io.h>
@@ -31,7 +30,7 @@
 
 #include "RawFile.h"
 
-#include "../SigAnal/_Type.h"
+// #include "../SigAnal/_Type.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -255,7 +254,14 @@ bool CRawFile::RawOpenFile( const char *filename, int iMode )
 #else
     int iResult = 1;
 
-    if ( (unsigned int) iMode & ( unsigned int ) O_CREAT ) {
+    unsigned int icMode;
+
+    icMode = ( unsigned int ) ( O_CREAT | O_APPEND );
+    if ( ( (unsigned int) iMode & icMode ) == icMode ) {
+
+    }
+    else if( ( ( unsigned int ) iMode & O_CREAT ) == O_CREAT ) {
+#if 1
         int iFileMode=_chmod(filename, 222);
         if ( iFileMode == 0) {
             iResult = remove(filename);
@@ -263,6 +269,16 @@ bool CRawFile::RawOpenFile( const char *filename, int iMode )
                 TRACE("[W] 파일을 삭제할 수 없습니다 !!!" );
             }
         }
+#else
+        iResult = remove( filename );
+        if( iResult != 0 ) {
+            TRACE( "[W] 파일을 삭제할 수 없습니다 !!!" );
+        }
+#endif
+
+    }
+    else {
+
     }
 
 	m_fid = _open( filename , iMode );
@@ -271,6 +287,14 @@ bool CRawFile::RawOpenFile( const char *filename, int iMode )
         TRACE( "\n[W] 파일[%s]을 생성하지 못합니다 !", filename );
 	}
 	else {
+			
+#ifdef _MSC_VER
+        int iFileMode;
+        
+        iFileMode = _chmod( filename, 222 );
+        
+#endif        
+
 #if defined(__linux__) || defined(__VXWORKS__)
         strcpy( m_fullname, filename );
 #else
@@ -303,16 +327,17 @@ bool CRawFile::RawOpenFile( const char *filename, int iMode )
  * @date      2013-07-18 오후 7:45
  * @warning
  */
-unsigned int CRawFile::Write( void *pData, unsigned int c_size )
+unsigned int CRawFile::Write( void *pData, unsigned int uiSize )
 {
     int iWrite=0;
 
-    if( c_size > 0 && pData != NULL && m_fid > 0 ) {
+    if( uiSize > 0 && pData != NULL && m_fid > 0 ) {
     	//printf( "\n Write[%p], Size[%d], m_fid[%d]" , pData, c_size, m_fid );
-	    iWrite = _write( m_fid, (char *) pData, c_size );
+	    iWrite = _write( m_fid, (char *) pData, uiSize );
         if( iWrite > 0 ) {
         }
         else {
+            perror("_write()");
             printf( "iWrite= %d" , iWrite );
             iWrite = 0;
         }
@@ -331,23 +356,23 @@ unsigned int CRawFile::Write( void *pData, unsigned int c_size )
  * @date		2021/01/06 10:05:06
  * @warning
  */
-unsigned int CRawFile::Read( void *pData, unsigned int c_size, int iOffset )
+unsigned int CRawFile::Read( void *pData, size_t c_size, int iOffset )
 {
 	unsigned int uiRead=0;
-    int iRead;
+    int szRead;
 
     if( m_fid != 0 && iOffset != 0 ) {
         _lseek(m_fid, iOffset, SEEK_SET );
     }
 
     if( pData != NULL && m_fid > 0 ) {
-        iRead = _read( m_fid, (char *) pData, c_size );
-        if( iRead < 0 ) {
+        szRead = _read( m_fid, (char *) pData, (unsigned int) c_size );
+        if( szRead < 0 ) {
 			// uiRead = 0;
 			//break;
         }
         else {
-            uiRead = (unsigned int) iRead;
+            uiRead = (unsigned int) szRead;
         }
     }
     else {
@@ -385,9 +410,13 @@ void CRawFile::CloseFile()
             statbuf.st_mode ^= (S_IROTH);
 
 #endif
+
+#if 0
             if( chmod( m_fullname, statbuf.st_mode ) < 0 ) {
                 perror( "파일:" );
             }
+#endif
+
         }
 
 	}
@@ -413,7 +442,7 @@ unsigned long long int CRawFile::GetRawFileSize()
 {
     unsigned long long int ullFileSize=0;
 
-	if( m_fid != NULL ) {
+	if( m_fid != 0 ) {
         // ullfile_byte = _filelength( m_fid );
         ullFileSize = GetRawFileSize( m_fullname );
 
@@ -481,7 +510,14 @@ bool CRawFile::CreateDir( const TCHAR *pPath )
 #elif defined(__linux__)
                 mkdir( dirName, 0766 );
 #else
+
+#ifdef __LP64__
+                mkdir( dirName, 666 );
+#else
                 mkdir( dirName );
+#endif
+
+
 #endif
             }
         }
@@ -518,7 +554,12 @@ bool CRawFile::CreateDir( const TCHAR *pPath )
         bRet = false;
     }
 #else
+
+#ifdef __LP64__
+    int iRet = mkdir( dirName, 666 );
+#else
     int iRet = mkdir( dirName );
+#endif
 
     //printf( "\n iRet=%d" , iRet );
     if( iRet == 0 || ( iRet == -1 && ( errno == EEXIST || errno == S_nfsLib_NFSERR_EXIST ) ) ) {

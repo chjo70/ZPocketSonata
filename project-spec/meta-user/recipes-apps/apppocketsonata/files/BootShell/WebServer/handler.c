@@ -219,7 +219,7 @@ char_t *websGetPublishDir(char_t *path, char_t **urlPrefix)
 static int websPublishHandler(webs_t wp, char_t *urlPrefix, char_t *webDir, 
 	int sid, char_t *url, char_t *path, char_t *query)
 {
-	int		len;
+	size_t		len;
 
 	a_assert(websValid(wp));
 	a_assert(path);

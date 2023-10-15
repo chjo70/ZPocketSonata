@@ -1,13 +1,13 @@
 ﻿//  MODULE:   odbccore.h
 //
-//	AUTHOR: Carlos Antollini 
+//	AUTHOR: Carlos Antollini
 //
 //  mailto: cantollini@hotmail.com
 //
 //	Date: 08/21/2001
 //
 //	Version 1.11
-// 
+//
 #pragma once
 
 #include <windows.h>
@@ -62,8 +62,14 @@ public:
 	SQLHDBC m_hDbc;
 
 protected:
-	LONG m_lLoginTimeout;
-	LONG m_lConnectionTimeout;
+#ifdef _WIN64
+	LONGLONG m_lLoginTimeout;
+    LONGLONG m_lConnectionTimeout;
+#else
+    LONG m_lLoginTimeout;
+    LONG m_lConnectionTimeout;
+#endif
+	
 	bool m_bIsConnected;
 	SQLHENV m_hEnv;
     SQLINTEGER m_nRowsAffected;
@@ -73,7 +79,13 @@ public:
 	bool DriverConnect(CHAR* szConnStr, CHAR* szConnStrOut = NULL, HWND hWnd = NULL, enum drvCompletion drvConn = sqlNoPrompt);
     void show_error( SQLSMALLINT handletype );
 	void SetReadOnly(bool bReadOnly = true);
-	void SetConnectionTimeout(LONG nSeconds);
+
+#ifdef _WIN64
+	void SetConnectionTimeout(LONGLONG nSeconds);
+#else
+    void SetConnectionTimeout( LONG nSeconds );
+#endif
+
 	LONG GetConnectionTimeout();
 	void SetLoginTimeout(LONG nSeconds)
 	{m_lLoginTimeout = nSeconds;};
@@ -92,10 +104,10 @@ class CODBCRecordset
 public:
 	enum datatypeEnum
 	{
-		typeChar = SQL_CHAR, 
-		typeVarChar = SQL_VARCHAR, 
-		typeLongVarChar = SQL_LONGVARCHAR, 
-		typeWChar = SQL_WCHAR, 
+		typeChar = SQL_CHAR,
+		typeVarChar = SQL_VARCHAR,
+		typeLongVarChar = SQL_LONGVARCHAR,
+		typeWChar = SQL_WCHAR,
 		typeWVarChar = SQL_WVARCHAR,
 		typeWLongVarChar = SQL_WLONGVARCHAR,
 		typeDecimal = SQL_DECIMAL,
@@ -127,7 +139,7 @@ public:
 		typeIntervalHourToMinute = SQL_INTERVAL_HOUR_TO_MINUTE,
 		typeIntervalHourToSecond = SQL_INTERVAL_HOUR_TO_SECOND,
 		typeIntervalMinuteToSecond = SQL_INTERVAL_MINUTE_TO_SECOND,
-		typeGUID = SQL_GUID		
+		typeGUID = SQL_GUID
 	};
 
 	CODBCRecordset(CODBCDatabase* pDb)
@@ -162,9 +174,9 @@ public:
 	bool GetFieldValue(SQLSMALLINT nField, LONG *lData);
 	bool GetFieldValue(CHAR* szFieldName, LONG *lData);
 	bool GetFieldValue(SQLSMALLINT nField, DOUBLE *dblData);
-	bool GetFieldValue(CHAR* szFieldName, DOUBLE *dblData);	
+	bool GetFieldValue(CHAR* szFieldName, DOUBLE *dblData);
 	bool GetFieldValue(SQLSMALLINT nField, float *dblData);
-	bool GetFieldValue(CHAR* szFieldName, float *dblData);	
+	bool GetFieldValue(CHAR* szFieldName, float *dblData);
 	bool GetFieldValue(SQLSMALLINT nField, struct tm* pTime);
 	bool GetFieldValue(CHAR* szFieldName, struct tm* pTime);
 	//bool GetFieldTimeValue(SQLSMALLINT nField, time_t * pTime);
@@ -175,7 +187,7 @@ public:
 	bool MoveNext();
 	bool MovePrevious();
 	bool MoveLast();
-	bool IsEof() 
+	bool IsEof()
 	{return m_bIsEOF;};
 	bool IsBof()
 	{return m_bIsBOF;};

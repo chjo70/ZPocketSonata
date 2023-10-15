@@ -1,8 +1,8 @@
-// Util.cpp: implementation of the CUtil class.
+﻿// Util.cpp: implementation of the CUtil class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -29,7 +29,8 @@ static char THIS_FILE[]=__FILE__;
  */
 void SetUnitType()
 {
-#ifdef _POCKETSONATA_
+
+#if defined(_POCKETSONATA_) || defined(_712_)
     g_enUnitType = en_ZPOCKETSONATA;
 #elif defined(_ELINT_)
     g_enUnitType = en_ELINT;
@@ -91,16 +92,73 @@ int MultiByteToUTF8(wchar_t *pszUniCode, char *pszMultiByte)
 
     iLen = (int) mbstowcs( pszUniCode, pszMultiByte, strlen(pszMultiByte) );
 
+    if( iLen > 0 && iLen < MAX_SQL_SIZE ) {
+        pszUniCode[iLen] = 0;
+    }
+    else {
+    }
+
     //memset( carr, '\0', sizeof(carr) );
     //WideCharToMultiByte(CP_UTF8, 0, p, -1, carr, 256, NULL, NULL);
 
     return iLen;
 }
 
+#ifdef _MSC_VER
+int ANSIToUTF8( char *pszUTF8, char *pszAnsiCode )
+{
+    BSTR    bstrWide;
+    int     nLength;
+
+    nLength = MultiByteToWideChar( CP_ACP, 0, pszAnsiCode, lstrlen( pszAnsiCode ) + 1, NULL, NULL );
+    bstrWide = SysAllocStringLen( NULL, ( UINT ) nLength );
+
+    MultiByteToWideChar( CP_ACP, 0, pszAnsiCode, lstrlen( pszAnsiCode ) + 1, bstrWide, nLength );
+
+    nLength = WideCharToMultiByte( CP_UTF8, 0, bstrWide, -1, NULL, 0, NULL, NULL );
+
+    WideCharToMultiByte( CP_UTF8, 0, bstrWide, -1, pszUTF8, nLength, NULL, NULL );
+    SysFreeString( bstrWide );
+
+    return nLength;
+
+}
+
+/**
+ * @brief     UTF8ToANSI
+ * @param     char_t * pszAnsiCode
+ * @param     char * pszUTF8
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-21 14:54:50
+ * @warning
+ */
+int UTF8ToANSI( char *pszAnsiCode, char *pszUTF8 )
+{
+    BSTR    bstrWide;
+    int     nLength;
+
+    nLength = MultiByteToWideChar( CP_UTF8, 0, pszUTF8, lstrlen( pszUTF8 ) + 1, NULL, NULL );
+    bstrWide = SysAllocStringLen( NULL, (UINT) nLength );
+
+    MultiByteToWideChar( CP_UTF8, 0, pszUTF8, lstrlen( pszUTF8 ) + 1, bstrWide, nLength );
+
+    nLength = WideCharToMultiByte( CP_ACP, 0, bstrWide, -1, NULL, 0, NULL, NULL );
+
+    WideCharToMultiByte( CP_ACP, 0, bstrWide, -1, pszAnsiCode, nLength, NULL, NULL );
+    SysFreeString( bstrWide );
+
+    return nLength;
+
+}
+
+#endif
 
 /**
  * @brief     UTF8을 멀티바이트로 변환한다.
- * @param     char * pszMultiByte
+ * @param     char * UTF8ToANSI( char *pszAn
  * @param     int iSizeOfMultiByte
  * @param     const wchar_t * p
  * @return    void
@@ -114,21 +172,11 @@ void UTF8ToMultibyte( char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t
 {
 
     if( p != NULL ) {
-        //printf( "\n p=%s" , p );
         wcstombs( pszMultiByte, p, iSizeOfMultiByte );
     }
     else {
-        *pszMultiByte = NULL;
+        *pszMultiByte = 0;
     }
-//     int iLen=WideCharToMultiByte(CP_ACP, 0, p, -1, NULL, 0, NULL, NULL);
-//
-//     if (iLen < iSizeOfMultiByte) {
-//         WideCharToMultiByte(CP_ACP, 0, p, -1, pszMultiByte, iLen, NULL, NULL);
-//     }
-//     else {
-//         *pszMultiByte = NULL;
-//     }
-    //*pszMultiByte = NULL;
 
     return;
 }
@@ -178,43 +226,140 @@ void LogPrint( const char *format, ... )
  * @date      2022-06-14, 16:38
  * @warning
  */
-UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold) {
-	UINT ret = 0;
+// UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold) {
+// 	UINT ret = 0;
+//
+// 	_TOA r;
+// 	_TOA harmonic;
+// 	_TOA max_mean, min_mean;
+//
+// 	if (priMean1 != 0 && priMean2 != 0) {
+// 		if (priMean1 > priMean2) {
+// 			max_mean = priMean1;
+// 			min_mean = priMean2;
+// 		}
+// 		else {
+// 			max_mean = priMean2;
+// 			min_mean = priMean1;
+// 		}
+//
+//         harmonic = max_mean % min_mean;
+//
+// 		// 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
+// 		_TOA margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
+//
+// 		// 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
+// 		if (harmonic <= tThreshold + margin_th || min_mean - harmonic <= tThreshold + margin_th) {
+// 			r = TDIV<_TOA>(max_mean, min_mean);
+// 			// r = (T) MulDiv64((T)1, (T) max_mean, (T) min_mean);
+// 			if (r > UINT_MAX) {
+// 				ret = UINT_MAX;
+// 			}
+// 			else {
+// 				ret = (UINT)r;
+// 			}
+// 		}
+// 	}
+// 	else {
+//
+// 	}
+//
+// 	return ret;
+// }
 
-	_TOA r;
-	_TOA harmonic;
-	_TOA max_mean, min_mean;
+/**
+ * @brief     CheckMissingPulse
+ * @param     _TOA priMean1
+ * @param     STR_MINMAX_TOA * pPRI
+ * @param     _TOA tThreshold
+ * @return    UINT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-27 20:18:52
+ * @warning
+ */
+// UINT CheckMissingPulse( _TOA priMean1, STR_MINMAX_TOA *pPRI, _TOA tThreshold )
+// {
+//     return priMean1 / pPRI->priMean;
+//
+// }
 
-	if (priMean1 != 0 && priMean2 != 0) {
-		if (priMean1 > priMean2) {
-			max_mean = priMean1;
-			min_mean = priMean2;
-		}
-		else {
-			max_mean = priMean2;
-			min_mean = priMean1;
-		}
 
-        harmonic = max_mean % min_mean;
+#define  MAX_MISSING_PILSE  (5)
+/**
+ * @brief     CheckMissingPulse
+ * @param     _TOA priMean1
+ * @param     _TOA priMean2
+ * @param     _TOA tThreshold
+ * @return    UINT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-16 13:07:54
+ * @warning
+ */
+UINT ExpectedMissingPulses( int ext_type, _TOA priMean1, STR_MINMAX_TOA *pstPRI, _TOA tThreshold )
+{
+    UINT ret = 1;
 
-		// 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
-		_TOA margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
+    STR_MINMAX_TOA stPRIRange;
 
-		// 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
-		if (harmonic <= tThreshold + margin_th || min_mean - harmonic <= tThreshold + margin_th) {
-			r = TDIV<_TOA>(max_mean, min_mean);
-			// r = (T) MulDiv64((T)1, (T) max_mean, (T) min_mean);
-			if (r > UINT_MAX) {
-				ret = UINT_MAX;
-			}
-			else {
-				ret = (UINT)r;
-			}
-		}
-	}
-	else {
+    if( ext_type == _STABLE || ext_type == _REFSTABLE || ext_type == _STABLE_STAGGER ) {
+        _TOA r = 0;
+        _TOA harmonic;
+        _TOA max_mean, min_mean;
 
-	}
+        if( priMean1 > pstPRI->tMean ) {
+            max_mean = priMean1;
+            min_mean = pstPRI->tMean;
+        }
+        else {
+            max_mean = pstPRI->tMean;
+            min_mean = priMean1;
+        }
 
-	return ret;
+        if( max_mean != 0 && min_mean != 0 ) {
+            harmonic = max_mean % min_mean;
+
+            // 10배수 이상이면 STABLE 마진 값을 두배로 해서 harmonic 체크한다.
+            //_TOA margin_th = tThreshold; // UDIV( max_mean, STB_MARGIN*1000 );
+
+            // 하모닉 체크에서 배수만큼 더한 마진으로 체크한다.
+            if( harmonic <= tThreshold ) {
+                r = TDIV<_TOA>( max_mean, min_mean ) - 1;
+                // r = (T) MulDiv64((T)1, (T) max_mean, (T) min_mean);
+            }
+            else if( min_mean - harmonic <= tThreshold ) {
+                r = max_mean / min_mean;
+            }
+            else {
+
+            }
+
+            if( r != 0 ) {
+                ret = ( UINT ) r;
+            }
+        }
+
+    }
+    else {
+        stPRIRange = *pstPRI;
+
+        do {
+            ++ ret;
+            if( ret >= MAX_MISSING_PILSE ) {
+                ret = UINT_MAX + 1;
+                break;
+            }
+
+            stPRIRange = ( *pstPRI ) * ret;
+        } while( TCompMarginDiff<_TOA>( priMean1, stPRIRange.tMin, stPRIRange.tMax, tThreshold ) == false );
+
+        -- ret;
+
+    }
+
+
+    return ret;
 }

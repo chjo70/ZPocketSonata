@@ -58,6 +58,9 @@
     <Filter Include="소스 파일\Anal\EmitterMerge\InverseMethod">
       <UniqueIdentifier>{ba56ccaa-f3cf-45df-a116-15c45d310358}</UniqueIdentifier>
     </Filter>
+    <Filter Include="설정 파일">
+      <UniqueIdentifier>{3b925b74-9e78-410e-97b2-76bd047fddaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -66,6 +69,9 @@
     </None>
     <None Include="res\RADARDIR.rc2">
       <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="D:\rawdata\sysconfig.ini">
+      <Filter>설정 파일</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -156,14 +162,14 @@
     <ClCompile Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.cpp">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Utils\MulDiv64.cpp">
-      <Filter>소스 파일\Anal\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Anal\SigAnal\SigAnal.cpp">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\clog.cpp">
       <Filter>소스 파일\Anal\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\SigAnal\Hopping.cpp">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -377,14 +383,14 @@
     <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEnvironVariableMngr.h">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Utils\MulDiv64.h">
-      <Filter>소스 파일\Anal\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Anal\SigAnal\SigAnal.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
     <ClInclude Include="..\..\files\Utils\clog.h">
       <Filter>소스 파일\Anal\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\SigAnal\Hopping.h">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

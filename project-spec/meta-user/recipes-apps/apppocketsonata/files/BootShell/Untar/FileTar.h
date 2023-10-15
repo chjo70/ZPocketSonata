@@ -47,8 +47,8 @@
 #define _O_TRUNC 0
 #define _S_IWRITE 0
 
-#elif _MFC_VER
-#define open _open
+#elif defined(_MSC_VER)
+//#define open _open
 
 #endif
 
@@ -246,7 +246,7 @@ struct star_ext_header {
 };
 
 // �� ����
-typedef union {
+union UNI_BLOCK {
   char buffer[TAR_HEADER];
   struct posix_header header;
   struct star_header star_header;
@@ -255,9 +255,9 @@ typedef union {
   struct star_in_header star_in_header;
   struct star_ext_header star_ext_header;
 
-} UNI_BLOCK ;
+}  ;
 
-class CFileTar  
+class CFileTar
 {
 private :
 	int m_TarFile;
@@ -286,7 +286,7 @@ public:
 		const char * GetDescription();
 	};
 
-public:	
+public:
 	bool MkDir( char *directory );
 	void GetDate( struct _utimbuf *pTime, char *pByte, int size );
 	unsigned long Octal2Deciaml( char *pByte, int size );

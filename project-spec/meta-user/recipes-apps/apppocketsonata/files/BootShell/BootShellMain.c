@@ -7,6 +7,8 @@
 
 //#include "pch.h"
 
+#include <stdarg.h>
+
 #ifdef __VXWORKS__
 #include <bootLib.h>
 #include <private/adrSpaceLibP.h>
@@ -33,13 +35,20 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "nfs/nfsCommon.h"
+#include <nfs/nfsCommon.h>
 
 #endif
 
 #include "BootShellMain.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 void _TRACE( char *format, ... );
+
+#ifdef __cplusplus
+}
+#endif
 
 #ifdef __VXWORKS__
 STATUS usrBootLineCrack (char * bootString, BOOT_PARAMS *pParams);
@@ -47,13 +56,15 @@ STATUS usrBootLineCrack (char * bootString, BOOT_PARAMS *pParams);
 extern BOOT_PARAMS g_stBootParams;
 
 #elif defined(_MSC_VER)
-//#define printf _TRACE
-
+#define TRACE _TRACE
 
 #endif
 
+
+
 // GoAhead 시작 함수 정의
 int websvxmain(int argc, char **argv);
+int ipftps_authenticate_user_callback();
 
 void Main()
 {
@@ -65,20 +76,24 @@ void Main()
 
     printf( "\n 소형 전자전장비(APECS-II) 자체개발, 부트 쉘 프로그램, %s, 전자전 연구소, 2021., 2022., 2023." , VERSION );
 
-#ifdef __VXWORKS
-    printf( "\n 컴파일 날짜 : %s" , creationDate );
+#ifdef __VXWORKS__
+    printf( "\n 컴파일 날짜 : %s\n\n" , creationDate );
+
+#else
+    printf( "\n\n" );
 
 #endif
 
 #ifdef __VXWORKS__
-	taskSpawn( "tBootShell", tPRI_BOOTSHEL, VX_STDIO|VX_SUPERVISOR_MODE, 64000, (FUNCPTR) BootShellMain, 0,0,0,0,0,0,0,0,0,0 );
+	taskSpawn( (char *) "tBootShell", tPRI_BOOTSHEL, VX_STDIO | VX_SUPERVISOR_MODE | VX_FP_TASK | VX_ALTIVEC_TASK, 64000, (FUNCPTR) BootShellMain, 0,0,0,0,0,0,0,0,0,0 );
 
 #ifdef WEBS
-	taskSpawn( "tHttpd", tPRI_HTTPDAEMON, VX_STDIO|VX_SUPERVISOR_MODE, 64000, (FUNCPTR) websvxmain, 0,0,0,0,0,0,0,0,0,0 );
+	taskSpawn( ( char * ) "tHttpd", tPRI_HTTPDAEMON, VX_STDIO | VX_SUPERVISOR_MODE | VX_FP_TASK | VX_ALTIVEC_TASK, 64000, (FUNCPTR) websvxmain, 0,0,0,0,0,0,0,0,0,0 );
 #endif
 
 #elif _MSC_VER
     BootShellMain();
+    websvxmain( 0, NULL );
 
 #endif
 
@@ -89,7 +104,7 @@ void Main()
 // {
 //     Main();
 //     return 0;
-// 
+//
 // }
 #endif
 
@@ -115,7 +130,8 @@ void LoadBootParameter()
     }
 
     /* interpret boot command */
-	if( usrBootLineCrack( BOOT_LINE_ADRS, & g_stBootParams ) != OK ) {
+	STATUS stat = usrBootLineCrack( BOOT_LINE_ADRS, & g_stBootParams );
+	if( stat != OK ) {
 		printf( "\n [W] 부트 페라미터값이 잘못 설정되었습니다 !" );
 	}
     else {
@@ -128,5 +144,12 @@ void LoadBootParameter()
 
     }
 #endif
+
+}
+
+int ipftps_authenticate_user_callback()
+{
+    printf( "AAAA" );
+    return 1;
 
 }

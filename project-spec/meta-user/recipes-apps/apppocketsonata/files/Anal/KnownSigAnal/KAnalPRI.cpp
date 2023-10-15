@@ -64,7 +64,7 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 14:09:52
 //
-CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw ) : CAnalPRI(uiCoMaxPdw)
+CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw ) : CAnalPRI( pParent, uiCoMaxPdw)
 {
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
@@ -100,7 +100,7 @@ void CKAnalPRI::Init()
 	m_uiCoSeg = GetCoSeg();
 	m_uiAnalSeg = GetAnalSeg();
 
-	m_uiAnalEmitter = GetCoEmitter();
+    //m_uiAnalEmitter = GetCoEmitter();
 
     m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
 
@@ -179,38 +179,34 @@ bool CKAnalPRI::KnownAnalysis()
 
 	// 타입에 따라서 펄스열 분석을 달리한다.
     //pPri = & stTrkAet.aet.pri;
-#ifdef _POCKETSONATA_
     switch( m_pTrkAet->vPRIType ) {
-#else
-    switch( m_pTrkAet->vPRIType ) {
-#endif
-		case _STABLE :
+		case ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			GroupingStable( TRUE );
 			PatternAnalysis();
 			break;
 
-		case _STAGGER :
+		case ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			GroupingJitter( TRUE );
 			StaggerAnalysis();
 			PatternAnalysis();
 			break;
 
-		case _JITTER_RANDOM :
+		case ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			GroupingJitter( TRUE );
 			StaggerAnalysis();
 			PatternAnalysis();
 			break;
 
-		case _JITTER_PATTERN :
+		case ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			GroupingJitter( TRUE );
 			PatternAnalysis();
 			break;
 
-		case _DWELL :
+		case ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			// 추적할 에미터의 PRI 정보를 근거로 에미터를 생성한다.
 			GroupingStable( TRUE );
@@ -240,9 +236,9 @@ bool CKAnalPRI::KnownAnalysis()
  * @date      2006-01-23 17:00:01
  * @warning
  */
-unsigned int CKAnalPRI::ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter )
+unsigned int CKAnalPRI::ExtractStagger( _TOA framePri, STR_EMITTER *pEmitter )
 {
-	return m_pKnownSigAnal->ExtractStagger( pPdwIndex, framePri, pEmitter );
+	return m_pKnownSigAnal->ExtractStagger( framePri, pEmitter );
 }
 
 /**
@@ -317,10 +313,10 @@ bool CKAnalPRI::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_
  * @date      2006-01-23 10:14:17
  * @warning
  */
-UINT CKAnalPRI::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
-{
-	return m_pKnownSigAnal->ExtractFramePri( pSrcPdwIndex, framePri );
-}
+// UINT CKAnalPRI::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
+// {
+// 	return m_pKnownSigAnal->ExtractFramePri( pSrcPdwIndex, framePri );
+// }
 
 /**
  * @brief     펄스열추출 단계에서의 펄스열 개수를 얻는다.
@@ -406,7 +402,7 @@ void CKAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
  * @date      2006-01-23 10:14:02
  * @warning
  */
-UINT CKAnalPRI::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount )
+UINT CKAnalPRI::MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount )
 {
 	return m_pKnownSigAnal->MedianFreq( pMinMax, pPdwIndex, uiCount );
 }
@@ -533,8 +529,42 @@ void CKAnalPRI::HoppingAnalysis()
  * @date      2022-06-15, 11:30
  * @warning
  */
-bool CKAnalPRI::CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
+bool CKAnalPRI::CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge )
 {
-    return m_pKnownSigAnal->CheckStablePT( pnHarmonic, pSeg1, pSeg2 );
+    return m_pKnownSigAnal->CheckStablePT( pnHarmonic, pSeg1, pSeg2, iMaxMiss, bForceMerge );
 }
 
+
+/**
+ * @brief     SaveDebug
+ * @param     char * pSourcefile
+ * @param     char * piLines
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-06 13:44:31
+ * @warning
+ */
+void CKAnalPRI::SaveDebug( const char *pSourcefile, int iLines )
+{
+    m_pKnownSigAnal->SaveDebug( pSourcefile, iLines );
+
+}
+
+#ifdef _LOG_ANALTYPE_
+/**
+ * @brief     GetAnalType
+ * @return    ENUM_ANAL_TYPE
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-19 12:08:05
+ * @warning
+ */
+bool CKAnalPRI::GetLogAnalType()
+{
+    return m_pKnownSigAnal->GetLogAnalType();
+}
+
+#endif

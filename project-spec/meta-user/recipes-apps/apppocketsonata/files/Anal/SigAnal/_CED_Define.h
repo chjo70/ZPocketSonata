@@ -19,7 +19,7 @@
 #define _MAX_SIZE_OF_BENUMBER                                       (30)
 
 #define _MAX_MODECODE_STRING_SIZE_									(3+_NULL_CHAR_)
-#define _MAX_NICKNAME_STRING_SIZE_									(39+_NULL_CHAR_)
+#define _MAX_NICKNAME_STRING_SIZE_									(27+_NULL_CHAR_)
 #define _MAX_RADARMODENAME_STRING_SIZE_								(30+_NULL_CHAR_)
 
 #define _MAX_FUNCTIONCODE_STRING_SIZE_								(3+_NULL_CHAR_)

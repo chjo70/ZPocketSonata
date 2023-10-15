@@ -27,10 +27,8 @@
 #define			PDW_ITEMS						(1024*128)			// 9437164
 #define			IQ_ITEMS						(1024*128)
 
-//#define			MAX_RAWDATA_SIZE				(4000000)	// 2,432,052
-#define			MAX_RAWDATA_SIZE				max( (sizeof(SRxPDWHeader) + sizeof(SRxPDWDataRGroup)*PDW_ITEMS), sizeof(TNEW_IQ)*IQ_ITEMS )	// 2,432,052
+#define			MAX_RAWDATA_SIZE				max( (sizeof(struct SRxPDWHeader) + sizeof(struct SRxPDWDataRGroup)*PDW_ITEMS), sizeof(TNEW_IQ)*IQ_ITEMS )	// 2,432,052
 
-//#define			MAX_HEADER_SIZE					max( HEADER_CONTROL_BLOCK_SIZE, 100 )
 #if HEADER_CONTROL_BLOCK_SIZE < 100
 #define			MAX_HEADER_SIZE					100
 #else
@@ -349,7 +347,7 @@ public:
 //
 // 	inline unsigned int GetOffsetSize() { return 0; }
 // 	inline int GetHeaderSize() { return 0; }
-//     inline unsigned int GetOneDataSize() { return sizeof(TNEW_PDW); }
+//     inline unsigned int GetOneDataSize() { return sizeof(struct TNEW_PDW); }
 //     inline void SetHeaderData( void *pData ) { return; }
 //
 // public:
@@ -651,7 +649,7 @@ public:
     int GetHeaderSize();
 
 	inline unsigned int GetOffsetSize() { return sizeof(int)*4; }
-    inline unsigned int GetOneDataSize() { return sizeof(_PDW); }
+    inline unsigned int GetOneDataSize() { return sizeof( struct _PDW); }
 
     inline void SetHeaderData( void *pData );
 
@@ -1614,7 +1612,7 @@ public:
 
     inline int GetBandWidth() { return ( int ) 0; }
 	inline unsigned int GetOffsetSize() { return 0; }
-    inline void UpdateHeaderSize() { GetHeaderSize(); }
+    inline void UpdateHeaderSize() { CPOCKETSONATAPDW::GetHeaderSize(); }
 
 public:
     /**
@@ -1713,25 +1711,6 @@ public:
 
         return fFREQ / (float) 1000.;	/* [MHz] */
     } ;
-
-
-    /**
-     * @brief
-     * @param     int iFreq
-     * @return    int
-     * @author    조철희 (churlhee.jo@lignex1.com)
-     * @version   0.0.1
-     * @date      2022/02/21 23:09:23
-     * @warning
-     */
-//     static float DecodeFREQ( int iFreq )
-//     {
-//         float fFreq;
-// 
-//         // fFreq = DecodeRealFREQMHz( iFreq, iCh, iBoardID, iNo );
-//         fFreq = DecodeFREQ( iFreq );
-//         return fFreq;
-//     } ;
 
     /**
      * @brief     DecodeFREQ
@@ -2054,9 +2033,9 @@ public:
 //     static float DecodeTOA( _TOA iTOA  )
 //     {
 //         long double dTOA;
-// 
+//
 //         //iTOA = iTOA & 0xFFFFFFFFFFF;
-// 
+//
 //         dTOA = (long double) ( (long double) iTOA * POCKETSONATA::_toaRes / (long double) 1000000000.0 );
 //         return (float) dTOA;	/* [s] */
 //     } ;
@@ -2144,8 +2123,26 @@ public:
         _TOA iretTOA;
 
         iretTOA = (_TOA) ( ( ( fTOA * (float) 1000.0 ) / POCKETSONATA::_toaRes) + 0.5 );
-        return iretTOA;	/* [ns] */
+        return iretTOA;
     } ;
+
+    /**
+     * @brief     EncodeTOAms
+     * @param     float fTOA
+     * @return    _TOA
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-09-11 16:57:00
+     * @warning
+     */
+    static _TOA EncodeTOAms( float fTOA )
+    {
+        _TOA iretTOA;
+
+        iretTOA = ( _TOA ) ( ( ( fTOA * ( float ) 1000000.0 ) / POCKETSONATA::_toaRes ) + 0.5 );
+        return iretTOA;
+    };
 
     /**
      * @brief     EncodeTOAs
@@ -2164,12 +2161,6 @@ public:
         iretTOA = ( _TOA ) ( ( ( fTOA * ( float ) 1000000000.0 ) / POCKETSONATA::_toaRes ) + 0.5 );
         return iretTOA;	/* [ns] */
     };
-
-
-
-
-
-
 
     /**
      * @brief     EncodePA
@@ -2297,7 +2288,7 @@ public:
 	_COMMON_FUNCTIONS_;
 
 	int GetDataFormatSize( char ch );
-	void GetSubRecords( S_EL_PDW_RECORDS *pPDWRecords );
+	//void GetSubRecords( S_EL_PDW_RECORDS *pPDWRecords );
 	double GetSubValue( char *psubformat );
 
 	inline unsigned int GetOffsetSize() { return 0; }

@@ -26,7 +26,10 @@ class CGroup
 protected:
     DEFINE_ANAL_PVAR_
 
+    unsigned int m_uiAOA_GROUP_MARGIN;
+
     unsigned int m_uiAOA_SHIFT_COUNT;
+    unsigned int m_uiMIN_CONTI_THRESHOLD_AOA;
 
     unsigned int m_uiMAXIMUM_STANDARD_DEVIATION;
     unsigned int m_uiMAXIMUM_DISTANCE_OF_CLUSTERS;
@@ -36,7 +39,7 @@ protected:
 #if defined(_ELINT_) || defined(_XBAND_)
 	UINT m_stSigma1Aoa[5];
 
-#elif _POCKETSONATA_
+#elif defined(_POCKETSONATA_) || defined(_712_)
 	UINT m_stSigma1Aoa[enMAXPRC];
 
 #else
@@ -46,7 +49,9 @@ protected:
 
 	UINT *m_pPDWParam;      // PDW의 데이터의 포인터 설정됨.
 	unsigned int m_uiClusters;
+#ifdef SCN_COLLECT_PDW
 	STR_CLUSTER *m_pCluster;
+#endif
 	unsigned int m_uiCoPdw;
 	unsigned int m_uiMaxPdw;
 	int m_nBand;
@@ -94,10 +99,12 @@ public:
 	void MakePWGroup( int frqidx, bool bForce1Group=false );
 	bool IsLastGroup();
 	bool IsLastGroup( unsigned int uiIndex );
+#ifdef SCN_COLLECT_PDW
 	void ReCluster( STR_CLUSTER *pDstCluster1, STR_CLUSTER *pDstCluster2, STR_CLUSTER *pSrcCluster );
 	bool SplitCenter( STR_CLUSTER *pCluster, STR_CLUSTER *pDstCluster );
 	void CalClusterInfo( STR_CLUSTER *pCluster );
 	void ISODATA( STR_PDWINDEX *pSrcIndex, UINT *pPdw );
+#endif
 
     bool MakePDWArray( _PDW *pdw, unsigned int uiCount, unsigned int uiBand=0 );
 
@@ -129,6 +136,10 @@ public:
 	void Init();
 	void PrintAllGroup();
 	void PrintGroup();
+
+#ifdef _LOG_ANALTYPE_
+    virtual bool GetLogAnalType() = 0;
+#endif
 
 };
 

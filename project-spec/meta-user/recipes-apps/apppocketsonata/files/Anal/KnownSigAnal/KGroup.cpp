@@ -92,7 +92,7 @@ bool CKGroup::MakeKnownGroup()
 	else
 		m_nStat = STAT[0];
 
-#elif _POCKETSONATA_
+#elif defined(_POCKETSONATA_) || defined(_712_)
     m_nStat = m_pSTAT[0];
 
 #else
@@ -121,3 +121,19 @@ unsigned int CKGroup::GetColPdw()
 	return m_pKnownSigAnal->GetColPdw(); 
 }
 
+#ifdef _LOG_ANALTYPE_
+/**
+ * @brief     GetLogAnalType
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-21 12:09:27
+ * @warning
+ */
+bool CKGroup::GetLogAnalType()
+{
+    return m_pKnownSigAnal->GetLogAnalType();
+}
+
+#endif

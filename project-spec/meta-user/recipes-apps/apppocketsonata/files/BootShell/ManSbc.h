@@ -21,6 +21,9 @@
 //#include "../OFP/COMMON/common.h"
 #define DRAM_SIZE			(0)
 
+
+#define IBRDID              (0x0208)
+
 // 내부 메모리의 운용 프로그램 구조체 정의
 typedef struct {
 	// 롬화  회수
@@ -38,7 +41,7 @@ typedef struct {
 
 enum enWhatDrvAPP {
     enDownloadApp = 0,
-    enTffsApp
+    enATAApp
 
 };
 
@@ -77,11 +80,6 @@ private :
 
 	STR_PRG_INFO m_ProgInfo;
 
-    // CSysConfig *g_pTheSysConfig;
-
-    CUDPServer *m_pUDPServer;
-
-
 #ifdef _NETMEM_
     STR_NETMEM m_strMemory;
 
@@ -90,7 +88,14 @@ private :
 
 #endif
 
+
+public:
+    static CUDPServer *m_pUDPServer;
+
+
 private:
+    void MakeDrive();
+
 	void Time2DateTime( UINT *pDate, UINT *pTime, time_t now_sec );
 	time_t GetLastAccessTime( char *pFileName );
 	int IsFile( char *pFileName );
@@ -103,9 +108,10 @@ private:
 	inline STR_PRG_INFO *GetProgInfo() { return & m_ProgInfo; }
 
 	void SetRtcClock( UINT date, UINT time );
-	void SetTimeBySNMP();
 	bool CopyToRamdrive( STR_PRG_INFO *pComPrgInfo, char *pFileName );
 	long DiskFreeSpace( char *szDiskName );
+
+    void GetIPAddress( char *pszIPAddress );
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -120,6 +126,8 @@ private:
     int CopyToFile( const char *src_file, const char *dest_file );
 
 public:
+	bool SetTimeBySNMP();
+
 	UCHAR GetCommand();
     void InstallWeb();
     void DownloadApp();
@@ -131,6 +139,9 @@ public:
     void MountDrive();
 
     void ShowNetMemory();
+
+	void KeyboardHooking();
+	static BOOL KeyboardHandler( int i, int ch );
 
 	CManSbc();
 	virtual ~CManSbc();

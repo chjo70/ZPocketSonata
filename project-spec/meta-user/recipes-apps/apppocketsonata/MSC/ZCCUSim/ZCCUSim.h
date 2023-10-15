@@ -17,6 +17,9 @@
 
 class CZCCUSimApp : public CWinApp
 {
+protected:
+    HANDLE m_hMutex;
+
 public:
 	CZCCUSimApp();
 

@@ -30,7 +30,7 @@ struct sqlite3;
 struct sqlite3_context;
 
 #ifndef SQLITE_USE_LEGACY_STRUCT // Since SQLITE 3.19 (used by default since SQLiteCpp 2.1.0)
-typedef struct sqlite3_value sqlite3_value;
+//typedef struct sqlite3_value sqlite3_value;
 #else // Before SQLite 3.19 (legacy struct forward declaration can be activated with CMake SQLITECPP_LEGACY_STRUCT var)
 struct Mem;
 typedef struct Mem sqlite3_value;
@@ -55,7 +55,7 @@ extern const int OPEN_FULLMUTEX;    // SQLITE_OPEN_FULLMUTEX
 /// Enable URI filename interpretation, parsed according to RFC 3986 (ex. "file:data.db?mode=ro&cache=private")
 extern const int OPEN_URI;          // SQLITE_OPEN_URI
 
-extern const int SQLITE_OK;                ///< SQLITE_OK (used by check() bellow)
+//extern const int SQLITE_OK;                ///< SQLITE_OK (used by check() bellow)
 
 extern const char*  VERSION;        ///< SQLITE_VERSION string from the sqlite3.h used at compile time
 extern const int    VERSION_NUMBER; ///< SQLITE_VERSION_NUMBER from the sqlite3.h used at compile time
@@ -508,8 +508,9 @@ public:
 
 private:
     // TODO: perhaps switch to having Statement sharing a pointer to the Connexion
+
 #ifdef __VXWORKS__
-    //std::unique_ptr<sqlite3, Deleter> mSQLitePtr;   ///< Pointer to SQLite Database Connection Handle
+    std::unique_ptr<sqlite3, Deleter> mSQLitePtr;   ///< Pointer to SQLite Database Connection Handle
 #else
     std::unique_ptr<sqlite3, Deleter> mSQLitePtr;   ///< Pointer to SQLite Database Connection Handle
 #endif

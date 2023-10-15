@@ -13,12 +13,17 @@
 
 #ifdef __cplusplus
 
-#include <typeinfo>
+//#include <typeinfo>
 
-using namespace std;
+//using namespace std;
 
 #include "../../Utils/clog.h"
 #include "../../Utils/MulDiv64.h"
+
+
+#define     FORWARD         (+1)
+#define     BACKWARD        (-1)
+
 
 /**	\brief	클래스명 CPulExt;
                         주파수,방위,펄스폭 그룹화 단계를 거친 후에 입력된 신호를 근거로 펄스열 추출을 한다.
@@ -49,7 +54,10 @@ public:
 
 protected:
     float m_fFixedFreqMargin;
+    unsigned int m_uiFixedFreqMargin;
     _TOA m_tStableMargin;
+    _TOA m_t1US;
+    _TOA m_t2US;
 
 private:
     unsigned int m_uiCoPDW;
@@ -78,6 +86,15 @@ private:
 
 private:
     void DiscardStablePT();
+
+    //void ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, bool bFlagMargin = false );
+    //void ExtractForPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, bool bMargin = false );
+
+    void ExtractPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, int iDirection, bool bFlagMargin = false, bool bMark=true );
+
+    void CalcDTOAMargin( STR_LOWHIGH_TOA *pPRIRange, _TOA *ptDTOAThreshold, bool bFlagMargin, int ext_type, STR_PULSE_TRAIN_SEG *pSeg );
+
+    void ReExtractPT( STR_PULSE_TRAIN_SEG *pSeg, int iExtType, unsigned int uiCoRefPulse, bool bFlagMargin );
 
 protected:
     void ExtractForKnownPRI( SRxABTData *pABTData );
@@ -108,15 +125,18 @@ public:
     void SavePdwParamIndex();
     void ExtractTrackPT( _TOA refPriMean, float refJitRat );
     void DiscardPulseTrain();
-    void PrintAllSeg();
-    void PrintSeg( int iSeg, STR_PULSE_TRAIN_SEG *pSeg );
+    void PrintAllSeg( STR_EMITTER *pEmitter );
+    void PrintAllSeg( unsigned int uiStartSeg, unsigned int uiEndSeg );
+    void PrintAllSeg( char *pszString=NULL );
+    void PrintSeg( STR_PULSE_TRAIN_SEG *pSeg );
+    void PrintPRIBand( STR_PULSE_TRAIN_SEG *pSeg, unsigned int *puiBand );
     void PrintAllSegPDW( STR_PULSE_TRAIN_SEG *pSeg );
     void ChangeMarkTo( unsigned int uiStartSeg, unsigned int uiEndSeg, SEG_MARK enFromMark, SEG_MARK enTomark);
     void MergePulseTrain( STR_PULSE_TRAIN_SEG *pMrgSeg, STR_PULSE_TRAIN_SEG *pSrcSeg );
     STR_PULSE_TRAIN_SEG *GetMainSeg( unsigned int uiStartSeg, unsigned int uiEndSeg );
     //! 추출하고자할 펄스열의 주파수 범위에 맞는 PDW 인가를 체크한다.
 
-    bool IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg );
+    bool IsValidPDW( int index, STR_PULSE_TRAIN_SEG *pSeg, int ext_type );
     //! 펄스열을 근거로 주파수 형태 및 주파수 범위를 계산한다.
 
     void CalcEmitterFrq( STR_PULSE_TRAIN_SEG *pSeg );
@@ -133,8 +153,9 @@ public:
     bool IsSamePulseTrain( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
 
     bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
-    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
-    bool CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, unsigned int i_uiMaxMiss=0 );
+    bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge=false );
+    bool CheckJitterPT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
+    bool CheckOmittedPulse( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int i_iMaxMiss=0 );
 
     void DeleteAllSeg( STR_EMITTER *pEmitter );
     bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange );
@@ -142,12 +163,12 @@ public:
     void CopyPulseTrains( STR_PULSE_TRAIN_SEG *pDstSeg, STR_PULSE_TRAIN_SEG *pSrcSeg, int coSeg );
     void PulseExtract();
     void ExtractJitter( int type );
-    void FindRefStableSeg( STR_PRI_RANGE_TABLE *pExtRange, int nPriBand=-1 );
+    int FindRefPulseTrainSeg( enANL_PRI_TYPE enPulseTrainType, STR_PRI_RANGE_TABLE *pExtRange, int nPriBand=-1 );
 
     _TOA CheckHarmonic( _TOA mean1, float jitter_p1, _TOA mean2, float jitter_p2 );
 
     void ExtractStablePT(STR_PRI_RANGE_TABLE *pExtRange, int nPriBand, bool flagMargin=false, PULSE_MARK enMark=enSTABLE_MARK, SEG_MARK enSegMark=NORMAL_SEG );
-    void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, unsigned int coRef=_sp.cm.Rpc, bool bFlagMargin=false , PULSE_MARK enMark =enJITTER_MARK, bool bIgnoreJitterP=false, SEG_MARK enSegMark = NORMAL_SEG);
+    void ExtractJitterPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiPriBand, bool bFlagMargin = false, unsigned int coRef=_sp.cm.Rpc, PULSE_MARK enMark =enJITTER_MARK, bool bIgnoreJitterP=false, SEG_MARK enSegMark = NORMAL_SEG);
     void ExtractPatternPT( STR_PRI_RANGE_TABLE *pExtRange, unsigned int uiCoRef=_sp.cm.Rpc, bool flagMargin=false );
 
     inline void MarkToPDWIndex( STR_PULSE_TRAIN_SEG *pSeg, PULSE_MARK enPULSE_MARK, SEG_MARK enSEG_MARK=NORMAL_SEG) {
@@ -161,10 +182,12 @@ public:
     UINT CheckStaggerLevel( _TOA framePri, STR_EMITTER *pEmitter );
     _TOA CheckHarmonic(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
 
-    unsigned int ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter );
+    unsigned int ExtractStagger(_TOA framePri, STR_EMITTER *pEmitter );
+    void GroupingStagger( unsigned int m_uiCoSeg, unsigned int coSeg, STR_EMITTER *pEmitter );
 
-    UINT ExtractFramePri( STR_PDWINDEX *pSrcPdwIndex, _TOA framePri);
-    UINT MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
+    //UINT ExtractFramePri( STR_PDWINDEX *pSrcPdwIndex, _TOA framePri);
+    UINT MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
+    UINT MedianPA( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
     void AllExtSegMark();
     int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount);
 
@@ -172,13 +195,16 @@ public:
 
     void CleanRefSeg();
 
-    enANAL_PRI_TYPE AnalPRIType( STR_PULSE_TRAIN_SEG *pSeg, enANAL_PRI_TYPE ext_type=_UNKNOWN_PRI );
+    enANL_PRI_TYPE AnalPRIType( STR_PULSE_TRAIN_SEG *pSeg, enANL_PRI_TYPE ext_type=_UNKNOWN_PRI );
 
     void ExtractSimpleStablePT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex );
 
-    bool FindStableSeg(STR_PULSE_TRAIN_SEG *pRefSeg, UINT uiStart, UINT uiEnd);
+    bool IsValidPulseTrainSeg( enANL_PRI_TYPE enPulseTrainType, STR_PULSE_TRAIN_SEG *pRefSeg, UINT uiStart, UINT uiEnd);
     void ExtractRefStable();
+    void ExtractRefJitter();
     void FindRefStable();
+    void FindRefJitter();
+    void FindRefPulseTrain( enANL_PRI_TYPE enPulseTrainType );
 
     //_TOA RecalcDtoaMargin( int ext_type, STR_PULSE_TRAIN_SEG *pSeg, UINT dtoa );
     bool OverlappedSeg(STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2);
@@ -190,13 +216,13 @@ public:
     void UnknownExtract();
     void ExtractJitterPT();
     bool CalcSegParam( STR_PULSE_TRAIN_SEG *pSeg, bool bIgnoreJitterP=false );
-    void ExtractForPT(STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, bool bMargin=false );
+
 
     float CalcRefPRI( PDWINDEX *pPdwIndex, UINT uiCount, STR_MINMAX_TOA *pPRI );
 
     void ChooseTOAMargin(STR_LOWHIGH_TOA *pStrMargin, STR_PRI_RANGE_TABLE *pPriRange, _TOA tDtoa, int ext_type, bool bFlagMargin);
-    void ExtractBackPT( STR_PULSE_TRAIN_SEG *pSeg, int ext_type, STR_PDWINDEX *pColPdwIndex, bool bFlagMargin=false );
-    bool ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, STR_PDWINDEX *pColPdwIndex, unsigned int uiCoRefPulse=_sp.cm.Rpc, bool flagMargin=false, bool bIgnoreJitterP=false );
+
+    bool ExtractRefPT( STR_PRI_RANGE_TABLE *pPriRange, int ext_type, STR_PULSE_TRAIN_SEG *pSeg, int start_idx, unsigned int uiCoRefPulse=_sp.cm.Rpc, bool flagMargin=false, bool bIgnoreJitterP=false );
     void ExtractStablePT();
 
     void Init();
@@ -211,6 +237,10 @@ public:
     virtual STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() = 0;
     virtual unsigned int GetCoPdw() = 0;
     //virtual void ClearAllMark(bool bClear)=0;
+
+#ifdef _LOG_ANALTYPE_
+    virtual bool GetLogAnalType() = 0;
+#endif
 
 
 };

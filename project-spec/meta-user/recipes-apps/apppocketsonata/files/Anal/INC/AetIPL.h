@@ -116,7 +116,7 @@ enum PATTERN_TYPE
 	MAX_FRQPATTYPE
 };   // same with PRI pattern type
 
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 
 // 아래는 밴드가 없는 것을 의미합니다.
 enum FREQ_BAND
@@ -157,15 +157,15 @@ enum enSIGNAL_TYPE
 	ST_MAX
 } ;
 
-enum PATTERN_TYPE
-{
-	UNK = 0,
-	SINE,
-	SAW_INC,
-	SAW_DEC,
-	TRI,
-	MAX_FRQPATTYPE
-};   // same with PRI pattern type
+// enum PATTERN_TYPE
+// {
+// 	UNK = 0,
+// 	SINE,
+// 	SAW_INC,
+// 	SAW_DEC,
+// 	TRI,
+// 	MAX_FRQPATTYPE
+// };   // same with PRI pattern type
 
 #else
 enum FREQ_BAND
@@ -219,7 +219,7 @@ enum enANL_FREQ_TYPE
     _RANDOM_AGILE,
     _PATTERN_AGILE,
 
-    _UNKNOWN_FT,
+    _UNKNOWN_FREQ,
 
     // _IGNORE_FREQ,
 
@@ -230,7 +230,7 @@ enum enANL_FREQ_TYPE
     @enum  enPRI_TYPE
     @brief 위협 정보의 PRI 형태 정의
 **/
-enum enANAL_PRI_TYPE
+enum enANL_PRI_TYPE
 {
     _STABLE = 0,
     _JITTER_RANDOM,
@@ -246,6 +246,7 @@ enum enANAL_PRI_TYPE
     //MAX_PRITYPE,
 
     _REFSTABLE,
+    _REFJITTER
 
 
 } ;
@@ -283,96 +284,6 @@ enum enANAL_PRI_TYPE
 
 //#define	_spUnknown	0
 
-
-#if defined(_ELINT_) || defined(_XBAND_)
-/////////////////////////////////////////////////////////////////////////////////////////
-// 안테나 스캔 형태 정의값
-enum ENUM_AET_SCAN_TYPE {
-    E_AET_SCAN_UNKNOWN = 0,
-    //##ModelId=452B0C510241
-    E_AET_SCAN_CIRCULAR            = 1,
-    //##ModelId=452B0C51024A
-    E_AET_SCAN_UNI_DIRECTIONAL,
-    //##ModelId=452B0C510254
-    E_AET_SCAN_BI_DIRECTIONAL,
-    //##ModelId=452B0C51025E
-    E_AET_SCAN_CONICAL,
-    //##ModelId=452B0C510268
-    E_AET_SCAN_STEADY,
-
-    E_AET_SCAN_SCANFAIL,
-    //##ModelId=452B0C510286
-    UFO,
-    MAX_SCANTYPE,
-    //##ModelId=452B0C510287
-    DetType,
-    //##ModelId=452B0C510290
-    TYPE_UNKNOWN,
-} ;
-static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
-
-#elif defined(_POCKETSONATA_)
-/////////////////////////////////////////////////////////////////////////////////////////
-// 안테나 스캔 형태 정의값
-enum ENUM_AET_SCAN_TYPE {
-    E_AET_SCAN_UNKNOWN = 0,
-    E_AET_SCAN_CIRCULAR,
-    E_AET_SCAN_UNI_DIRECTIONAL,
-    E_AET_SCAN_BI_DIRECTIONAL,
-    E_AET_SCAN_CONICAL,
-    E_AET_SCAN_STEADY,
-
-    E_AET_SCAN_SCANFAIL,
-
-    E_AET_MAX_SCAN_TYPE,
-
-} ;
-//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
-#elif defined(_SONATA_)
-//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
-
-// 기본형
-enum ENUM_AET_SCAN_TYPE {
-    E_AET_SCAN_UNKNOWN = 0,
-    E_AET_SCAN_CIRCULAR,
-    E_AET_SCAN_UNI_DIRECTIONAL,
-    E_AET_SCAN_BI_DIRECTIONAL,
-    E_AET_SCAN_CONICAL,
-    E_AET_SCAN_STEADY,
-
-    E_AET_SCAN_SCANFAIL,
-
-    UFO,
-    MAX_SCANTYPE,
-
-    DetType,
-
-    TYPE_UNKNOWN,
-};
-
-
-#else
-//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
-
-// 기본형
-/////////////////////////////////////////////////////////////////////////////////////////
-// 안테나 스캔 형태 정의값
-enum ENUM_AET_SCAN_TYPE {
-    E_AET_SCAN_UNKNOWN = 0,
-    E_AET_SCAN_CIRCULAR,
-    E_AET_SCAN_UNI_DIRECTIONAL,
-    E_AET_SCAN_BI_DIRECTIONAL,
-    E_AET_SCAN_CONICAL,
-    E_AET_SCAN_STEADY,
-
-    E_AET_SCAN_SCANFAIL,
-
-    E_AET_MAX_SCAN_TYPE,
-
-};
-
-#endif
-
 enum SCAN_STAT
 {
   NO_PROCESS        = 0,
@@ -387,7 +298,7 @@ enum SCAN_STAT
 
 #if defined(_ELINT_) || defined(_XBAND_)
 //const char aet_asp_stat_ch[7][3] = { "UK" , "CR" , "UD" , "BD" , "CO" , "ST" , "UF" } ;
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 //static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
 #elif defined(_SONATA_)
 //static const char aet_asp_stat_ch[7][3] = { "NO" , "SS" , "SF" , "RS" , "CO" , "RF" , "__" } ;
@@ -464,7 +375,6 @@ struct STR_LHBAND {
     int iBand;
 } ;
 
-//##ModelId=452B0C51033A
 struct STR_MINMAX {
     int iMean;
     int iMin;
@@ -494,7 +404,28 @@ struct STR_MINMAX_TOA {
 	_TOA tMean;
 	_TOA tMin;
 	_TOA tMax;
+
+    STR_MINMAX_TOA operator*( const unsigned int &c )
+    {
+        STR_MINMAX_TOA stTOA;
+
+        stTOA.tMean = tMean * c;
+        stTOA.tMin = tMin * c;
+        stTOA.tMax = tMax * c;
+
+        return stTOA;
+    }
+
+    void operator=( const STR_MINMAX_TOA &c )
+    {
+        tMean = c.tMean;
+        tMin = c.tMin;
+        tMax = c.tMax;
+    }
+
 } ;
+
+
 
 struct STR_F_MINMAX {
 	float fMean;
@@ -502,24 +433,30 @@ struct STR_F_MINMAX {
 	float fMax;
 } ;
 
-//##ModelId=452B0C51034F
 struct STR_TYPEMINMAX {
-    int iType;
+    enANL_FREQ_TYPE enFreqType;
     int iMean;
     int iMin;
     int iMax;
 } ;
 
+struct STR_TYPEMINMAX_TOA {
+    enANL_PRI_TYPE enPRIType;
+
+    _TOA tMean;
+    _TOA tMin;
+    _TOA tMax;
+};
+
 /* AET용 주파수 구조체 */
-//##ModelId=452B0C510363
 struct STR_FRQ {
     int iBand;
-    int iType;
+    ENUM_AET_FRQ_TYPE iType;
     int iMean;
     int iMin;
     int iMax;
     int iMode;
-    int iPatType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE iPatType;
     int iSwtLev;
     int iSwtVal[ MAX_FREQ_PRI_STEP  ];     // _spMaxSwtLev
     int iPatPrd;
@@ -527,27 +464,27 @@ struct STR_FRQ {
 
 /* AET용 PRI 구조체 */
 struct STR_PRI {
-    int iType;
+    ENUM_AET_PRI_TYPE iType;
     _TOA tMean;
     _TOA tMin;
     _TOA tMax;
     _TOA tMode;
-    int iPatType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE iPatType;
     float fJtrPer;
     int iSwtLev;
     _TOA tSwtVal[ MAX_FREQ_PRI_STEP  ];    // _spMaxSwtLev
     _TOA tPatPrd;
 
 	STR_PRI() :
-		iType(0),
+		iType( ENUM_AET_PRI_TYPE::E_AET_PRI_UNKNOWN ),
 		tMean(0),
 		tMin(0),
 		tMax(0),
 		tMode(0),
-        iPatType(0),
+        iPatType( ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN ),
 		fJtrPer(0),
 	    iSwtLev(0),
-        tPatPrd(0)    
+        tPatPrd(0)
 	{
         memset( tSwtVal, 0, sizeof( tSwtVal ) );
 	}
@@ -827,7 +764,7 @@ struct STR_NEWAET {
 
     STR_EXT ext;    // exteded infomation of AET
 }  ;
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
 typedef struct SRxLOBData STR_NEWAET;
 #elif defined(_SONATA_)
 typedef struct SRxLOBData STR_NEWAET;
@@ -924,7 +861,7 @@ struct STR_LOC {
 struct STR_MANAET {
 #if defined(_ELINT_) || defined(_XBAND_)
     STR_AET aet;
-#elif defined(_POCKETSONATA_)
+#elif defined(_POCKETSONATA_) || defined(_712_)
     SRxLOBData aet;
 #else
 

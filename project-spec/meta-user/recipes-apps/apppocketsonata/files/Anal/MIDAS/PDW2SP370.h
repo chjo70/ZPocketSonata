@@ -10,7 +10,7 @@
 #define _VALID							1
 #define _INVALID						0
 
-typedef struct {
+struct SELSP350_PDWHEADER {
 	unsigned short uiSignalInterceptNumer;
 
 	unsigned char uiReserved1[4];
@@ -23,7 +23,7 @@ typedef struct {
 
 	char szMasterLibraryName[48];
 	unsigned int uiPadbytes[2];
-} SELSP350_PDWHEADER;
+} ;
 
 union SELSP350_PDWWORDS {
 	unsigned int wpdw[PDW_PHASE_OF_SP370];

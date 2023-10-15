@@ -8,7 +8,7 @@
 #include "RADARDIRAPP.h"
 #include "MainFrm.h"
 
-#include "../RadarDIR/RadarDirAlgorithm.h"
+#include "../RADARDIR/RadarDirAlgorithm.h"
 
 #include "RADARDIRAPPDoc.h"
 #include "RADARDIRAPPView.h"
@@ -68,7 +68,7 @@ CRADARDIRAPPApp theApp;
 BOOL CRADARDIRAPPApp::InitInstance()
 {
 	// 응용 프로그램 매니페스트가 ComCtl32.dll 버전 6 이상을 사용하여 비주얼 스타일을
-	// 사용하도록 지정하는 경우, Windows XP 상에서 반드시 InitCommonControlsEx()가 필요합니다. 
+	// 사용하도록 지정하는 경우, Windows XP 상에서 반드시 InitCommonControlsEx()가 필요합니다.
 	// InitCommonControlsEx()를 사용하지 않으면 창을 만들 수 없습니다.
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);
@@ -91,7 +91,7 @@ BOOL CRADARDIRAPPApp::InitInstance()
 
 	EnableTaskbarInteraction(FALSE);
 
-	// RichEdit 컨트롤을 사용하려면  AfxInitRichEdit2()가 있어야 합니다.	
+	// RichEdit 컨트롤을 사용하려면  AfxInitRichEdit2()가 있어야 합니다.
 	// AfxInitRichEdit2();
 
 	// 표준 초기화
@@ -110,7 +110,7 @@ BOOL CRADARDIRAPPApp::InitInstance()
 
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
     //_CrtSetBreakAlloc(219028);
-    
+
 	InitContextMenuManager();
 
 	InitKeyboardManager();
@@ -302,7 +302,7 @@ void CRADARDIRAPPApp::InitApp(void)
 	//CRADARDIRAPPDoc *pDoc;
 	//CRADARDIRAPPView *pView;
 	//CChildFrame *pChild;
-	//CDocTemplate *pDocTemplate=nullptr;	
+	//CDocTemplate *pDocTemplate=nullptr;
 
 	//pos = GetFirstDocTemplatePosition();
 
@@ -403,7 +403,7 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 #endif
 
 		//CFileFind는 파일, 디렉터리가 존재하면 TRUE 를 반환함
-		BOOL bWorking = finder.FindFile(strFolderPath); 
+		BOOL bWorking = finder.FindFile(strFolderPath);
 
 		CString fileName;
 		CString DirName;
@@ -426,8 +426,8 @@ void CRADARDIRAPPApp::OnFileContiOpen()
 				CString strMainTitle;
 
 // 				// 현재폴더 상위폴더 썸네일파일은 제외
-// 				if( _fileName == _T(".") || 
-// 					_fileName == _T("..")|| 
+// 				if( _fileName == _T(".") ||
+// 					_fileName == _T("..")||
 // 					_fileName == _T("Thumbs.db") ) continue;
 
 				//fileName =  finder.GetFileTitle();

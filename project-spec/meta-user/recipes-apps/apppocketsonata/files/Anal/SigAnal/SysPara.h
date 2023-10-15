@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "_Type.h"
+
 #include "_Macro.h"
 
 
@@ -30,6 +30,8 @@
 #include "_Struct.h"
 
 #include "_SigAnal.h"
+
+#include "_Type.h"
 
 #ifdef __cplusplus
 

@@ -10,8 +10,46 @@
 
 #define WM_USER_LOGMSG				(7011)
 
-#include "../RADARANL/_CED_Define.h"
 
+#ifdef _USRDLL
+#include "../../files/Anal/SigAnal/_CED_Define.h"
+
+#else
+
+#include "./_CED_Define.h"
+
+#ifndef ENUM_BOARDID
+#define ENUM_BOARDID
+enum ENUM_BoardID {
+    enPRC_Unknown = 0,
+
+    enPRC1 = 1,
+    enPRC2,
+    enPRC3,
+    enPRC4,
+    enPRC5,
+    enMAXPRC,
+
+    enMaster = enPRC3
+
+};
+#endif
+
+// 수집 뱅크 종류 정의
+#ifndef _ENUM_COLLECTBANK
+#define _ENUM_COLLECTBANK
+enum ENUM_COLLECTBANK {
+    enUnknownCollectBank = 0,
+
+    enDetectCollectBank = 1,
+    enTrackCollectBank,
+    enScanCollectBank,
+    enUserCollectBank,
+
+};
+#endif
+
+#endif
 
 
 //
@@ -105,7 +143,7 @@ union UNI_PDW_ETC {
     } el;
 #endif
 
-#if defined(_GRAPH_) || defined(_POCKETSONATA_)
+#if defined(_GRAPH_) || ( defined(_POCKETSONATA_) || defined(_712_) )
     struct {
         int iChannel;
 
@@ -133,8 +171,6 @@ union UNI_PDW_ETC {
 #ifndef _PDW_STRUCT
 #define _PDW_STRUCT
 struct _PDW {
-    unsigned long long int ullTOA;
-
     int iStat;
 
     unsigned int uiAOA;
@@ -142,11 +178,13 @@ struct _PDW {
     unsigned int uiPA;
     unsigned int uiPW;
 
-    int iPFTag;
+    unsigned int uiIndex;
 
     UNI_PDW_ETC x;
 
-#ifdef _POCKETSONATA_
+    unsigned long long int ullTOA;
+
+#if defined( _POCKETSONATA_ ) || defined( _712_ )
     int iChannel;
 #endif
 
@@ -155,7 +193,7 @@ struct _PDW {
     }
 
     int GetChannel() {
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
         return iChannel;
 #else
         return 0;
@@ -185,14 +223,6 @@ struct _PDW {
 
 } ;
 #endif
-
-// #if TOOL==diab
-// #pragma pack( 4 )
-// #else
-// #pragma pack( pop )
-// #endif
-
-#pragma pack( pop )
 
 namespace ELINT {
 #ifndef _ELINT_ENUM_BANDWIDTH_
@@ -238,13 +268,13 @@ namespace _701 {
 // 아래는 공용 정보
 struct STR_COMMON_HEADER {
 	UINT uiTotalPDW;
-	time_t tColTime;
+    unsigned int uiColTime;
 	UINT uiColTimeMs;
 	UINT uiPDWID;
 
 	void CheckColTime() {
-		if( tColTime < 0 ) {
-			tColTime = 0;
+		if( uiColTime < 0 ) {
+			uiColTime = 0;
 		}
 
 		if( uiColTimeMs > 1000 ) {
@@ -392,7 +422,7 @@ struct STR_XBAND_HEADER {
 #define _POCKETSONATA_HEADER_
 struct STR_POCKETSONATA_HEADER {
 	unsigned int uiBoardID;
-	unsigned int enCollectBank;
+    ENUM_COLLECTBANK enCollectBank;
 	unsigned int uiBand;                // 주파수 대역
 	unsigned int uiIsStorePDW;
 
@@ -457,7 +487,7 @@ struct STR_SONATA_HEADER {
 union UNION_HEADER {
 #if defined(_GRAPH_) || defined(_ELINT_)
     // 인천공항 ELINT 구조체
-	STR_ELINT_HEADER el;
+    STR_ELINT_HEADER el;
 #endif
 
 #if defined(_GRAPH_) || defined(_XBAND_)
@@ -465,16 +495,20 @@ union UNION_HEADER {
     STR_XBAND_HEADER xb;
 #endif
 
+#if defined(_GRAPH_) || ( defined(_POCKETSONATA_) || defined(_712_) )
     // 소형 전자전장비 구조체
-	STR_POCKETSONATA_HEADER ps;
+    STR_POCKETSONATA_HEADER ps;
+#endif
 
 #if defined(_GRAPH_) || defined(_SONATA_)
     // SONATA 전자전장비 구조체
-	STR_SONATA_HEADER so;
+    STR_SONATA_HEADER so;
 #endif
 
+#if defined(_GRAPH_) || defined(_701_)
     // 701-ELINT 전자전장비 구조체
     STR_701_HEADER e7;
+#endif
 
 	char *GetTaskID( ENUM_UnitType enUnitType ) {
 		char *pTaskID;
@@ -596,7 +630,7 @@ struct STR_PDWDATA {
     unsigned int GetTotalPDW() {
         unsigned int uiTotalPDW;
 
-#ifdef _POCKETSONATA_
+#if defined( _POCKETSONATA_ ) || defined( _712_ )
         uiTotalPDW = x.ps.stCommon.uiTotalPDW;
 
 #elif defined(_ELINT_)
@@ -617,7 +651,7 @@ struct STR_PDWDATA {
     }
 
 	void SetTotalPDW( unsigned int uiTotalPDW ) {
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
 		x.ps.stCommon.uiTotalPDW = uiTotalPDW;
 
 #elif defined(_ELINT_)
@@ -648,22 +682,22 @@ struct STR_PDWDATA {
      * @date      2022-03-03, 13:48
      * @warning
      */
-    void SetColTime( time_t tColTime, UINT uiColTimeMs ) {
+    void SetColTime( unsigned int uiColTime, UINT uiColTimeMs ) {
 
-#ifdef _POCKETSONATA_
-		x.ps.stCommon.tColTime = tColTime;
+#if defined(_POCKETSONATA_) || defined(_712_)
+		x.ps.stCommon.uiColTime = uiColTime;
 		x.ps.stCommon.uiColTimeMs = uiColTimeMs;
 
 #elif defined(_ELINT_)
-		x.el.stCommon.tColTime = tColTime;
+		x.el.stCommon.uiColTime = uiColTime;
 		x.el.stCommon.uiColTimeMs = uiColTimeMs;
 
 #elif defined(_XBAND_)
-        x.xb.stCommon.tColTime = tColTime;
+        x.xb.stCommon.uiColTime = uiColTime;
         x.xb.stCommon.uiColTimeMs = uiColTimeMs;
 
 #elif defined(_SONATA_)
-		x.so.stCommon.tColTime = tColTime;
+		x.so.stCommon.uiColTime = uiColTime;
 		x.so.stCommon.uiColTimeMs = uiColTimeMs;
 #endif
 
@@ -683,17 +717,17 @@ struct STR_PDWDATA {
 	time_t GetColTime() {
 		time_t retTime;
 
-#ifdef _POCKETSONATA_
-		retTime = x.ps.stCommon.tColTime;
+#if defined( _POCKETSONATA_ ) || defined( _712_ )
+		retTime = x.ps.stCommon.uiColTime;
 
 #elif defined(_ELINT_)
-        retTime = x.el.stCommon.tColTime;
+        retTime = x.el.stCommon.uiColTime;
 
 #elif defined(_XBAND_)
-        retTime = x.xb.stCommon.tColTime;
+        retTime = x.xb.stCommon.uiColTime;
 
 #elif defined(_SONATA_)
-        retTime = x.so.stCommon.tColTime;
+        retTime = x.so.stCommon.uiColTime;
 
 #endif
 
@@ -709,8 +743,217 @@ struct STR_PDWDATA {
 #define MAX_FREQ_PRI_STEP				(32)
 #endif
 
+//////////////////////////////////////////////////////////////////////////
+//
+#if defined(_POCKETSONATA_) || defined(_712_)
 
+// 주파수 형태 정의
+#ifndef _ENUM_AET_FRQ_TYPE
+#define _ENUM_AET_FRQ_TYPE
+enum class ENUM_AET_FRQ_TYPE : unsigned char {
+    E_AET_FRQ_FIXED = 0,
+    E_AET_FRQ_HOPPING,
+    E_AET_FRQ_AGILE,
+    E_AET_FRQ_PATTERN,
+
+    E_AET_FRQ_UNKNOWN,
+    E_AET_FRQ_IGNORE,
+
+    E_AET_MAX_FRQ_TYPE
+};
+#endif
+
+// PRI 형태 정의
+#ifndef _ENUM_AET_PRI_TYPE
+#define _ENUM_AET_PRI_TYPE
+enum class ENUM_AET_PRI_TYPE : unsigned char {
+    E_AET_PRI_FIXED = 0,
+    E_AET_PRI_JITTER,
+    E_AET_PRI_DWELL_SWITCH,
+    E_AET_PRI_STAGGER,
+    E_AET_PRI_PATTERN,
+
+    E_AET_PRI_UNKNOWN,
+
+    E_AET_MAX_PRI_TYPE,
+
+    //E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
+};
+#endif
+
+#ifndef _ENUM_AET_FREQ_PRI_PATTERN_TYPE
+#define _ENUM_AET_FREQ_PRI_PATTERN_TYPE
+enum class ENUM_AET_FREQ_PRI_PATTERN_TYPE : unsigned char {
+    E_AET_FREQ_PRI_UNKNOWN = 0,
+    E_AET_FREQ_PRI_SINE,
+    E_AET_FREQ_PRI_SLIDE_INC,
+    E_AET_FREQ_PRI_SLIDE_DEC,
+    E_AET_FREQ_PRI_SAW_TRI,
+
+    E_AET_MAX_FREQ_PRI_PATTERN_TYPE,
+
+};
+#endif
+
+#else
+#ifndef _ENUM_AET_FRQ_TYPE
+#define _ENUM_AET_FRQ_TYPE
+enum class ENUM_AET_FRQ_TYPE : unsigned int {
+    E_AET_FRQ_FIXED = 0,
+    E_AET_FRQ_HOPPING,
+    E_AET_FRQ_AGILE,
+    E_AET_FRQ_PATTERN,
+
+    E_AET_FRQ_UNKNOWN,
+    E_AET_FRQ_IGNORE,
+
+    E_AET_MAX_FRQ_TYPE
+};
+#endif
+
+// PRI 형태 정의
+#ifndef _ENUM_AET_PRI_TYPE
+#define _ENUM_AET_PRI_TYPE
+enum class ENUM_AET_PRI_TYPE : unsigned int {
+    E_AET_PRI_FIXED = 0,
+    E_AET_PRI_JITTER,
+    E_AET_PRI_DWELL_SWITCH,
+    E_AET_PRI_STAGGER,
+    E_AET_PRI_PATTERN,
+
+    E_AET_PRI_UNKNOWN,
+
+    E_AET_MAX_PRI_TYPE,
+
+    //E_AET_PRI_BEACON, // 2015.4.12. 추가. 현재 ICD에 반영되어 있지 않음.
+};
+#endif
+
+#ifndef _ENUM_AET_FREQ_PRI_PATTERN_TYPE
+#define _ENUM_AET_FREQ_PRI_PATTERN_TYPE
+enum class ENUM_AET_FREQ_PRI_PATTERN_TYPE : unsigned int {
+    E_AET_FREQ_PRI_UNKNOWN = 0,
+    E_AET_FREQ_PRI_SINE,
+    E_AET_FREQ_PRI_SLIDE_INC,
+    E_AET_FREQ_PRI_SLIDE_DEC,
+    E_AET_FREQ_PRI_SAW_TRI,
+
+    E_AET_MAX_FREQ_PRI_PATTERN_TYPE,
+
+};
+#endif
+
+#endif
+
+
+#ifndef _ENUM_AET_SCAN_TYPE
+#define _ENUM_AET_SCAN_TYPE
+
+#if defined(_ELINT_) || defined(_XBAND_)
+/////////////////////////////////////////////////////////////////////////////////////////
+// 안테나 스캔 형태 정의값
+enum ENUM_AET_SCAN_TYPE : unsigned int {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR = 1,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+    UFO,
+    MAX_SCANTYPE,
+    DetType,
+
+    TYPE_UNKNOWN,
+};
+static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" };
+
+#elif defined(_POCKETSONATA_) || defined(_712_)
+/////////////////////////////////////////////////////////////////////////////////////////
+// 안테나 스캔 형태 정의값
+enum class ENUM_AET_SCAN_TYPE : unsigned char {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+
+    E_AET_TRACKUNKNOWN,
+    E_AET_DETECTUNKNOWN,
+    E_AET_LOWILLUSTRATION,
+
+    E_AET_MAX_SCAN_TYPE,
+
+};
+//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+#elif defined(_SONATA_)
+//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+
+// 기본형
+enum ENUM_AET_SCAN_TYPE {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+
+    UFO,
+    MAX_SCANTYPE,
+
+    DetType,
+
+    TYPE_UNKNOWN,
+};
+
+
+#else
+//static const char aet_asp_type_ch[7][3] = { "UK" , "CR" , "SC" , "TW" , "CO" , "ST" , "MA" } ;
+
+// 기본형
+/////////////////////////////////////////////////////////////////////////////////////////
+// 안테나 스캔 형태 정의값
+enum ENUM_AET_SCAN_TYPE {
+    E_AET_SCAN_UNKNOWN = 0,
+    E_AET_SCAN_CIRCULAR,
+    E_AET_SCAN_UNI_DIRECTIONAL,
+    E_AET_SCAN_BI_DIRECTIONAL,
+    E_AET_SCAN_CONICAL,
+    E_AET_SCAN_STEADY,
+
+    E_AET_SCAN_SCANFAIL,
+
+    E_AET_MAX_SCAN_TYPE,
+
+};
+
+#endif
+#endif
+
+
+#ifndef _ENUM_AET_SCAN_STAT
+#define _ENUM_AET_SCAN_STAT
+enum class ENUM_AET_SCAN_STAT : unsigned char {
+    E_AET_UNANALYZED = 0,
+
+    E_AET_SELF_SCAN_SUCCESS,
+    E_AET_SELF_SCAN_FAIL,
+    E_AET_USER_SCAN_SUCCESS,
+    E_AET_USER_SCAN_FAIL,
+
+};
+#endif
+
+
+///////////////////////////////////////////////////////////////////////////////////
 // RadarDirAlgorithm.h
+
 #ifndef _SRxLOBData_STRUCT
 #define _SRxLOBData_STRUCT
 struct SRxLOBData {
@@ -722,9 +965,9 @@ struct SRxLOBData {
     unsigned int uiABTID;
     unsigned int uiAETID;
 
-    time_t tiContactTime;			// _USE_32BIT_TIME_T 로 선언하면 32비트, 없으면 64비트로 설정됨.
+    unsigned int tiContactTime;			// _USE_32BIT_TIME_T 로 선언하면 32비트, 없으면 64비트로 설정됨.
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712)
     unsigned short tiContactTimems;
 #else
     unsigned int tiContactTimems;
@@ -754,7 +997,7 @@ struct SRxLOBData {
 
 #endif
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char vSignalType;
 #else
     unsigned int vSignalType;
@@ -768,13 +1011,8 @@ struct SRxLOBData {
 
     unsigned int uiDIRatio;					// [1 %]
 
-#ifdef _POCKETSONATA_
-    unsigned char vFreqType;
-    unsigned char vFreqPatternType;
-#else
-    int vFreqType;
-    int vFreqPatternType;
-#endif
+    ENUM_AET_FRQ_TYPE vFreqType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE vFreqPatternType;
 
     float fFreqPatternPeriod;                       // [us]
     float fFreqMean;				// [10KHz]
@@ -783,7 +1021,7 @@ struct SRxLOBData {
     float fFreqDeviation;
     float fFreqMode;            // Freq 최빈수
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char vFreqPositionCount;
     unsigned char vFreqElementCount;
 #else
@@ -793,13 +1031,8 @@ struct SRxLOBData {
 
     float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
-#ifdef _POCKETSONATA_
-    unsigned char vPRIType;
-    unsigned char vPRIPatternType;
-#else
-    int vPRIType;
-    int vPRIPatternType;
-#endif
+    ENUM_AET_PRI_TYPE vPRIType;
+    ENUM_AET_FREQ_PRI_PATTERN_TYPE vPRIPatternType;
 
     float fPRIPatternPeriod;		// [us]
     float fPRIMean;				// [1ns]
@@ -809,7 +1042,7 @@ struct SRxLOBData {
     float fPRIMode;             // PRI 최빈수
     float fPRIJitterRatio;		// [%]
 
-#ifdef _POCKETSONATA_
+#if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char vPRIPositionCount;
     unsigned char vPRIElementCount;
 #else
@@ -832,9 +1065,9 @@ struct SRxLOBData {
     float fPAMode;              // 신호세기 최빈수
 
 #if defined(_XBAND_) || defined(_ELINT_)
-#elif defined(_POCKETSONATA_)
-    unsigned char ucScanType;
-    float fScanPeriod;			// [msec]
+#elif defined(_POCKETSONATA_) || defined(_712_)
+    unsigned char vScanType;
+    float fMeanScanPeriod;			// [msec]
 
     unsigned char ucMOPType;				// 인트라 타입
     unsigned char ucDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
@@ -844,7 +1077,7 @@ struct SRxLOBData {
     float fMOPFreqDeviation;
 
 #else
-    int iScanType;
+    int vScanType;
     float fScanPeriod;			// [msec]
 
     int iMOPType;				// 인트라 타입
@@ -865,8 +1098,8 @@ struct SRxLOBData {
     int iIsStoreData;
 #endif
 
-    unsigned int uiCoPDWOfCollection;			// 신호 수집 개수
-    unsigned int uiCoPDWOfAnalysis;             // 분석된 PDW 개수
+    unsigned int uiNumOfCollectedPDW;			// 신호 수집 개수
+    unsigned int uiNumOfAnalyzedPDW;             // 분석된 PDW 개수
 
 #if defined(_XBAND_) || defined(_ELINT_)
     int iNumOfIQ;
@@ -875,11 +1108,12 @@ struct SRxLOBData {
     char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
     unsigned int uiRadarModeIndex;
 
+    unsigned int uiRadarIndex;                  // 레이더 인덱스 : ELNOT
+
     float fCollectLatitude;
     float fCollectLongitude;
 
-#ifdef _POCKETSONATA_
-
+#if defined(_POCKETSONATA_) || defined(_712_)
 
 #elif defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
     char aucTaskID[LENGTH_OF_TASK_ID];
@@ -894,10 +1128,10 @@ struct SRxLOBData {
 
 #endif
 
-}  ;
+};
 #endif
 
-
+#pragma pack( pop )
 
 //////////////////////////////////////////////////////////////////////////
 // 컴파일 방법

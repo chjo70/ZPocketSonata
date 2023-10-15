@@ -37,7 +37,7 @@ CGenPDW::CGenPDW( int iCoMergedPDW )
     m_iCoMergedPDW = iCoMergedPDW;
 
     memset( &m_stMergedPDWData.x, 0, sizeof( m_stMergedPDWData.x ) );
-    szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( _PDW ), iCoMergedPDW );
+    szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( struct _PDW ), iCoMergedPDW );
     m_stMergedPDWData.pstPDW = ( _PDW* ) malloc( szSize );
     m_stMergedPDWData.SetTotalPDW( 0 );
 
@@ -151,7 +151,7 @@ void CGenPDW::ParseAndMakefile()
         // PDW 발생해서 파일로 저장
         GeneratePDW();
 		unsigned int uiTotalPDW = m_stSavePDWData.GetTotalPDW();
-        Write( m_stSavePDWData.pstPDW, sizeof( _PDW ) * uiTotalPDW );
+        Write( m_stSavePDWData.pstPDW, sizeof( struct _PDW ) * uiTotalPDW );
 
         CloseFile();
 
@@ -185,7 +185,7 @@ void CGenPDW::ParseAndMakeMemory( SIGAPDW *pSigPDW )
         GetLineCommand();
 
         // 메모리 할당
-        szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( _PDW ), (int) m_stGenPDWInfo.uiCoAllPDW );
+        szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( struct _PDW ), (int) m_stGenPDWInfo.uiCoAllPDW );
 
 		if (szSize != 0) {
 			m_stSavePDWData.pstPDW = (_PDW *) malloc(szSize);
@@ -387,10 +387,10 @@ void CGenPDW::MergePDW( SIGAPDW *pSigPDW )
                 if( iIndex < m_iCoMergedPDW ) {
                     iMove = ( int ) uiCoMergedPDW - iIndex;
                     if( iMove > 0 ) {
-                        memmove( &m_stMergedPDWData.pstPDW[iIndex + 1], &m_stMergedPDWData.pstPDW[iIndex], sizeof( _PDW )*( size_t ) iMove );
+                        memmove( &m_stMergedPDWData.pstPDW[iIndex + 1], &m_stMergedPDWData.pstPDW[iIndex], sizeof( struct _PDW )*( size_t ) iMove );
                     }
 
-                    memcpy( &m_stMergedPDWData.pstPDW[iIndex], m_pstPDW, sizeof( _PDW ) );
+                    memcpy( &m_stMergedPDWData.pstPDW[iIndex], m_pstPDW, sizeof( struct _PDW ) );
                 }
 
                 // 병합된 PDW 개수 증가 : 최대 초기 생성자 함수에서 설정한 값까지 설정하게 함.
@@ -403,7 +403,7 @@ void CGenPDW::MergePDW( SIGAPDW *pSigPDW )
             else {
 				unsigned int uiPA = m_pstPDW->GetPulseamplitude();
                 if( uiPA > m_stMergedPDWData.pstPDW[-iIndex - 1].GetPulseamplitude() ) {
-                    memcpy( &m_stMergedPDWData.pstPDW[-iIndex - 1], m_pstPDW, sizeof( _PDW ) );
+                    memcpy( &m_stMergedPDWData.pstPDW[-iIndex - 1], m_pstPDW, sizeof( struct _PDW ) );
                 }
             }
 

@@ -38,7 +38,14 @@ CScanAnalysis::CScanAnalysis( int iThreadPriority, const char *pClassName, bool 
 
     strcpy(szSQLiteFileName, EMITTER_SQLITE_FOLDER);
     strcat(szSQLiteFileName, "/");
-    strcat(szSQLiteFileName, EMITTER_SQLITE_FILENAME);
+#ifdef _MSC_VER
+    char szSrcSQLiteFileName[100];
+
+    sprintf( szSrcSQLiteFileName, "%s_%d.sqlite3", EMITTER_SQLITE_FILENAME, g_enBoardId );
+    strcat( szSQLiteFileName, szSrcSQLiteFileName );
+#else
+    strcat( szSQLiteFileName, EMITTER_SQLITE_FILEEXTNAME );
+#endif
 
     m_pTheScanSigAnal = new CScanSigAnal(SCN_COLLECT_PDW, false, szSQLiteFileName);
 #else
@@ -70,7 +77,7 @@ CScanAnalysis::~CScanAnalysis(void)
  */
 void CScanAnalysis::Run(key_t msgQ)
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     CThread::Run();
 
@@ -87,16 +94,28 @@ void CScanAnalysis::Run(key_t msgQ)
  */
 void CScanAnalysis::_routine()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     m_pMsg = GetRecvDataMessage();
 
     while( m_bThreadLoop ) {
+#ifdef _MSC_VER
+        if( QMsgRcv( enTIMER, OS_MILLISEC( 1000 ) ) == -1 ) {
+            perror( "QMsgRcv" );
+        }
+#else
         if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv" );
         }
+
+#endif
         else {
             switch( m_pMsg->uiOpCode ) {
+#ifdef _MSC_VER
+                case enTHREAD_TIMER:
+                    break;
+
+#endif
                 // 운용 제어 관련 메시지 처리
                 case enREQ_OP_START:
                     // QMsgClear();
@@ -105,7 +124,12 @@ void CScanAnalysis::_routine()
 
                 case enTHREAD_DISCONNECTED:
                 case enREQ_OP_SHUTDOWN:
-                    QMsgClear();
+                    //QMsgClear();
+                    //InitScanAnalysis();
+                    break;
+
+                case enREQ_OP_RESTART:
+                    //QMsgClear();
                     InitScanAnalysis();
                     break;
 
@@ -121,7 +145,7 @@ void CScanAnalysis::_routine()
                     break;
 
                  default:
-                    Log( enError, "=================================== 잘못된 명령(0x%x)을 수신하였습니다 !!", m_pMsg->uiOpCode );
+                    Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
                     break;
             }
 
@@ -141,35 +165,30 @@ void CScanAnalysis::_routine()
  */
 void CScanAnalysis::AnalysisStart()
 {
-    LOGENTRY;
+    //LOGENTRY;
 
     STR_SCANRESULT *pScanResult;
 
-    Log( enDebug, "스캔 : 위협[%d/%d] 에 대해서 %d[Ch]에서, PDW[%d] 를 수집했습니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiCh, m_pScnPDWData->strPDW.GetTotalPDW() );
+    Log( enDebug, "스캔 : 위협[%d/%d] 에 대해서, 채널[%d], 스캔분석 요청주기 [%d ms] 에서 PDW[%d 개] 를 분석합니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiCh, m_pRecvScanAnalInfo->uiReqScanPeriod, m_pScnPDWData->strPDW.GetTotalPDW() );
 
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
     // 1. 스캔 신호 분석을 호출한다.
-    m_pTheScanSigAnal->Start( & m_pScnPDWData->strPDW, & m_pScnPDWData->strABTData );
+    m_pTheScanSigAnal->Start( & m_pScnPDWData->strPDW, & m_pScnPDWData->strABTData, m_pRecvScanAnalInfo->uiScanStep, m_pRecvScanAnalInfo->uiReqScanPeriod, & m_pRecvScanAnalInfo->stScanResult );
 
     // 2. 분석 결과를 병합/식별 쓰레드에 전달한다.
-    m_pstrScanAnalInfo->Set( g_enBoardId, m_pRecvScanAnalInfo->uiCh, m_pRecvScanAnalInfo->enCollectBank, m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiABTIndex, 0 );
-    pScanResult = m_pTheScanSigAnal->GetScanResult();
-
-#ifndef _XBAND_
-//     pLOBData->ucScanType = 0;
-//     pLOBData->fScanPeriod = 0;
-#endif
+    pScanResult = & m_pRecvScanAnalInfo->stScanResult; //  m_pTheScanSigAnal->GetScanResult();
+    m_pstrScanAnalInfo->Set( m_pRecvScanAnalInfo->uiCh, m_pRecvScanAnalInfo->enCollectBank, m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiABTIndex, 0, m_pRecvScanAnalInfo->uiScanStep, pScanResult );
 
     if( pScanResult->enResult == EN_SCANRESULT::_spAnalSuc ) {
         MakeLOBData();
 
         //?     LOB 데이터화 해서 병합으로 보내는게 좋지 않을까 ? 아니면 분석 결과면 보내는게 낳을까 ?
         //date 	2023-03-21 09:39:53
-        g_pTheEmitterMerge->QMsgSnd( enTHREAD_SCANANAL_RESULT, & m_stLOBData, _spOne, sizeof( SRxLOBData ), GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_SCANANAL_RESULT, & m_stLOBData, _spOne, sizeof( struct SRxLOBData ), GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
     }
     else {
-        g_pTheEmitterMerge->QMsgSnd( enTHREAD_SCANANAL_FAIL, GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_SCANANAL_FAIL, GetUniMessageData(), sizeof( union UNI_MSG_DATA ), GetThreadName() );
     }
 
 }
@@ -186,10 +205,10 @@ void CScanAnalysis::AnalysisStart()
  */
 void CScanAnalysis::MakeLOBData()
 {
-    STR_SCANRESULT *pScanResult=m_pTheScanSigAnal->GetScanResult();
+    SRxLOBData *pLOBData;
 
-    // 생성할 데이터 초기화
-    memset( & m_stLOBData, 0, sizeof( SRxLOBData ) );
+    pLOBData = m_pTheScanSigAnal->GetLOBData( 0 );
+    memcpy( & m_stLOBData, pLOBData, sizeof( SRxLOBData ) );
 
     m_stLOBData.uiPDWID = 0;
     m_stLOBData.uiPLOBID = 0;
@@ -201,31 +220,41 @@ void CScanAnalysis::MakeLOBData()
 
     CCommonUtils::GetCollectTime( &m_stLOBData.tiContactTime, &m_stLOBData.tiContactTimems );
 
-    strcpy( m_stLOBData.szPrimaryELNOT, m_pstABTData->szPrimaryELNOT );
-    strcpy( m_stLOBData.szPrimaryModeCode, m_pstABTData->szPrimaryModeCode );
+    m_stLOBData.uiNumOfCollectedPDW = m_pScnPDWData->strPDW.GetTotalPDW();
 
-    strcpy( m_stLOBData.szModulationCode, m_pstABTData->szModulationCode );
-
-    strcpy( m_stLOBData.szNickName, m_pstABTData->szNickName );
-
-    // 신호 형태 저장
-    m_stLOBData.vSignalType = m_pstABTData->vSignalType;
-
-    // 주파수 정보 저장
-    m_stLOBData.vFreqType = m_pstABTData->vFreqType;
-    m_stLOBData.vFreqPatternType = m_pstABTData->vFreqPatternType;
-
-    // PRI 정보 저장
-    m_stLOBData.vPRIType = m_pstABTData->vPRIType;
-    m_stLOBData.vPRIType = m_pstABTData->vPRIType;
-
-    // 스캔 정보 저장
-    m_stLOBData.ucScanType = ( unsigned char ) pScanResult->uiScanType;
-    m_stLOBData.fScanPeriod = pScanResult->fScanPeriod;
-
-    // 식별 정보 저장
-    m_stLOBData.uiRadarModeIndex = m_pstABTData->uiRadarModeIndex;
-    strcpy( m_stLOBData.szRadarModeName, m_pstABTData->szRadarModeName );
+//     if( m_pstABTData != NULL ) {
+//     STR_SCANRESULT *pScanResult = m_pTheScanSigAnal->GetScanResult();
+//         strcpy( m_stLOBData.szPrimaryELNOT, m_pstABTData->szPrimaryELNOT );
+//         strcpy( m_stLOBData.szPrimaryModeCode, m_pstABTData->szPrimaryModeCode );
+//
+//         strcpy( m_stLOBData.szModulationCode, m_pstABTData->szModulationCode );
+//
+//         strcpy( m_stLOBData.szNickName, m_pstABTData->szNickName );
+//
+//         // 신호 형태 저장
+//         m_stLOBData.vSignalType = m_pstABTData->vSignalType;
+//
+//         // 주파수 정보 저장
+//         m_stLOBData.vFreqType = m_pstABTData->vFreqType;
+//         m_stLOBData.vFreqPatternType = m_pstABTData->vFreqPatternType;
+//
+//         // PRI 정보 저장
+//         m_stLOBData.vPRIType = m_pstABTData->vPRIType;
+//         m_stLOBData.vPRIType = m_pstABTData->vPRIType;
+//
+//         // PA 정보 저장
+//         m_stLOBData.fPAMin = 0;
+//         m_stLOBData.fPAMax = 0;
+//         m_stLOBData.fPAMean = 0;
+//
+//         // 스캔 정보 저장
+//         m_stLOBData.vScanType = pScanResult->enScanType;
+//         m_stLOBData.fMeanScanPeriod = pScanResult->fScanPeriod;
+//
+//         // 식별 정보 저장
+//         m_stLOBData.uiRadarModeIndex = m_pstABTData->uiRadarModeIndex;
+//         strcpy( m_stLOBData.szRadarModeName, m_pstABTData->szRadarModeName );
+//     }
 
 }
 
@@ -245,6 +274,10 @@ void CScanAnalysis::InitScanAnalysis()
     m_pScnPDWData = NULL;
 
     m_pstABTData = NULL;
+
+    // 테이블 삭제하기
+    Log( enNormal, "테이블을 삭제합니다." );
+    m_pTheScanSigAnal->DeleteDB_RAW( "RAWDATA" );
 
 }
 

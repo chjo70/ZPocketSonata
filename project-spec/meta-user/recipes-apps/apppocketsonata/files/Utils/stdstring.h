@@ -2569,7 +2569,7 @@ public:
 			*this			= strRes;
 
 	#else // otherwise make our own hackneyed version of CString's Load
-		
+
 		// Get the resource name and module handle
 
 		if ( NULL == hModule )

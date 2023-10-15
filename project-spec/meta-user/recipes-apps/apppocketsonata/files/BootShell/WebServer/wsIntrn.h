@@ -154,7 +154,7 @@ typedef struct {
 			char_t *query);					/* Callback URL handler function */
 	char_t	*webDir;						/* Web directory if required */
 	char_t	*urlPrefix;						/* URL leading prefix */
-	int		len;							/* Length of urlPrefix for speed */
+	size_t		len;							/* Length of urlPrefix for speed */
 	int		arg;							/* Argument to provide to handler */
 	int		flags;							/* Flags */
 } websUrlHandlerType;

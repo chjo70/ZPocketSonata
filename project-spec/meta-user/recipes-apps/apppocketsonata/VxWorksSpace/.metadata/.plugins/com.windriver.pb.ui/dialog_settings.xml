@@ -6,7 +6,7 @@
 		<item value="" key="BSPVTSOptionsDialog.BSPVTS_HOST"/>
 		<item value="PPCE6500" key="SourceBuildProjectSetupPage.SELECTED_ACTIVECPU"/>
 		<item value="vxworks-7" key="WRGenericProjectWizardBuildTypePage.STORE_SELECTED_PLATFORM"/>
-		<item value="VSourceBuild" key="ApplicationProjectSetupPage.SELECTED_PROJECT"/>
+		<item value="VBootShell_T2MS32" key="ApplicationProjectSetupPage.SELECTED_PROJECT"/>
 		<item value="bspvts" key="BSPVTSOptionsDialog.BSPVTS_SUITE"/>
 		<item value="hmt_t2ms_3_0_0_1" key="VIPSetupPage.SELECTED_BSP"/>
 		<item value="hmt_t2ms_3_0_0_1" key="SourceBuildProjectSetupPage.SELECTED_BSP"/>
@@ -18,16 +18,16 @@
 		<item value="diab" key="VIPSetupPage.SELECTED_TC"/>
 		<item value="false" key="BSPVTSOptionsDialog.BSPVTS_ENABLED"/>
 		<item value="" key="BSPVTSOptionsDialog.BSPVTS_TIMEOUT"/>
-		<item value="Kernel Image" key="WRGenericProjectWizardBuildTypePage.STORE_SELECTED_BUILD_TYPE"/>
+		<item value="Source Build" key="WRGenericProjectWizardBuildTypePage.STORE_SELECTED_BUILD_TYPE"/>
 		<item value="a VxWorks 7 board support package" key="SourceBuildProjectSetupPage.SELECTED_TYPE"/>
 		<item value="" key="BSPVTSOptionsDialog.BSPVTS_HOSTIP"/>
-		<item value="a source build project" key="ApplicationProjectSetupPage.SELECTED_TYPE"/>
+		<item value="an image project" key="ApplicationProjectSetupPage.SELECTED_TYPE"/>
 		<list key="WRWizardNewProjectCreationPage.STORE_PROJECT_LOCATION">
-			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell_T2MS64"/>
 			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VSourceBuild_T2MS64"/>
+			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\LibTEST"/>
+			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\LibVSIGA"/>
+			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VBootShell_T2MS64"/>
 			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VIP_T2M"/>
-			<item value="D:\VirtualBoxVMs\Git\ZPocketSonataT\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\VSB_T2M"/>
-			<item value="D:\VirtualBoxVMs\Git\ZPocketSonata1\project-spec\meta-user\recipes-apps\apppocketsonata\VxWorksSpace\Hello"/>
 		</list>
 	</section>
 </section>

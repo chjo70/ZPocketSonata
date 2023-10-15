@@ -41,7 +41,9 @@ private:
 
 public:
     int m_iCoEmitter;
+
     int m_iCoLOB;
+    int m_iAnaledCoLOB;
 
 protected:
     DEFINE_ANAL_PVAR_
@@ -58,7 +60,7 @@ protected:
 	STR_PULSE_TRAIN_SEG *m_pSeg;
 
 private:
-    int SortLevel( int iSwtLev, _TOA *pSwtLev );
+
 
 public:
     CMakeAET( unsigned int uiCoMaxLOB );
@@ -95,7 +97,7 @@ public:
 
     void MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
     unsigned int MakeDIInfoFromSeg( STR_EMITTER *pEmitter);
-    void MakeLOBDataFromEmitter(int iLOBData, STR_EMITTER *pEmitter, int idxEmitter);
+    void MakeLOBDataFromEmitter(int iLOBData, STR_EMITTER *pEmitter, int idxEmitter );
     void PrintAllAET();
 	void MakeFreqLOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
 	void MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
@@ -133,6 +135,10 @@ public:
 #if defined(_ELINT_) || defined(_XBAND_)
     virtual EN_RADARCOLLECTORID GetCollectorID()=0;
     virtual char *GetTaskID()=0;
+#endif
+
+#ifdef _LOG_ANALTYPE_
+    virtual bool GetLogAnalType() = 0;
 #endif
 
 

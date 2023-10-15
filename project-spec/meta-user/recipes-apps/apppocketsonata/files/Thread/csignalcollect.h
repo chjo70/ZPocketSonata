@@ -23,6 +23,14 @@
 #include "../Utils/clog.h"
 
 
+enum EN_CHECKLOBE {
+    EN_MAINLOBE=0,
+    EN_SIDELOBE,
+
+    EN_NOISEOBE,
+};
+
+
 /**
  * @brief The CSignalCollect class
  */
@@ -44,8 +52,23 @@ private:
     UNION_HEADER *m_pUniHeader;
 
     unsigned int m_uiCoSim;
-    _TOA m_ullTOA;
+
+    _TOA m_tTOA;
+    _TOA m_tFirstTOA;
+    unsigned int m_uiMainLobeDuration;
+    unsigned int m_uiStartDuration;
+
+    int m_iMissingPercent;
+
+    int m_iMainLobe;
+
     unsigned int m_uiIndex;
+
+    STR_RADAR_PDW m_stRadarPDW;
+
+    char m_szDDRFile[200];
+
+    bool m_bWriteDDRFile;
 
 #endif
 
@@ -86,9 +109,7 @@ private:
     void Free();
 
     void InitOfMessageData();
-    void InitSignalCollect();
-    void AnalysisStart();
-    //void RoutineForSimPDW();
+    void InitSignalCollect( bool bWrite=false );
 
     void SendEndCollect();
 
@@ -104,16 +125,16 @@ private:
     void ReqTrackWindowCell();
     void CloseTrackWindowCell();
     void NewTrackWindowCell( SRxABTData *pABTData );
-    void StartTrackWindowCell();
     void CalTrackWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData *pABTData );
     void UpdateTrackWindowCell( SRxABTData *pABTData );
-    void CloseTrackWindowCell( SRxABTData *pABTData );
+    //void CloseTrackWindowCell( SRxABTData *pABTData );
 
     // 스캔 채널 관련 함수
     void StartScanChannel();
     void ReqScanWindowCell();
     void CloseScanWindowCell();
     void UpdateScanWindowCell( SRxABTData *pABTData );
+    void SaveScanResult( STR_SCANRESULT *pstScanResult, STR_WINDOWCELL *pWindowCell, unsigned int uiCoScanCollectingPDW, unsigned int uiScanDurationms );
     void CloseScanChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
 
     // 공통 채널 관련 함수
@@ -151,6 +172,12 @@ public:
 
 #ifdef _SIM_PDW_
     void MakeSIMPDWData();
+
+    unsigned int MakeSIMFreq( int iRandomIndex );
+    _TOA MakeSIMPRI( int iRandomIndex );
+    unsigned int MakeSIMPA( int iRandomIndex );
+    void GenerateDDRFile( bool bWrite=false );
+    EN_CHECKLOBE CheckLobe();
 
     void SimPDWData();
     void SimFilter( STR_PDWDATA *pPDWData, ENUM_PCI_DRIVER enPCIDriver );

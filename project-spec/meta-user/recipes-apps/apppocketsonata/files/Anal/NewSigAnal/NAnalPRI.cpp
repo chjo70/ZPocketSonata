@@ -67,7 +67,7 @@ int CNAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:10:00
 //
-CNAnalPRI::CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw) : CAnalPRI(uiCoMaxPdw)
+CNAnalPRI::CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw) : CAnalPRI( pParent, uiCoMaxPdw)
 {
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
@@ -127,39 +127,41 @@ void CNAnalPRI::Analysis()
     Init();
 
     // 고정펄스열들에 대하여 스태거 그룹핑 수행하여 스태거 신호인지 분석한다.
-    GroupingStagger();
-    StaggerAnalysis();
-    PrintAllEmitter( m_uiStepEmitter, "[1/6] 그룹핑 Stable PRI 기반 스태거 분석" );
+    //GroupingStagger();
+    //StaggerAnalysis();
+    //PrintAllEmitter( 0, "[1/8] 그룹핑 Stable PRI 기반 스태거 분석", _UNKNOWN_FREQ, _STAGGER );
 
     // 고정펄스열 그룹핑은 스태거 그룹핑 후 검증하여 해제된 펄스열들에 대해 한다.
     GroupingStable();
-    PrintAllEmitter( m_uiStepEmitter, "[2/6] 스테이블 PRI 분석", _STABLE );
+    PrintAllEmitter( 0, "[2/8] 스테이블 PRI 분석", _UNKNOWN_FREQ, _STABLE );
 
     GroupingJitter();
-    PrintAllEmitter( m_uiStepEmitter, "[3/6] 지터 PRI 분석", _JITTER_RANDOM );
+    PrintAllEmitter( 0, "[3/8] 지터 PRI 분석", _UNKNOWN_FREQ, _JITTER_RANDOM );
 
     ///////////////////////////////////////////////////////////////////////////////////
     // 기존 에미터 분석한 결과에서 세부 분석을 수행 합니다.
     // 지터 그룹핑된 이후 스태거 분석을 한번 더 수행한다.(Jitter 펄스열들에 대해 Auto-Correlation Function으로 스태거 분석 수행)
+    MergeGrouping();
     StaggerAnalysis();
-    PrintAllEmitter( m_uiAnalEmitter, "[4/6] 스태거 PRI 분석", _JITTER_STAGGER );
+    PrintAllEmitter( 0, "[4/8] 스태거 PRI 분석", _UNKNOWN_FREQ, _JITTER_STAGGER );
 
     // PRI 고정으로 분석된 에미터들에 대해 D&S 분석을 수행한다.
-    //DNSAnalysis();
-    //PrintAllEmitter( 0, "[5/8] 드웰 PRI 분석", _DWELL );
+    DwellNSwitchAnalysis();
+    PrintAllEmitter( 0, "[5/8] 드웰 PRI 분석", _UNKNOWN_FREQ, _DWELL );
 
     // Agile 형태 에미터를 대상으로 Hopping 여부를 분석한다.
-    //HoppingAnalysis();
-    //PrintAllEmitter( 0, "[6/8] 호핑 PRI 분석" );
+    HoppingAnalysis();
+    PrintAllEmitter( 0, "[6/8] 호핑 PRI 분석", _HOPPING, _UNKNOWN_PRI );
 
     // 주파수/PRI 패턴 분석을 수행한다.
     PatternAnalysis();
-    PrintAllEmitter( m_uiAnalEmitter, "[5/6] 패턴 PRI 분석", _JITTER_PATTERN );
+    PrintAllEmitter( 0, "[7-1/8] 주파수 패턴 분석", _PATTERN_AGILE, _UNKNOWN_PRI );
+    PrintAllEmitter( 0, "[7-2/8] PRI 패턴 분석", _UNKNOWN_FREQ, _JITTER_PATTERN );
 
     // 에미터 그룹핑
     // PRI 타입이 다르더라도 PRI 평균이 같은 에미터 단위는 하나로 형성한다.
     MergeGrouping();
-    PrintAllEmitter( m_uiStepEmitter, "[6/6] 유사 PRI 병합" );
+    PrintAllEmitter( 0, "[8/8] 유사 PRI 병합" );
 
     CAnalPRI::Analysis();
 
@@ -177,9 +179,9 @@ void CNAnalPRI::Analysis()
  * @date      2006-01-23 16:57:14
  * @warning
  */
-unsigned int CNAnalPRI::ExtractStagger(STR_PDWINDEX *pPdwIndex, _TOA framePri, STR_EMITTER *pEmitter )
+unsigned int CNAnalPRI::ExtractStagger(_TOA framePri, STR_EMITTER *pEmitter )
 {
-    return m_pNewSigAnal->ExtractStagger( pPdwIndex, framePri, pEmitter );
+    return m_pNewSigAnal->ExtractStagger( framePri, pEmitter );
 }
 
 /**
@@ -266,10 +268,10 @@ bool CNAnalPRI::ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_T
  * @date      2006-01-23 10:10:21
  * @warning
  */
-UINT CNAnalPRI::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
-{
-    return m_pNewSigAnal->ExtractFramePri( pSrcPdwIndex, framePri );
-}
+// UINT CNAnalPRI::ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri )
+// {
+//     return m_pNewSigAnal->ExtractFramePri( pSrcPdwIndex, framePri );
+// }
 
 /**
  * @brief     펄스열 개수를 리턴한다.
@@ -339,7 +341,7 @@ void CNAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
  * @date      2006-01-23 10:10:40
  * @warning
  */
-UINT CNAnalPRI::MedianFreq( STR_TYPEMINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount )
+UINT CNAnalPRI::MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount )
 {
     return m_pNewSigAnal->MedianFreq( pMinMax, pPdwIndex, uiCount );
 }
@@ -416,9 +418,6 @@ void CNAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int ui
     return;
 }
 
-
-
-
 /**
  * @brief		가상 에미터 포인터를 리턴한다.
  * @return		CMakeAET*
@@ -441,7 +440,55 @@ CMakeAET* CNAnalPRI::GetMakeAET()
  * @date		2022/01/03 16:49:18
  * @warning
  */
-bool CNAnalPRI::CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 )
+bool CNAnalPRI::CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge )
 {
-    return m_pNewSigAnal->CheckStablePT( pnHarmonic, pSeg1, pSeg2 );
+    return m_pNewSigAnal->CheckStablePT( pnHarmonic, pSeg1, pSeg2, iMaxMiss, bForceMerge );
 }
+
+/**
+ * @brief     GetParentSigAnal
+ * @return    void *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-06-14 10:30:33
+ * @warning
+ */
+void *CNAnalPRI::GetParentSigAnal()
+{
+    return ( void * ) m_pNewSigAnal;
+}
+
+/**
+ * @brief     SaveDebug
+ * @param     char * pSourcefile
+ * @param     char * piLines
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-08-06 13:42:16
+ * @warning
+ */
+void CNAnalPRI::SaveDebug( const char *pSourcefile, int iLines )
+{
+    m_pNewSigAnal->SaveDebug( pSourcefile, iLines );
+
+}
+
+#ifdef _LOG_ANALTYPE_
+/**
+ * @brief     GetLogAnalType
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-09-21 12:01:36
+ * @warning
+ */
+bool CNAnalPRI::GetLogAnalType()
+{
+    return m_pNewSigAnal->GetAnalType();
+}
+
+#endif

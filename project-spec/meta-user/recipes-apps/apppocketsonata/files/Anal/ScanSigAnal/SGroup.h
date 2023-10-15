@@ -27,6 +27,11 @@ public:
 	CSGroup( void *pParent, unsigned int uicoMaxPdw);
 	virtual ~CSGroup();
 
+#ifdef _LOG_ANALTYPE_
+    bool GetLogAnalType();
+#endif
+
+
 };
 
 #endif
