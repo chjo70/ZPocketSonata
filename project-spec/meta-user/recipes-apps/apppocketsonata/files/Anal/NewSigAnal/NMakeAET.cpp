@@ -40,8 +40,10 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-20 19:04:38
 //
-CNMakeAET::CNMakeAET( void *pParent, UINT uicoMaxPdw ) : CMakeAET(MAX_LOB)
+CNMakeAET::CNMakeAET( void *pParent, UINT uicoMaxPdw, const char *pThreadName ) : CMakeAET(MAX_LOB, pThreadName )
 {
+    SetAnalType( enDET_ANAL );
+
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pNewSigAnal)
@@ -403,9 +405,9 @@ unsigned int CNMakeAET::GetOpInitID()
  * @date      2023-09-21 11:56:54
  * @warning
  */
-bool CNMakeAET::GetLogAnalType()
+bool CNMakeAET::IsLogAnalType( LogType enLogType )
 {
-    return m_pNewSigAnal->GetLogAnalType();
+    return m_pNewSigAnal->IsLogAnalType( enLogType );
 }
 
 #endif

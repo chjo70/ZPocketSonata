@@ -190,6 +190,7 @@
     <ClInclude Include="..\..\files\Utils\clog.h" />
     <ClInclude Include="..\..\files\Utils\cmultiserver.h" />
     <ClInclude Include="..\..\files\Utils\cthread.h" />
+    <ClInclude Include="ColorListCtrl\ColorListCtrl.h" />
     <ClInclude Include="csbc.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -211,6 +212,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\cthread.cpp" />
+    <ClCompile Include="ColorListCtrl\ColorListCtrl.cpp" />
     <ClCompile Include="csbc.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

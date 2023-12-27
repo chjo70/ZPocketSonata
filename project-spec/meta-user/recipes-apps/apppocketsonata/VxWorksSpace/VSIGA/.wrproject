@@ -362,6 +362,11 @@
             <listAttribute key="BLD::Info|Libs|VSourceBuild_T2MS32_PPCE6500gnu_SMP"/>
             <listAttribute key="BLD::Info|Definess|VSourceBuild_T2MS32_PPCE6500gnu_SMP">
                 <stringAttribute value="-DCPU=_VX_$(CPU)"/>
+                <stringAttribute value="-D_COL_VER2_"/>
+                <stringAttribute value="-DSQLITE_ENABLE_COLUMN_METADATA"/>
+                <stringAttribute value="-DSQLITE_ENABLE_IOTRACE"/>
+                <stringAttribute value="-DSQLITE_SYSTEM_MALLOC"/>
+                <stringAttribute value="-D_LOG_ANALTYPE_"/>
                 <stringAttribute value="-D_SERIAL_DETECT_FLOW_"/>
                 <stringAttribute value="-D_UTM_POSITION_"/>
                 <stringAttribute value="-D_SELF_GEN_PDW1"/>

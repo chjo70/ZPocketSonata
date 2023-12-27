@@ -19,6 +19,9 @@
     <Filter Include="소스 파일\RawFile">
       <UniqueIdentifier>{40f8a28e-c51c-4aac-8261-8e2d82be2f8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\ColorListCtrl">
+      <UniqueIdentifier>{7b1bf969-e012-42b0-8bf9-392d3e0ead6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZCCUSim.h">
@@ -63,6 +66,9 @@
     <ClInclude Include="csbc.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ColorListCtrl\ColorListCtrl.h">
+      <Filter>소스 파일\ColorListCtrl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ZCCUSim.cpp">
@@ -97,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="csbc.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorListCtrl\ColorListCtrl.cpp">
+      <Filter>소스 파일\ColorListCtrl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -30,6 +30,17 @@ enum EN_CHECKLOBE {
     EN_NOISEOBE,
 };
 
+struct STR_SIM_SIGNAL_TYPE {
+    unsigned int uiCWPulse;
+    unsigned int uiFMOPDir;
+    unsigned int uiPMOP;
+    unsigned int uiFMOP;
+    unsigned int uiFalsePdw;
+
+    float fFMOPBW;
+
+};
+
 
 /**
  * @brief The CSignalCollect class
@@ -46,6 +57,7 @@ private:
     Queue<UNI_MSG_DATA> m_theQueueScanAnal;
 
 #ifdef _SIM_PDW_
+    bool m_bStopSigGen;
     char *m_pstrPDWWithFileHeader;
 
     SIGAPDW *m_pSIGAPDW;
@@ -109,6 +121,7 @@ private:
     void Free();
 
     void InitOfMessageData();
+    void CloseCollectingInterrupt();
     void InitSignalCollect( bool bWrite=false );
 
     void SendEndCollect();
@@ -122,25 +135,28 @@ private:
     void CloseDetectChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
 
     // 추적 채널 관련 함수
-    void ReqTrackWindowCell();
-    void CloseTrackWindowCell();
-    void NewTrackWindowCell( SRxABTData *pABTData );
+    void ReqSetTrackWindowCell();
+    //void StartTrackChannel( ENUM_PCI_DRIVER enPCIDriver );
+    void ReqCloseTrackWindowCell();
     void CalTrackWindowCell( STR_WINDOWCELL *pstWindowCell, SRxABTData *pABTData );
+
     void UpdateTrackWindowCell( SRxABTData *pABTData );
-    //void CloseTrackWindowCell( SRxABTData *pABTData );
+
+    void UpdateTrackChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
+    void UpdateScanChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
+    void CloseTrackChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver );
 
     // 스캔 채널 관련 함수
-    void StartScanChannel();
     void ReqScanWindowCell();
+    void RequestScanAnal();
     void CloseScanWindowCell();
-    void UpdateScanWindowCell( SRxABTData *pABTData );
     void SaveScanResult( STR_SCANRESULT *pstScanResult, STR_WINDOWCELL *pWindowCell, unsigned int uiCoScanCollectingPDW, unsigned int uiScanDurationms );
     void CloseScanChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
 
     // 공통 채널 관련 함수
     void CloseCollectBank();
     void StartCollecting();
-    void GetPDWDataFromDetectChannel();
+    //void GetPDWDataFromDetectChannel();
 
     // 위협 관리에서 관리되고 있는 최신의 빔 데이터를 얻는다.
     bool CopyFromEmitterABTData( SRxABTData *pABTData );
@@ -165,7 +181,7 @@ public:
     void MakeStaticPDWData( STR_STATIC_PDWDATA *pStaticPDWData, STR_UZPOCKETPDW *pPDWData, bool bAutoIncPDWID=false );
 
     void _routine();
-    char *GetThreadName() { return m_szThreadName; }
+    const char *GetThreadName() { return m_szThreadName; }
     STR_MessageData *GetParentMessage() { return m_pMsg; }                          ///< 메시지 데이터를 리턴 합니다.
 
     CCollectBank *GetCollectBank( ENUM_PCI_DRIVER enPCIDriver );
@@ -175,17 +191,22 @@ public:
 
     unsigned int MakeSIMFreq( int iRandomIndex );
     _TOA MakeSIMPRI( int iRandomIndex );
+    void MakeSIMSignalType( STR_SIM_SIGNAL_TYPE *pstSignalType );
     unsigned int MakeSIMPA( int iRandomIndex );
     void GenerateDDRFile( bool bWrite=false );
     EN_CHECKLOBE CheckLobe();
 
-    void SimPDWData();
-    void SimFilter( STR_PDWDATA *pPDWData, ENUM_PCI_DRIVER enPCIDriver );
+    void SimLogicFilter();
+    void SimLogicFilter( STR_PDWDATA *pPDWData, ENUM_PCI_DRIVER enPCIDriver );
 
     void CheckAllCollectBank();
     int CheckCollectBank( ENUM_COLLECTBANK enCollectBank, ENUM_PCI_DRIVER enPCIDriver );
     void CheckDetectCollectBank( ENUM_PCI_DRIVER enPCIDriver );
     void CheckScanCollectBank( ENUM_PCI_DRIVER enPCIDriver );
+
+    void CheckTrackCollectBank( ENUM_PCI_DRIVER enPCIDriver );
+
+    inline void StopSigGen( bool bStopSigGen ) { m_bStopSigGen = bStopSigGen; }
 
 #endif
 

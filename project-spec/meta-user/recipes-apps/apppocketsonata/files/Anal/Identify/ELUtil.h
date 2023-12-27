@@ -36,7 +36,7 @@ void UTF8ToMultibyte(char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t 
 void MultibyteToUTF8( char *pszMultiByte, size_t iSizeOfMultiByte, const wchar_t *p );
 int MultiByteToUTF8(wchar_t *pszUniCode, char *pszMultiByte);
 int UTF8ToANSI( char *pszAnsiCode, char *pszUTF8 );
-int ANSIToUTF8( char *pszUTF8, char *pszAnsiCode );
+int ANSIToUTF8( char *pszUTF8, size_t szLength, char *pszAnsiCode );
 
 UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold);
 UINT ExpectedMissingPulses( int ext_type, _TOA priMean1, STR_MINMAX_TOA *pstPRI, _TOA tThreshold );
@@ -168,17 +168,18 @@ bool TCompEncodeDOADiff( T x, T y, T thresh_value )
 template <typename T>
 bool TCompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
 {
-    //T tDiff; // , tY1, tY2;
-    bool bRet;
+    bool bRet=false;
 
-    //tY1 = ( ( y1 - thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
-    //tY2 = ( ( y2 + thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
-
-    if( ( tx >= ty1 && tx <= ty2 ) || ( ( tx >= ty1 && tx <= (PDW_DOA_MAX-1) ) || ( tx >= 0 && tx <= ty2 ) ) ) {
-        bRet = true;
+    if( ty1 < ty2 ) {
+        if( ( tx >= ty1 && tx <= ty2 ) ) {
+            bRet = true;
+        }
     }
     else {
-        bRet = false;
+        if( ( ( tx >= ty1 && tx <= ( PDW_DOA_MAX - 1 ) ) || ( tx >= 0 && tx <= ty2 ) ) ) {
+            bRet = true;
+        }
+
     }
 
     return bRet;
@@ -198,19 +199,19 @@ bool TCompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
  * @warning
  */
 template <typename T>
-bool TCompDOAMarginDiff( T x, T y1, T y2 )
+bool TCompDOAMarginDiff( T tx, T ty1, T ty2 )
 {
-    //T tDiff; // , tY1, tY2;
-    bool bRet;
+    bool bRet = false;
 
-    //tY1 = ( ( y1 - thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
-    //tY2 = ( ( y2 + thresh_value ) + PDW_DOA_MAX ) % PDW_DOA_MAX;
-
-    if( ( x >= y1 && x <= y2 ) || ( ( x >= y1 && x <= 0xFFFFFF ) || ( x >= 0 && x <= y2 ) ) ) {
-        bRet = true;
+    if( ty1 < ty2 ) {
+        if( ( tx >= ty1 && tx <= ty2 ) ) {
+            bRet = true;
+        }
     }
     else {
-        bRet = false;
+        if( ( ( tx >= ty1 && tx <= 0xFFFFFFF ) || ( tx >= 0 && tx <= ty2 ) ) ) {
+            bRet = true;
+        }
     }
 
     return bRet;
@@ -621,7 +622,7 @@ bool TCompMarginDiff( T x, T iy1, T iy2, T thresh )
         }
     }
     else {
-        if( ( strcmp( pType, "f" ) == 0 || strcmp( pType, "__int64" ) == 0 || strcmp( pType, "long long int" ) == 0 || strcmp( pType, "int" ) == 0 || strcmp( pType, "float" ) == 0 ) ) {
+        if( ( strcmp( pType, "i" ) == 0 || strcmp( pType, "f" ) == 0 || strcmp( pType, "__int64" ) == 0 || strcmp( pType, "long long int" ) == 0 || strcmp( pType, "int" ) == 0 || strcmp( pType, "float" ) == 0 ) ) {
             if( ( x >= iy1 - thresh ) && ( x <= iy2 + thresh ) ) {
                 bRet = true;
             }
@@ -636,9 +637,8 @@ bool TCompMarginDiff( T x, T iy1, T iy2, T thresh )
             }
 
         }
-
-
     }
+
     return bRet;
 }
 
@@ -652,32 +652,86 @@ bool TCompMarginDiff( T x, T iy1, T iy2, T thresh )
  * @version   0.0.1
  * @date      2022-06-22 11:44:46
  * @warning
+//  */
+// template <typename T>
+// float TCalcJitterRatio(T tRange, T tMean)
+// {
+// 	float fRet=0.0;
+//
+// 	// const char *pst = typeid(T).name();
+//
+//     if( tMean != 0 ) {
+//
+// #ifdef _MSC_VER
+// 	    if (strcmp(typeid(T).name(), "float") == 0) {
+// 		    fRet = tRange * (float) 100. / tMean;
+//         }
+//
+// 	    else {
+// 		    fRet = (float) tRange * (float) 100. / (float) tMean;
+// 	    }
+// #else
+// 	    if (sizeof(T) == sizeof(float)) {
+// 		    fRet = tRange * (float) 100. / tMean;
+// 	    }
+// 	    else {
+// 		    fRet = (float)tRange * (float) 100. / (float)tMean;
+// 	    }
+// #endif
+//
+//     }
+//     else {
+//         TRACE( "PRI 평균이 0 으로 잘못 계산되었습니다." );
+//         WhereIs;
+//     }
+//
+// 	return fRet;
+// }
+
+/**
+ * @brief     TCalcJitterPercent
+ * @param     T tRange
+ * @param     T tMean
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-24 11:10:46
+ * @warning
  */
 template <typename T>
-float TCalcJitterRatio(T tRange, T tMean)
+float TCalcJitterPercent( T tRange, T tMean )
 {
-	float fRet=0.0;
+    float fRet = 0.0;
 
-	// const char *pst = typeid(T).name();
+    // const char *pst = typeid(T).name();
+
+    if( tMean != 0 ) {
 
 #ifdef _MSC_VER
-	if (strcmp(typeid(T).name(), "float") == 0) {
-		fRet = tRange * (float) 100. / tMean;
-	}
-	else {
-		fRet = (float) tRange * (float) 100. / (float) tMean;
-	}
-#else
-	if (sizeof(T) == sizeof(float)) {
-		fRet = tRange * (float) 100. / tMean;
-	}
-	else {
-		fRet = (float)tRange * (float) 100. / (float)tMean;
-	}
+        if( strcmp( typeid( T ).name(), "float" ) == 0 ) {
+            fRet = tRange * ( float ) 50. / tMean;
+        }
 
+        else {
+            fRet = ( float ) tRange * ( float ) 50. / ( float ) tMean;
+        }
+#else
+        if( sizeof( T ) == sizeof( float ) ) {
+            fRet = tRange * ( float ) 50. / tMean;
+        }
+        else {
+            fRet = ( float ) tRange * ( float ) 50. / ( float ) tMean;
+        }
 #endif
 
-	return fRet;
+    }
+    else {
+        TRACE( "PRI 평균이 0 으로 잘못 계산되었습니다." );
+        WhereIs;
+    }
+
+    return fRet;
 }
 
 /**

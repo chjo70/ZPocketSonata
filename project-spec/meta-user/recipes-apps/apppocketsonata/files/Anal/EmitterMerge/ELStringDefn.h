@@ -63,6 +63,91 @@ enum ENUM_PDW_AXIS_INFO
 // 	"상태"
 // };
 
+
+#if defined(_ELINT_) || defined(_701_)
+
+// 신호 형태 정의값
+enum ENUM_SIGNAL_TYPE {
+    ST_NORMAL_PULSE = 1,
+    ST_CW,
+    ST_DOPPLER,
+    ST_HIGHPRF,
+
+    ST_FMOP,
+    ST_CW_FMOP,
+    ST_SHORT,
+    ST_ALL,
+    ST_MAX
+};
+
+#elif defined(_XBAND_)
+
+// 신호 형태 정의값
+enum ENUM_SIGNAL_TYPE {
+    ST_CW = 0,
+    ST_NORMAL_PULSE,
+
+    ST_DOPPLER,
+    ST_HIGHPRF,
+
+    ST_FMOP,
+    ST_CW_FMOP,
+    ST_SHORT,
+    ST_ALL,
+    ST_MAX
+};
+
+#elif defined(_POCKETSONATA_) || defined(_712_)
+
+// 신호 형태 정의값
+enum ENUM_SIGNAL_TYPE {
+    ST_NORMAL_PULSE = 0,
+    ST_CW,
+    ST_DOPPLER,
+    ST_HIGHPRF,
+
+//     ST_FMOP_TRI,
+//     ST_FMOP_UP,
+//     ST_FMOP_DN,
+//     ST_FMOP_UK,
+//
+//     ST_CW_FMOP_TRI,
+//     ST_CW_FMOP_UP,
+//     ST_CW_FMOP_DN,
+//     ST_CW_FMOP_UK,
+//
+//     ST_PMOP,
+//     ST_CW_PMOP,
+
+//    ST_SHORT,
+
+    ST_ALL,
+    ST_MAX
+};
+
+
+#else
+
+// 신호 형태 정의값
+enum ENUM_SIGNAL_TYPE {
+    ST_NORMAL_PULSE = 1,
+    ST_CW,
+    ST_DOPPLER,
+    ST_HIGHPRF,
+
+    ST_FMOP,
+    ST_CW_FMOP,
+    ST_SHORT,
+    ST_ALL,
+    ST_MAX
+};
+
+
+#endif
+
+
+
+
 enum ENUM_AET_AOA {
     E_AET_DOA_FIXED = 0,
     E_AET_DOA_MULTI,
@@ -70,6 +155,16 @@ enum ENUM_AET_AOA {
     E_AET_DOA_GAUSSIAN,
 
 };
+
+#ifndef _ENUM_MOP_TYPE
+#define _ENUM_MOP_TYPE
+enum ENUM_MOP_TYPE : unsigned char {
+    E_MOP_UNKNOWN=0,
+    E_MOP_FMOP,
+    E_MOP_PMOP,
+};
+
+#endif
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -733,6 +828,11 @@ enum ENUM_BIT_FLAG
 //#define STR_AIR_INDEPENDENT_HG_TASK		"HG_TASK"	//
 
 struct STR_RADAR_PDW {
+    int iNoRadar;
+
+    int iSignalType;
+    float fFMOPBW;
+
     ENUM_AET_AOA enDOA;
     float fDOA;
     float fDOARange;
@@ -761,7 +861,7 @@ struct STR_RADAR_PDW {
     int iAmplitude;
 
     // 메인 로브에서 펄스 발생 개수
-    unsigned int uiCoPulsePerLobe;
+    int iCoPulsePerLobe;
 
     // 펄스폭
     float fPW;

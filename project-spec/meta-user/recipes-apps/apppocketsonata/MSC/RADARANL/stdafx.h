@@ -119,16 +119,16 @@ bool GetLocal();
 
 #ifdef _DEBUG
 
-bool _TRACE(char *format, ...);
-bool _TRACE(CString strFormat, ...);
+bool _TRACE(const char *format, ...);
+//bool _TRACE(CString strFormat, ...);
 
 #undef TRACE
 #define TRACE _TRACE
 
 #else
 
-bool _TRACE(char *format, ...);
-bool _TRACE(CString strFormat, ...);
+bool _TRACE(const char *format, ...);
+//bool _TRACE(CString strFormat, ...);
 
 #undef TRACE
 #define TRACE _TRACE

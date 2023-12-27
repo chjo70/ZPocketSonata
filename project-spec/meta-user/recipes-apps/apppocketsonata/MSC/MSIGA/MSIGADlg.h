@@ -11,6 +11,7 @@ class CMSIGADlg : public CDialogEx
 // 생성입니다.
 private:
 	bool m_bReqStart;
+    bool m_bStopSigGen;
 
     unsigned int m_uiCoStart;
 
@@ -18,7 +19,7 @@ private:
 
 private:
     void LoadINI( char *pszIniFileName );
-    void SaveINI( char *pszIniFileName );
+    void SaveINI( char *pszIniFileName, int iComboRadarTest );
 
     void UpdateRadarPDW( int iRadarTest=0 );
     void LoadRadarPDW();
@@ -84,4 +85,8 @@ public:
     CComboBox m_ComboRadarTest;
     afx_msg void OnSelchangeComboRadarTest();
     afx_msg void OnBnClickedSave();
+    CComboBox m_ComboSignalType;
+    afx_msg void OnBnClickedOk();
+    afx_msg void OnBnClickedStopSigGen();
+    virtual BOOL PreTranslateMessage( MSG *pMsg );
 };

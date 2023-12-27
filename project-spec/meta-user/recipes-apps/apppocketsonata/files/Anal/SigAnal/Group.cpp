@@ -28,10 +28,12 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 13:19:06
 //
-CGroup::CGroup( unsigned int uiCoMaxPdw )
+CGroup::CGroup( unsigned int uiCoMaxPdw, const char *pThreadName )
 {
     int i=0;
     bool bRet=true;
+
+    SetThreadName( pThreadName );
 
     // 고정형 주파수 및 규칙성 펄스열 마진
     m_uiAOA_GROUP_MARGIN = g_pTheSysConfig->GetAOAGroupMargin();
@@ -166,7 +168,7 @@ CGroup::~CGroup()
 void CGroup::Init()
 {
     // 펄스 수집 개수
-    m_uiCoPdw = GetColPdw();
+    m_uiCoPdw = GetCoPDW();
 
     // PDW STAT 별 초기화
     for( int i=0 ; i < MAX_STAT ; ++i ) {
@@ -264,10 +266,11 @@ bool CGroup::MakePDWArray( _PDW *pPDW, unsigned int uiCount, unsigned int uiBand
     UCHAR *pStat, *pBand;
     USHORT *pMark;
 
-    UCHAR /* *pPmop, *pFmop, */ *pMaxChannel;
+    unsigned short *pFmop /* *pPmop, */;
+    unsigned char *pMaxChannel;
 
     //pPmop = & m_pPMOP[0];
-    //pFmop = & m_pFMOP[0];
+    pFmop = & m_pFMOP[0];
     pMaxChannel = & m_pMAXCHANNEL[0];
 
     pToa = & m_pTOA[0];
@@ -280,16 +283,19 @@ bool CGroup::MakePDWArray( _PDW *pPDW, unsigned int uiCount, unsigned int uiBand
     pBand = & m_pBAND[0];
 
     //flagBand = false;
-
     for( i=0 ; i < uiCount; ++i, ++pPDW ) {
+    	// printf("\n iStat[%d]\tuiAOA[%d]", pPDW->iStat, pPDW->uiAOA );
+
         *pToa++ = pPDW->tTOA;
 
         *pStat++ = (unsigned char) pPDW->iStat;
 
-        *pPa++ = ( int ) pPDW->uiPA;
-        *pAOA++ = pPDW->uiAOA;
-        *pPw++ = pPDW->uiPW;
-        *pFreq++ = pPDW->uiFreq;
+        *pPa++ = ( int ) pPDW->GetPulseamplitude();
+        *pAOA++ = pPDW->GetAOA();
+        *pPw++ = pPDW->GetPulsewidth();
+        *pFreq++ = pPDW->GetFrequency();
+        *pFmop++ = (unsigned short) pPDW->GetFMOPBW();
+
         *pMark++ = ( USHORT ) enUnMark;
 
         if( g_enUnitType == en_ZPOCKETSONATA ) {
@@ -345,7 +351,7 @@ int FrqGrpCompare(const void *arg1, const void *arg2)
 //
 bool CGroup::MakeGroup()
 {
-    int i;
+    int j;
 
     // 방위 및 주파수 그룹화 초기화
     m_AoaGroups.uiCount = 0;
@@ -354,8 +360,6 @@ bool CGroup::MakeGroup()
     m_FrqGroups.uiCoAnal = 0;
     m_PwGroups.uiCount = 0;
     m_PwGroups.coAnal = 0;
-
-    MakeBandGroup();
 
     // 밴드별 PDW STAT 그룹화
 #ifdef _SONATA_
@@ -403,22 +407,24 @@ bool CGroup::MakeGroup()
 #else
 
 #if defined(_POCKETSONATA_) || defined(_712_)
-    m_nBand = g_enBoardId;
+    m_nBand = (int) g_enBoardId;
 #else
     m_nBand = 0;
 #endif
 
-    i = GetBand();
-    MakeStatGroup(&m_Band[i]);
+    MakeBandGroup();
+
+    MakeStatGroup(&m_Band[ m_nBand ]);
 
 #if defined(_POCKETSONATA_) || defined(_712_)
     // PDW 상태별 그룹화
-    for( int j = 0; j < MAX_STAT; ++j ) {
+    for( j = 0; j < MAX_STAT; ++j ) {
         m_nStat = j;
 
         // 방위 그룹화 만들기
         MakeAOAGroup( &m_GrStat[j] );
     }
+    PrintAllAOAGroup();
 
     /*! \bug  펄스폭 그룹화를 추가해서 De-interleaving을 가능케한다.
                         그룹화 내에서 지터 신호가 여러가 있으면 펄스열 추출이 불가능하다.
@@ -489,6 +495,8 @@ void CGroup::PrintAllGroup()
 #ifdef _MSC_VER
     unsigned int uiIdxFrqAoaPw=0;
 
+    char szPulseType[MAX_STAT][3] = { "NP" , "CW" , "PM" , "CP" , "Fu", "FD", "FU", "Cu", "CD", "CU", "SP" };
+
     STR_AOA_GROUP *pAoaGroup;
     STR_FRQ_GROUP *pFrqGr;
     STR_PW_GROUP *pPwGr;
@@ -518,11 +526,11 @@ void CGroup::PrintAllGroup()
             // 방위 그룹화 출력
             if (pFrqGr->narrow_wide == false) {
                 //printf( "\n\t [%d] 방위 및 주파수 협대역 그룹화, 신호 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( nBand, pFrqGr->from_frq ), FRQMhzCNV( nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
-                Log(enDebug, "\t\t[%ld] 협대역 %s[%d]: %3d[개], %5.1f-%5.1f[도], %4d-%4d[MHz], %6d-%6d[ns]", uiIdxFrqAoaPw, g_szPulseType[pAoaGroup->uiStat], pAoaGroup->uiStat, m_FrqAoaPwIdx.uiCount, FAOACNV(pAoaGroup->iFromAOA), FAOACNV(pAoaGroup->iToAOA), I_FRQMhzCNV(nBand, pFrqGr->uiFromFRQ), I_FRQMhzCNV(nBand, pFrqGr->uiToFRQ), I_PWCNV( (int) pPwGr->uiFromPW), I_PWCNV((int) pPwGr->uiToPW));
+                Log(enDebug, "\t\t[%ld] 협대역 %s[%d]: %3d[개], %5.1f-%5.1f[도], %4d-%4d[MHz], %6d-%6d[ns]", uiIdxFrqAoaPw, szPulseType[pAoaGroup->uiStat], pAoaGroup->uiStat, m_FrqAoaPwIdx.uiCount, FAOACNV(pAoaGroup->iFromAOA), FAOACNV(pAoaGroup->iToAOA), I_FRQMhzCNV(nBand, pFrqGr->uiFromFRQ), I_FRQMhzCNV(nBand, pFrqGr->uiToFRQ), I_PWCNV( (int) pPwGr->uiFromPW), I_PWCNV((int) pPwGr->uiToPW));
             }
             else {
                 //printf( "\n\t [%d] 방위 및 주파수 광대역 그룹화, 펄스(%d), 신호 개수(%3d), 방위(%.1f-%.1f), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , IdxFrqAoaPw, m_nStat, m_FrqAoaPwIdx.count, CPOCKETSONATAPDW::DecodeDOA( pAoaGroup->from_aoa ), CPOCKETSONATAPDW::DecodeDOA( pAoaGroup->to_aoa ), CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->from_frq), CPOCKETSONATAPDW::DecodeFREQMHz(pFrqGr->to_frq), CPOCKETSONATAPDW::DecodePWus( pPwGr->from_pw ), CPOCKETSONATAPDW::DecodePWus( pPwGr->to_pw ) );
-                Log(enDebug, "\t\t[%ld] 광대역 %s[%d]: %3d[개], %5.1f-%5.1f[도], %4d-%4d[MHz], %6d-%6d[ns]", uiIdxFrqAoaPw, g_szPulseType[pAoaGroup->uiStat], pAoaGroup->uiStat, m_FrqAoaPwIdx.uiCount, FAOACNV(pAoaGroup->iFromAOA), FAOACNV(pAoaGroup->iToAOA), I_FRQMhzCNV(nBand, pFrqGr->uiFromFRQ), I_FRQMhzCNV(nBand, pFrqGr->uiToFRQ), I_PWCNV( (int) pPwGr->uiFromPW), I_PWCNV((int) pPwGr->uiToPW));
+                Log(enDebug, "\t\t[%ld] 광대역 %s[%d]: %3d[개], %5.1f-%5.1f[도], %4d-%4d[MHz], %6d-%6d[ns]", uiIdxFrqAoaPw, szPulseType[pAoaGroup->uiStat], pAoaGroup->uiStat, m_FrqAoaPwIdx.uiCount, FAOACNV(pAoaGroup->iFromAOA), FAOACNV(pAoaGroup->iToAOA), I_FRQMhzCNV(nBand, pFrqGr->uiFromFRQ), I_FRQMhzCNV(nBand, pFrqGr->uiToFRQ), I_PWCNV( (int) pPwGr->uiFromPW), I_PWCNV((int) pPwGr->uiToPW));
             }
 
 #if defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
@@ -543,7 +551,9 @@ void CGroup::PrintAllGroup()
 
     }
     else {
-        Log( enDebug, "그룹화 총 개수 없음 !!!");
+        if( GetAnalType() == enDET_ANAL ) {
+            Log( enDebug, "그룹화 총 개수 없음 !!!");
+        }
     }
 #endif
 
@@ -561,23 +571,25 @@ void CGroup::PrintAllGroup()
 void CGroup::PrintGroup()
 {
 #ifdef _MSC_VER
-    STR_AOA_GROUP *pAoaGroup;
-    STR_FRQ_GROUP *pFrqGr;
-    STR_PW_GROUP *pPwGr;
+    if( GetAnalType() == enDET_ANAL ) {
+        STR_AOA_GROUP *pAoaGroup;
+        STR_FRQ_GROUP *pFrqGr;
+        STR_PW_GROUP *pPwGr;
 
-    char buffer[800];
+        char buffer[800];
 
-    pPwGr = & m_PwGroups.pw[ m_uiCoFrqAoaPwIdx ];
-    pFrqGr = & m_FrqGroups.stFreq[ pPwGr->frq_idx ];
-    pAoaGroup = & m_AoaGroups.stAOA[ pFrqGr->iIdxAOA ];
+        pPwGr = & m_PwGroups.pw[ m_uiCoFrqAoaPwIdx ];
+        pFrqGr = & m_FrqGroups.stFreq[ pPwGr->frq_idx ];
+        pAoaGroup = & m_AoaGroups.stAOA[ pFrqGr->iIdxAOA ];
 
-    sprintf( buffer, "--- [%d]번째 그룹화 선택 Co(%3d), A(%4.1f-%4.1f), F(%5d-%5d)", m_uiCoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, FAOACNV( pAoaGroup->iFromAOA ), FAOACNV( pAoaGroup->iToAOA ), I_FRQMhzCNV( m_nBand, pFrqGr->uiFromFRQ ), I_FRQMhzCNV( m_nBand, pFrqGr->uiToFRQ ) );
-    CCommonUtils::WallMakePrint( buffer, '.' );
-    Log( enDebug, "%s", buffer);
-    //Log( enDebug, "=== [%d]번째 그룹화 선택 Co(%3d), A(%3d-%3d), F[MHz](%5d-%5d) ====================================", m_uiCoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->iFromAOA ), I_AOACNV( pAoaGroup->iToAOA ), I_FRQMhzCNV( m_nBand, pFrqGr->uiFromFRQ ), I_FRQMhzCNV( m_nBand, pFrqGr->uiToFRQ ) );
-    //printf( "\n [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
-    //LOG_LINEFEED;
-    // Log( enDebug, " [%d] GR: Co(%3d), A(%3d-%3d), F[MHz](%5d-%5d), PW[us](%6d-%6d)" , m_uiCoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->iFromAOA ), I_AOACNV( pAoaGroup->iToAOA ), I_FRQMhzCNV( m_nBand, pFrqGr->uiFromFRQ ), I_FRQMhzCNV( m_nBand, pFrqGr->uiToFRQ ), I_PWCNV((int)pPwGr->uiFromPW ), I_PWCNV((int)pPwGr->uiToPW ) );
+        sprintf( buffer, "--- [%d]번째 그룹화 선택 Co(%3d), A(%4.1f-%4.1f), F(%5d-%5d)", m_uiCoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, FAOACNV( pAoaGroup->iFromAOA ), FAOACNV( pAoaGroup->iToAOA ), I_FRQMhzCNV( m_nBand, pFrqGr->uiFromFRQ ), I_FRQMhzCNV( m_nBand, pFrqGr->uiToFRQ ) );
+        CCommonUtils::WallMakePrint( buffer, '.' );
+        Log( enDebug, "%s", buffer);
+        //Log( enDebug, "=== [%d]번째 그룹화 선택 Co(%3d), A(%3d-%3d), F[MHz](%5d-%5d) ====================================", m_uiCoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->iFromAOA ), I_AOACNV( pAoaGroup->iToAOA ), I_FRQMhzCNV( m_nBand, pFrqGr->uiFromFRQ ), I_FRQMhzCNV( m_nBand, pFrqGr->uiToFRQ ) );
+        //printf( "\n [%d]번째 그룹화: 개수(%3d), 방위(%3d-%3d), 주파수[MHz](%4d-%4d), 펄스폭[us](%4d-%4d)" , m_CoFrqAoaPwIdx, m_FrqAoaPwIdx.count, AOACNV( pAoaGroup->from_aoa ), AOACNV( pAoaGroup->to_aoa ), FRQMhzCNV( m_nBand, pFrqGr->from_frq ), FRQMhzCNV( m_nBand, pFrqGr->to_frq ), PWCNV( pPwGr->from_pw ), PWCNV( pPwGr->to_pw ) );
+        //LOG_LINEFEED;
+        // Log( enDebug, " [%d] GR: Co(%3d), A(%3d-%3d), F[MHz](%5d-%5d), PW[us](%6d-%6d)" , m_uiCoFrqAoaPwIdx, m_FrqAoaPwIdx.uiCount, I_AOACNV( pAoaGroup->iFromAOA ), I_AOACNV( pAoaGroup->iToAOA ), I_FRQMhzCNV( m_nBand, pFrqGr->uiFromFRQ ), I_FRQMhzCNV( m_nBand, pFrqGr->uiToFRQ ), I_PWCNV((int)pPwGr->uiFromPW ), I_PWCNV((int)pPwGr->uiToPW ) );
+    }
 
 #endif
 
@@ -619,7 +631,34 @@ void CGroup::MakeFreqGroup( bool bForce1Group )
 #endif
     }
 
+    PrintAllFreqGroup();
+
     m_AoaGroups.uiCoAnal = m_AoaGroups.uiCount;
+}
+
+/**
+ * @brief     PrintAllFreq
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-25 10:25:19
+ * @warning
+ */
+void CGroup::PrintAllFreqGroup()
+{
+    unsigned int i;
+    char buffer[200];
+
+    STR_FRQ_GROUP *pFRQ;
+
+    for( i = 0; i < ( unsigned int ) m_FrqGroups.uiCount; ++i ) {
+        pFRQ = & m_FrqGroups.stFreq[i];
+
+        sprintf( buffer, "방위 그룹화 인덱스[%d], 주파수[%4d-%4d[MHz]]", pFRQ->iIdxAOA, I_FRQMhzCNV( 0, pFRQ->uiFromFRQ ), I_FRQMhzCNV( 0, pFRQ->uiToFRQ ) );
+        CCommonUtils::WallMakePrint( buffer, '.' );
+        Log( enDebug, "%s", buffer );
+    }
 }
 
 /**
@@ -645,11 +684,46 @@ void CGroup::MakeBandGroup()
     pBand = & m_pBAND[0];
     for( i=0 ; i < m_uiCoPdw ; ++i ) {
         if (m_pMARK[i] != enEXTRACT_MARK) {
-            m_Band[*pBand].pIndex[m_Band[*pBand].uiCount++] = (PDWINDEX) i;	// Band 그룹화
+            if( *pBand < TOTAL_BAND ) {
+                m_Band[*pBand].pIndex[m_Band[*pBand].uiCount++] = (PDWINDEX) i;	// Band 그룹화
+            }
+            else {
+                Log( enError, "PDW의 밴드(보드ID) 값[%d]이 잘못 됐습니다 !", *pBand );
+                break;
+            }
 
         }
         ++pBand;
     }
+
+    PrintAllBandGroup();
+
+}
+
+/**
+ * @brief     PrintAllBandGroup
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-25 09:55:41
+ * @warning
+ */
+void CGroup::PrintAllBandGroup()
+{
+    if( GetAnalType() == enDET_ANAL ) {
+        unsigned int i;
+        int iLoc = 0;
+        char buffer[200];
+
+        for( i = 1 ; i < ( unsigned int ) TOTAL_BAND; ++i ) {
+            iLoc += sprintf( & buffer[(unsigned int) iLoc], "#%d 밴드 : [%d], ", i, m_Band[i].uiCount );
+        }
+
+        CCommonUtils::WallMakePrint( buffer, '.' );
+        Log( enDebug, "%s", buffer );
+    }
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -687,10 +761,12 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
     PDWINDEX *pChirpDnPdwIndex;
     PDWINDEX *pChirpUpPdwIndex;
     PDWINDEX *pChirpUkPdwIndex;
+    PDWINDEX *pChirpTriPdwIndex;
     PDWINDEX *pPmopPdwIndex;
     PDWINDEX *pCWChirpDnPdwIndex;
     PDWINDEX *pCWChirpUpPdwIndex;
     PDWINDEX *pCWChirpUkPdwIndex;
+    PDWINDEX *pCWChirpDirPdwIndex;
     PDWINDEX *pCWPmopPdwIndex;
 
     pNormalPdwIndex = m_GrStat[STAT_NORMAL].pIndex;
@@ -698,10 +774,12 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
     pChirpDnPdwIndex = m_GrStat[STAT_CHIRPDN].pIndex;
     pChirpUpPdwIndex = m_GrStat[STAT_CHIRPUP].pIndex;
     pChirpUkPdwIndex = m_GrStat[STAT_CHIRPUK].pIndex;
+    pChirpTriPdwIndex = m_GrStat[STAT_CHIRPTRI].pIndex;
     pPmopPdwIndex = m_GrStat[STAT_PMOP].pIndex;
     pCWChirpDnPdwIndex = m_GrStat[STAT_CW_CHIRPDN].pIndex;
     pCWChirpUpPdwIndex = m_GrStat[STAT_CW_CHIRPUP].pIndex;
     pCWChirpUkPdwIndex = m_GrStat[STAT_CW_CHIRPUK].pIndex;
+    pCWChirpDirPdwIndex = m_GrStat[STAT_CW_CHIRPTRI].pIndex;
     pCWPmopPdwIndex = m_GrStat[STAT_CW_PMOP].pIndex;
 
 #else
@@ -764,12 +842,22 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
                     ++m_GrStat[STAT_CHIRPUK].uiCount;
                     break;
 
+                case STAT_CHIRPTRI:
+                    *pChirpTriPdwIndex++ = *pPdwIndex;
+                    ++m_GrStat[STAT_CHIRPTRI].uiCount;
+                    break;
+
                 case STAT_PMOP:
                     *pPmopPdwIndex++ = *pPdwIndex;
                     ++m_GrStat[STAT_PMOP].uiCount;
                     break;
 
                 // CW 펄스 상태
+                case STAT_CW_CHIRPTRI:
+                    *pCWChirpDirPdwIndex++ = *pPdwIndex;
+                    ++m_GrStat[STAT_CW_CHIRPTRI].uiCount;
+                    break;
+
                 case STAT_CW_CHIRPDN:
                     *pCWChirpDnPdwIndex++ = *pPdwIndex;
                     ++m_GrStat[STAT_CW_CHIRPDN].uiCount;
@@ -819,6 +907,37 @@ void CGroup::MakeStatGroup( STR_PDWINDEX *pBand )
             }
         }
     }
+
+    PrintAllStatGroup();
+}
+
+/**
+ * @brief     PrintAllStat
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-25 10:03:44
+ * @warning
+ */
+void CGroup::PrintAllStatGroup()
+{
+    unsigned int i;
+    char buffer[200];
+    int iLoc = 0;
+
+    char szPulseType[MAX_STAT][3] = { "NP" , "CW" , "PM" , "CP" , "Fu", "FD", "FU", "Cu", "CD", "CU", "SP" };
+
+    buffer[0] = 0;
+    for( i = 0; i < ( unsigned int ) MAX_STAT; ++i ) {
+        if( m_GrStat[i].uiCount != 0 ) {
+            iLoc += sprintf( & buffer[(unsigned int) iLoc], "%s : [%d], ", szPulseType[i], m_GrStat[i].uiCount );
+        }
+    }
+
+    CCommonUtils::WallMakePrint( buffer, '.' );
+    Log( enDebug, "%s", buffer );
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -958,6 +1077,36 @@ void CGroup::MakeAOAGroup(STR_PDWINDEX *pStatGrPdwIndex, bool bForce1Group )
 #endif
 
     }
+
+}
+
+/**
+ * @brief     PrintAllAOA
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-25 10:10:51
+ * @warning
+ */
+void CGroup::PrintAllAOAGroup()
+{
+#ifdef _MSC_VER
+    unsigned int i;
+    char buffer[1000];
+
+    STR_AOA_GROUP *pAOA;
+
+    char szPulseType[MAX_STAT][3] = { "NP" , "CW" , "PM" , "CP" , "Fu", "FD", "FU", "Cu", "CD", "CU", "SP" };
+
+    for( i = 0; i < ( unsigned int ) m_AoaGroups.uiCount; ++i ) {
+        pAOA = & m_AoaGroups.stAOA[i];
+        sprintf( buffer, "밴드[%d], STAT[%s], 개수[%d], 방위 [%5.1f~%5.1f [도]]", pAOA->uiBand, szPulseType[pAOA->uiStat], pAOA->iCount, FAOACNV(pAOA->iFromAOA), FAOACNV(pAOA->iToAOA) );
+
+        CCommonUtils::WallMakePrint( buffer, '.' );
+        Log( enDebug, "%s", buffer );
+    }
+#endif
 
 }
 
@@ -1892,7 +2041,7 @@ bool CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
 
     int co_thresh;
 
-    // int thr;
+    bool bOverFlag;
 
 	bool bRet;
 
@@ -1915,11 +2064,16 @@ bool CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
     // 좌측의 경계 찾기 (from_val)
 	bRet = false;
     co_thresh = 0;
+    bOverFlag = false;
     for( i=(int) ( peak_index-1) ;; --i ) {
         // 좌측의 끝에 도달 overgroup 발생
         if( i < 0 ) {
             i += (int) m_AoaHist.uiBinCount;
-            pAoaGroup->bCrossDOA0 = true;
+
+            //! 방위 오버랩 플레그는 값이 있을 떄 경계 값을 업데이트 합니다.
+            //!  데이터가 359도에서 359.9 사이에 있을 때 시험 해봐야 합니다.
+            bOverFlag = true;
+
         }
 
         // 전방위 그룹화 체크
@@ -1932,6 +2086,10 @@ bool CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
         // 경계 조건
         if( m_AoaHist.hist[i] >= iThrAOAHist /*_sp.np.Aoa_Hist_Thr*/ ) {
             ++ co_thresh;
+
+            if( bOverFlag == true ) {
+                pAoaGroup->bCrossDOA0 = true;
+            }
         }
         else {
             // co_thresh = 0;
@@ -1973,11 +2131,13 @@ bool CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
 		// peak 부터 우로 범위를 설정
 		// 우측의 경계 찾기 (to_val)
 		co_thresh = 0;
+        bOverFlag = false;
 		for (i = peak_index + 1;; ++i) {
 			// 우측의 끝에 도달 overgroup 발생
 			if (i >= (int)m_AoaHist.uiBinCount) {
 				i -= (int)m_AoaHist.uiBinCount;
-				pAoaGroup->bCrossDOA0 = true;
+                bOverFlag = true;
+
 			}
 
 			// 전방위 그룹화
@@ -1992,6 +2152,10 @@ bool CGroup::GetAOARange( int peak_index, int nShift, STR_AOA_GROUP *pAoaGroup )
 			// 경계 조건
 			if (m_AoaHist.hist[i] >= iThrAOAHist /*_sp.np.Aoa_Hist_Thr*/) {
 				++co_thresh;
+
+                if( bOverFlag == true ) {
+                    pAoaGroup->bCrossDOA0 = true;
+                }
 			}
 			else {
 				// co_thresh = 0;

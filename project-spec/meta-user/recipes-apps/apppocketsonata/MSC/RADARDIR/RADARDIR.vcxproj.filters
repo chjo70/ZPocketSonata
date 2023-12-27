@@ -61,6 +61,12 @@
     <Filter Include="설정 파일">
       <UniqueIdentifier>{3b925b74-9e78-410e-97b2-76bd047fddaa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\SQLite">
+      <UniqueIdentifier>{7c46d723-0c7a-424c-b5f5-1a80e2b234bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Anal\ScanSigAnal">
+      <UniqueIdentifier>{428fcf6c-7fc3-4595-a5a0-d493b860fdba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -170,6 +176,33 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\SigAnal\Hopping.cpp">
       <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\SigAnal\RadarSimilarity.cpp">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteBlob.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteDatabase.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteStatement.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\sqlite3.c">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\ScanSigAnal\ScanSigAnal.cpp">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\ScanSigAnal\SGroup.cpp">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\ScanSigAnal\SPulExt.cpp">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\ScanSigAnal\SAnalSCN.cpp">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +424,66 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\SigAnal\Hopping.h">
       <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\SigAnal\RadarSimilarity.h">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clogname.h">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Assertion.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteBlob.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteDatabase.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteException.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLitePrerequisites.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteStatement.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteStreamRedirection.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\sqlite3.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\sqlite3ext.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\SQLiteCpp.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Utils.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\VariadicBind.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\ScanSigAnal\ScanSigAnal.h">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\ScanSigAnal\SDefine.h">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\ScanSigAnal\SGroup.h">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\ScanSigAnal\SPulExt.h">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\ScanSigAnal\SStruct.h">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\ScanSigAnal\SAnalSCN.h">
+      <Filter>소스 파일\Anal\ScanSigAnal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -34,10 +34,11 @@
     @details ~
 
 **/
-class CMakeAET
+class CMakeAET : public CLogName
 {
 private:
-    SRxLOBData *m_pLOBData;
+    std::vector<SRxLOBData > m_vecLOBData;
+    std::vector<STR_PDWINDEX > m_vecLOB2PDWData;
 
 public:
     int m_iCoEmitter;
@@ -57,13 +58,14 @@ protected:
     STR_PDWPARAM *m_pPdwParam;
 
     STR_EMITTER *m_pEmitter;
+
 	STR_PULSE_TRAIN_SEG *m_pSeg;
 
 private:
 
 
 public:
-    CMakeAET( unsigned int uiCoMaxLOB );
+    CMakeAET( unsigned int uiCoMaxLOB, const char *pThreadName=NULL );
     virtual ~CMakeAET();
 
     int CalMaxChannel( STR_PDWINDEX *pPdw );
@@ -101,12 +103,26 @@ public:
     void PrintAllAET();
 	void MakeFreqLOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
 	void MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
+    void MakeMOPInfoFromSeg( SRxLOBData *pLOBData, STR_EMITTER *pEmitter );
 
     void MakeAET( bool bDBInsert );
 
     void Init(void);
 
-    inline SRxLOBData *GetLOBData( int index = 0 ) { return & m_pLOBData[index]; }
+    inline SRxLOBData *GetLOBData( unsigned int uiLOBIndex = 0 ) {
+        SRxLOBData *pLOBData = NULL;
+        if( uiLOBIndex < m_vecLOBData.size() ) {
+            pLOBData = & m_vecLOBData.at( uiLOBIndex );
+        }
+        return pLOBData;
+    }
+    inline STR_PDWINDEX *GetLOB2PDWData( unsigned int uiLOBIndex ) {
+        STR_PDWINDEX *pPDWIndex=NULL;
+        if( uiLOBIndex < m_vecLOB2PDWData.size() ) {
+            pPDWIndex = & m_vecLOB2PDWData.at( uiLOBIndex );
+        }
+        return pPDWIndex;
+    }
 
 protected:
 
@@ -135,10 +151,6 @@ public:
 #if defined(_ELINT_) || defined(_XBAND_)
     virtual EN_RADARCOLLECTORID GetCollectorID()=0;
     virtual char *GetTaskID()=0;
-#endif
-
-#ifdef _LOG_ANALTYPE_
-    virtual bool GetLogAnalType() = 0;
 #endif
 
 

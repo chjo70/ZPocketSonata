@@ -17,6 +17,10 @@
 
 #include "../../Include/globals.h"
 
+#ifndef M_PI
+#define M_PI          3.14159265358979323846  /* pi */
+#endif
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -28,8 +32,10 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 16:09:34
 //
-CSAnalScan::CSAnalScan( void *pParent, UINT uiCoMaxPdw ) : CAnalPRI(pParent, uiCoMaxPdw), CMakeAET(1)
+CSAnalScan::CSAnalScan( void *pParent, UINT uiCoMaxPdw, const char *pThreadName ) : CAnalPRI(pParent, uiCoMaxPdw, pThreadName )
 {
+    SetAnalType( enSCN_ANAL );
+
 	m_pScanSigAnal = ( CScanSigAnal * ) pParent;
 
     m_uiMinConicalPeriod = UMUL( g_pTheSysConfig->GetConcalMinPeriod(), _spOneMilli );
@@ -39,7 +45,7 @@ CSAnalScan::CSAnalScan( void *pParent, UINT uiCoMaxPdw ) : CAnalPRI(pParent, uiC
     m_iMinSteadyPAAmplitude = (int) IPACNV( (float) m_iMinSteadyPAAmplitude );
 
     INIT_ANAL_VAR2_( CAnalPRI, m_pScanSigAnal)
-    INIT_ANAL_VAR2_( CMakeAET, m_pScanSigAnal)
+    //INIT_ANAL_VAR2_( CMakeAET, m_pScanSigAnal)
 
     m_uiMaxPdw = uiCoMaxPdw;
 
@@ -86,7 +92,7 @@ void CSAnalScan::Init( unsigned int uinoEMT, int noCh )
     m_uiCoSeg = GetCoSeg();
 
     CAnalPRI::Init();
-    CMakeAET::Init();
+    //CMakeAET::Init();
 
 }
 
@@ -152,8 +158,8 @@ bool CSAnalScan::KnownAnalysis()
         case ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH :
             // 추적에서는 로브 조건을 무시하도록 한다.
             // 추적할 에미터의 PRI 정보를 근거로 에미터를 생성한다.
-            GroupingStable( true, true );
-            GroupingDwell();
+            GroupingJitter();
+            //DwellNSwitchAnalysis();
             break;
 
         default:
@@ -190,6 +196,8 @@ EN_SCANRESULT CSAnalScan::AnalScan( STR_SCANRESULT *pstScanResult )
     */
     if( m_pEmitter == NULL ) {
         m_stScanResult.enScanType = ENUM_AET_SCAN_TYPE::E_AET_SCAN_UNKNOWN;
+        m_stScanResult.uiScanPeriod = 0;
+
         //m_stScanResult.fScanPeriod = _spZero;
         m_stScanResult.enResult = _spAnalFail;
 
@@ -223,6 +231,10 @@ EN_SCANRESULT CSAnalScan::AnalScan( STR_SCANRESULT *pstScanResult )
 
             //m_nCoModWc[m_uinoEMT] = _spZero;
             m_stScanResult.enResult = _spAnalSuc;
+
+#ifdef _DEBUG
+            CheckSteadySignal();
+#endif
         }
         else {
 #ifdef _DEBUG
@@ -240,7 +252,7 @@ EN_SCANRESULT CSAnalScan::AnalScan( STR_SCANRESULT *pstScanResult )
 
         }
 
-        MakeLOBDataFromEmitter( m_iCoLOB, m_pEmitter, _spZero );
+        //MakeLOBDataFromEmitter( m_iCoLOB, m_pEmitter, _spZero );
     }
 
     // 스캔 수집 정보 저장
@@ -274,6 +286,9 @@ void CSAnalScan::SaveScanResult( STR_SCANRESULT *pstScanResult )
     m_stScanResult.uiMedianPA = pstScanResult->uiMedianPA;
 
     pstScanResult->enResult = m_stScanResult.enResult;
+
+    pstScanResult->uiScanPeriod = m_stScanResult.uiScanPeriod;
+    pstScanResult->enScanType = m_stScanResult.enScanType;
 
 }
 
@@ -719,10 +734,15 @@ bool CSAnalScan::CheckSteadySignal()
 
 	int *pPa;
     //unsigned int uiThPa = I_IPACNV( SEADY_PA_MARGIN );      // 3dBm 이하 허용하게 함.
-    unsigned int uiThPa = SEADY_PA_MARGIN;      // 3dBm 이하 허용하게 함.
+    unsigned int uiThPa;      // 3dBm 이하 허용하게 함.
 
     // debug, 99-12-15 14:14:32 -> 00-01-13 13:12:56
     iPAMean = ( int ) ( TMeanInArray<int>( & m_pScanPt->iPA[0], m_pScanPt->uiCount ) + 0.5 );
+
+    // 평균 근처의 - (STEADY_PA_MARGIN) 값에서 정합니다.
+    float fPAdBm = CPOCKETSONATAPDW::DecodePA( iPAMean ) - STEADY_PA_MARGIN;
+
+    uiThPa = (unsigned int) iPAMean - CPOCKETSONATAPDW::EncodePA( fPAdBm );
 
 	pPa = & m_stSample.iPA[0];
 	cleanPa = _spZero;
@@ -738,8 +758,8 @@ bool CSAnalScan::CheckSteadySignal()
 
 	// if( ( FDIV( cleanPa, pSample->co ) < 0.01 ) && pSample->sdevY < UDIV( 1.0, _spAMPres ) ||
     unsigned int uiThCleanPA = UDIV( 10 * m_stSample.uiCount, 100 );
-    if( iPAMean >= m_iMinSteadyPAAmplitude &&
-        ( ( ( FDIV( cleanPa, m_stSample.uiCount ) < 0.01 ) && ( m_stSample.fSdevY < UDIV( 1.0, _spAMPres ) ) ) || cleanPa <= uiThCleanPA ) ) {
+    if( iPAMean >= m_iMinSteadyPAAmplitude && m_stSample.uiCount >= STEADY_MIN_CO_SAMPLING &&
+        ( ( ( FDIV( cleanPa, m_stSample.uiCount ) < 0.01 ) && ( m_stSample.fSdevY < UDIV( 1.0, 10 ) ) ) || cleanPa <= uiThCleanPA ) ) {
         bRet = _spTrue;
 	}
     else {
@@ -1532,26 +1552,31 @@ UINT CSAnalScan::GetFlagControlWc( UINT noEMT )
  * @param pEmitter
  * @param idxEmitter
  */
-void CSAnalScan::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int idxEmitter )
-{
-
-    // 기본 LOB 데이터 저장
-    CMakeAET::MakeLOBDataFromEmitter(iLOBData, pEmitter, idxEmitter );
-
-    // 스캔 정보 저장
-
-#ifndef _XBAND_
-    SRxLOBData *pLOBData = GetLOBData();
-
-    pLOBData->vScanType = m_stScanResult.enScanType;
-    pLOBData->fMeanScanPeriod = ( float ) TOAmsCNV( m_stScanResult.uiScanPeriod );
-
-#endif
-
-    // 스캔 정보 저장
-    SaveEmitterPDWFile( pEmitter, _spOne, true );
-
-}
+// void CSAnalScan::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int idxEmitter )
+// {
+// 
+//     // 기본 LOB 데이터 저장
+//     //CMakeAET::MakeLOBDataFromEmitter(iLOBData, pEmitter, idxEmitter );
+// 
+//     // 스캔 정보 저장
+// 
+// #ifndef _XBAND_
+//     SRxLOBData *pLOBData = GetLOBData();
+// 
+//     if( pLOBData != NULL ) {
+//         pLOBData->vScanType = m_stScanResult.enScanType;
+//         pLOBData->fMeanScanPeriod = ( float ) TOAmsCNV( m_stScanResult.uiScanPeriod );
+//     }
+//     else {
+// 
+//     }
+// 
+// #endif
+// 
+//     // 스캔 정보 저장
+//     SaveEmitterPDWFile( pEmitter, _spOne, true );
+// 
+// }
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -1642,7 +1667,7 @@ int CSAnalScan::GetBand()
  */
 SRxLOBData *CSAnalScan::GetLOBData( int index )
 {
-    return CMakeAET::GetLOBData( index );
+    return NULL; // CMakeAET::GetLOBData( index );
 }
 
 /**
@@ -1796,19 +1821,3 @@ ENUM_ANAL_TYPE CSAnalScan::GetAnalType()
 {
     return m_pScanSigAnal->GetAnalType();
 }
-
-#ifdef _LOG_ANALTYPE_
-/**
- * @brief     GetLogAnalType
- * @return    bool
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-09-21 11:50:50
- * @warning
- */
-bool CSAnalScan::GetLogAnalType()
-{
-    return m_pScanSigAnal->GetLogAnalType();
-}
-#endif

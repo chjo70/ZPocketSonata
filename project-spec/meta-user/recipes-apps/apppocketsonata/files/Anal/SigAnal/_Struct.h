@@ -2,8 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_STRUCT_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)
-#define AFX_STRUCT_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_
+#pragma once
 
 #if _MSC_VER > 1000
 #pragma once
@@ -288,7 +287,7 @@ struct STR_PULSE_TRAIN_SEG {
 #endif
 
 	_TOA tMinDtoa;					    // DTOA 간격 중에서 최소가 되는 값
-	float fJitterRatio;					// 지터율
+	float fJitterPercent;					// 지터율
 	UINT uiContinuity;				    // 펄스열 연속성(%)
 	UINT uiBand;						// 주파수 Band Code
 	UINT peak_idx;					    // peak PA의 펄스 index
@@ -318,18 +317,19 @@ enum ENUM_SAMPLING_OPTION {
 
 };
 
-typedef struct {
+struct STR_STAGGER_SEG {
     _TOA tStaggerTOA;
     STR_PULSE_TRAIN_SEG *pSeg;
 
-} STR_STAGGER_SEG;
+} ;
 
 // 에미터 정보
 #ifndef _GRAPH_
 struct STR_EMITTER {
 	unsigned int uiID;					// ID : 인덱스 번호
 
-	enSIGNAL_TYPE enSignalType;
+	ENUM_SIGNAL_TYPE enSignalType;
+    unsigned int uiStat;
 
     UINT uiSegIdx[ MAX_SEG ];			// 펄스열 index, 파라메터 저장
 
@@ -344,7 +344,6 @@ struct STR_EMITTER {
 
     unsigned int uiFreqLevelCount;					// Hop level 수
     unsigned int uiFreqLevel[MAX_FREQ_PRI_STEP];					// Hopping level
-
 
 	enANL_PRI_TYPE enPRIType;							// PRI 형태
 	_TOA tFramePRI;								// 스태거일 때의 frmae PRI 값
@@ -361,11 +360,12 @@ struct STR_EMITTER {
     //unsigned int uiFreqElementCount;
     //unsigned int uiFreqElement[MAX_FREQ_PRI_STEP];					// Hopping level
 
-
 	STR_MINMAX stPW;							// 에미터 펄스열의 PRI 범위
 
+    STR_MINMAX stFMOPFreq;
+
 	UINT uiMainSeg;							// 분석에 성공한 seg index
-    EMITTER_MARK enMark;									// 삭제 여부
+    EMITTER_MARK enMark;
 
 	int iDIRatio;
 
@@ -483,35 +483,35 @@ struct STR_FG {
 
 //##ModelId=452B0C4E039A
 struct STR_NP {
-    UINT Pdw_Max;            // 수집 PDW 최대수
-    //UINT Aoa_Shift_Cnt;      // 방위 히스토 BIN 크기 = 2^N
-    UINT Aoa_Peak_Thr;       // 방위 히스토그램 PEAK 임계값  // 00.02.09
-    UINT Aoa_Hist_Thr;       // 방위 히스토그램 범위 임계값  // 00.02.09
-    UINT Aoa_Range_Margin;   // 방위 그룹 범위 margin
+    UINT Pdw_Max;                                     // 수집 PDW 최대수
+    //UINT Aoa_Shift_Cnt;                             // 방위 히스토 BIN 크기 = 2^N
+    UINT Aoa_Peak_Thr;                                // 방위 히스토그램 PEAK 임계값, 00.02.09
+    UINT Aoa_Hist_Thr;                                // 방위 히스토그램 범위 임계값, 00.02.09
+    UINT Aoa_Range_Margin;                            // 방위 그룹 범위 margin
 
-    UINT Freq_Shift_Cnt;     // 주파수 히스토 BIN 크기 = 2^N
-    UINT Freq_Peak_Thr;      // 주파수 히스토그램 PEAK 임계값    // 00.02.09
-    UINT Freq_Hist_Thr;      // 주파수 히스토그램 범위 임계값    // 00.02.09
-    UINT Freq_Range_Margin;  // 주파수 그룹 범위 margin
+    UINT Freq_Shift_Cnt;                              // 주파수 히스토 BIN 크기 = 2^N
+    UINT Freq_Peak_Thr;                               // 주파수 히스토그램 PEAK 임계값, 00.02.09
+    UINT Freq_Hist_Thr;                               // 주파수 히스토그램 범위 임계값, 00.02.09
+    UINT Freq_Range_Margin;                           // 주파수 그룹 범위 margin
 
-    UINT Rpt_Aet_Cnt;    // 탐지; 하나의 그룹에서 REPORT될 AET의 개수를 선언
+    UINT Rpt_Aet_Cnt;                                 // 탐지; 하나의 그룹에서 REPORT될 AET의 개수를 선언
 }  ;
 
 //##ModelId=452B0C4E03AE
 struct STR_KP {
-  UINT Pdw_Max;            // 수집 PDW 최대수
-  /*  UINT    Aoa_Shift_Cnt;      // 방위 히스토 BIN 크기 = 2^N
-      UINT    Aoa_Peak_Thr;       // 방위 히스토그램 PEAK 임계값  // 00.02.09
-      UINT    Aoa_Hist_Thr;       // 방위 히스토그램 범위 임계값  // 00.02.09
-      UINT    Aoa_Range_Margin;   // 방위 그룹 범위 margin
+  UINT Pdw_Max;                                       // 수집 PDW 최대수
+  /*  UINT    Aoa_Shift_Cnt;                          // 방위 히스토 BIN 크기 = 2^N
+      UINT    Aoa_Peak_Thr;                           // 방위 히스토그램 PEAK 임계값, 00.02.09
+      UINT    Aoa_Hist_Thr;                           // 방위 히스토그램 범위 임계값, 00.02.09
+      UINT    Aoa_Range_Margin;                       // 방위 그룹 범위 margin
 
-      UINT    Freq_Shift_Cnt;     // 주파수 히스토 BIN 크기 = 2^N
-      UINT    Freq_Peak_Thr;      // 주파수 히스토그램 PEAK 임계값    // 00.02.09
-      UINT    Freq_Hist_Thr;      // 주파수 히스토그램 범위 임계값    // 00.02.09
-      UINT    Freq_Range_Margin;  // 주파수 그룹 범위 margin
+      UINT    Freq_Shift_Cnt;                         // 주파수 히스토 BIN 크기 = 2^N
+      UINT    Freq_Peak_Thr;                          // 주파수 히스토그램 PEAK 임계값, 00.02.09
+      UINT    Freq_Hist_Thr;                          // 주파수 히스토그램 범위 임계값, 00.02.09
+      UINT    Freq_Range_Margin;                      // 주파수 그룹 범위 margin
   */
 
-  UINT Rpt_Aet_Cnt;    // 추적; 하나의 그룹에서 REPORT될 AET의 개수를 선언
+  UINT Rpt_Aet_Cnt;                                   // 추적; 하나의 그룹에서 REPORT될 AET의 개수를 선언
 }  ;
 
 struct STR_CM
@@ -521,7 +521,9 @@ struct STR_CM
   UINT Mpc;                //000223 // Stable 펄스열의 최소 펄스수 (Min. Pulse Count)
   UINT Mjpc;               //000223 // Jitter 펄스열의 최소 펄스수 (Min. Jitter Pulse Count)
   UINT Rpc;                // 기준 펄스열의 펄스수 (Reference Pule Count)
-  UINT Rjgpc;              // 000404  Jitter Stagger 기준펄스열의 최소 펄스수 (Min. Jitter Stagger Pulse Count)
+  UINT RSpc;               // 기준 펄스열의 펄스수 (Reference Pule Count)
+
+  UINT Rjgpc;              // 000404  Jitter Stagger 기준펄스열의 최소 펄스수 (Min. Jitter Stagger Pulse Count) //!<  //!<
 
   UINT Stb_Max_Miss;       // 최대 허용 STABLE MISS 개수
   UINT Jit_Max_Miss;       // 최대 허용 JITTER MISS 개수
@@ -619,21 +621,11 @@ struct STR_DWELL_LEVEL {
 } ;
 
 
-
 #ifdef _MAIN_
 
 #ifndef _GRAPH_
   STR_SYS _sp;
 #endif
-
-  // 주파수 밴드별 옵셋값과 resolution
-  // Update AOA threshold
-//   UINT _sprfaoa[ 6 ] =
-//   {
-//     0, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR, 2 * KHARM_AOA_MAR
-//   } ;
-
-
 
   float _spFreqMin;
   float _spFreqMax;
@@ -707,22 +699,24 @@ struct STR_DWELL_LEVEL {
 ///////////////////////////////////////////////////////////////////////////////////
 
 #elif defined(_POCKETSONATA_) || defined(_712_)
-
 #define PDW_FREQ_RES        (1.953125)
-    char g_szPulseType[MAX_STAT][3] = { "NP" , "CW" , "PM" , "CP" , "Fu", "FD", "FU", "Cu", "CD", "CU", "SP" };
-    char g_szAetSignalType[ST_MAX][3] = { "NP" , "CW" , "Fu" , "FD", "FU", "Cu", "CD", "CU", "PM", "CP", "SH", "DO", "HI" };
-    char g_szAetFreqType[(int)ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK" };
-    char g_szAetPriType[(int)ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "UK" };
-    char g_szAetPatternType[(int)ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_MAX_FREQ_PRI_PATTERN_TYPE][3] = { "UK" , "SI", "S+" , "S-" , "TR" };
-    char g_szAetScanType[(int)ENUM_AET_SCAN_TYPE::E_AET_MAX_SCAN_TYPE][3] = { "UK" , "CI", "UN" , "BI" , "CO", "ST", "FA", "TF", "DF", "LF" };
+char g_szAetSignalType[ST_MAX][10] = { "NP" , "CW" , "DOPPLER", "H-PRF" };  // { "NP" , "CW" , "FTri" , "FU", "FD", "FUk", "C-FTri", "C-FU", "C-FD", "C-FUk", "PM", "C-PM", "SHP", "DOP", "H-PRF" };
+char g_szAetFreqType[(int)ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][3] = { "F_" , "HP" , "RA" , "PA", "UK" };
+char g_szAetPriType[(int)ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][3] = { "ST" , "JT", "DW" , "SG" , "PJ", "UK" };
 
-    FREQ_RESOL gFreqRes[ enMAXPRC ] = {	// min, max, offset, res
-          {     0,     0, 0, (float) PDW_FREQ_RES } ,
-          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
-          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
-          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
-          {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
-          {     0,     0, 1984000, (float) PDW_FREQ_RES } } ;
+#ifdef _ANAL_LOG_
+char g_szAetPatternType[(int)ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_MAX_FREQ_PRI_PATTERN_TYPE][3] = { "UK" , "SI", "S+" , "S-" , "TR" };
+#endif
+char g_szAetScanType[(int)ENUM_AET_SCAN_TYPE::E_AET_MAX_SCAN_TYPE][3] = { "UK" , "CI", "UN" , "BI" , "CO", "ST", "FA", "TF", "DF", "LF" };
+char g_szAetScanStat[( int ) ENUM_AET_SCAN_STAT::E_AET_USER_SCAN_FAIL+1][20] = { "미실시" , "자체성공", "자체실패" , "사용자성공" , "사용자실패" };
+
+FREQ_RESOL gFreqRes[ enMAXPRC ] = {	// min, max, offset, res
+        {     0,     0, 0, (float) PDW_FREQ_RES } ,
+        {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
+        {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
+        {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
+        {     0,     0, 1984000, (float) PDW_FREQ_RES } ,
+        {     0,     0, 1984000, (float) PDW_FREQ_RES } } ;
 
 #elif defined(_SONATA_)
   char g_szAetSignalType[ST_MAX][3] = { "UK" , "NP" , "CW" , "DP" , "HP" };
@@ -752,6 +746,8 @@ struct STR_DWELL_LEVEL {
   } ;
 
 #endif
+
+
 #else
 
 extern float _spFreqMin;
@@ -762,7 +758,10 @@ extern STR_SYS _sp;
 
 extern char g_szAetFreqType[(int)ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][3];
 extern char g_szAetPriType[( int ) ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][3];
+#ifdef _ANAL_LOG_
 extern char g_szAetPatternType[( int ) ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_MAX_FREQ_PRI_PATTERN_TYPE][3];
+#endif
+
 extern char g_szAetScanType[(int)ENUM_AET_SCAN_TYPE::E_AET_MAX_SCAN_TYPE][3];
 
 #endif
@@ -778,14 +777,17 @@ extern double dRCLatitude[RADARCOL_MAX];
 extern double dRCLongitude[RADARCOL_MAX];
 
 #elif defined(_POCKETSONATA_) || defined(_712_)
-extern char g_szPulseType[MAX_STAT][3];
-extern char g_szAetSignalType[ST_MAX][3];
+extern char g_szAetSignalType[ST_MAX][10];
+extern char g_szAetFreqType[( int ) ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][3];
+extern char g_szAetPriType[( int ) ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][3];
 
 extern FREQ_RESOL gFreqRes[ enMAXPRC ];
 extern PA_RESOL gPaRes[ 6 ];
 
 #elif defined(_SONATA_)
 extern char g_szAetSignalType[ST_MAX][3];
+extern char g_szAetFreqType[( int ) ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE][3];
+extern char g_szAetPriType[( int ) ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][3];
 
 extern FREQ_RESOL gFreqRes[ 3 ];
 extern PA_RESOL gPaRes[ 6 ];
@@ -793,6 +795,7 @@ extern PA_RESOL gPaRes[ 6 ];
 #else
 //extern PA_RESOL gPaRes[ 6 ];
 //extern FREQ_RESOL gFreqRes[ 7 ];
+
 #endif
 
 #endif
@@ -803,4 +806,4 @@ extern PA_RESOL gPaRes[ 6 ];
 // qsort 함수 선언
 int pdwindexCompare( const void *arg1, const void *arg2 );
 
-#endif // !defined(AFX_NSTRUCT_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)
+

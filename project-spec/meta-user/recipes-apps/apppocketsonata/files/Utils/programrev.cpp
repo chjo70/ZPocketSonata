@@ -76,6 +76,11 @@ extern "C"
 
 static std::string g_strVersion;
 
+const char *GetThreadName()
+{
+    return NULL;
+}
+
 
 /**
  * @brief     _ShowProgramTitle
@@ -94,7 +99,7 @@ void _ShowProgramTitle( void )
 
     CCommonUtils::WallMakePrint( szHeader, '~' );
     Log( enNormal, "%s", szHeader);
-    Log( enNormal, "[%s] 프로그램 시작 시간 [%s] 버젼 (%s)...", PROGRAM_NAME, szDate, GEN_VER_VERSION_STRING );
+    Log( enNormal, "[%s] 프로그램 시작 시간 [%s] 버젼 (%s)", PROGRAM_NAME, szDate, GEN_VER_VERSION_STRING );
 
 #ifdef _POCKETSONATA_
     Log( enNormal, "%s", szHeader );

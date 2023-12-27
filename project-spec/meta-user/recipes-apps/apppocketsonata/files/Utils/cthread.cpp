@@ -103,11 +103,13 @@ CThread::CThread( int iThreadPriority, const char *pThreadName, bool bArrayLanDa
     // 송신 메시지 데이터 정의
     m_pstrCollectInfo = m_uniMsgData.GetCollectInfo();
     m_pstrDetectAnalInfo = m_uniMsgData.GetDetectAnalInfo();
+    m_pstrTrackAnalInfo = m_uniMsgData.GetTrackAnalInfo();
     m_pstrScanAnalInfo = m_uniMsgData.GetScanAnalInfo();
 
     // 수신 메시지 데이터 정의
     m_pRecvCollectInfo = m_RcvMsg.x.GetCollectInfo();
     m_pRecvDetectAnalInfo = m_RcvMsg.x.GetDetectAnalInfo();
+    m_pRecvTrackAnalInfo = m_RcvMsg.x.GetTrackAnalInfo();
     m_pRecvScanAnalInfo = m_RcvMsg.x.GetScanAnalInfo();
 
 #ifdef _MSC_VER
@@ -135,14 +137,11 @@ CThread::CThread( int iThreadPriority, const char *pThreadName, bool bArrayLanDa
     m_MsgKeyID = 0;
     m_bTaskRunStat = false;
 
-    if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
-        perror( "세마포어 실패" );
-    }
-
     // 메시지 큐 생성
-    m_MsgKeyID = msgQCreate( SIZE_OF_MSGDATA_ARRAY, sizeof( struct STR_MessageData), MSG_Q_FIFO );
+    m_MsgKeyID = msgQCreate( SIZE_OF_MSGDATA_ARRAY, sizeof( STR_MessageData), MSG_Q_FIFO );
     if( m_MsgKeyID == NULL ) {
         printf( "\n큐 ID[%d]를 생성 실패했습니다 !" , m_MsgKeyID );
+        while( true );
     }
     else {
         //printf( "\n큐 ID[%d]를 생성합니다." , m_MsgKeyID );
@@ -153,10 +152,6 @@ CThread::CThread( int iThreadPriority, const char *pThreadName, bool bArrayLanDa
 
 #elif defined(__linux__)
     m_MsgKeyID = 0;
-
-    if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
-        perror( "세마포어 실패" );
-    }
 
     // 기존의 메시지 큐를 삭제하고 재 생성한다.
     m_MsgKeyID = msgget( key, S_DEFFILEMODE | IPC_CREAT );
@@ -229,7 +224,7 @@ CThread::~CThread()
 
 #elif defined(__VXWORKS__)
 
-    sem_destroy( & m_mutex );
+    // sem_destroy( & m_mutex );
 
 
 #else
@@ -288,11 +283,25 @@ void CThread::Init()
     m_pszRecvData = NULL;
 
     // 메시지큐 생성
-    memset( & m_RcvMsg, 0, sizeof( struct STR_MessageData ) );
-
-    //CArrayMsgData::Init();
+    memset( & m_RcvMsg, 0, sizeof( STR_MessageData ) );
 
 }
+
+/**
+ * @brief     Clear
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-27 15:14:12
+ * @warning
+ */
+void CThread::Clear()
+{
+    CArrayMsgData::Clear();
+
+}
+
 
 /**
  * @brief     CallBack
@@ -362,7 +371,9 @@ void CThread::Run( void *(*pFunc)(void*) )
 #elif defined(__VXWORKS__)
     // 타스크 큐 생성
     // m_iPriority = GetPriorityByThreadName();
-    m_TaskID = taskSpawn( m_szThreadName, GetPriority(), VX_STDIO|VX_SUPERVISOR_MODE|VX_FP_TASK|VX_ALTIVEC_TASK, GetStackSize(), (FUNCPTR) *pFunc, (int) this, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+    m_TaskID = taskSpawn( m_szThreadName, GetPriority(), \
+        VX_STDIO|VX_SUPERVISOR_MODE|VX_FP_TASK|VX_ALTIVEC_TASK, GetStackSize(), \
+        (FUNCPTR) *pFunc, (int) this, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     if( m_TaskID != TASK_ID_ERROR ) {
         m_bTaskRunStat = true;
     }
@@ -489,7 +500,10 @@ void CThread::StopThread()
 
     }
 #elif defined(__VXWORKS__)
+    -- m_iCoThread;
+
     m_bThreadLoop = false;
+    taskDelete( m_TaskID );
 
 #else
     if( m_MainThread != 0 ) {
@@ -520,6 +534,7 @@ void CThread::StopThread()
 void CThread::TCleanUpHandler(void *arg )
 {
     printf("cleanup \n");
+    WhereIs;
     // close your socket
 }
 
@@ -537,11 +552,11 @@ void CThread::QMsgClear()
 {
 
 #ifdef _MSC_VER
-    Lock();
+    CLock::Lock();
     while( !m_queue.empty() ) {
         m_queue.pop();
     }
-    UnLock();
+    CLock::UnLock();
 
 #elif defined(__VXWORKS__)
     int noError;
@@ -549,7 +564,7 @@ void CThread::QMsgClear()
     do {
 		//STATUS stat;
 
-        msgQReceive( m_MsgKeyID, ( char* ) &m_RcvMsg, sizeof( struct STR_MessageData ), WAIT_FOREVER );
+        msgQReceive( m_MsgKeyID, ( char* ) &m_RcvMsg, sizeof( STR_MessageData ), WAIT_FOREVER );
         noError = errnoGet();
         // printf( "\n stat[%d], noError[%d]", stat, noError );
 
@@ -610,7 +625,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
 	    dwRes = ::WaitForSingleObject(m_hEvent, 0 );
 
         if( dwRes == WAIT_OBJECT_0 || dwRes == WAIT_TIMEOUT ) {
-            Lock();
+            CLock::Lock();
             if( m_queue.size() != 0 ) {
                 iMsgRcv = 1;
 
@@ -627,7 +642,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
 
                 m_queue.pop();
             }
-            UnLock();
+            CLock::UnLock();
 
         }
         else if( dwRes == WAIT_FAILED ) {
@@ -639,9 +654,9 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
     else {
         int iSize;
 
-        Lock();
+        CLock::Lock();
         iSize = (int) m_queue.size();
-        UnLock();
+        CLock::UnLock();
 
 //         if( iSize >= 10 /* SIZE_OF_MSGDATA_ARRAY */ ) {
 //             TRACE( "\n 큐 사이즈가 초과[%d] 되고 있습니다." , iSize );
@@ -652,6 +667,9 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
                 dwRes = ::WaitForSingleObject(m_hEvent, dwMilliSec);
             }
             else {
+                if( strcmp( GetThreadName(), "CCU_O1" ) == 0 ) {
+                    TRACE( "\n m_hEvent[%u]", m_hEvent );
+                }
                 dwRes = ::WaitForSingleObject(m_hEvent, INFINITE);
             }
 
@@ -673,13 +691,15 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
             }
             else if( dwRes == WAIT_OBJECT_0 ) {
                 if( strcmp( GetThreadName(), "TASKMNGR" ) == 0 ) {
+#ifdef _DEBUG
                     TRACE( "\n TASKMNGR..." );
                     WhereIs;
+#endif
                 }
                 //TRACE( "\nCThread[%s]..ResetEvent..", GetThreadName() );
 
                 // 처리 한다.
-                Lock();
+                CLock::Lock();
                 ::ResetEvent( m_hEvent );
 
                 iSize = (int) m_queue.size();
@@ -691,6 +711,9 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
                     if( m_RcvMsg.iArrayIndex != -1 ) {
                         m_pszRecvData = (char *) m_szRecvData;
                         //memcpy( m_szRecvData, m_RcvMsg.szArrayData, m_RcvMsg.uiArrayLength );
+                        if( strcmp( GetThreadName(), "MRG" ) == 0 ) {
+                            TRACE( "\n PopLanData=[%d]", m_RcvMsg.iArrayIndex );
+                        }
                         PopLanData( m_szRecvData, m_RcvMsg.iArrayIndex, m_RcvMsg.uiArrayLength );
                     }
                     else {
@@ -704,7 +727,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
                     iMsgRcv = -1;
                     // TRACE( "Invalid the receive message..." );
                 }
-                UnLock();
+                CLock::UnLock();
 
                 //STR_CLIENT_SOCKET *pClientSocket;
                 //pClientSocket = ( STR_CLIENT_SOCKET * ) & m_RcvMsg.x.szData;
@@ -716,10 +739,10 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
 
         }
         else {
-            Lock();
+            CLock::Lock();
             m_RcvMsg = m_queue.front();
             m_queue.pop();
-            UnLock();
+            CLock::UnLock();
 
             iMsgRcv = 1;
 
@@ -749,7 +772,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
         option = dwMilliSec;
     }
 
-    STATUS stat = msgQReceive( m_MsgKeyID, (char *) & m_RcvMsg, sizeof( struct STR_MessageData), option );
+    STATUS stat = msgQReceive( m_MsgKeyID, (char *) & m_RcvMsg, sizeof( STR_MessageData), option );
     if( ERROR == stat ) {
         int noError = errnoGet();
 
@@ -827,6 +850,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLe
     }
     else {
         QMsgSnd( uiOpCode, pData, 1, uiDataLength, NULL, 0, pszClassName, iOption );
+
     }
 }
 
@@ -845,22 +869,6 @@ void CThread::QMsgSnd( unsigned int uiOpCode, const char *pszClassName, int iOpt
 {
     QMsgSnd( uiOpCode, NULL, 0, 0, NULL, 0, pszClassName, iOption );
 }
-
-/**
- * @brief     QMsgEchoSnd
- * @param     unsigned int uiOpCode
- * @param     const char * pszClassName
- * @return    void
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-03-24 17:43:21
- * @warning
- */
-// void CThread::QMsgEchoSnd( unsigned int uiOpCode, const char *pszClassName )
-// {
-//     QMsgSnd( uiOpCode, NULL, 0, 0, NULL, 0, pszClassName );
-// }
 
 /**
  * @brief     QMsgSnd
@@ -901,42 +909,42 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
  */
 void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayElement, unsigned int uiArraySize, void *pData, unsigned int uiDataLength, const char *pszClassName, int iOption )
 {
-    if( IsSendEnabled() == true || m_bLog == true ) {
-        STR_MessageData sndMsg;         // 의심
+    STR_MessageData sndMsg;
 
 #ifdef __linux__
-        sndMsg.mtype = 1;
+    sndMsg.mtype = 1;
 #endif
 
-        // 1. OPCODE 저장
-        sndMsg.uiOpCode = uiOpCode;
-        sndMsg.soSocket = 0;
+    // 1. OPCODE 저장
+    sndMsg.uiOpCode = uiOpCode;
+    sndMsg.soSocket = 0;
 
-        // 2. 데이터 저장
-        if( pData != NULL ) {
-   		    sndMsg.uiDataLength = uiDataLength;
-            memcpy( & sndMsg.x, pData, sizeof(char)*sndMsg.uiDataLength );
-        }
-        else {
-    	    sndMsg.uiDataLength = 0;
-        }
-
-        // 3. 추가 데이터 저장
-        if( pArrayMsgData != NULL ) {
-    	    sndMsg.uiArrayLength = uiArrayElement * uiArraySize;
-            //memcpy( & sndMsg.szArrayData, pArrayMsgData, sndMsg.uiArrayLength );
-            sndMsg.iArrayIndex = PushLanData(pArrayMsgData, sndMsg.uiArrayLength);
-        }
-        else {
-    	    sndMsg.uiArrayLength = 0;
-    	    sndMsg.iArrayIndex = -1;
-        }
-
-        QMsgSnd( & sndMsg, pszClassName, iOption );
+    // 2. 데이터 저장
+    if( pData != NULL ) {
+   		sndMsg.uiDataLength = uiDataLength;
+        memcpy( & sndMsg.x, pData, uiDataLength );
     }
     else {
-
+    	sndMsg.uiDataLength = 0;
     }
+
+    // 3. 추가 데이터 저장
+    if( pArrayMsgData != NULL ) {
+    	sndMsg.uiArrayLength = uiArrayElement * uiArraySize;
+        //memcpy( & sndMsg.szArrayData, pArrayMsgData, sndMsg.uiArrayLength );
+
+        sndMsg.iArrayIndex = PushLanData(pArrayMsgData, sndMsg.uiArrayLength);
+        if( strcmp( GetThreadName(), "MRG" ) == 0 ) {
+            TRACE( "\n PushLanData=[%d]", sndMsg.iArrayIndex );
+            PrintDebug( -1 );
+        }
+    }
+    else {
+    	sndMsg.uiArrayLength = 0;
+    	sndMsg.iArrayIndex = -1;
+    }
+
+    QMsgSnd( & sndMsg, pszClassName, iOption );
 
 }
 
@@ -954,13 +962,12 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
  */
 void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const char *pszThreadName )
 {
-    if( IsSendEnabled() == true || m_bLog == true ) {
-        if( pArrayMsgData != NULL ) {
-            pMessageData->iArrayIndex = PushLanData( pArrayMsgData, pMessageData->uiArrayLength );
-        }
-
-        QMsgSnd( pMessageData, pszThreadName );
+    if( pArrayMsgData != NULL ) {
+        pMessageData->iArrayIndex = PushLanData( pArrayMsgData, pMessageData->uiArrayLength );
     }
+
+    QMsgSnd( pMessageData, pszThreadName );
+
 
 }
 
@@ -976,56 +983,49 @@ void CThread::QMsgSnd( STR_MessageData *pMessageData, void *pArrayMsgData, const
 void CThread::QMsgSnd( STR_MessageData *pMessageData, const char *pszThreadName, int iOption )
 {
 
-    //if( IsSendEnabled() == true ) {
-        // DisplayMsg( true, pszThreadName, m_szThreadName, pMessageData );
-        // printf( "@[%s] ==> [%s]...[%d:%d]", pszThreadName, m_szThreadName, pMessageData->uiOpCode, pMessageData->uiArrayLength );
-
+    if( IsSendEnabled() == true ) {
 #ifdef __linux__
-    if( msgsnd( m_MsgKeyID, (void *) pMessageData, sizeof( struct STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
-        perror( "msgsnd 실패" );
-        WhereIs;
-        SendTaskMngr( enERROR_OF_SENDMSG );
-    }
-    else {
-        // DisplayMsg( true, m_szThreadName, pMessageData );
+        if( msgsnd( m_MsgKeyID, (void *) pMessageData, sizeof( struct STR_MessageData)-sizeof(long), IPC_NOWAIT) < 0 ) {
+            perror( "msgsnd 실패" );
+            WhereIs;
+            SendTaskMngr( enERROR_OF_SENDMSG );
+        }
+        else {
+            // DisplayMsg( true, m_szThreadName, pMessageData );
 
-    }
+        }
 
 #elif defined(_MSC_VER)
-    //STR_CLIENT_SOCKET *pClientSocket;
-    //pClientSocket = ( STR_CLIENT_SOCKET * ) & pMessageData->x.szData;
-    //TRACE( "\nCThread[%s] QMsgSnd-OpCode[0x%0x]-소켓[%d]", GetThreadName(), pMessageData->uiOpCode, pClientSocket->iSocket );
-
-    Lock();
-	m_queue.push(*pMessageData);
-    ::SetEvent( m_hEvent );
-    UnLock();
+        CLock::Lock();
+	    m_queue.push(*pMessageData);
+        ::SetEvent( m_hEvent );
+        CLock::UnLock();
 
 
-    //TRACE( "\nQueue Size : %d" , m_queue.size() );
-    //TRACE( "\nCThread[%s]..SetEvent..", GetThreadName() );
-
-
-
-#elif defined(__VXWORKS__)
-    STATUS stat=msgQSend( GetKeyId(), (char *) pMessageData, sizeof( struct STR_MessageData), iOption, MSG_PRI_NORMAL );
-    if( stat == ERROR ) {
-        // 메시지 송신 에러시 타스크 관리자에게 메시지 전달하여 긴급 복구하도록 메시지 전달함.
-        _func_kprintf( "GetThreadName()=%s", GetThreadName() );
-        WhereIs;
-        SendTaskMngr( enERROR_OF_SENDMSG, pszThreadName );
-    }
-    else {
+        //TRACE( "\nQueue Size : %d" , m_queue.size() );
+        //TRACE( "\nCThread[%s]..SetEvent[%d]", GetThreadName(), m_hEvent );
         //DisplayMsg( true, m_szThreadName, GetThreadName(), pMessageData );
 
-    }
+#elif defined(__VXWORKS__)
+        STATUS stat=msgQSend( GetKeyId(), (char *) pMessageData, sizeof( STR_MessageData), iOption, MSG_PRI_NORMAL );
+        if( stat == ERROR ) {
+            // 메시지 송신 에러시 타스크 관리자에게 메시지 전달하여 긴급 복구하도록 메시지 전달함.
+            _func_kprintf( "GetThreadName()=%s", GetThreadName() );
+            WhereIs;
+            SendTaskMngr( enERROR_OF_SENDMSG, pszThreadName );
+        }
+        else {
+            //printf( "\n SnedOpcode[%d]", pMessageData->uiOpCode );
+            //DisplayMsg( true, m_szThreadName, GetThreadName(), pMessageData );
+
+        }
 
 #endif
-//     }
-//     else {
-//         printf( "[%s] 타스크에서 송신 메시지를 무시합니다." , GetThreadName() );
-//         WhereIs;
-//     }
+
+    }
+    else {
+
+    }
 
 }
 
@@ -1063,7 +1063,7 @@ void CThread::SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName 
 
     STR_MessageData stMessageData;      // 의심
 
-    memset( & stMessageData, 0, sizeof( struct STR_MessageData ) );
+    memset( & stMessageData, 0, sizeof( STR_MessageData ) );
 
     for( i=0 ; i < g_vecThread.size() ; ++i ) {
         pThis = g_vecThread[i];
@@ -1130,8 +1130,7 @@ void CThread::msSleep( unsigned int mssleep )
  */
 void CThread::DisplayMsg( bool bSend, const char *pszFromClassName, const char *pszToClassName, STR_MessageData *pInMsg )
 {
-    char buffer[200];
-
+    char buffer[300];
     STR_MessageData *pMsg;
 
     if( pszFromClassName != NULL && strcmp( pszFromClassName, PCIISR_NAME ) != 0 ) {
@@ -1170,15 +1169,13 @@ void CThread::DisplayMsg( bool bSend, const char *pszFromClassName, const char *
             }
         }
 
-        //TRACE( "%s", buffer );
+        TRACE( "%s", buffer );
         //Log( enNormal, "%s", buffer );
-
     }
     else {
     }
 
 }
-
 
 /**
  * @brief     ShowTaskMessae
@@ -1219,9 +1216,9 @@ int CThread::QMsgRcvSize()
     int iSize;
 
 #ifdef _MSC_VER
-    Lock();
+    CLock::Lock();
     iSize = ( int ) m_queue.size();
-    UnLock();
+    CLock::UnLock();
 
 #elif defined(__VXWORKS__)
     iSize = msgQNumMsgs( m_MsgKeyID );
@@ -1252,9 +1249,9 @@ void CThread::ShowQueueMessae( int iLevel )
     //Log( enNormal, "[%s]", m_szThreadName );
 
 #ifdef _MSC_VER
-    Lock();
+    CLock::Lock();
     //Log( enNormal, "\t처리할 메시지 큐 개수: %d", m_queue.size() );
-    UnLock();
+    CLock::UnLock();
 
 #elif defined(__VXWORKS__)
     // msgQShow( m_MsgKeyID, iLevel );

@@ -50,11 +50,7 @@ public:
 
     void KnownPulseExtract();
 
-#ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
-#endif
-
-    CKPulExt( void *pParent, unsigned int uiCoMaxPdw );
+    CKPulExt( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
     virtual ~CKPulExt();
 
 };

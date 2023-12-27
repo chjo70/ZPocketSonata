@@ -22,17 +22,16 @@
 
 #endif
 
+#include "clock.h"
 
 
-#define SIZE_OF_MSGDATA_ARRAY           (32)            // 128 -> 64
+#define SIZE_OF_MSGDATA_ARRAY           (5)            // 128 -> 64
 
 #define ARARAY_MARK_UPPER              (0x4F)
 #define ARARAY_MARK_LOWER              (0xF4)
 
 // 랜 데이터 비교 횟수 이후 에러 통보
 #define MAX_TRY_MARK                    (20)
-
-//#include "cthread.h"
 
 class CArrayMsgData
 {
@@ -44,18 +43,12 @@ private:
 
     unsigned char *m_pszArray[SIZE_OF_MSGDATA_ARRAY];
 
-#if _MSC_VER
-    CCriticalSection m_cs;
+    CLock m_theLock;
 
-#elif defined(__VXWORKS__)
+#ifdef __VXWORKS__
     sem_t m_mutex;
 
-#elif defined(__linux__)
-    sem_t m_mutex;
-
-#else
 #endif
-
 
 public:
     CArrayMsgData( bool bArrayLanData );
@@ -66,37 +59,18 @@ public:
 
     void PrintDebug( unsigned int ucPushIndex );
 
-    void Lock()
-    {
-#ifdef _MSC_VER
-        m_cs.Lock();
-
-#else
-        sem_wait( & m_mutex );
-#endif
-
-    }
-
-    void UnLock()
-    {
-#ifdef _MSC_VER
-        m_cs.Unlock();
-
-#else
-        sem_post( & m_mutex );
-#endif
-    }
+    void Clear();
 
     virtual void msSleep( unsigned int mssleep )=0;
     virtual void ShowTaskMessae( int iLevel ) = 0;
-    virtual char *GetThreadName() = 0;
+    virtual const char *GetThreadName() = 0;
 
     virtual void SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName=NULL )=0;
 
 private:
     void Alloc();
     void Free();
-    void SetMark( int iIndex );
+    void SetMark( int iIndex, bool bLog=false );
 
 public:
     void Init();

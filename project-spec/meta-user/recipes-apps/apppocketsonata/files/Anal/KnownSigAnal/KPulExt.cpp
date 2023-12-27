@@ -29,9 +29,10 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 14:10:33
 //
-//##ModelId=42E85F3303AD
-CKPulExt::CKPulExt( void *pParent, unsigned int uiCoMaxPdw ) : CPulExt(uiCoMaxPdw)
+CKPulExt::CKPulExt( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CPulExt(uiCoMaxPdw, pThreadName )
 {
+    SetAnalType( enTRK_ANAL );
+
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pKnownSigAnal)
@@ -121,12 +122,22 @@ void CKPulExt::PulseExtract()
 	ExtractJitter( _STABLE + _JITTER_RANDOM );
 
 	// 펄스열의 인덱스를 조사해서 겹쳐져 있으면 그 중 한개를 버린다.
-	DiscardPulseTrain();
+	DropPulseTrain();
 
     //CPulExt::PulseExtract();
 
 }
 
+/**
+ * @brief     ExtractPulseTrainByLibrary
+ * @param     vector<SRadarMode * > * pVecMatchRadarMode
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-22 11:02:48
+ * @warning
+ */
 void CKPulExt::ExtractPulseTrainByLibrary(vector<SRadarMode *> *pVecMatchRadarMode)
 {
     UINT i;
@@ -172,7 +183,7 @@ void CKPulExt::ExtractPulseTrainByLibrary(vector<SRadarMode *> *pVecMatchRadarMo
             case RadarModePRIType::enumPATTERN:
                 extRange.tMinPRI = ITOAusCNV(pRadarMode->fPRI_TypicalMin);
                 extRange.tMaxPRI = ITOAusCNV(pRadarMode->fPRI_TypicalMax);
-                ExtractJitterPT(&extRange, UINT_MAX, _sp.cm.Rpc, TRUE, enJITTER_MARK, TRUE);
+                ExtractKnownJitterPT(&extRange, UINT_MAX, _sp.cm.Rpc, enJITTER_MARK, TRUE );
                 break;
 
             default:
@@ -272,7 +283,7 @@ void CKPulExt::PulseExtract(vector<SRadarMode *> *pVecMatchRadarMode)
                         비교해서 유사 펄스열이면, 기본 규칙성 펄스열을 제거한다.
             \date 2006-05-19 17:59:24, 조철희
     */
-    DiscardPulseTrain(nRefSeg, nExtSeg);
+    DropPulseTrain(nRefSeg, nExtSeg);
 
 #elif defined( _EXTRACT_PULSE_METHOD5_ )
     SetRefStartSeg();
@@ -317,7 +328,7 @@ void CKPulExt::PulseExtract(vector<SRadarMode *> *pVecMatchRadarMode)
         ExtractJitter(_STABLE + _JITTER_RANDOM);
 
         // 펄스열의 인덱스를 조사해서 겹쳐져 있으면 그 중 한개를 버린다.
-        DiscardPulseTrain();
+        DropPulseTrain();
 
         //////////////////////////////////////////////////////////////////////////
         // 2차 펄스열 추출
@@ -491,35 +502,3 @@ UINT CKPulExt::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
 {
     return m_pKnownSigAnal->CheckHarmonic( priMean1, priMean2, uiThreshold );
 }
-
-
-/**
- * @brief     ClearAllMark
- * @return    void
- * @exception
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   0.0.1
- * @date      2022-01-05, 15:56
- * @warning
- */
-// void CKPulExt::ClearAllMark()
-// {
-//     memset( & m_pMARK[0], 0, sizeof( m_pKnownSigAnal->MARK ) );
-// }
-
-#ifdef _LOG_ANALTYPE_
-/**
- * @brief     GetLogAnalType
- * @return    bool
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-09-21 12:10:15
- * @warning
- */
-bool CKPulExt::GetLogAnalType()
-{
-    return m_pKnownSigAnal->GetLogAnalType();
-}
-
-#endif

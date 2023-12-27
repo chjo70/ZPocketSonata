@@ -51,7 +51,7 @@ CDeltaGraphDoc::CDeltaGraphDoc()
 CDeltaGraphDoc::~CDeltaGraphDoc()
 {
 	theApp.CloseMapData( & m_strPathname );
-	
+
 }
 
 BOOL CDeltaGraphDoc::OnNewDocument()
@@ -161,12 +161,12 @@ void CDeltaGraphDoc::Dump(CDumpContext& dc) const
 // CDeltaGraphDoc ¸í·É
 
 /**
- * @brief     
+ * @brief
  * @return    ENUM_UnitType
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/12 19:42:44
- * @warning   
+ * @warning
  */
  ENUM_UnitType CDeltaGraphDoc::WhatUnitType()
 {
@@ -174,12 +174,12 @@ void CDeltaGraphDoc::Dump(CDumpContext& dc) const
 }
 
 /**
- * @brief     
+ * @brief
  * @return    ENUM_DataType
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/12 19:42:42
- * @warning   
+ * @warning
  */
 ENUM_DataType CDeltaGraphDoc::WhatDataType()
 {
@@ -192,11 +192,11 @@ ENUM_DataType CDeltaGraphDoc::WhatDataType()
   * @author		Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version		0.0.1
   * @date		2021/01/04 20:12:39
-  * @warning		
+  * @warning
   */
-ENUM_DataType CDeltaGraphDoc::GetDataType() 
-{ 
-    return m_enDataType; 
+ENUM_DataType CDeltaGraphDoc::GetDataType()
+{
+    return m_enDataType;
 }
 
 /**
@@ -214,14 +214,14 @@ int CDeltaGraphDoc::GetBandWidth()
 }
 
 /**
- * @brief     
+ * @brief
  * @param     CString & strPathname
  * @param     STR_FILTER_SETUP * pstFilterSetup
  * @return    bool
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/08 22:17:09
- * @warning   
+ * @warning
  */
 bool CDeltaGraphDoc::OpenFile( CString &strPathname, STR_FILTER_SETUP *pstFilterSetup )
 {
@@ -238,11 +238,11 @@ bool CDeltaGraphDoc::OpenFile( CString &strPathname, STR_FILTER_SETUP *pstFilter
 // 	it = m_gMapData.find( m_strPathname );
 // 	if( it == m_gMapData.end() ) {
 // 		ReadDataFile( 0, pstFilterSetup );
-// 
+//
 // 	}
 // 	else {
 // 		m_theDataFile.SetData( it->second );
-// 
+//
 // 	}
 
 	// Å¸ÀÌÆ² ¹Ù º¯°æ
@@ -256,18 +256,18 @@ bool CDeltaGraphDoc::OpenFile( CString &strPathname, STR_FILTER_SETUP *pstFilter
 }
 
 /**
- * @brief     
+ * @brief
  * @param     STR_FILTER_SETUP * pstFilterSetup
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/08 22:36:03
- * @warning   
+ * @warning
  */
 bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSetup, bool bCountOfWindow )
 {
 	CDataFile *pFindMapData;
-	
+
 	pFindMapData = theApp.FindMapData( & m_strPathname );
 
 	if( pFindMapData == NULL ) {
@@ -281,7 +281,7 @@ bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSe
 	else {
         m_pTheDataFile = pFindMapData;
 
-        m_pTheDataFile->ReadDataFile( NULL, NULL, enPDWToReal );        
+        m_pTheDataFile->ReadDataFile( NULL, NULL, enPDWToReal );
 		if( bCountOfWindow == true ) {
 			theApp.IncWindowNumber( m_pTheDataFile );
 		}
@@ -292,18 +292,18 @@ bool CDeltaGraphDoc::ReadDataFile( DWORD dwOffset, STR_FILTER_SETUP *pstFilterSe
 }
 
 /**
- * @brief     
+ * @brief
  * @return    UINT
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/11 22:19:09
- * @warning   
+ * @warning
  */
 UINT CDeltaGraphDoc::GetPDWDataItems()
-{ 
+{
 	STR_PDWREALDATA *pPDWData;
 
 	pPDWData = ( STR_PDWREALDATA * ) m_pTheDataFile->GetRealData();
-	return pPDWData->uiDataItems; 
+	return pPDWData->uiDataItems;
 }
 

@@ -43,24 +43,28 @@ typedef unsigned char UCHAR;
 
 
 #ifdef _SIM_SERVER_
-#define _DEFAULT_PRIME_SERVER           (const char *) ( "127.0.0.1" )
-#define _DEFAULT_CCU_SERVER_IP_ADDRESS  (const char *) ( "127.0.0.1" )
-#define DEV_SERVER                      (const char *) ( "127.0.0.1" )
-#define DEV2_SERVER                     (const char *) ( "127.0.0.1" )
+#define _DEFAULT_RECENT_SERVER               (const char *) ( "127.0.0.1" )
+#define _DEFAULT_CCU_SERVER_IP_ADDRESS      (const char *) ( "127.0.0.1" )
+#define _DEFAULT_DEBUG_SERVER_IP_ADDRESS    (const char *) ( "127.0.0.1" )
+#define DEV_SERVER                          (const char *) ( "127.0.0.1" )
+#define DEV2_SERVER                         (const char *) ( "127.0.0.1" )
 
 #else
 
-#define _DEFAULT_PRIME_SERVER           (const char *) ( "192.168.0.200" )
-#define _DEFAULT_CCU_SERVER_IP_ADDRESS  (const char *) ( "127.0.0.1" )
-#define DEV_SERVER                      (const char *) ( "192.168.0.11" )
-#define DEV2_SERVER                     (const char *) ( "192.168.0.12" )
+#define _DEFAULT_RECENT_SERVER              (const char *) ( "192.168.0.200" )
+#define _DEFAULT_CCU_SERVER_IP_ADDRESS      (const char *) ( "127.0.0.1" )
+#define _DEFAULT_DEBUG_SERVER_IP_ADDRESS    (const char *) ( "192.168.0.200" )
+#define DEV_SERVER                          (const char *) ( "192.168.0.11" )
+#define DEV2_SERVER                         (const char *) ( "192.168.0.12" )
 
 #endif
 
-#define _DEFAULT_SBC_FROM_IP        (100)
-#define _DEFAULT_SBC_TO_IP          (110)
+#define _DEFAULT_SBC_FROM_IP                (110)
+#define _DEFAULT_SBC_TO_IP                  (114)
 
-#define _DEFAULT_TFFS_BOOT          (0)
+#define _DEFAULT_TFFS_BOOT                  (1)
+
+#define _DEFAULT_PRESENT_TIME               (const char *) ( "2023_1_1_0_0_0" )
 
 
 // 제어조종장치 서버
@@ -71,17 +75,19 @@ typedef unsigned char UCHAR;
 #endif
 
 #ifdef __ZYNQ_BOARD__
-#define CCU_PORT        (6600)
+#define CCU_PORT                    (6600)
+#define CCU_DEBUG_PORT              (6700)     // 13030
 #else
-#define CCU_PORT        (6600)     // 13030
+#define CCU_PORT                    (6600)     // 13030
+#define CCU_DEBUG_PORT              (6700)     // 13030
 #endif
 
 // 재밍신호관리장치 서버
-#define PMC_SERVER      (char *) ( "192.168.1.245" )
-#define PMC_PORT        (13040)
+//#define PMC_SERVER                  (char *) ( "192.168.1.245" )
+//#define PMC_PORT                    (13040)
 
 
-#define TEST_PORT       (13090)
+#define TEST_PORT                   (13090)
 
 /////////////////////////////////////////////////////////////////////////////////
 

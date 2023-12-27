@@ -46,6 +46,11 @@ extern bool g_bSNTP;
 
 #endif
 
+#ifdef _SIM_PDW_
+extern void StopSigGen( bool bEnable );
+
+#endif
+
 #define _DEBUG_
 
 /**
@@ -314,6 +319,9 @@ void CTaskMngr::Start()
     Log( enDebug, "[운용제어/시작 요청]" );
 
     g_pTheCCUSocket->StopThread();
+    if( g_pTheCCUDebugSocket != NULL ) {
+        g_pTheCCUDebugSocket->StopThread();
+    }
 
     g_pTheSignalCollect->QMsgSnd( m_pMsg, GetThreadName() );
 #ifdef _MSC_VER
@@ -321,61 +329,17 @@ void CTaskMngr::Start()
 #endif
     TaskSummary();
 
-    g_pTheCCUSocket->SendLan( enRES_OP_START, NULL, 0 );
+    //g_pTheCCUSocket->SendLan( enRES_OP_START, NULL, 0 );
+    SendLan( enRES_OP_START, NULL, 0 );
 
     g_pTheCCUSocket->CloseSocket();
+    if( g_pTheCCUDebugSocket != NULL ) {
+        g_pTheCCUDebugSocket->CloseSocket();
+    }
 
-    //g_pTheCCUSocket->Run( _MSG_CCU_KEY );
     Log( enDebug, "================================================================" );
 
 }
-
-/**
- * @brief       모드 명령을 처리한다.
- * @return		void
- * @author		조철희 (churlhee.jo@lignex1.com)
- * @version		0.0.1
- * @date		2023/02/22 15:52:21
- * @warning
- */
-// void CTaskMngr::SetMode()
-// {
-//     ENUM_MODE enMode, enMode2;
-//
-//     _EQUALS3( enMode2, enMode, (ENUM_MODE) m_pMsg->x.uiData )
-//
-//     Log( enDebug, "Set Mode[%d]", enMode );
-//
-//     g_pTheSysConfig->SetMode( enMode );
-//
-//     switch( enMode ) {
-//         case enES_MODE :
-//         case enEW_MODE :
-//             CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
-//             break;
-//
-//         case enREADY_MODE :
-//             //g_pTheCCUSocket->StopThread();
-//
-//             g_pTheSignalCollect->QMsgSnd( m_pMsg, GetThreadName() );
-// #ifdef _MSC_VER
-//             g_pTheUserCollect->QMsgSnd( enTHREAD_REQ_COLEND, GetThreadName() );
-// #endif
-//             ProcessSummary();
-//
-//             CCommonUtils::SendLan( enRES_MODE, & enMode, sizeof(int) );
-//
-//             CCommonUtils::CloseSocket();
-//
-//             //g_pTheCCUSocket->Run( _MSG_CCU_KEY );
-//             Log( enDebug, "================================================================" );
-//             break;
-//
-//         default :
-//             break;
-//     }
-//
-// }
 
 /**
  * @brief     AnalysisReStart
@@ -391,7 +355,8 @@ void CTaskMngr::AnalysisReStart()
     AnalysisStart( false );
 
     BOOL bResult = TRUE;
-    g_pTheCCUSocket->SendLan( enRES_OP_RESTART, & bResult, sizeof( bResult ) );
+    //g_pTheCCUSocket->SendLan( enRES_OP_RESTART, & bResult, sizeof( bResult ) );
+    SendLan( enRES_OP_RESTART, & bResult, sizeof( bResult ) );
 
 }
 
@@ -413,10 +378,19 @@ void CTaskMngr::AnalysisStart( bool bOut )
     CCommonUtils::WallMakePrint( buffer, '#' );
     Log( enNormal, "%s", buffer);
 
+#ifdef _SIM_PDW_
+    StopSigGen( false );
+
+#endif
+
     SetMode( enOP_Mode );
 
     g_pTheSysConfig->LoadINI();
     g_pTheSysConfig->DisplaySystemVar();
+
+    // 현재 시간 기록하기
+    CCommonUtils::getStringPresentTime( buffer, sizeof( buffer ), true );
+    g_pTheSysConfig->WritePresentTime( buffer );
 
 	g_pTheSysConfig->IncOpInitID();
 
@@ -467,17 +441,16 @@ void CTaskMngr::AnalysisStart( bool bOut )
 
 #endif
 
-    // 신호 수집 시작
-    WhereIs;
+    // 분석 시작
     g_pTheEmitterMerge->QMsgSnd( enREQ_OP_START );
-    g_pTheSignalCollect->QMsgSnd( enREQ_OP_START );
+    g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_START );
     g_pTheTrackAnalysis->QMsgSnd( enREQ_OP_START );
     g_pTheScanAnalysis->QMsgSnd( enREQ_OP_START );
-    g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_START );
     g_pTheLog->QMsgSnd( enREQ_OP_START );
 
 #ifdef __VXWORKS__
     ChangeTaskPriority( iPriority );
+    Sleep( REQ_OP_START_DELAY );
 
 #elif defined(_MSC_VER)
     Sleep( REQ_OP_START_DELAY );
@@ -492,9 +465,13 @@ void CTaskMngr::AnalysisStart( bool bOut )
     CCommonUtils::WallMakePrint( buffer, '#' );
     Log( enNormal, "%s", buffer );
 
+    // 신호 수집 시작
+    g_pTheSignalCollect->QMsgSnd( enREQ_OP_START );
+
     if( bOut == true ) {
         BOOL bResult=TRUE;
-        g_pTheCCUSocket->SendLan( enRES_OP_START, & bResult, sizeof( bResult ) );
+
+        SendLan( enRES_OP_START, & bResult, sizeof( bResult ) );
     }
 
     //g_pTheClockTimer->Start();
@@ -588,48 +565,12 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
     SetSendDisable();
 
     // 모든 타스트의 메시지 비우기
-    while( g_pTheSignalCollect->QMsgRcvSize() != 0 ) {
-        Sleep( REQ_OP_STOP_DELAY );
-#ifdef _MSC_VER
-        g_pTheSignalCollect->FlushEvent();
-
-#endif
-        WhereIs;
-    }
-
-    while( g_pTheDetectAnalysis->QMsgRcvSize() != 0 ) {
-        Sleep( REQ_OP_STOP_DELAY );
-#ifdef _MSC_VER
-        g_pTheDetectAnalysis->FlushEvent();
-
-#endif
-
-        WhereIs;
-    }
-
-    while( g_pTheTrackAnalysis->QMsgRcvSize() != 0 ) {
-        Sleep( REQ_OP_STOP_DELAY );
-#ifdef _MSC_VER
-        g_pTheTrackAnalysis->FlushEvent();
-
-#endif
-        WhereIs;
-    }
-
-    while( g_pTheScanAnalysis->QMsgRcvSize() != 0 ) {
-        Sleep( REQ_OP_STOP_DELAY );
-        WhereIs;
-    }
-
-    while( g_pTheEmitterMerge->QMsgRcvSize() != 0 ) {
-        Sleep( REQ_OP_STOP_DELAY );
-        WhereIs;
-    }
-
-    while( g_pTheLog->QMsgRcvSize() != 0 ) {
-        Sleep( REQ_OP_STOP_DELAY );
-        WhereIs;
-    }
+    WaitThread( g_pTheSignalCollect );
+    WaitThread( g_pTheDetectAnalysis );
+    WaitThread( g_pTheTrackAnalysis );
+    WaitThread( g_pTheScanAnalysis );
+    WaitThread( g_pTheEmitterMerge );
+    WaitThread( g_pTheLog );
 
     TRACE( "\n\n" );
 
@@ -643,7 +584,8 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
 
     if( bAbnormalEvent == false && bOut == true ) {
         unsigned int uiResult = TRUE;
-        g_pTheCCUSocket->SendLan( enRES_OP_SHUTDOWN, &uiResult, sizeof( uiResult ) );
+        //g_pTheCCUSocket->SendLan( enRES_OP_SHUTDOWN, &uiResult, sizeof( uiResult ) );
+        SendLan( enRES_OP_SHUTDOWN, &uiResult, sizeof( uiResult ) );
     }
 
     if( bAbnormalEvent ) {
@@ -654,6 +596,45 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
     }
     CCommonUtils::WallMakePrint( buffer, '#', MAX_SCREEN_COLUMNS );
     Log( enNormal, "%s", buffer );
+
+}
+
+/**
+ * @brief     WaitThread
+ * @param     CThread * pThread
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-21 17:13:17
+ * @warning
+ */
+bool CTaskMngr::WaitThread( CThread *pThread )
+{
+    int iTry = 0;
+    bool bRet=true;
+
+    while( pThread->QMsgRcvSize() != 0 && iTry++ < WAIT_THREAD_MAX_RESPOND ) {
+        Sleep( REQ_OP_STOP_DELAY );
+#ifdef _MSC_VER
+        pThread->FlushEvent();
+
+#endif
+        Log( enNormal, "g_pTheSignalCollect->QMsgRcvSize() = %d", pThread->QMsgRcvSize() );
+    }
+
+    if( iTry >= WAIT_THREAD_MAX_RESPOND ) {
+        Log( enNormal, "[%s] 쓰레드가 죽었습니다 !", pThread->GetThreadName() );
+
+#ifdef __VXWORKS__
+        pThread->StopThread();
+        pThread->Run();
+
+#endif
+        bRet = false;
+    }
+
+    return bRet;
 
 }
 
@@ -674,15 +655,15 @@ void CTaskMngr::TaskSummary()
     Log( enNormal, "%s", buffer );
 
     Log( enNormal, "타스크(쓰레드) 총 개수\t\t: %d [개]" , GetCoThread() );
-    for( const auto &cThread : g_vecThread ) {
-        //cThread->ShowTaskMessae();
-    }
+//     for( const auto &cThread : g_vecThread ) {
+//         //cThread->ShowTaskMessae();
+//     }
 
-    Log( enNormal, "메시지 큐 총 개수\t\t\t: %d [개]", GetCoMsgQueue() );
+    Log( enNormal, "메시지 큐 총 개수\t\t: %d [개]", GetCoMsgQueue() );
 
-    for( const auto &cThread : g_vecThread ) {
-        //cThread->ShowQueueMessae();
-    }
+//     for( const auto &cThread : g_vecThread ) {
+//         //cThread->ShowQueueMessae();
+//     }
 
     //CCommonUtils::WallMakePrint( buffer, '*', MAX_MESSAGE_COLUMNS );
     Log( enNormal, "%s", buffer );
@@ -792,7 +773,8 @@ void CTaskMngr::ReqSetSystemVar()
     g_pTheSysConfig->LoadINI();
     g_pTheSysConfig->DisplaySystemVar();
 
-    g_pTheCCUSocket->SendLan( enRES_SETSYS, & iRet, sizeof( int ) );
+    //g_pTheCCUSocket->SendLan( enRES_SETSYS, & iRet, sizeof( int ) );
+    SendLan( enRES_SETSYS, & iRet, sizeof( int ) );
 
 }
 
@@ -806,11 +788,11 @@ void CTaskMngr::ReqSetSystemVar()
  */
 void CTaskMngr::ReqSystemVar()
 {
-    //STR_SYSCONFIG *pstrSysConfig;
-
     Log( enNormal, "신호분석 운용 변수 요청했습니다." );
 
-    unsigned int uiLength = 0;
+    unsigned int uiRead = 0;
+
+    size_t szLength = 0;
 
     char szSrcFilename[100];
     char *pszData= NULL;
@@ -831,15 +813,23 @@ void CTaskMngr::ReqSystemVar()
 
         ullFileSize = m_theRawFile.GetRawFileSize();
 
-        uiLength = ( unsigned int ) min( ullFileSize, _MAX_LANDATA );
+#if 0
+        szLength = ( size_t ) min( ullFileSize & ( unsigned long long int ) 0x00FFFFFF, (size_t) _MAX_LANDATA );
+#else
+        if( ullFileSize >= 0x10000 ) {
+            szLength = 0x10000;
+        }
+        else {
+            szLength = (size_t) ullFileSize;
+        }
+#endif
 
-        if( uiLength != 0 ) {
-            pszData = ( char * ) malloc( uiLength * sizeof( char ) );
+        if( szLength != 0 ) {
+            pszData = ( char * ) malloc( szLength );
             if( pszData != NULL ) {
-                m_theRawFile.Read( pszData, uiLength );
+                uiRead = m_theRawFile.Read( pszData, szLength );
             }
             else {
-
             }
         }
         else {
@@ -849,17 +839,19 @@ void CTaskMngr::ReqSystemVar()
         m_theRawFile.CloseFile();
     }
 
-    if( pszData != NULL ) {
-        g_pTheCCUSocket->SendLan( enRES_SYS, pszData, uiLength, false );
-        Log( enNormal, "신호분석 운용 변수 내용을 [%d]바이트 전송합니다.", uiLength );
-        free( pszData );
+    if( pszData != NULL && uiRead != 0 ) {
+        //g_pTheCCUSocket->SendLan( enRES_SYS, pszData, (unsigned int) szLength, false );
+        SendLan( enRES_SYS, pszData, ( unsigned int ) szLength, false );
+        Log( enNormal, "신호분석 운용 변수 내용을 [%d]바이트 전송합니다.", szLength );
     }
     else {
-        g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, (const char *) "INI 파일을 읽지 못했거나 드라이브가 잘못 됐습니다." );
+        //g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, (const char *) "INI 파일을 읽지 못했거나 드라이브가 잘못 됐습니다." );
+        SendStringLan( enREQ_SYSERROR, ( const char * ) "INI 파일을 읽지 못했거나 드라이브가 잘못 됐습니다." );
 
         Log( enError, "INI 파일[%s]이 손상됐거나 존재하지 않습니다. 담당자에게 문의하세요 !" , szSrcFilename );
-
     }
+
+    free( pszData );
 
 }
 

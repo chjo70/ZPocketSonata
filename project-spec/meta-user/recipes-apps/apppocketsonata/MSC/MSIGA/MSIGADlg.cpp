@@ -90,6 +90,7 @@ void CMSIGADlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control( pDX, IDC_EDIT_FREQ_PULSEPERLOBE, m_CEditFreqPulsePerLobe );
     DDX_Control( pDX, IDC_EDIT_FREQ_PULSEPERLOBE2, m_CEditPRIPulsePerLobe );
     DDX_Control( pDX, IDC_COMBO_RADAR_TEST, m_ComboRadarTest );
+    DDX_Control( pDX, IDC_COMBO_SIGTYPE, m_ComboSignalType );
 }
 
 BEGIN_MESSAGE_MAP(CMSIGADlg, CDialogEx)
@@ -106,15 +107,24 @@ BEGIN_MESSAGE_MAP(CMSIGADlg, CDialogEx)
     ON_CBN_SELCHANGE( IDC_COMBO_PRIPATTERNTYPE, &CMSIGADlg::OnSelchangeComboPRIPatternType )
     ON_CBN_SELCHANGE( IDC_COMBO_RADAR_TEST, &CMSIGADlg::OnSelchangeComboRadarTest )
     ON_BN_CLICKED( IDOK_SAVE, &CMSIGADlg::OnBnClickedSave )
+    //ON_BN_CLICKED( IDOK, &CMSIGADlg::OnBnClickedOk )
+    ON_BN_CLICKED( ID_STOPSIGGEN, &CMSIGADlg::OnBnClickedStopSigGen )
 END_MESSAGE_MAP()
 
 
+// 외부 함수 정의
 extern void Start( int iArgc, char *iArgv[], void *pParent );
+extern void StopSigGen( bool bEnable );
 extern void End();
 extern void ss();
 
 extern void SIM_Start( bool bReqStart );
 extern void SIM_Library();
+
+#ifdef _LOG_ANALTYPE_
+extern CRITICAL_SECTION g_CSTrace;
+
+#endif
 
 
 // CMSIGADlg 메시지 처리기
@@ -150,10 +160,11 @@ BOOL CMSIGADlg::OnInitDialog()
 
 	//ShowWindow(SW_MINIMIZE);
 
-
-
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+
+    m_bStopSigGen = true;
+    OnBnClickedStopSigGen();
 
     unsigned int i;
     char buffer[100];
@@ -172,6 +183,22 @@ BOOL CMSIGADlg::OnInitDialog()
     m_ComboFreqPatternType.AddString( "슬라이드(-)" );
     m_ComboFreqPatternType.AddString( "톱니파" );
 
+    m_ComboSignalType.AddString( "NORMAL" );
+    m_ComboSignalType.AddString( "CW" );
+    m_ComboSignalType.AddString( "FMOP(TRI)" );
+    m_ComboSignalType.AddString( "FMOP(증가)" );
+    m_ComboSignalType.AddString( "FMOP(감소)" );
+    m_ComboSignalType.AddString( "FMOP(모름)" );
+    m_ComboSignalType.AddString( "CW FMOP(TRI)" );
+    m_ComboSignalType.AddString( "CW FMOP(증가)" );
+    m_ComboSignalType.AddString( "CW FMOP(감소)" );
+    m_ComboSignalType.AddString( "CW FMOP(모름)" );
+    m_ComboSignalType.AddString( "PMOP" );
+    m_ComboSignalType.AddString( "CW PMOP" );
+    m_ComboSignalType.AddString( "SHORT" );
+    m_ComboSignalType.AddString( "DOPPLER" );
+    m_ComboSignalType.AddString( "HIGHPRF" );
+
     for( i = 2; i <= MAX_STAGGER_LEVEL_POSITION; ++i ) {
         sprintf( buffer, "%d", i );
         m_ComboFreqLevel.AddString( buffer );
@@ -183,7 +210,8 @@ BOOL CMSIGADlg::OnInitDialog()
         m_ComboPRIJitter.AddString( buffer );
     }
 
-    for( i = 1; i <= 40; ++i ) {
+    m_ComboRadarTest.AddString( "#--" );
+    for( i = 1; i <= 50 ; ++i ) {
         sprintf( buffer, "#%02d", i );
         m_ComboRadarTest.AddString( buffer );
     }
@@ -212,6 +240,8 @@ BOOL CMSIGADlg::OnInitDialog()
 
     UpdateRadarPDW();
 
+    LoadRadarPDW();
+
     OnSelchangeComboFreqType();
     OnSelchangeComboPRIType();
     OnSelchangeComboScanType();
@@ -219,6 +249,11 @@ BOOL CMSIGADlg::OnInitDialog()
 	m_bReqStart = true;
 
     srand( 0 );
+
+#ifdef _LOG_ANALTYPE_
+    InitializeCriticalSection( & g_CSTrace );
+
+#endif
 
     Start( __argc, __argv, this );
 
@@ -237,6 +272,9 @@ void CMSIGADlg::OnSysCommand(UINT nID, LPARAM lParam)
 		CAboutDlg dlgAbout;
 		dlgAbout.DoModal();
 	}
+    else if( nID == SC_CLOSE ) {
+        AfxGetMainWnd()->PostMessageA( WM_CLOSE );
+    }
 	else
 	{
 		CDialogEx::OnSysCommand(nID, lParam);
@@ -304,12 +342,15 @@ void CMSIGADlg::OnBnClickedSimStart()
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	GetDlgItem( ID_SIM_START )->EnableWindow( FALSE );
 
+    m_bStopSigGen = false;
+    OnBnClickedStopSigGen();
+
     if( m_bReqStart ) {
         ++ m_uiCoStart;
 
         LoadRadarPDW();
 
-        SaveINI( m_szIniFileName );
+        SaveINI( m_szIniFileName, 1 );
 
         GetDlgItem( ID_SIM_START )->SetWindowTextA( "운용제어/종료요청" );
     }
@@ -361,7 +402,7 @@ void CMSIGADlg::UpdateRadarPDW( int iRadarTest )
     sprintf( buffer, "%d", g_stRadarPDW.iAmplitude );
     m_CEditAmplitude.SetWindowTextA( buffer );
 
-    sprintf( buffer, "%d", g_stRadarPDW.uiCoPulsePerLobe );
+    sprintf( buffer, "%d", g_stRadarPDW.iCoPulsePerLobe );
     m_CEditPulsePerLobe.SetWindowTextA( buffer );
 
     sprintf( buffer, "%d", g_stRadarPDW.iDDROffset );
@@ -401,6 +442,8 @@ void CMSIGADlg::UpdateRadarPDW( int iRadarTest )
 
     m_ComboRadarTest.SetCurSel( iRadarTest );
 
+    m_ComboSignalType.SetCurSel( g_stRadarPDW.iSignalType );
+
 }
 
 /**
@@ -415,6 +458,11 @@ void CMSIGADlg::UpdateRadarPDW( int iRadarTest )
 void CMSIGADlg::LoadRadarPDW()
 {
     CString strData;
+
+    g_stRadarPDW.iNoRadar = m_ComboRadarTest.GetCurSel();
+
+    g_stRadarPDW.iSignalType = m_ComboSignalType.GetCurSel();
+    g_stRadarPDW.fFMOPBW = 40.0;
 
     g_stRadarPDW.enDOA = ( ENUM_AET_AOA ) m_ComboDOAType.GetCurSel();
     m_CEditDOA.GetWindowText( strData );
@@ -454,16 +502,16 @@ void CMSIGADlg::LoadRadarPDW()
                 {
                     float fStaggerPositions[2] = { 770, 777 };
 
-                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * 2 );
+                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * (size_t) g_stRadarPDW.iCoPRIDwellStaggerPositions );
                 }
                 break;
 
             case 3:
                 {
-                    // 스태거 32단 엘리먼트 값 정의
+                    // 스태거 3단 엘리먼트 값 정의
                     float fStaggerPositions[3] = { 100, 125, 100 };
 
-                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * 3 );
+                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * ( size_t ) g_stRadarPDW.iCoPRIDwellStaggerPositions );
                 }
                 break;
 
@@ -471,13 +519,13 @@ void CMSIGADlg::LoadRadarPDW()
                 {
                     if( g_stRadarPDW.enFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_PATTERN ) {
                         if( m_uiCoStart % 2 == 0 ) {
-                            // 스태거 32단 엘리먼트 값 정의
+                            // 스태거 4단 엘리먼트 값 정의
                             float fStaggerPositions[4] = { 356, 364, 349, 365 };
 
                             memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * 4 );
                         }
                         else {
-                            // 스태거 32단 엘리먼트 값 정의
+                            // 스태거 4단 엘리먼트 값 정의
                             float fStaggerPositions[4] = { 556, 564, 549, 565 };
 
                             memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * 4 );
@@ -485,7 +533,7 @@ void CMSIGADlg::LoadRadarPDW()
                         }
                     }
                     else {
-                        // 스태거 32단 엘리먼트 값 정의
+                        // 스태거 4단 엘리먼트 값 정의
                         float fStaggerPositions[4] = { 650, 657, 680, 672 };
 
                         memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * 4 );
@@ -493,12 +541,40 @@ void CMSIGADlg::LoadRadarPDW()
                 }
                 break;
 
+            case 6:
+                {
+                    // 스태거 6단 엘리먼트 값 정의
+                    float fStaggerPositions[6] = { 1899, 1899, 2099, 2099, 1999, 1999 };
+
+                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * ( size_t ) g_stRadarPDW.iCoPRIDwellStaggerPositions );
+                }
+                break;
+
             case 8:
                 {
-                    // 스태거 32단 엘리먼트 값 정의
+                    // 스태거 8단 엘리먼트 값 정의
                     float fStaggerPositions[8] = { 527, 516, 538, 504, 522, 511, 532, 507 };
 
-                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * 8 );
+                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * ( size_t ) g_stRadarPDW.iCoPRIDwellStaggerPositions );
+                }
+                break;
+
+            case 12:
+                {
+                    // 스태거 12단 엘리먼트 값 정의
+                    float fStaggerPositions[12] = { 3484, 3502, 3489, 3502, 3489, 3502, 3489, 3497, 3489, 3502, 3489, 3502 };
+
+                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * ( size_t ) g_stRadarPDW.iCoPRIDwellStaggerPositions );
+                }
+                break;
+
+            case 26:
+                {
+                    // 스태거 26단 엘리먼트 값 정의
+                    float fStaggerPositions[26] = { 3484, 3502, 3489, 3502, 3489, 3502, 3489, 3497, 3489, 3502, 3489, 3502, 3498, \
+                                                    3484, 3502, 3489, 3502, 3489, 3502, 3489, 3497, 3489, 3502, 3489, 3502, 3494 };
+
+                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * ( size_t ) g_stRadarPDW.iCoPRIDwellStaggerPositions );
                 }
                 break;
 
@@ -510,7 +586,8 @@ void CMSIGADlg::LoadRadarPDW()
                                                     215, 210, 190, 180, 200, 210, 180, 170, \
                                                     185, 210, 180, 210, 180, 210, 190, 210 };
 
-                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * 32 );
+                    g_stRadarPDW.iCoPRIDwellStaggerPositions = 32;
+                    memcpy( g_stRadarPDW.fStaggerPositions, fStaggerPositions, sizeof( float ) * ( size_t ) g_stRadarPDW.iCoPRIDwellStaggerPositions );
 
                 }
                 break;
@@ -590,9 +667,9 @@ void CMSIGADlg::OnSelchangeComboFreqType()
             m_ComboFreqLevel.EnableWindow( TRUE );
             m_CEditFreqBW.EnableWindow( FALSE );
             m_CEditFreqPeriod.EnableWindow( FALSE );
-            m_CEditFreqPulsePerLobe.EnableWindow( FALSE );
+            m_CEditFreqPulsePerLobe.EnableWindow( TRUE );
 
-            GetDlgItem( ID_SIM_START )->EnableWindow( FALSE );
+            GetDlgItem( ID_SIM_START )->EnableWindow( TRUE );
             break;
 
         case ENUM_AET_FRQ_TYPE::E_AET_FRQ_AGILE:
@@ -682,9 +759,9 @@ void CMSIGADlg::OnSelchangeComboPRIType()
             m_ComboPRIJitter.EnableWindow( FALSE );
             m_CEditPRI.EnableWindow( FALSE );
             m_CEditPRIPeriod.EnableWindow( FALSE );
-            m_CEditPRIPulsePerLobe.EnableWindow( FALSE );
+            m_CEditPRIPulsePerLobe.EnableWindow( TRUE );
 
-            GetDlgItem( ID_SIM_START )->EnableWindow( FALSE );
+            GetDlgItem( ID_SIM_START )->EnableWindow( TRUE );
             break;
 
         case ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER:
@@ -827,6 +904,12 @@ void CMSIGADlg::LoadINI( char *pszIniFileName )
 {
     char szBuffer[100];
 
+    g_stRadarPDW.iNoRadar = ( int ) GetPrivateProfileInt( "TEST", "NO", ( int ) -1, pszIniFileName );
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 신호 형태
+    g_stRadarPDW.iSignalType = (int) GetPrivateProfileInt( "SIGNAL", "TYPE", ( int ) ENUM_SIGNAL_TYPE::ST_NORMAL_PULSE, pszIniFileName );
+
     ///////////////////////////////////////////////////////////////////////////////////
     // 방위
     g_stRadarPDW.enDOA = ( ENUM_AET_AOA ) GetPrivateProfileInt( "DOA", "TYPE", ( int ) ENUM_AET_AOA::E_AET_DOA_FIXED, pszIniFileName );
@@ -874,7 +957,7 @@ void CMSIGADlg::LoadINI( char *pszIniFileName )
     GetPrivateProfileString( "SCAN", "AMPLITUDE", "10", szBuffer, 100, pszIniFileName );
     g_stRadarPDW.iAmplitude = atoi( szBuffer );
     GetPrivateProfileString( "SCAN", "PULSEPERLOBE", "30", szBuffer, 100, m_szIniFileName );
-    g_stRadarPDW.uiCoPulsePerLobe = (unsigned int) atoi( szBuffer );
+    g_stRadarPDW.iCoPulsePerLobe = atoi( szBuffer );
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -895,9 +978,22 @@ void CMSIGADlg::LoadINI( char *pszIniFileName )
  * @date      2023-09-08 11:56:05
  * @warning
  */
-void CMSIGADlg::SaveINI( char *pszIniFileName )
+void CMSIGADlg::SaveINI( char *pszIniFileName, int iComboRadarTest )
 {
     CString strData;
+
+    strData.Format( "%d", g_stRadarPDW.iNoRadar );
+    WritePrivateProfileString( "TEST", "NO", strData, "RadarNo.ini" );
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 시험 신호 #
+    strData.Format( "%d", g_stRadarPDW.iNoRadar );
+    WritePrivateProfileString( "TEST", "NO", strData, pszIniFileName );
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 신호 형태
+    strData.Format( "%d", g_stRadarPDW.iSignalType );
+    WritePrivateProfileString( "SIGNAL", "TYPE", strData, pszIniFileName );
 
     ///////////////////////////////////////////////////////////////////////////////////
     // 방위
@@ -971,7 +1067,7 @@ void CMSIGADlg::SaveINI( char *pszIniFileName )
     WritePrivateProfileString( "SCAN", "SIGNAL_INTENSITY", strData, pszIniFileName );
     strData.Format( "%d", g_stRadarPDW.iAmplitude );
     WritePrivateProfileString( "SCAN", "AMPLITUDE", strData, pszIniFileName );
-    strData.Format( "%d", g_stRadarPDW.uiCoPulsePerLobe );
+    strData.Format( "%d", g_stRadarPDW.iCoPulsePerLobe );
     WritePrivateProfileString( "SCAN", "PULSEPERLOBE", strData, pszIniFileName );
 
 
@@ -998,7 +1094,6 @@ void CMSIGADlg::OnConnect( struct sockaddr_in *pAddr )
 
 
 }
-
 
 /**
  * @brief     OnDisConnect
@@ -1030,12 +1125,12 @@ void CMSIGADlg::OnSelchangeComboRadarTest()
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
     char szIniFileName[100];
 
-    int iComboRadarTest = m_ComboRadarTest.GetCurSel() + 1;
+    int iComboRadarTest = m_ComboRadarTest.GetCurSel();
 
     sprintf( szIniFileName, "./RadarPDW_%02d.ini", iComboRadarTest );
     LoadINI( szIniFileName );
 
-    UpdateRadarPDW( iComboRadarTest-1 );
+    UpdateRadarPDW( iComboRadarTest );
 
     OnSelchangeComboFreqType();
     OnSelchangeComboPRIType();
@@ -1057,7 +1152,7 @@ void CMSIGADlg::OnBnClickedSave()
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
     char szIniFileName[100];
     char buffer[100];
-    int iComboRadarTest = m_ComboRadarTest.GetCurSel() + 1;
+    int iComboRadarTest = m_ComboRadarTest.GetCurSel();
 
     sprintf( buffer, "레이더 시험 신호[#%02d] 발생 파일에 저장하시겠습니까 ? ", iComboRadarTest );
 
@@ -1065,6 +1160,77 @@ void CMSIGADlg::OnBnClickedSave()
         LoadRadarPDW();
 
         sprintf( szIniFileName, "./RadarPDW_%02d.ini", iComboRadarTest );
-        SaveINI( szIniFileName );
+        SaveINI( szIniFileName, iComboRadarTest );
     }
+}
+
+
+/**
+ * @brief     OnBnClickedOk
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-16 13:58:19
+ * @warning
+ */
+void CMSIGADlg::OnBnClickedOk()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    //CDialogEx::OnOK();
+}
+
+
+/**
+ * @brief     OnBnClickedStopSigGen
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-16 11:52:58
+ * @warning
+ */
+void CMSIGADlg::OnBnClickedStopSigGen()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    if( m_bStopSigGen == false ) {
+        GetDlgItem( ID_STOPSIGGEN )->SetWindowTextA( "신호 발생 정지" );
+        StopSigGen( m_bStopSigGen );
+    }
+    else {
+        GetDlgItem( ID_STOPSIGGEN )->SetWindowTextA( "신호 발생 시작" );
+        StopSigGen( m_bStopSigGen );
+    }
+
+    m_bStopSigGen = ! m_bStopSigGen;
+
+}
+
+/**
+ * @brief     PreTranslateMessage
+ * @param     MSG * pMsg
+ * @return    BOOL
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-16 16:10:08
+ * @warning
+ */
+BOOL CMSIGADlg::PreTranslateMessage( MSG *pMsg )
+{
+    // TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+    BOOL bRet=FALSE;
+
+    if( pMsg->message == WM_KEYDOWN ) {
+        if( pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE ) {
+            bRet = TRUE;
+        }
+
+    }
+
+    if( bRet == FALSE ) {
+        bRet = CDialogEx::PreTranslateMessage( pMsg );
+    }
+
+    return bRet;
 }

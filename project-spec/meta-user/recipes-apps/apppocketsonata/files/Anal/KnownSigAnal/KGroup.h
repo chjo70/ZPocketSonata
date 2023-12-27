@@ -23,20 +23,17 @@ protected:
 	CKnownSigAnal *m_pKnownSigAnal;
 
 public:
-    CKGroup( void *pParent, unsigned int uiCoMaxPdw );
+    CKGroup( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
     virtual ~CKGroup();
 
     void Init();
 
-	unsigned int GetColPdw();
+	unsigned int GetColPDW();
+    unsigned int GetCoPDW();
 	void MakeFreqAoaPwGroup() { CGroup::MakeFreqAoaPwGroup( & m_GrStat[m_nStat] ); }
 	bool MakeKnownGroup();
 
     //inline unsigned int GetFrqAoaGroupedPdwIndex() { return CGroup::m_uiCoFrqAoaPwIdx; }
-
-#ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
-#endif
 
 };
 

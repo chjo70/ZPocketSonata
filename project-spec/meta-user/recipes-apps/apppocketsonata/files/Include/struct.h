@@ -15,7 +15,9 @@
 
 #endif
 
+#include "system.h"
 #include "../Anal/SigAnal/_Macro.h"
+
 
 #include "../Anal/EmitterMerge/ELMSGDefn.h"
 
@@ -26,8 +28,11 @@
 enum ENUM_COLLECT_MODE {
     enUnused=0,
 
-    enCollecting,
+    enCollecting,               // 채널의 기능은 체크하여 해당 펄스를 수집합니다.
     enCompleteCollection,
+
+    enUpdateCollecting,         // 채널의 기능은 유효하지만 펄스는 수집하지 않는다.
+
     enCloseCollection,
     enAnalysing,
 };
@@ -72,20 +77,32 @@ struct STR_LOWHIGH {
 #endif
 
 
+#ifndef _STR_LOWHIGH_FLOAT
+#define _STR_LOWHIGH_FLOAT
+struct STR_LOWHIGH_FLOAT {
+    float fLow;
+    float fHigh;
+};
+#endif
+
 /**
     @struct STR_COLLECT_PCIADDRESS
     @brief  PCI 수집 버퍼 정보
 **/
 struct STR_COLLECT_PCIADDRESS {
-    unsigned int uiPCIAddressOffset;
-    unsigned int uiPCIAddressSize;
+    unsigned int uiPCI_ANZ_M_OFFSET;
+    unsigned int uiPCI_ANZ_M_SIZE;
+
+    ENUM_COLLECTBANK enCollectBank;
+
+    unsigned int uiPARAM_BRAM_WADDR;
 
 };
 
 /**
  * @brief 윈도우 셀 구조체 정의
  */
-struct STR_WINDOWCELL {
+typedef struct stSTR_WINDOWCELL {
     /**
      * @brief 사용 여부 플레그 를 의미한다.
      */
@@ -105,7 +122,7 @@ struct STR_WINDOWCELL {
     /**
      * @brief 저장된 PDW 개수
      */
-    unsigned int uiTotalPDW;
+    unsigned int uiColPDW;
 
     /**
     * @brief 최대 수집 개수 및 수집 시간
@@ -113,8 +130,17 @@ struct STR_WINDOWCELL {
     unsigned int uiCoCollectingPDW;
     unsigned int uiMaxCollectTimeMssec;             // 최대 수집 시간 [ms]
 
-    //!<     펄스 상태
-    unsigned int uiStat;
+    //!<     펄스 정보
+    unsigned int uiSignalType;
+
+    //!<     펄스 MOP 정보
+    unsigned int uiMOPType;
+    unsigned int uiMOPDir;
+
+    //!<     ADAPT 정보
+    unsigned int uiAdapt;
+
+    unsigned int uiByPass;
 
     /**
     * @brief 주파수 범위
@@ -162,15 +188,19 @@ struct STR_WINDOWCELL {
 
     STR_UZPOCKETPDW strPDW;
 
+    ENUM_ROBUST_ANAL enRobustAnal;          ///< 주파수 및 PRI 정밀 분석 플레그
+
     void Init( unsigned int uiValueCh ) {
         uiCh = uiValueCh;
 
         bUse = false;
         enCollectMode = enUnused;
 
+        enRobustAnal = enNO_ROBUST_ANALYSIS;
+
         uiABTID = 0;
 
-        uiTotalPDW = 0;
+        uiColPDW = 0;
         uiAccumulatedCoPDW = 0;
 
         uiAccumulatedTime = 0;
@@ -191,34 +221,60 @@ struct STR_WINDOWCELL {
         enCollectMode = enSetCollectMode;
     }
 
-};
-
-// 수집 뱅크 종류 정의
-// enum ENUM_COLLECTBANK {
-//     enDetectCollectBank=0,
-//     enTrackCollectBank,
-//     enScanCollectBank,
-//     enUserCollectBank,
-//
-//     enUnknownCollectBank
-//
-// };
+} STR_WINDOWCELL;
 
 
-// #ifndef _ENUM_DataType
-// #define _ENUM_DataType
-// typedef enum {
-//     en_UnknownData = 0,
-//
-//     en_PDW_DATA,
-// 	en_PDW_DATA_CSV,
-//     en_IQ_DATA,
-//     en_IF_DATA,
-//
-// } ENUM_DataType;
-// #endif
+typedef struct stSTR_WINDOWCELL_INFO {
+    /**
+     * @brief 사용 여부 플레그 를 의미한다.
+     */
+    bool bUse;
 
-//static char g_szCollectbank[enUnknownCollectBank][10] = { "NP", "KP", "SP", "UP" } ;
+    //unsigned int uiMode;
 
+    // 채널 번호
+    // 탐지 채널은 0번,
+    unsigned int uiCh;
 
+    /**
+     * @brief 수집 완료 상태를 나타낸다.
+     */
+    //ENUM_COLLECT_MODE enCollectMode;
 
+    //!<     펄스 상태
+    unsigned int uiSignalType;
+
+    STR_LOWHIGH_FLOAT strFreq;
+    STR_LOWHIGH_FLOAT strAOA;
+    STR_LOWHIGH_FLOAT strPA;
+    STR_LOWHIGH_FLOAT strPW;
+
+    //struct timespec tsCollectStart;
+
+    /**
+    * @brief 빔 번호
+    */
+    unsigned int uiABTID;
+
+    void Init( unsigned int uiValueCh )
+    {
+        uiCh = uiValueCh;
+
+        bUse = false;
+        //enCollectMode = enUnused;
+
+        uiABTID = 0;
+
+    }
+
+    void SetChannel( unsigned int uiValueCh )
+    {
+        uiCh = uiValueCh;
+    }
+
+//     void SetCollectMode( ENUM_COLLECT_MODE enSetCollectMode )
+//     {
+//         enCollectMode = enSetCollectMode;
+//     }
+
+} STR_WINDOWCELL_INFO ;

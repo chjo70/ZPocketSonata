@@ -109,7 +109,7 @@ BOOL CRADARDIRAPPApp::InitInstance()
 	//LoadStdProfileSettings(4);  // MRU를 포함하여 표준 INI 파일 옵션을 로드합니다.
 
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-    //_CrtSetBreakAlloc(219028);
+    //_CrtSetBreakAlloc(468);
 
 	InitContextMenuManager();
 
@@ -165,7 +165,7 @@ int CRADARDIRAPPApp::ExitInstance()
 	//TODO: 추가한 추가 리소스를 처리합니다.
 	AfxOleTerm(FALSE);
 
-	RadarDirAlgotirhm::RadarDirAlgotirhm::Close();
+	RadarDirAlgotirhm::RadarDirAlgotirhm::CloseAll();
 
 	SaveProfile();
 
@@ -245,8 +245,6 @@ void CRADARDIRAPPApp::OnFileOpen()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	CString strPathName, strFileName;
 
-	RadarDirAlgotirhm::RadarDirAlgotirhm::SetMute( false );
-
 	if( true == OpenFile( strPathName, strFileName) ) {
 		m_pDoc->OpenFile( strPathName, strFileName );
 	}
@@ -289,7 +287,7 @@ void CRADARDIRAPPApp::InitApp(void)
 {
  	CMainFrame *pMainFrame=( CMainFrame * ) AfxGetMainWnd();
 
- 	RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
+ 	RadarDirAlgotirhm::RadarDirAlgotirhm::Init( 1, pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
 
     RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
 

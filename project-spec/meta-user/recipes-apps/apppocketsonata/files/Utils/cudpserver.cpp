@@ -439,7 +439,7 @@ void CUDPServer::SendAllUDPServer()
     int iStart = g_pTheSysConfig->GetSBCFromIP();
     int iEnd = g_pTheSysConfig->GetSBCToIP();
 
-    for( i=iStart ; i < iEnd ; ++i ) {
+    for( i=iStart ; i <= iEnd ; ++i ) {
 #ifdef _MSC_VER
         sprintf( szInetAddress, "10.29.245.%d", 51 + 0 );
 #else
@@ -448,7 +448,6 @@ void CUDPServer::SendAllUDPServer()
 #endif
 
         if( strcmp( m_szIPAddress, szInetAddress ) == 0 ) {
-            WhereIs;
             continue;
         }
         else {

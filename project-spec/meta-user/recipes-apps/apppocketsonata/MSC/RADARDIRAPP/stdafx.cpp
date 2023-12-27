@@ -40,7 +40,7 @@ int Printf(char *format, ...)
 
 #if _MSC_VER > 1600
 
-bool _TRACE(char *format, ...)
+bool _TRACE( const char *format, ...)
 {
 #ifdef _DEBUG
     char buffer[1000];
@@ -58,22 +58,22 @@ bool _TRACE(char *format, ...)
 
 }
 
-bool _TRACE(CString strFormat, ...)
-{
-#ifdef _DEBUG
-    char *format = (char*)(LPCTSTR)strFormat;
-    char buffer[1000];
-
-    va_list argptr;
-    va_start(argptr, format);
-    wvsprintf(buffer, format, argptr);
-    va_end(argptr);
-
-    OutputDebugString(buffer);
-#endif
-
-    return true;
-
-}
+// bool _TRACE(CString strFormat, ...)
+// {
+// #ifdef _DEBUG
+//     char *format = (char*)(LPCTSTR)strFormat;
+//     char buffer[1000];
+// 
+//     va_list argptr;
+//     va_start(argptr, format);
+//     wvsprintf(buffer, format, argptr);
+//     va_end(argptr);
+// 
+//     OutputDebugString(buffer);
+// #endif
+// 
+//     return true;
+// 
+// }
 
 #endif

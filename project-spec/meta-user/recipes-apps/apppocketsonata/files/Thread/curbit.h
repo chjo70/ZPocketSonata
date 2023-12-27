@@ -11,9 +11,9 @@
 
 #define _AXI_DATATEST_          (0xAABBEEF0)
 
-#define URBIT_TIMER             (2*60)
+#define URBIT_TIMER             (2*60)                  // 2분 마다 자체점검 수행
 
-#define SNTP_TIMER              (60*60*4)
+#define SNTP_TIMER              (60*60*4)               // 4시간 마다 시간 동기화
 
 /**
  *
@@ -73,7 +73,7 @@ public:
     void Run( key_t key=IPC_PRIVATE );												///< CThread 클래스의 Run() 함수를 호출하여 쓰레드를 생성하게 합니다.
 
     void _routine();														///< 쓰레드에서 서버 또는 클라이언트를 실행하게 한다.
-    char *GetThreadName() { return m_szThreadName; }						///< 쓰레드명을 리턴합니다.
+    const char *GetThreadName() { return m_szThreadName; }						///< 쓰레드명을 리턴합니다.
     STR_MessageData *GetParentMessage() { return m_pMsg; }                  ///< 메시지 데이터를 리턴 합니다.
 
 };

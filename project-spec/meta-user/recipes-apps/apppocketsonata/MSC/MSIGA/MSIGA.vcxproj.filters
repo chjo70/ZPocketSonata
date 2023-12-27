@@ -94,9 +94,6 @@
     <Filter Include="소스 파일\ODBC">
       <UniqueIdentifier>{38258f16-e649-4993-8b02-351dc43ab872}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Anal\IntraSigAnal">
-      <UniqueIdentifier>{541e0db4-52a1-49c6-a294-59d8f9607cf7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="설정 파일">
       <UniqueIdentifier>{64458260-29c8-48b4-bdda-6d7567d9647b}</UniqueIdentifier>
     </Filter>
@@ -304,9 +301,6 @@
     <ClInclude Include="..\..\files\Anal\EmitterMerge\constants.h">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\EmitterMerge\ELDecoder.h">
-      <Filter>소스 파일\Anal\EmitterMerge</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Anal\EmitterMerge\ELEmitterDataType.h">
       <Filter>소스 파일\Anal\EmitterMerge</Filter>
     </ClInclude>
@@ -481,9 +475,6 @@
     <ClInclude Include="..\..\files\Thread\coperationconsole.h">
       <Filter>소스 파일\Thread</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.h">
-      <Filter>소스 파일\Anal\IntraSigAnal</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\files\Anal\Collect\DataFile\DataFile.h">
       <Filter>소스 파일\Anal\Collect\DataFile</Filter>
     </ClInclude>
@@ -510,6 +501,15 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\SigAnal\RadarSimilarity.h">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clogname.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clock.h">
+      <Filter>소스 파일\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -705,9 +705,6 @@
     <ClCompile Include="..\..\files\Thread\coperationconsole.cpp">
       <Filter>소스 파일\Thread</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\files\Anal\IntraSigAnal\IntraSigAnal.cpp">
-      <Filter>소스 파일\Anal\IntraSigAnal</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\files\Anal\Collect\DataFile\DataFile.cpp">
       <Filter>소스 파일\Anal\Collect\DataFile</Filter>
     </ClCompile>
@@ -730,6 +727,12 @@
       <Filter>소스 파일\Thread</Filter>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\carraymsgdata.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\SigAnal\RadarSimilarity.cpp">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clogname.cpp">
       <Filter>소스 파일\Utils</Filter>
     </ClCompile>
   </ItemGroup>

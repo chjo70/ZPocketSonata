@@ -59,7 +59,7 @@ public:
 
 
     void _routine();
-    char *GetThreadName() { return m_szThreadName; }
+    const char *GetThreadName() { return m_szThreadName; }
     STR_MessageData *GetParentMessage() { return m_pMsg; }              ///< 메시지 데이터를 리턴 합니다.
 };
 

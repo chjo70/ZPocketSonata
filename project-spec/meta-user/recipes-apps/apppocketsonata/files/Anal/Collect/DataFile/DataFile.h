@@ -649,7 +649,7 @@ public:
     int GetHeaderSize();
 
 	inline unsigned int GetOffsetSize() { return sizeof(int)*4; }
-    inline unsigned int GetOneDataSize() { return sizeof( struct _PDW); }
+    inline unsigned int GetOneDataSize() { return sizeof( _PDW); }
 
     inline void SetHeaderData( void *pData );
 
@@ -1561,17 +1561,25 @@ public:
 // 함정용 전자전장비
 // CPOCKETSONATAPDW PDW
 namespace POCKETSONATA {
+    #define PDW_DOA_MAX         ( 3599 )
+
     #define PH_WIDTH_FREQ		128000
     #define L_PH_MIN_FREQ		64000
     #define H_PH_MIN_FREQ		192000  // [kHz]
 
-    #define PDW_PA_OFFSET		(0)
+    #define PDW_PA_DB_MIN		(float) (-89)
+    #define PDW_PA_DB_MAX		(float) (7.329466)          // 20 * log10(0xffff) - 89.0
+    #define PDW_PA_RANGE        (float) ( PDW_PA_DB_MAX - PDW_PA_DB_MIN )
 
-    #define PDW_PA_DB_MIN		(-90)
-    #define PDW_PA_DB_MAX		(0)
-    #define PDW_PA_RANGE        ( PDW_PA_DB_MAX - PDW_PA_DB_MIN )
+    #define PDW_PA_MAX          ( 1 << 16 )
 
-    #define PDW_DOA_MAX         ( 4096 )
+    #define PDW_PW_MAX          (0xFFFFFF)
+    #define PDW_PW_MIN          (0)
+    #define PDW_PW_NS_MIN       (float) ( 0. )
+    #define PDW_PW_NS_MAX       (float) ( 108854.6 ) // [us]
+
+
+    #define FMOP_BW             (float) (3.79)      // MHz
 
     const unsigned int uiPDW_CW=1;
     const unsigned int uiPDW_NORMAL=0;
@@ -1586,8 +1594,8 @@ namespace POCKETSONATA {
 
     const float _toaRes = (float) 6.48824007;
     const float _fFreqRes = ( float ) 1000.;
-    const float _fDOARes = (float) ( 360. / (float) ( 4 * 1024 ) );		// = 0.087890625
-    const float _fPARes = (float) ( ( float ) PDW_PA_RANGE / (float) ( 64 * 1024 - 1 ) );		// = ?
+    const float _fDOARes = (float) ( 0.1 );		// = 0.087890625
+    //const float _fPARes = (float) ( ( float ) PDW_PA_RANGE / (float) ( 64 * 1024 - 1 ) );		// = ?
 
 }
 
@@ -1595,8 +1603,6 @@ class CPOCKETSONATAPDW : public CData
 {
 private:
 	STR_POCKETSONATA_HEADER m_stHeader;
-
-	static int m_iBoardID;
 
 public:
     CPOCKETSONATAPDW( char *pRawData, STR_FILTER_SETUP *pstFilterSetup, int iBoardID );
@@ -1666,10 +1672,48 @@ public:
     {
         unsigned int uiDOA;
 
-        fDOA = ( float ) fmod( ( double ) fDOA + ( double ) (360 * 10), (double) 360.0 );
+        fDOA = ( float ) fmod( ( double ) fDOA + ( double ) (3600.), (double) 360.0 );
         uiDOA = (unsigned int) ( ( fDOA / POCKETSONATA::_fDOARes ) + 0.5 );
         return uiDOA;
     } ;
+
+    /**
+     * @brief     EncodeDOAFloor
+     * @param     float fDOA
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-12-02 11:50:12
+     * @warning
+     */
+    static unsigned int EncodeDOAFloor( float fDOA )
+    {
+        unsigned int uiDOA;
+
+        fDOA = ( float ) fmod( ( double ) fDOA + ( double ) ( 360 * 10 ), ( double ) 360.0 );
+        uiDOA = ( unsigned int ) ( ( fDOA / POCKETSONATA::_fDOARes ) );
+        return uiDOA;
+    };
+
+    /**
+     * @brief     EncodeDOACeiling
+     * @param     float fDOA
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-12-02 14:11:48
+     * @warning
+     */
+    static unsigned int DecodeDOACeiling( float fDOA )
+    {
+        unsigned int uiDOA;
+
+        fDOA = ( float ) fmod( ( double ) fDOA + ( double ) ( 360 * 10 ), ( double ) 360.0 );
+        uiDOA = ( unsigned int ) ( ( fDOA / POCKETSONATA::_fDOARes ) + 0.5 );
+        return uiDOA;
+    };
 
     /**
      * @brief     DecodeRealFREQMHz
@@ -1865,10 +1909,17 @@ public:
      */
     static unsigned int EncodeFREQMHz( float fFreq )
     {
+        unsigned int uiRet;
         float fRetFreq;
 
-        fRetFreq = ( ( fFreq * (float) 1000000. ) / POCKETSONATA::_fFreqRes);
-        return ( unsigned int ) ( fRetFreq + 0.5 );	/* [MHz] */
+        if( fFreq > 0 && fFreq < MAX_FREQ_MHZ ) {
+            fRetFreq = ( ( fFreq * (float) 1000000. ) / POCKETSONATA::_fFreqRes);
+            uiRet = ( unsigned int ) ( fRetFreq + 0.5 );	/* [MHz] */
+        }
+        else {
+            uiRet = 0;
+        }
+        return uiRet;
     } ;
 
     /**
@@ -1883,9 +1934,11 @@ public:
      */
     static unsigned int EncodeRealFREQMHz( float fFreq )
     {
-        float fRetFreq;
+        float fRetFreq= ( float ) 0.0;
 
-        fRetFreq = ((fFreq * (float) 1000000.) / POCKETSONATA::_fFreqRes);
+        if( fFreq > ( float ) 0. ) {
+            fRetFreq = ((fFreq * (float) 1000000.) / POCKETSONATA::_fFreqRes);
+        }
         return (unsigned int) ( fRetFreq + 0.5 );	/* [MHz] */
     } ;
 
@@ -1896,10 +1949,14 @@ public:
      */
     static int EncodeFREQMHzFloor( float fFreq )
     {
-        float fRetFreq;
+        float fRetFreq= ( float ) 0.0;
 
-        fRetFreq = ( ( (float) fFreq * (float) 1000000. ) / POCKETSONATA::_fFreqRes);
-        return (int) ( fRetFreq + 0.5 );	/* [MHz] */
+        if( fFreq > (float) 0. ) {
+            fRetFreq = ( ( ( (float) fFreq - ( float ) 0.001 ) * (float) 1000000. ) / POCKETSONATA::_fFreqRes );
+        }
+        else {
+        }
+        return (int) ( fRetFreq );	/* [MHz] */
     } ;
 
     /**
@@ -1913,9 +1970,13 @@ public:
      */
     static int EncodeFREQMHzCeiling( float fFreq )
     {
-        float fRetFreq;
+        float fRetFreq=(float) 0.0;
 
-        fRetFreq = ( ( (float) fFreq * (float) 1000000. ) / POCKETSONATA::_fFreqRes);
+        if( fFreq > (float) 0. ) {
+            fRetFreq = ( ( ( (float) fFreq + (float) 0.001 ) * (float) 1000000. ) / POCKETSONATA::_fFreqRes);
+        }
+        else {
+        }
         return (int) ( fRetFreq + 0.5 );	/* [MHz] */
     } ;
 
@@ -1931,9 +1992,13 @@ public:
      */
     static float DecodePW( int iPW )
     {
-        float fPW;
+        float fPW=(float) 0.0;
 
-        fPW = (float) ( (float) iPW * POCKETSONATA::_toaRes / (float) 1000000000.);
+        if( iPW >= 0 ) {
+            fPW = (float) ( (float) iPW * POCKETSONATA::_toaRes / (float) 1000000000.);
+        }
+        else {
+        }
         return fPW;		/* [ns] */
     } ;
 
@@ -1949,10 +2014,14 @@ public:
      */
     static float DecodePWus( int iPW )
     {
-        float fretPW;
+        float fretPW=(float) 0.0;
 
-        fretPW = (float) iPW * POCKETSONATA::_toaRes;
-        fretPW = ( fretPW / (float) 1000. );
+        if( iPW >= 0 ) {
+            fretPW = (float) iPW * POCKETSONATA::_toaRes;
+            fretPW = ( fretPW / (float) 1000. );
+        }
+        else {
+        }
         return fretPW;
     } ;
 
@@ -1967,10 +2036,14 @@ public:
      */
     static float DecodePWns( int iPW )
     {
-        float fretPW;
+        float fretPW=(float) 0.0;
 
-        fretPW = (float) iPW * POCKETSONATA::_toaRes;
-        fretPW = ( fretPW / (float) 1000000. );
+        if( iPW >= 0 ) {
+            fretPW = (float) iPW * POCKETSONATA::_toaRes;
+        }
+        else {
+
+        }
         return fretPW;
     } ;
 
@@ -1986,11 +2059,19 @@ public:
      */
     static unsigned int EncodePWns( float fPW )
     {
+        unsigned int uiRet = PDW_PW_MAX;
         float fretPW;
 
-        //fretPW = fPW * (float) 100.;
-        fretPW = fPW / POCKETSONATA::_toaRes;
-        return ( unsigned int ) ( fretPW + 0.5 );
+        if( fPW < 0 || fPW > PDW_PW_NS_MAX ) {
+
+        }
+        else {
+            fretPW = fPW / POCKETSONATA::_toaRes;
+
+            uiRet = ( unsigned int ) ( fretPW + 0.5 );
+        }
+
+        return uiRet;
     } ;
 
     /**
@@ -2004,16 +2085,23 @@ public:
      */
     static int EncodePWFloor( float fPW )
     {
+        int iRet = PDW_PW_MAX;
         float fretPW;
 
-        fretPW = fPW * (float) 1000.;
-        fretPW = fretPW / POCKETSONATA::_toaRes;
-        return (int) fretPW;
+        if( fPW < 0 || fPW > PDW_PW_NS_MAX ) {
+        }
+        else {
+            fretPW = fPW * ( float ) 1000.;
+            fretPW = fretPW / POCKETSONATA::_toaRes;
+
+            iRet = ( int ) ( fretPW + 0.5 );
+        }
+        return iRet;
     } ;
 
     /**
-     * @brief     EncodePWCeiling
-     * @param     float fPW
+     * @brief     펄스폭 값을 PDW 값으로 변환 합니다.
+     * @param     float fPW [ns]
      * @return    int
      * @exception
      * @author    조철희 (churlhee.jo@lignex1.com)
@@ -2021,24 +2109,26 @@ public:
      * @date      2022-05-02, 19:16
      * @warning
      */
-    static int EncodePWCeiling( float fPW )
+    static int EncodePW( float fPW )
     {
+        int iRet= PDW_PW_MAX;
         float fretPW;
 
-        fretPW = fPW * (float) 1000.;
-        fretPW = fretPW / POCKETSONATA::_toaRes;
-        return (int) ( fretPW + 0.5 );
-    } ;
+        if( fPW < 0 || fPW > PDW_PW_NS_MAX ) {
 
-//     static float DecodeTOA( _TOA iTOA  )
-//     {
-//         long double dTOA;
-//
-//         //iTOA = iTOA & 0xFFFFFFFFFFF;
-//
-//         dTOA = (long double) ( (long double) iTOA * POCKETSONATA::_toaRes / (long double) 1000000000.0 );
-//         return (float) dTOA;	/* [s] */
-//     } ;
+        }
+        else {
+            fretPW = fPW * ( float ) 1000.;
+            fretPW = fretPW / POCKETSONATA::_toaRes;
+
+            iRet = ( int ) ( fretPW + 0.5 );
+            if( iRet > PDW_PW_MAX ) {
+                iRet = PDW_PW_MAX;
+            }
+        }
+
+        return iRet;
+    } ;
 
     /**
      * @brief DecodeTOA
@@ -2174,8 +2264,57 @@ public:
      */
     static unsigned int EncodePA( float fPA )
     {
-        return ( unsigned int ) ( ( fPA + (float) PDW_PA_RANGE ) / POCKETSONATA::_fPARes + PDW_PA_OFFSET );
+        float fValue;
+        unsigned int uiRet;
+
+        if( fPA > PDW_PA_DB_MAX ) {
+            uiRet = 0xFFFF;
+        }
+        else {
+            fValue = ( fPA - PDW_PA_DB_MIN ) / ( float ) 20.;
+            if( fValue > ( float ) 0.0 ) {
+                fValue = ( float ) pow( 10., ( double ) fValue );
+            }
+            else {
+                fValue = ( float ) 0.0;
+            }
+            uiRet = ( unsigned int ) ( fValue + 0.5 );
+        }
+
+        return uiRet;
     } ;
+
+    /**
+     * @brief     EncodePAFloor
+     * @param     float fPA
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-12-02 10:53:55
+     * @warning
+     */
+    static unsigned int EncodePAFloor( float fPA )
+    {
+        float fValue;
+        unsigned int uiRet;
+
+        if( fPA > PDW_PA_DB_MAX ) {
+            uiRet = 0xFFFF;
+        }
+        else {
+            fValue = ( fPA - PDW_PA_DB_MIN ) / ( float ) 20.;
+            if( fValue > ( float ) 0.0 ) {
+                fValue = ( float ) pow( 10., ( double ) fValue );
+            }
+            else {
+                fValue = ( float ) 0.0;
+            }
+            uiRet = ( unsigned int ) ( fValue );
+        }
+
+        return uiRet;
+    };
 
     /**
 	 * @brief     신호세기인 [dBm] 단위로 변환한다.
@@ -2191,9 +2330,57 @@ public:
     {
         float fPA;
 
-        fPA = ( float ) PDW_PA_DB_MIN + POCKETSONATA::_fPARes * ( float ) iPA;
+        if( iPA == 0 ) {
+            fPA = (float) PDW_PA_DB_MIN;
+        }
+        else if( iPA >= 0x10000 ) {
+            fPA = ( float ) 7.329466;
+            TRACE( "\n PA 값이 초과 됐습니다 !!" );
+            WhereIs;
+        }
+        else {
+            fPA = ( float ) 20. * (float) log10( iPA ) + PDW_PA_DB_MIN;
+        }
         return fPA;		/* [dBm] */
     } ;
+
+    /**
+     * @brief     DecodeFMOPBW
+     * @param     int iFMOPBW
+     * @return    float
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-10-08 16:19:04
+     * @warning
+     */
+    static float DecodeFMOPBW( int iFMOPBW )
+    {
+        float fFMOPBW;
+
+        fFMOPBW = ( float ) iFMOPBW * ( float ) FMOP_BW;
+
+        return fFMOPBW;
+    };
+
+    /**
+     * @brief     EncodeFMOPBW
+     * @param     float fFMOPBW
+     * @return    int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-10-08 16:23:06
+     * @warning
+     */
+    static int EncodeFMOPBW( float fFMOPBW )
+    {
+        int iFMOPBW;
+
+        iFMOPBW = (int) ( ( ( float ) fFMOPBW / ( float ) FMOP_BW ) + (float) 0.5 );
+
+        return iFMOPBW;
+    };
 
 };
 

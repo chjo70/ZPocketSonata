@@ -21,7 +21,7 @@
 		\author 조철희
 		\date   2008-01-15 08:57:55
 */
-class CGroup
+class CGroup : public CLogName
 {
 protected:
     DEFINE_ANAL_PVAR_
@@ -73,7 +73,7 @@ protected:
 	STR_PDWINDEX *m_pGrPdwIndex;
 
 public:
-    CGroup( unsigned int uiCoMaxPdw = NEW_COLLECT_PDW );
+    CGroup( unsigned int uiCoMaxPdw = NEW_COLLECT_PDW, const char *pThreadName=NULL );
     virtual ~CGroup();
 
 
@@ -86,7 +86,8 @@ public:
     inline unsigned int GetCoFrqAoaPwIdx() { return m_uiCoFrqAoaPwIdx; }
 
 	// 가상 함수 선언
-	virtual unsigned int GetColPdw()=0;
+	virtual unsigned int GetCoPDW()=0;
+    virtual unsigned int GetColPDW() = 0;
 
 	int GetFreqShift( int band, int FREQ_NARR_SHIFT );
 	bool SetHistBinCount( UINT nShift, STR_FRQAOAPWHISTOGRAM *pHist );
@@ -132,14 +133,16 @@ public:
 	void MakeAOAGroup( STR_PDWINDEX *pGrPdwIndex, bool bForce1Group=false );
 	void MakeStatGroup( STR_PDWINDEX *pBand );
 
+
 	bool MakeGroup(void);
 	void Init();
+
+    void PrintAllBandGroup();
 	void PrintAllGroup();
 	void PrintGroup();
-
-#ifdef _LOG_ANALTYPE_
-    virtual bool GetLogAnalType() = 0;
-#endif
+    void PrintAllStatGroup();
+    void PrintAllAOAGroup();
+    void PrintAllFreqGroup();
 
 };
 

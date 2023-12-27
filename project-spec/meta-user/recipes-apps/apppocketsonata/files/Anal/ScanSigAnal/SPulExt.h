@@ -28,7 +28,7 @@ protected:
 	CScanSigAnal *m_pScanSigAnal;
 
 public:
-    CSPulExt( void *pParent, unsigned int uiCoMaxPdw );
+    CSPulExt( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
     virtual ~CSPulExt();
 
 
@@ -47,10 +47,6 @@ public:
 	void KnownPulseExtract();
 
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
-
-#ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
-#endif
 
 };
 

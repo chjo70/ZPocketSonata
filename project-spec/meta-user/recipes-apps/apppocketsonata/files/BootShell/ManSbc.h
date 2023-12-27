@@ -14,11 +14,9 @@
 
 #include "../Utils/cudpserver.h"
 
-//#include "BootShell.h"
+#include "../Anal/INC/PDW.h"
 
-//#include "../System/csysconfig.h"
 
-//#include "../OFP/COMMON/common.h"
 #define DRAM_SIZE			(0)
 
 
@@ -51,7 +49,8 @@ enum enWhatDrvAPP {
 //////////////////////////////////////////////////////////////////////
 // NFS 드라이브 정의
 // NFS 호스트 경로에 d:/rawdata 를 export 해야 합니다.
-#define NFS_DRIVE                       "/d/rawdata"
+#define NFS_DRIVE                       (char *) "/d/rawdata"
+#define NFS_DRIVE_2                     (char *) "/c/rawdata"
 
 
 
@@ -76,6 +75,8 @@ enum enWhatDrvAPP {
 class CManSbc
 {
 private :
+    bool m_bPCIeInit[2];
+
 	unsigned int m_uiBoardID;
 
 	STR_PRG_INFO m_ProgInfo;
@@ -122,7 +123,7 @@ private:
 	UCHAR Getche( int sec );
 	UCHAR Getche2( int sec );
 
-    bool DownloadfromTftp(char *tftpfilename, char *ramfilename );
+    bool DownloadfromTftp(char *tftpfilename, char *ramfilename, char *pTFTPServerIP );
     int CopyToFile( const char *src_file, const char *dest_file );
 
 public:
@@ -137,14 +138,25 @@ public:
     void InitDataBase();
     void PCIConfigSetting();
     void MountDrive();
+    bool MountDrive( char *pHostIPAddress, char *pRemoteFileSystem );
+
+    bool CheckPing( char *pIPAddress );
 
     void ShowNetMemory();
+
+    void AutoIPAddress();
+    void CreateUDPServer();
 
 	void KeyboardHooking();
 	static BOOL KeyboardHandler( int i, int ch );
 
 	CManSbc();
 	virtual ~CManSbc();
+
+    inline ENUM_BoardID GetBoardID()
+    {
+        return ( ENUM_BoardID )m_uiBoardID;
+    }
 
 };
 

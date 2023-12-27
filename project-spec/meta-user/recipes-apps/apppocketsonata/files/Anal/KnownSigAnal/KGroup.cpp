@@ -19,15 +19,17 @@
  * @brief     그룹화 객체 수행시 내부 변수, 메모리를 할당한다.
  * @param     void * pParent
  * @param     int coMaxPdw
- * @return    
+ * @return
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-08, 12:45
  * @warning
  */
-CKGroup::CKGroup( void *pParent, unsigned int uiCoMaxPdw ) : CGroup(uiCoMaxPdw)
+CKGroup::CKGroup( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CGroup(uiCoMaxPdw, pThreadName )
 {
+    SetAnalType( enTRK_ANAL );
+
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pKnownSigAnal)
@@ -35,7 +37,7 @@ CKGroup::CKGroup( void *pParent, unsigned int uiCoMaxPdw ) : CGroup(uiCoMaxPdw)
 
 /**
  * @brief     소멸자 처리를 수행한다.
- * @return    
+ * @return
  * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
@@ -116,24 +118,22 @@ bool CKGroup::MakeKnownGroup()
  * @date      2006-01-23 09:42:07
  * @warning
  */
-unsigned int CKGroup::GetColPdw()
+unsigned int CKGroup::GetColPDW()
 {
-	return m_pKnownSigAnal->GetColPdw(); 
+	return m_pKnownSigAnal->GetColPdw();
 }
 
-#ifdef _LOG_ANALTYPE_
 /**
- * @brief     GetLogAnalType
- * @return    bool
+ * @brief     GetCoPDW
+ * @return    unsigned int
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
- * @date      2023-09-21 12:09:27
+ * @date      2023-10-11 18:41:37
  * @warning
  */
-bool CKGroup::GetLogAnalType()
+unsigned int CKGroup::GetCoPDW()
 {
-    return m_pKnownSigAnal->GetLogAnalType();
+    return m_pKnownSigAnal->GetCoPdw();
 }
 
-#endif

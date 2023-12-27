@@ -154,7 +154,7 @@ void CSharedMemroy::attachSharedMemory()
 
 #else
     m_shared_memory = (void *) NULL;
-    WhereIs;
+    // WhereIs;
 
 #endif
 

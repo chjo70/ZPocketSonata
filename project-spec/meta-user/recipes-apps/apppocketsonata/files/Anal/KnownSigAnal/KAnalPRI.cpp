@@ -64,8 +64,10 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 14:09:52
 //
-CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw ) : CAnalPRI( pParent, uiCoMaxPdw)
+CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CAnalPRI( pParent, uiCoMaxPdw, pThreadName )
 {
+    SetAnalType( enTRK_ANAL );
+
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pKnownSigAnal)
@@ -102,7 +104,7 @@ void CKAnalPRI::Init()
 
     //m_uiAnalEmitter = GetCoEmitter();
 
-    m_pTrkAet = m_pKnownSigAnal->GetTrkAET();
+    m_pTrkABT = m_pKnownSigAnal->GetTrkAET();
 
 	/*! \bug  하위 그룹에서 초기화하는 것으로 수정함.
     \date 2008-07-30 13:35:49, 조철희
@@ -171,47 +173,77 @@ void CKAnalPRI::Analysis()
  * @date      2005-07-28 18:06:05
  * @warning
  */
-bool CKAnalPRI::KnownAnalysis()
+bool CKAnalPRI::KnownAnalysis( ENUM_ROBUST_ANAL enRobustAnal )
 {
-    //STR_PRI *pPri;
+    bool bFreqPattern; //, bPRIPattern;
 
+    // 펄스열 추출 업데이트
 	m_uiCoSeg = GetCoSeg();
 
-	// 타입에 따라서 펄스열 분석을 달리한다.
-    //pPri = & stTrkAet.aet.pri;
-    switch( m_pTrkAet->vPRIType ) {
+	// 정밀 분석 요청
+    //TODO: 주파수 및 PRI 형태에 따라 정밀 분석을 요청 합니다. 위협 관리에서 CED 라이브러리를 참조해서 정밀 분석을 요청하게 합니다.
+    //date 	2023-10-30 11:47:55
+    bFreqPattern = ( enRobustAnal == enFREQ_ROBUST_ANALYSIS || enRobustAnal == enFREQ_PRI_ROBUST_ANALYSIS ? true : false );
+    //bPRIPattern = ( enRobustAnal == enPRI_ROBUST_ANALYSIS || enRobustAnal == enFREQ_PRI_ROBUST_ANALYSIS ? true : false );
+    switch( m_pTrkABT->vPRIType ) {
 		case ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			GroupingStable( TRUE );
-			PatternAnalysis();
+
+            if( m_pTrkABT->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING ) {
+                HoppingAnalysis();
+            }
+            else {
+			    PatternAnalysis( bFreqPattern, false );
+            }
 			break;
 
 		case ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			GroupingJitter( TRUE );
-			StaggerAnalysis();
-			PatternAnalysis();
+
+            if( m_pTrkABT->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING ) {
+                HoppingAnalysis();
+            }
+
+			PatternAnalysis( bFreqPattern, false );
+            StaggerAnalysis();
 			break;
 
 		case ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			GroupingJitter( TRUE );
-			StaggerAnalysis();
-			PatternAnalysis();
+
+            if( m_pTrkABT->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING ) {
+                HoppingAnalysis();
+            }
+
+            StaggerAnalysis();
+			PatternAnalysis( bFreqPattern, true );
 			break;
 
 		case ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			GroupingJitter( TRUE );
-			PatternAnalysis();
+
+            if( m_pTrkABT->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING ) {
+                HoppingAnalysis();
+            }
+
+			PatternAnalysis( bFreqPattern, true );
 			break;
 
 		case ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH :
 			// 추적에서는 로브 조건을 무시하도록 한다.
 			// 추적할 에미터의 PRI 정보를 근거로 에미터를 생성한다.
-			GroupingStable( TRUE );
-			GroupingDwell();
-			PatternAnalysis();
+            GroupingJitter();
+
+            if( m_pTrkABT->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING ) {
+                HoppingAnalysis();
+            }
+
+            PatternAnalysis( bFreqPattern, false );
+            DwellNSwitchAnalysis();
 			break;
 
         default:
@@ -552,19 +584,3 @@ void CKAnalPRI::SaveDebug( const char *pSourcefile, int iLines )
 
 }
 
-#ifdef _LOG_ANALTYPE_
-/**
- * @brief     GetAnalType
- * @return    ENUM_ANAL_TYPE
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-09-19 12:08:05
- * @warning
- */
-bool CKAnalPRI::GetLogAnalType()
-{
-    return m_pKnownSigAnal->GetLogAnalType();
-}
-
-#endif

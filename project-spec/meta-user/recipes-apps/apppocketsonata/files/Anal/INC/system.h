@@ -58,8 +58,16 @@
 #define CEDEOB_SQLITE_FOLDER        (const char *) "/home/chjo70"
 
 #elif defined(__VXWORKS__)
-#if defined( _POCKETSONATA_ ) || defined( _712_ )
-#define CEDEOB_SQLITE_FOLDER        (const char *) "/d/rawdata"
+#if defined( _POCKETSONATA_ )
+#define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
+
+#elif defined( _712_ )
+#ifdef _WRS_CONFIG_LP64
+#define CEDEOB_SQLITE_FOLDER        (const char *) "/ata0/LIB"
+#else
+#define CEDEOB_SQLITE_FOLDER        (const char *) "/ata0:0/LIB"
+#endif
+
 #else
 #define CEDEOB_SQLITE_FOLDER        (const char *) "/RAMDRV:0/LIB"
 #endif
@@ -97,7 +105,14 @@
 #ifdef __ZYNQ_BOARD__
 #define INI_FOLDER                  (const char *) "/home/root"
 #elif defined(__VXWORKS__)
+
+#ifdef _WRS_CONFIG_LP64
+#define INI_FOLDER                  (const char *) "/ata0/INI"
+#else
 #define INI_FOLDER                  (const char *) "/ata0:0/INI"
+#endif
+
+
 #elif defined(__linux__)
 #define INI_FOLDER                  (const char *) "/home/chjo70"
 #else
@@ -284,37 +299,37 @@
 //  for RXDF configuration definition
 //
 //  Band 1
-#define   _spBd1LvlThr      IDIV( ( -54 - _spPAoffset ), _spAMPres )    // -54 dB
-#define   _spBd1FmpThr      0x60
-#define   _spBd1PmpThr      0x60
-#define   _spBd1AntOffLeft  0x60
-#define   _spBd1AntOffRght  0x60
-#define   _spBd1BlkAnt      0x9090
-#define   _spBd1NotFlt      0x60
-#define   _spBd1PinAtt      0x60
-#define   _spBd1BandEn      0x1
-
-//  Band 2
-#define   _spBd2LvlThr      IDIV( ( -53 - _spPAoffset ), _spAMPres )    // -53 dB
-#define   _spBd2FmpThr      0x60
-#define   _spBd2PmpThr      0x60
-#define   _spBd2AntOffLeft  0x60
-#define   _spBd2AntOffRght  0x60
-#define   _spBd2BlkAnt      0x9090
-#define   _spBd2NotFlt      0x60
-#define   _spBd2PinAtt      0x60
-#define   _spBd2BandEn      0x1
-
-//  Band 3
-#define   _spBd3LvlThr      IDIV( ( -52 - _spPAoffset ), _spAMPres )  // -52 dB
-#define   _spBd3FmpThr      0x60
-#define   _spBd3PmpThr      0x60
-#define   _spBd3AntOffLeft  0x60
-#define   _spBd3AntOffRght  0x60
-#define   _spBd3BlkAnt      0x9090
-#define   _spBd3NotFlt      0x60
-#define   _spBd3PinAtt      0x60
-#define   _spBd3BandEn      0x1
+// #define   _spBd1LvlThr      IDIV( ( -54 - _spPAoffset ), _spAMPres )    // -54 dB
+// #define   _spBd1FmpThr      0x60
+// #define   _spBd1PmpThr      0x60
+// #define   _spBd1AntOffLeft  0x60
+// #define   _spBd1AntOffRght  0x60
+// #define   _spBd1BlkAnt      0x9090
+// #define   _spBd1NotFlt      0x60
+// #define   _spBd1PinAtt      0x60
+// #define   _spBd1BandEn      0x1
+//
+// //  Band 2
+// #define   _spBd2LvlThr      IDIV( ( -53 - _spPAoffset ), _spAMPres )    // -53 dB
+// #define   _spBd2FmpThr      0x60
+// #define   _spBd2PmpThr      0x60
+// #define   _spBd2AntOffLeft  0x60
+// #define   _spBd2AntOffRght  0x60
+// #define   _spBd2BlkAnt      0x9090
+// #define   _spBd2NotFlt      0x60
+// #define   _spBd2PinAtt      0x60
+// #define   _spBd2BandEn      0x1
+//
+// //  Band 3
+// #define   _spBd3LvlThr      IDIV( ( -52 - _spPAoffset ), _spAMPres )  // -52 dB
+// #define   _spBd3FmpThr      0x60
+// #define   _spBd3PmpThr      0x60
+// #define   _spBd3AntOffLeft  0x60
+// #define   _spBd3AntOffRght  0x60
+// #define   _spBd3BlkAnt      0x9090
+// #define   _spBd3NotFlt      0x60
+// #define   _spBd3PinAtt      0x60
+// #define   _spBd3BandEn      0x1
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -556,7 +571,7 @@
 
 #define   _spCoNonWeighted      (10)
 
-#define   _spIncThr             UDIV( 8, _spAMPres )    // 02-08-11
+//#define   _spIncThr             UDIV( 8, _spAMPres )    // 02-08-11
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // 펄스열 추출 정의
@@ -607,21 +622,25 @@ const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, 0, 0, STAT_CHIRPDN, STAT_C
 enum PDW_MARK { STAT_NORMAL = 0,
                 STAT_CW,
 
-                STAT_PMOP=2,
+                STAT_CHIRPTRI,
+                STAT_CHIRPUP,
+                STAT_CHIRPDN,
+                STAT_CHIRPUK,
+
+                STAT_CW_CHIRPTRI,
+                STAT_CW_CHIRPUP,
+                STAT_CW_CHIRPDN,
+                STAT_CW_CHIRPUK,
+
+                STAT_PMOP,
                 STAT_CW_PMOP,
 
-                STAT_CHIRPUK=4,
-                STAT_CHIRPDN,
-                STAT_CHIRPUP,
-                STAT_CW_CHIRPUK,
-                STAT_CW_CHIRPDN,
-                STAT_CW_CHIRPUP,
-
                 STAT_SHORTP,
+                STAT_DOPPLER,
                 MAX_STAT
 };
-const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, STAT_PMOP, STAT_CW_PMOP, STAT_CHIRPUK, STAT_CHIRPDN,
-                                STAT_CHIRPUP, STAT_CW_CHIRPUK, STAT_CW_CHIRPDN, STAT_CW_CHIRPUP, STAT_SHORTP, 0, 0, 0, 0, 0 };
+const int stStat2GrStat[16] = { STAT_NORMAL, STAT_CW, STAT_PMOP, STAT_CW_PMOP, STAT_CHIRPTRI, STAT_CHIRPUK, STAT_CHIRPDN, STAT_CHIRPUP, \
+                                STAT_CW_CHIRPTRI, STAT_CW_CHIRPUP, STAT_CW_CHIRPDN, STAT_CW_CHIRPUK, STAT_SHORTP, 0, 0, 0 };
 
 #else
 enum PDW_MARK {

@@ -19,9 +19,10 @@
 
 #include "../Anal/INC/OS.h"
 
+//#include "../Include/struct.h"
 #include "../Anal/SigAnal/_Type.h"
 
-#include "../Include/struct.h"
+//#include "../Include/struct.h"
 #include "../Include/thrmsg.h"
 
 #include "clog.h"
@@ -110,19 +111,19 @@ T CheckOverflow( unsigned long long int ullFileSize ) {
  * @warning
  */
 template<typename ... Args>
-std::string string_format( const std::string& format, Args ... args )
+std::string string_format( const char *pFormat, Args ... args )
 {
 #ifdef __VXWORKS__
 	std::string strPrintf;
 
-	int iSize = snprintf( 0, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+	int iSize = snprintf( 0, 0, pFormat, args ... ) + 1; // Extra space for '\0'
 	if( iSize <= 0 ) {
 		throw std::runtime_error( "Error during formatting." );
 	}
 
 	char* pBuff;
 	pBuff = ( char* ) malloc( sizeof( char ) * iSize );
-	snprintf( pBuff, iSize, format.c_str(), args ... );
+	snprintf( pBuff, iSize, pFormat, args ... );
 
 	strPrintf = std::string( pBuff, pBuff + iSize - 1 ); // We don't want the '\0' inside
 	free( pBuff );
@@ -130,10 +131,10 @@ std::string string_format( const std::string& format, Args ... args )
 	return strPrintf;
 
 #else
-    unsigned int uiSize = (unsigned int) snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    unsigned int uiSize = (unsigned int) snprintf( nullptr, 0, pFormat, args ... ) + 1; // Extra space for '\0'
     if( uiSize <= 0 ) { throw std::runtime_error( "Error during formatting." ); }
     std::unique_ptr<char[]> buf( new char[uiSize] );
-    snprintf( buf.get(), uiSize, format.c_str(), args ... );
+    snprintf( buf.get(), uiSize, pFormat, args ... );
     return std::string( buf.get(), buf.get() + uiSize - 1 ); // We don't want the '\0' inside
 #endif
 
@@ -157,14 +158,14 @@ public:
 
     static bool IsValidMinMax( float fMin, float fMax );
 
-    static void DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop=NULL );
+    static void DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop=NULL, char *pStrMessage=NULL );
 
     static int CalcDiffAOA( int iAOA1, int iAOA2 );
 
 	// SWAP 관련 함수
     static void AllSwapData16( void *pData, unsigned int uiLength );
     static void AllSwapData64( void *pData, unsigned int uiLength );
-    static void AllSwapData32( void *pData, unsigned int uiLength );
+    static void AllSwapData32( void *pData, size_t szLength );
 
     static void swapByteOrder( unsigned int& ui );
     static void swapByteOrder( unsigned long long int &d);
@@ -202,7 +203,7 @@ public:
 
     static void WallMakePrint( char *buffer, char delimeter, int iColumns= MAX_SCREEN_COLUMNS );
     static void CenterMakePrint( char *buffer, char delimeter, int iColumns = MAX_SCREEN_COLUMNS );
-    static void WallMakePrint( char delimeter, int iColumns, char *buffer, ... );
+    static void WallMakePrint( char delimeter, int iColumns,  char *buffer, ... );
 
     static float Random( float fMin, float fMax );
     static int Random( int iMin, int iMax );
@@ -229,8 +230,13 @@ public:
     static unsigned int CountSetBits( const unsigned int uiValue );
     static unsigned int GetNoChannel( unsigned int &uiValue );
 
+#ifdef __VXWORKS__
     // 랜/타스크 메시지 정의
     static void MakeStringMessage( std::string *pszString, unsigned int uiOpCode, bool bSend );
+#else
+    static void MakeStringMessage( std::string *pszString, unsigned int uiOpCode, bool bSend );
+#endif
+
 };
 
 

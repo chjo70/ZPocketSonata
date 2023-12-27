@@ -27,23 +27,24 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-06-24 15:41:08
 //
-CKnownSigAnal::CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName)
+CKnownSigAnal::CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName, const char *pThreadName ) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName, pThreadName )
 {
-	InitVar();
 
-	m_theGroup = new CKGroup( this, uiCoMaxPdw);
-	m_thePulExt = new CKPulExt( this, uiCoMaxPdw);
-	m_theAnalPRI = new CKAnalPRI( this, uiCoMaxPdw);
+    SetAnalType( enTRK_ANAL );
 
-    // 추적 개수 제한
-    unsigned int uiCoMaxLOB = g_pTheSysConfig->GetMaxCountOfLOB();
-	m_theMakeAET = new CKMakeAET( this, uiCoMaxLOB );
+    m_uiMaxPdw = uiCoMaxPdw;
 
-	m_uiMaxPdw = uiCoMaxPdw;
+    float *pFvalue = g_pTheSysConfig->GetMargin();
+    m_fFixedFreqMargin = pFvalue[0];
+    m_fStableMargin = pFvalue[1];
 
+    AllocMemory();
+
+    // 하부 클래스 데이터 포인터 연결
 	m_pSeg = GetPulseSeg();
-
 	m_pGrPdwIndex = GetFrqAoaGroupedPdwIndex();
+
+    Init();
 
 }
 
@@ -64,14 +65,29 @@ CKnownSigAnal::~CKnownSigAnal()
 }
 
 /**
- * @brief CKnownSigAnal::Init
+ * @brief     AllocMemory
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-20 09:39:41
+ * @warning
  */
-void CKnownSigAnal::Init()
+void CKnownSigAnal::AllocMemory()
 {
+    m_pSEnvironVariable = GlobalMemberFunction::GetEnvrionVariable();
+
+    m_theGroup = new CKGroup( this, m_uiMaxPdw, GetThreadName() );
+    m_thePulExt = new CKPulExt( this, m_uiMaxPdw, GetThreadName() );
+    m_theAnalPRI = new CKAnalPRI( this, m_uiMaxPdw, GetThreadName() );
+
+    // 추적 개수 제한
+    unsigned int uiCoMaxLOB = g_pTheSysConfig->GetMaxCountOfLOB();
+    m_theMakeAET = new CKMakeAET( this, uiCoMaxLOB, GetThreadName() );
 
 }
 
-//////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
 /*! \brief    CKnownSigAnal::Start
     \author   조철희
     \param    pPdwBank 인자형태 STR_PDWBANK *
@@ -81,12 +97,12 @@ void CKnownSigAnal::Init()
     \date     2008-07-10 12:43:16
     \warning
 */
-void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, bool bDBInsert )
+void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, ENUM_ROBUST_ANAL enRobustAnal, unsigned int uiGlobalCh, bool bDBInsert )
 {
-	//bool bRet;
-    //DWORD dwTime = CCommonUtils::GetTickCounts();
+    struct timespec nowTime;
+    CCommonUtils::GetCollectTime( &nowTime );
 
-    //Log( enLineFeed, "" );
+    char buffer[200];
 
     PrintFunction
 
@@ -98,21 +114,23 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, 
 	// 신호 분석 관련 초기화.
     Init( pstPDWData );
 
-    Log( enNormal, "#### 추적 - 추적 분석 시작[%dth, Co:%d] ####" , GetStep(), m_uiCoPdw );
+    sprintf( buffer, "---------------- 추적 분석 시작[%dth, PDWID: %d, AET/ABT:%04d/%04d, 채널: %d, 수집 개수:%d/%d]", GetStep(), GetPDWID(), pTrkAet->uiAETID, pTrkAet->uiABTID, uiGlobalCh, m_uiCoPDW, m_uiColPDW );
+    CCommonUtils::WallMakePrint( buffer, '-' );
+    Log( enNormal, "%s", buffer );
 
     InsertRAWData( & m_stSavePDWData, _spZero, (int) -1, bDBInsert );
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
 	_PDW *pPDW = pstPDWData->stPDW;
 	unsigned int uiBand = (unsigned int) pstPDWData->GetBand();
-    m_theGroup->MakePDWArray( pPDW, m_uiCoPdw, uiBand );
+    m_theGroup->MakePDWArray( pPDW, m_uiCoPDW, uiBand );
 
     // 수집한 PDW 파일 만들기...
     //m_pMidasBlue->SaveRawDataFile( SHARED_DATA_DIRECTORY, E_EL_SCDT_PDW, pPDWData );
 
 	///////////////////////////////////////////////////////////////////////////////////
 	// 추적 분석 시작
-	StartOfTrackSignalAnalysis( bDBInsert );
+	StartOfTrackSignalAnalysis( bDBInsert, enRobustAnal );
 
 	///////////////////////////////////////////////////////////////////////////////////
     // 잔여 펄스열에 대해서 탐지 신호 분석을 수행한다.
@@ -134,7 +152,9 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, 
 //         SendAllAet();
 #endif
 
-    //CLogMsg::Log(enNormal, "================ 추적 분석 종료[%s] : %d[ms] =================", CSigAnal::GetRawDataFilename(), (int)((CCommonUtils::GetTickCounts() - dwTime)));
+    sprintf( buffer, "---------------- 추적 분석 종료[%s] : %d[ns]", CSigAnal::GetRawDataFilename(), ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
+    CCommonUtils::WallMakePrint( buffer, '=' );
+    Log( enNormal, "%s", buffer );
 
 }
 
@@ -147,7 +167,7 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, 
  * @date      2023-02-05 14:28:49
  * @warning
  */
-void CKnownSigAnal::StartOfTrackSignalAnalysis( bool bDBInsert )
+void CKnownSigAnal::StartOfTrackSignalAnalysis( bool bDBInsert, ENUM_ROBUST_ANAL enRobustAnal )
 {
 	bool bRet;
 
@@ -161,7 +181,7 @@ void CKnownSigAnal::StartOfTrackSignalAnalysis( bool bDBInsert )
 		m_thePulExt->KnownPulseExtract();
 
 		// PRI 분석
-		m_theAnalPRI->KnownAnalysis();
+		m_theAnalPRI->KnownAnalysis( enRobustAnal );
 
 		// 에미터 분석
 		bRet = m_theMakeAET->KnownMakeAET( bDBInsert );
@@ -172,13 +192,13 @@ void CKnownSigAnal::StartOfTrackSignalAnalysis( bool bDBInsert )
 		}
 	}
 
-	int iIdxUpdAet = m_theMakeAET->GetIdxUpdAet();
-	if (iIdxUpdAet >= 0) {
-        //CLogMsg::Log(enNormal, "#### 추적 - 탐지 분석 시작[%dth, Co:%d] ####", GetStep(), m_uiCoPdw - m_theMakeAET->GetPulseCountFromKnownIndex((UINT)iIdxUpdAet));
-	}
-	else {
-        //CLogMsg::Log(enError, "에러 발생");
-	}
+// 	int iIdxUpdAet = m_theMakeAET->GetIdxUpdAet();
+// 	if (iIdxUpdAet >= 0) {
+//         //CLogMsg::Log(enNormal, "#### 추적 - 탐지 분석 시작[%dth, Co:%d] ####", GetStep(), m_uiCoPdw - m_theMakeAET->GetPulseCountFromKnownIndex((UINT)iIdxUpdAet));
+// 	}
+// 	else {
+//         //CLogMsg::Log(enError, "에러 발생");
+// 	}
 
 
 }
@@ -202,14 +222,15 @@ void CKnownSigAnal::StartOfNewSignalAnalysis( bool bDBInsert )
 	m_theAnalPRI->CAnalPRI::Init();
 
 	// AET 생성 초기화
-	m_theMakeAET->CMakeAET::Init();
+	//m_theMakeAET->CMakeAET::Init();
 
 	// 탐지 신호 분석을 그대로 분석한다.
 	if (TRUE == m_theGroup->MakeGroup()) {
 		CheckKnownByAnalysis();
 
 		// 그룹화 만들기
-		while (!m_theGroup->IsLastGroup()) {
+		while (!m_theGroup->IsLastGroup() )
+        {
 			// 협대역 주파수 그룹화
 			// 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
 			m_theGroup->MakeGrIndex();
@@ -262,20 +283,6 @@ void CKnownSigAnal::ClearColBuffer()
 
 }
 
-//////////////////////////////////////////////////////////////////////////
-/*! \brief    CKnownSigAnal::InitVar
-		\author   조철희
-		\return   void
-		\version  0.0.52
-		\date     2008-10-25 15:59:18
-		\warning
-*/
-void CKnownSigAnal::InitVar()
-{
-    // m_uiStep = 0;
-
-}
-
 /**
  * @brief     Init
  * @param     STR_STATIC_PDWDATA * pstPDWData
@@ -305,14 +312,16 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 	// 신호 수집 개수 정의
     if( pstPDWData != NULL ) {
 		MakeAnalDirectory( &pstPDWData->x, false );
-		CCommonUtils::DeleteAllFile( GetAnalDirectory() );
+        MakeDebugDirectory( &pstPDWData->x, false );
 
-        memcpy( & m_stSavePDWData.x, & pstPDWData->x, sizeof(union UNION_HEADER) );
+        m_uiColPDW = m_pstPDWData->GetTotalPDW();
+
+        memcpy( & m_stSavePDWData.x, & pstPDWData->x, sizeof( UNION_HEADER) );
+        memcpy( m_stSavePDWData.pstPDW, & pstPDWData->stPDW[0], sizeof( _PDW ) * m_uiColPDW );
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
         SetPDWID( m_pstPDWData->GetPDWID());
-
-        m_uiCoPdw = m_pstPDWData->GetTotalPDW();
+        SetColTime( ( time_t ) m_pstPDWData->GetColTime() );
 
         CSigAnal::SetColTime( m_pstPDWData->GetColTime() );
 
@@ -335,30 +344,48 @@ void CKnownSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData )
 
 #else
 #endif
+
+        CheckValidData( pstPDWData );
+
     }
     else {
         // m_CoPdw = _spZero;
 
     }
 
+    InitOfKnownSigAnal();
+
+}
+
+/**
+ * @brief     InitOfKnownSigAnal
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-20 09:16:41
+ * @warning
+ */
+void CKnownSigAnal::InitOfKnownSigAnal()
+{
     // 단위 초기화
     CSigAnal::InitResolution();
 
-	/*! \bug  클래스별 클리어를 하게 한다.
-	    \date 2008-07-30 13:22:13, 조철희
-	*/
+    /*! \bug  클래스별 클리어를 하게 한다.
+        \date 2008-07-30 13:22:13, 조철희
+    */
 
-	// 그룹화 초기화
-	m_theGroup->CKGroup::Init();
+    // 그룹화 초기화
+    m_theGroup->CKGroup::Init();
 
-	// 펄스열 추출 초기화
-	m_thePulExt->CKPulExt::Init();
+    // 펄스열 추출 초기화
+    m_thePulExt->CKPulExt::Init();
 
-	// PRI 분석 초기화
-	m_theAnalPRI->CKAnalPRI::Init();
+    // PRI 분석 초기화
+    m_theAnalPRI->CKAnalPRI::Init();
 
-	// AET 생성 초기화
-	m_theMakeAET->CKMakeAET::Init();
+    // AET 생성 초기화
+    m_theMakeAET->CKMakeAET::Init();
 
 }
 
@@ -551,7 +578,7 @@ bool CKnownSigAnal::CheckKnownByAnalysis()
     else {
         uiFreqMax = 0;
         uiFreqMin = UINT_MAX;
-        for (i = 0; i < m_uiCoPdw; ++i) {
+        for (i = 0; i < m_uiCoPDW; ++i) {
             uiFreqMax = max(FREQ[i], uiFreqMax);
             uiFreqMin = min(FREQ[i], uiFreqMin);
         }
@@ -597,32 +624,47 @@ void CKnownSigAnal::SaveDebug( const char *pSourcefile, int iLines )
 
 }
 
-#ifdef _LOG_ANALTYPE_
 /**
- * @brief     GetLogAnalType
+ * @brief     CheckValidData
+ * @param     STR_STATIC_PDWDATA * pPDWData
  * @return    bool
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
- * @date      2023-09-21 11:53:48
+ * @date      2023-10-19 20:28:17
  * @warning
  */
-bool CKnownSigAnal::GetLogAnalType()
+bool CKnownSigAnal::CheckValidData( STR_STATIC_PDWDATA *pPDWData )
 {
     bool bRet = true;
 
-    if( g_enLogAnalType == enALL ) {
+#if defined(_XBAND_)
+    if( pPDWData->x.xb.aucTaskID[0] == 0 ) {
+        Log( enError, "PDW 데이터에 과제 정보가 없습니다. !!" );
+        bRet = false;
     }
-    else {
-        if( m_enAnalType == g_enLogAnalType ) {
 
-        }
-        else {
-            bRet = false;
-        }
+    if( !( pPDWData->x.xb.GetCollectorID() >= RADARCOL_1 && pPDWData->x.xb.GetCollectorID() <= RADARCOL_3 ) ) {
+        Log( enError, "수집소 ID[%d]가 잘못됐습니다.", pPDWData->x.el.GetCollectorID() );
+        bRet = false;
     }
+
+#elif defined(_ELINT_)
+    if( ( pPDWData->x.el.enBandWidth != ELINT::en5MHZ_BW && pPDWData->x.el.enBandWidth != ELINT::en50MHZ_BW ) ) {
+        Log( enError, "수집 대역폭[%d]은 0 또는 1이 어야 합니다!!", pPDWData->x.el.enBandWidth );
+        bRet = false;
+    }
+#elif defined(_POCKETSONATA_) || defined(_712_)
+
+    // TOA 정렬하기 - 답이 없네... 그냥 코딩
+    SortingTOAOfPDW( pPDWData );
+
+
+#else
+
+#endif
+
+    m_uiCoPDW = pPDWData->GetTotalPDW();
 
     return bRet;
 }
-
-#endif

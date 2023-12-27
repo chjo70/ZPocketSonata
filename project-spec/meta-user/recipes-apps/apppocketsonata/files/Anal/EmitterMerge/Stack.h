@@ -396,10 +396,25 @@ void Queue<T>::Print()
 {
 	int i;
 
-	printf( "\n Queue[%d]:" , nelems );
-	for( i=0 ; i < nelems ; ++i ) {
-		printf( "[%d]" , v[i] );
-	}
+	TRACE( "\n Queue[%d, H%d/T%d]:" , nelems, head, tail );
+
+    if( head < tail ) {
+	    for( i=head ; i < tail ; ++i ) {
+            TRACE( "[%d]" , v[i] );
+	    }
+    }
+    else if( head == tail ) {
+        TRACE( "Empty !" );
+    }
+    else {
+        for( i = head ; i < nelems; ++i ) {
+            TRACE( "[%d]", v[i] );
+        }
+        for( i = 0 ; i < tail ; ++i ) {
+            TRACE( "[%d]", v[i] );
+        }
+    }
+
 }
 
 

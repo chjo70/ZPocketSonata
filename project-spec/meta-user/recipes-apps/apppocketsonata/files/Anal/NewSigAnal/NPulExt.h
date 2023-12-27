@@ -39,12 +39,12 @@ protected:
 	//ENUM_BANDWIDTH m_enBandWidth;
 
 public:
-    CNPulExt( void *pParent, unsigned int uiCoMaxPdw );
+    CNPulExt( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
     virtual ~CNPulExt();
 
 	unsigned int GetCoPdw();
 
-	inline void DiscardPulseTrain() { CPulExt::DiscardPulseTrain(); }
+	inline void DropPulseTrain() { CPulExt::DropPulseTrain(); }
 	inline void SetRefEndSeg() { CPulExt::SetRefEndSeg(); }
 	inline void CleanPulseTrains() { CPulExt::CleanPulseTrains(); }
 	inline void SetRefStartSeg() { CPulExt::SetRefStartSeg(); }
@@ -65,7 +65,7 @@ public:
     void ClearAllMark();
 
 #ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
+    bool IsLogAnalType( LogType enLogType );
 #endif
 
 };

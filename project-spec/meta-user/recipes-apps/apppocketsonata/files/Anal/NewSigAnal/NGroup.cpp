@@ -34,8 +34,10 @@
  * @date      2006-01-20 19:01:00
  * @warning
  */
-CNGroup::CNGroup( void *pParent, unsigned int uiCoMaxPdw ) : CGroup(uiCoMaxPdw)
+CNGroup::CNGroup( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CGroup(uiCoMaxPdw, pThreadName )
 {
+    SetAnalType( enDET_ANAL );
+
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pNewSigAnal)
@@ -65,9 +67,23 @@ CNGroup::~CNGroup()
  * @date      2022-06-28 16:16:32
  * @warning
  */
-unsigned int CNGroup::GetColPdw()
+unsigned int CNGroup::GetColPDW()
 {
     return m_pNewSigAnal->GetColPdw();
+}
+
+/**
+ * @brief     GetCoPDW
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-11 18:46:40
+ * @warning
+ */
+unsigned int CNGroup::GetCoPDW()
+{
+    return m_pNewSigAnal->GetCoPdw();
 }
 
 
@@ -88,7 +104,6 @@ void CNGroup::Init()
     CGroup::Init();
 }
 
-
 #ifdef _LOG_ANALTYPE_
 /**
  * @brief     GetLogAnalType
@@ -99,9 +114,9 @@ void CNGroup::Init()
  * @date      2023-09-21 11:56:37
  * @warning
  */
-bool CNGroup::GetLogAnalType()
+bool CNGroup::IsLogAnalType( LogType enLogType )
 {
-    return m_pNewSigAnal->GetLogAnalType();
+    return m_pNewSigAnal->IsLogAnalType( enLogType );
 }
 
 #endif

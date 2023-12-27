@@ -20,8 +20,9 @@
 #ifdef _MIDAS_
 
 #else
-#include "./EmitterMerge/ELMsgDefn.h"
 #include "./INC/AetIPL.h"
+#include "./EmitterMerge/ELMsgDefn.h"
+
 #endif
 
 #include "./INC/ErrorMsg.h"

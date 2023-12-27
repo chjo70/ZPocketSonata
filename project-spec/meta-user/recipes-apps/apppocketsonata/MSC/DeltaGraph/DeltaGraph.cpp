@@ -67,7 +67,7 @@ CDeltaGraphApp theApp;
 BOOL CDeltaGraphApp::InitInstance()
 {
 	// 응용 프로그램 매니페스트가 ComCtl32.dll 버전 6 이상을 사용하여 비주얼 스타일을
-	// 사용하도록 지정하는 경우, Windows XP 상에서 반드시 InitCommonControlsEx()가 필요합니다. 
+	// 사용하도록 지정하는 경우, Windows XP 상에서 반드시 InitCommonControlsEx()가 필요합니다.
 	// InitCommonControlsEx()를 사용하지 않으면 창을 만들 수 없습니다.
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);
@@ -90,7 +90,7 @@ BOOL CDeltaGraphApp::InitInstance()
 
 	EnableTaskbarInteraction();
 
-	// RichEdit 컨트롤을 사용하려면  AfxInitRichEdit2()가 있어야 합니다.	
+	// RichEdit 컨트롤을 사용하려면  AfxInitRichEdit2()가 있어야 합니다.
 	// AfxInitRichEdit2();
 
 	// 표준 초기화
@@ -245,12 +245,12 @@ void CDeltaGraphApp::OnAppAbout()
 
 
 /**
- * @brief     
+ * @brief
  * @return    BOOL
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/08 21:48:30
- * @warning   
+ * @warning
  */
 BOOL CAboutDlg::OnInitDialog()
 {
@@ -313,19 +313,19 @@ void CDeltaGraphApp::OnFileOpen()
 }
 
 /**
- * @brief     
+ * @brief
  * @param     CString * pStrPathname
  * @return    void
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/08 21:43:12
- * @warning   
+ * @warning
  */
 void CDeltaGraphApp::RawDataOpen( CString *pStrPathname )
 {
 	int i;
 
-	CDocTemplate *pDocTemplate=nullptr;	
+	CDocTemplate *pDocTemplate=nullptr;
 	TCHAR warningMessage[200];
 
 	POSITION pos;
@@ -336,12 +336,12 @@ void CDeltaGraphApp::RawDataOpen( CString *pStrPathname )
 
  	//ENUM_GRAPH_VIEW viewPDWGraph[PDW_MULTI_WINDOWS] = { enGraphPulseInfo, enGRAPH_PIE, enGRAPH_POLAR, enGRAPH_2D, enGRAPH_MULTI, enGRAPH_3D } ;
 	ENUM_SUB_GRAPH viewPDWSubGraph[PDW_MULTI_WINDOWS] = { enSubMenu_1, enSubMenu_1 } ; //, enSubMenu_1, enSubMenu_3, enSubMenu_1, enSubMenu_1 } ;
-// 
+//
 // 	ENUM_GRAPH_VIEW viewIQGraph[IQ_MULTI_WINDOWS] = { enGraphPulseInfo, enGRAPH_2D, enGRAPH_2D, enGRAPH_2D, enGRAPH_2D } ;
 // 	ENUM_SUB_GRAPH viewIQSubGraph[IQ_MULTI_WINDOWS] = { enSubMenu_1, enSubMenu_2, enSubMenu_3, enSubMenu_4, enSubMenu_1 } ;
-// 
+//
 // 	OnMenuCloseAll();
-// 
+//
 
 	if( true == IsExistFile( *pStrPathname ) ) {
 		++ m_uiWindowNumber;
@@ -350,7 +350,7 @@ void CDeltaGraphApp::RawDataOpen( CString *pStrPathname )
 			pos = GetFirstDocTemplatePosition();
 			for( i=0 ; i < PDW_MULTI_WINDOWS ; ++i ) {
  				pDocTemplate = GetNextDocTemplate( pos );
- 
+
  				pDoc = ( CDeltaGraphDoc *) pDocTemplate->OpenDocumentFile(*pStrPathname);
 			}
 		}
@@ -359,7 +359,7 @@ void CDeltaGraphApp::RawDataOpen( CString *pStrPathname )
 
 		for( i=0 ; i < IQ_MULTI_WINDOWS ; ++i ) {
  			pDocTemplate = GetNextDocTemplate( pos );
- 
+
  			pDoc = ( CDeltaGraphDoc *) pDocTemplate->OpenDocumentFile(*pStrPathname);
 
 		}
@@ -379,13 +379,13 @@ void CDeltaGraphApp::RawDataOpen( CString *pStrPathname )
 
 
 /**
- * @brief     
+ * @brief
  * @param     CString & strPathname
  * @return    bool
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/01 16:31:42
- * @warning   
+ * @warning
  */
 bool CDeltaGraphApp::IsExistFile( CString &strPathname )
 {
@@ -402,13 +402,13 @@ bool CDeltaGraphApp::IsExistFile( CString &strPathname )
 }
 
 /**
- * @brief     
+ * @brief
  * @param     CString & strPathName
  * @return    ENUM_DataType
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/08 22:03:45
- * @warning   
+ * @warning
  */
 ENUM_DataType CDeltaGraphApp::GetDataType(CString &strPathName)
 {
@@ -428,7 +428,7 @@ ENUM_DataType CDeltaGraphApp::GetDataType(CString &strPathName)
 }
 
 /**
- * @brief     
+ * @brief
  * @param     CString & strPathname
  * @param     TCHAR * pTitle
  * @param     ENUM_OPENTYPE enOpenType
@@ -436,7 +436,7 @@ ENUM_DataType CDeltaGraphApp::GetDataType(CString &strPathName)
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/08 21:43:08
- * @warning   
+ * @warning
  */
 bool CDeltaGraphApp::OpenFile( CString &strPathname, TCHAR *pTitle, ENUM_OPENTYPE enOpenType )
 {

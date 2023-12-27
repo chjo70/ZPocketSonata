@@ -37,9 +37,9 @@ CHopping::CHopping( void *pParent, unsigned int uiCoMaxPdw )
 
     m_uiMaxPdw = min( uiCoMaxPdw, ( unsigned int ) MAX_PDW );
 
-    CNewSigAnal *pNewSigAnal = ( CNewSigAnal * ) pParent;
+    m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
-    INIT_ANAL_VAR_( pNewSigAnal )
+    INIT_ANAL_VAR_( m_pNewSigAnal )
 
     float *pfValue = g_pTheSysConfig->GetMargin();
     //m_uiFixedFreqMargin = (unsigned int) FFRQMhzCNV( 0, ( unsigned int ) ( pfValue[0] * ( float ) 1000000. ) );
@@ -458,7 +458,7 @@ void CHopping::HoppingAnalysis( STR_EMITTER *pEmitter )
  */
 void CHopping::MakeHoppingEmitter( STR_EMITTER *pEmitter )
 {
-    if( m_uiHoppingLevel > 0 ) {
+    if( m_uiHoppingLevel >= 2 ) {
         unsigned int i;
 
         if( m_enHoppingDwell == enFREQ_HOPPING ) {
@@ -799,7 +799,7 @@ void CHopping::SamplingDTOAProcess( STR_EMITTER *pEmitter, ENUM_SAMPLING_OPTION 
         	\date 	2023-07-18 09:29:20
         */
         //if( TCompMarginDiff<_TOA>( (_TOA) *puiDataY, pstPRI->tMin, pstPRI->tMax, m_uiMargin ) == true ) {
-        if( TCompMarginDiff<_TOA>( ( _TOA ) *puiDataY, 0, pstPRI->tMax, m_uiMargin ) == true ) {
+        if( TCompMarginDiff<_TOA>( ( _TOA ) *puiDataY, 0, pstPRI->tMax, (_TOA) m_uiMargin ) == true ) {
             if( m_uiStartSample == UINT_MAX ) {
                 m_uiStartSample = m_uiCoSample;
             }
@@ -1052,61 +1052,61 @@ void CHopping::FindPeriod()
  * @date      2023-06-29 13:43:28
  * @warning
  */
-unsigned int CHopping::CalcHoppingStepByNonPeriod2( STR_EMITTER *pEmitter )
-{
-    unsigned int i, k;
-
-    SHoppingDwell stHopping;
-
-    //int *piSampleData;
-    unsigned int *puiDataY, uiFirstDataY;
-
-    m_uiHoppingLevel = 0;
-
-    // 데이터 값 클리어
-    memset( & stHopping, 0, sizeof( stHopping ) );
-
-    m_vecHopping.clear();
-
-    // 단계적으로 스태게 레벨 찾기
-    puiDataY = m_puiDataY;
-    for( i = 0; i < m_uiCoData; ) {
-
-        // 한 주기 내에서 Dwell 들 찾기
-        uiFirstDataY = ( unsigned int ) *puiDataY;
-
-        // Dwell 찾기
-        if( TCompMarginDiff<_TOA>( uiFirstDataY, pEmitter->stPRI.tMin, pEmitter->stPRI.tMax, m_uiMargin ) ) {
-            k = 0;
-            while( TCompMeanDiff<unsigned int>( uiFirstDataY, *puiDataY, m_uiMargin ) ) {
-                ++puiDataY;
-                ++i;
-                ++k;
-                if( i >= m_uiCoSample ) {
-                    break;
-                }
-            }
-
-            if( k > HOP_LEVEL_MIN_CNT ) {
-                stHopping.AddSteps( ( int ) uiFirstDataY );
-            }
-
-        }
-        else {
-            ++puiDataY;
-            ++i;
-        }
-
-    }
-
-    // 저장하기
-    m_vecHopping.push_back( stHopping );
-
-    m_uiHoppingLevel = stHopping.uiCoSteps;
-
-    return m_uiHoppingLevel;
-
-}
+// unsigned int CHopping::CalcHoppingStepByNonPeriod2( STR_EMITTER *pEmitter )
+// {
+//     unsigned int i, k;
+//
+//     SHoppingDwell stHopping;
+//
+//     //int *piSampleData;
+//     unsigned int *puiDataY, uiFirstDataY;
+//
+//     m_uiHoppingLevel = 0;
+//
+//     // 데이터 값 클리어
+//     memset( & stHopping, 0, sizeof( stHopping ) );
+//
+//     m_vecHopping.clear();
+//
+//     // 단계적으로 스태게 레벨 찾기
+//     puiDataY = m_puiDataY;
+//     for( i = 0; i < m_uiCoData; ) {
+//
+//         // 한 주기 내에서 Dwell 들 찾기
+//         uiFirstDataY = ( unsigned int ) *puiDataY;
+//
+//         // Dwell 찾기
+//         if( TCompMarginDiff<_TOA>( uiFirstDataY, pEmitter->stPRI.tMin, pEmitter->stPRI.tMax, m_uiMargin ) ) {
+//             k = 0;
+//             while( TCompMeanDiff<unsigned int>( uiFirstDataY, *puiDataY, m_uiMargin ) ) {
+//                 ++puiDataY;
+//                 ++i;
+//                 ++k;
+//                 if( i >= m_uiCoSample ) {
+//                     break;
+//                 }
+//             }
+//
+//             if( k > HOP_LEVEL_MIN_CNT ) {
+//                 stHopping.AddSteps( ( int ) uiFirstDataY );
+//             }
+//
+//         }
+//         else {
+//             ++puiDataY;
+//             ++i;
+//         }
+//
+//     }
+//
+//     // 저장하기
+//     m_vecHopping.push_back( stHopping );
+//
+//     m_uiHoppingLevel = stHopping.uiCoSteps;
+//
+//     return m_uiHoppingLevel;
+//
+// }
 
 /**
  * @brief     CalcDwellStepByNonPeriod
@@ -1120,6 +1120,7 @@ unsigned int CHopping::CalcHoppingStepByNonPeriod2( STR_EMITTER *pEmitter )
  */
 unsigned int CHopping::CalcHoppingDwellStepByNonPeriod( STR_EMITTER *pEmitter )
 {
+    bool bRet;
     unsigned int i, k;
 
     SHoppingDwell stHopping;
@@ -1135,38 +1136,76 @@ unsigned int CHopping::CalcHoppingDwellStepByNonPeriod( STR_EMITTER *pEmitter )
     m_vecHopping.clear();
 
     // 단계적으로 스태게 레벨 찾기
-    piSampleData = m_piSampleData;
-    for( i = 0; i < m_uiCoSample ; ) {
+    if( m_enHoppingDwell == enFREQ_HOPPING ) {
+        piSampleData = m_piSampleData;
+        for( i = 0; i < m_uiCoSample; ) {
 
-        // 한 주기 내에서 Dwell 들 찾기
-        iFirstDataY = *piSampleData;
+            // 한 주기 내에서 Dwell 들 찾기
+            iFirstDataY = *piSampleData;
 
-        // Dwell 찾기
-        bool bRet = TCompMarginDiff<_TOA>( ( _TOA ) iFirstDataY, pEmitter->stPRI.tMin, pEmitter->stPRI.tMax, ( _TOA ) m_uiMargin );
-        if( m_enHoppingDwell == enFREQ_HOPPING || bRet == true ) {
-            k = 0;
+            // Dwell 찾기
+            bRet = TCompMarginDiff<int>( iFirstDataY, pEmitter->stFreq.iMin, pEmitter->stFreq.iMax, ( int ) m_uiMargin );
 
-            //while( TCompMeanDiff<int>( iFirstDataY, *piSampleData, (int) m_uiMargin ) ) {
-            while( TCheckHarmonic<int>( iFirstDataY, *piSampleData, ( int ) m_uiMargin ) ) {
+            if( bRet == true ) {
+                k = 0;
+
+                while( TCheckHarmonic<int>( iFirstDataY, *piSampleData, ( int ) m_uiMargin ) ) {
+                    ++piSampleData;
+                    ++i;
+                    ++k;
+                    if( i >= m_uiCoSample ) {
+                        break;
+                    }
+                }
+
+                if( k >= HOP_LEVEL_MIN_CNT_NONPRD ) {
+                    stHopping.AddSteps( ( int ) iFirstDataY );
+                }
+
+            }
+            else {
                 ++piSampleData;
                 ++i;
-                ++k;
-                if( i >= m_uiCoSample ) {
-                    break;
-                }
             }
 
-            if( k >= HOP_LEVEL_MIN_CNT_NONPRD ) {
-                stHopping.AddSteps( ( int ) iFirstDataY );
-            }
-
-        }
-        else {
-            ++piSampleData;
-            ++i;
         }
 
     }
+    else {
+        piSampleData = m_piSampleData;
+        for( i = 0; i < m_uiCoSample; ) {
+
+            // 한 주기 내에서 Dwell 들 찾기
+            iFirstDataY = *piSampleData;
+
+            // Dwell 찾기
+            bRet = TCompMarginDiff<_TOA>( ( _TOA ) iFirstDataY, pEmitter->stPRI.tMin, pEmitter->stPRI.tMax, ( _TOA ) m_uiMargin );
+            if( bRet == true ) {
+                k = 0;
+
+                while( TCheckHarmonic<int>( iFirstDataY, *piSampleData, ( int ) m_uiMargin ) ) {
+                    ++piSampleData;
+                    ++i;
+                    ++k;
+                    if( i >= m_uiCoSample ) {
+                        break;
+                    }
+                }
+
+                if( k >= HOP_LEVEL_MIN_CNT_NONPRD ) {
+                    stHopping.AddSteps( ( int ) iFirstDataY );
+                }
+
+            }
+            else {
+                ++piSampleData;
+                ++i;
+            }
+
+        }
+
+    }
+
 
     // 반복 구간 찾아서 제거하기
     RemoveRepeatableDwell( & stHopping );
@@ -1194,11 +1233,16 @@ void CHopping::RemoveRepeatableDwell( SHoppingDwell *pstHopping )
 {
     unsigned int ui;
 
-    for( ui = 2; ui < MAX_STAGGER_LEVEL_POSITION; ++ui ) {
-        if( IsRepeatable( pstHopping, 0, ui ) == true ) {
-            pstHopping->uiCoSteps = ui;
-            break;
+    if( pstHopping->uiCoSteps > 1 ) {
+        for( ui = 2; ui < MAX_STAGGER_LEVEL_POSITION; ++ui ) {
+            if( IsRepeatable( pstHopping, 0, ui ) == true ) {
+                pstHopping->uiCoSteps = ui;
+                break;
+            }
+
         }
+    }
+    else {
 
     }
 
@@ -1233,24 +1277,29 @@ bool CHopping::IsRepeatable( SHoppingDwell *pstHopping, unsigned int uiStart, un
     piSteps = pstHopping->iSteps;
 
     //TRACE( "\n 시작 위치 : %d, 스텝[%d] 체크" , uiStart, uiSteps );
-    for( ui = uiStart ; ui < pstHopping->uiCoSteps; ui += uiSteps ) {
-        for( uj = ui ; uj < ui+uiSteps && uj+uiSteps < pstHopping->uiCoSteps ; ++uj ) {
-            uIndex = uj; // %uiSteps;
-            //TRACE( "\n (%d, %d)", uIndex, uj+uiSteps );
+    if( pstHopping->uiCoSteps > 1 ) {
+        for( ui = uiStart ; ui < pstHopping->uiCoSteps; ui += uiSteps ) {
+            for( uj = ui ; uj < ui+uiSteps && uj+uiSteps < pstHopping->uiCoSteps ; ++uj ) {
+                uIndex = uj; // %uiSteps;
+                //TRACE( "\n (%d, %d)", uIndex, uj+uiSteps );
 
-            //if( TCompMeanDiff<int>( piSteps[uIndex], piSteps[uj + uiSteps], ( int ) m_uiStableMargin ) == false ) {
-            if( TCheckHarmonic<int>( piSteps[uIndex], piSteps[uj + uiSteps], (int) m_uiStableMargin ) == false ) {
-                bRet = false;
+                //if( TCompMeanDiff<int>( piSteps[uIndex], piSteps[uj + uiSteps], ( int ) m_uiStableMargin ) == false ) {
+                if( TCheckHarmonic<int>( piSteps[uIndex], piSteps[uj + uiSteps], (int) m_uiStableMargin ) == false ) {
+                    bRet = false;
+                    break;
+                }
+                else {
+                    ++ iMatch;
+                }
+            }
+            if( bRet == false ) {
                 break;
             }
-            else {
-                ++ iMatch;
-            }
+            //TRACE( "\n" );
         }
-        if( bRet == false ) {
-            break;
-        }
-        //TRACE( "\n" );
+    }
+    else {
+        bRet = false;
     }
 
     return bRet;

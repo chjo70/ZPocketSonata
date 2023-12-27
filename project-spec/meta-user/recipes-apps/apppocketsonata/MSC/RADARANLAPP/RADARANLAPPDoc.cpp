@@ -3,30 +3,35 @@
 //
 
 #include "stdafx.h"
+
+#define _MAIN_
+#define _MAIN_GLOBALS_
+
+
 // SHARED_HANDLERS는 미리 보기, 축소판 그림 및 검색 필터 처리기를 구현하는 ATL 프로젝트에서 정의할 수 있으며
 // 해당 프로젝트와 문서 코드를 공유하도록 해 줍니다.
 #ifndef SHARED_HANDLERS
 #include "RADARANLAPP.h"
 #endif
 
-#define _MAIN_
-#define _MAIN_GLOBALS_
+//float _spAOAres;
+//float _spAMPres;
 
-float _spAOAres;
-float _spAMPres;
 
-#include "../../files/Anal/OFP_Main.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <propkey.h>
 
+
+#include "../../files/Anal/OFP_Main.h"
+
 #include "RADARANLAPPDoc.h"
 
-#include "../../files/Utils/cthread.h"
-#include "../../files/Anal/EmitterMerge/ELEmitterMergeMngr.h"
+//#include "../../files/Utils/cthread.h"
+//#include "../../files/Anal/EmitterMerge/ELEmitterMergeMngr.h"
 
-#include "../../files/Include/globals.h"
+//#include "../../files/Include/globals.h"
 
 
 
@@ -690,7 +695,7 @@ bool CRADARANLAPPDoc::LoadFieldOfTable( int *pCoField, char **pField, char *pTab
     *pCoField = 0;
 
 #ifdef _MSSQL_
-    
+
 	DECLARE_BEGIN_CHECKODBC
 
 	CODBCRecordset theRS = CODBCRecordset(m_pMyODBC);

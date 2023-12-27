@@ -365,6 +365,9 @@
     <ClCompile Include="..\..\files\Anal\MIDAS\ELDecoder.cpp">
       <Filter>소스 파일\Anal\MIDAS</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clogname.cpp">
+      <Filter>소스 파일\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DeltaGraph.rc">

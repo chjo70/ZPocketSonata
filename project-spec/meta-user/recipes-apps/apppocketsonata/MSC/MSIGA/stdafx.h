@@ -74,8 +74,8 @@
 // VS2012 이상에서 TRACE를 변경하기 위함.
 #if _MSC_VER > 1600
 
-bool _TRACE(char *format, ...);
-bool _TRACE(CString strFormat, ...);
+bool _TRACE(const char *format, ...);
+
 
 #undef TRACE
 #ifdef _LOG_ANALTYPE_

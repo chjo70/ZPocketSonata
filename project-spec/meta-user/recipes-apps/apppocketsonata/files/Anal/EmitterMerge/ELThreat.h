@@ -14,9 +14,9 @@
 #define INVALID_INDEX			(0)
 
 struct SELINDEX {
-	UINT uiAET;
-	UINT uiABT;
-	UINT uiLOB;
+	UINT uiAETID;
+	UINT uiABTID;
+	UINT uiLOBID;
 
 };
 
@@ -26,14 +26,26 @@ struct SELINDEX {
 //////////////////////////////////////////////////////////////////////////
 // 위협 관리 관련 정의문
 #ifdef _POCKETSONATA_
-#define TOTAL_ITEMS_OF_THREAT_NODE			(100)							// 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT			    (10)						        // 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT_NODE			(2*TOTAL_ITEMS_OF_THREAT)	    // 방사체/빔 개수
+
+#define AETID_OFFSET                        (1000)
 
 #elif _712_
-#define TOTAL_ITEMS_OF_THREAT_NODE			(1000)							// 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT			    (1000)						    // 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT_NODE			(2*TOTAL_ITEMS_OF_THREAT)	    // 방사체/빔 개수
+#define AETID_OFFSET                        (0)
 
 #else
-#define TOTAL_ITEMS_OF_THREAT_NODE			(100000)						// 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT			    (500)							    // 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT_NODE			(2*TOTAL_ITEMS_OF_THREAT)	    // 방사체/빔 개수
 
+#define AETID_OFFSET                        (1000)
+
+#endif
+
+#if AETID_OFFSET != 0 && AETID_OFFSET <= TOTAL_ITEMS_OF_THREAT
+#error  "프로세서판 별로 위협 OFFSET 값이 위협 개수보다 크게 설정해야 합니다."
 #endif
 
 /**
@@ -57,13 +69,17 @@ class CELThreat
 {
 private:
 	static int m_CoInstance;										///< 객체 총 개수
-	static Queue<unsigned int> m_QueIndex;								    ///< 위협의 큐 포인터
 
-    static int m_iTotalOfABT;								            ///< 위협의 큐 포인터
-    static int m_iTotalOfAET;								            ///< 위협의 큐 포인터
+    static unsigned int m_uiBoardID;										    ///< 보드 ID
 
 
-	static CELThreat *m_pRootThreat;										///< 트리 구조의 좌측 포인터
+	static Queue<unsigned int> m_QueIndex;							///< 위협의 큐 포인터
+    static Queue<unsigned int> m_QueAETID;					///< 방사체 번호의 큐 포인터
+
+    static int m_iTotalOfABT;								        ///< 위협의 큐 포인터
+    static int m_iTotalOfAET;								        ///< 위협의 큐 포인터
+
+    static CELThreat *m_pRootThreat;								///< 트리 구조의 좌측 포인터
 
 	CELThreat *m_pLeftChild;										///< 트리 구조의 좌측 포인터
 	CELThreat *m_pRightChild;										///< 트리 구조의 우측 포인터
@@ -72,50 +88,24 @@ private:
 public:
 	SELINDEX m_Idx;													///< 위협의 방사체/빔/LOB 번호
 
-	unsigned int m_uiIndex;													///< 위협 인덱스
+	unsigned int m_uiIndex;											///< 위협 인덱스
 
 	CELThreat * GetRootThreat() const { return m_pRootThreat; }
 	void SetRootThreat(CELThreat * val) { m_pRootThreat = val; }
 public:
-	CELThreat(void);
+	CELThreat(unsigned int iBoardID );
 	~CELThreat(void);
 	bool Remove( SELINDEX *pIndex );
 	CELThreat *GetLastThreat( CELThreat *pThreat );
 
 	CELThreat& operator= (const CELThreat& p);
 
-	CELThreat( UINT nAET, UINT nABT, UINT nLOB )
-	{
-		m_pLeftChild = NULL;
-		m_pRightChild = NULL;
-
-		m_Idx.uiAET = nAET;
-		m_Idx.uiABT = nABT;
-		m_Idx.uiLOB = nLOB;
-
-        m_uiIndex = 0;
-
-		if( false == m_QueIndex.Pop( & m_uiIndex ) ) {
-			m_uiIndex = INVALID_INDEX;
-		}
- 		else {
- 			//TRACE( "\n 생성 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
- 		}
-
-        if( m_Idx.uiABT == INVALID_INDEX ) {
-            ++m_iTotalOfAET;
-        }
-        else {
-            ++m_iTotalOfABT;
-        }
-
-		++ m_CoInstance;
-	}
+    CELThreat( UINT nAET, UINT nABT, UINT nLOB );
 
 	void RemoveAll();
 	bool RemoveThreat( int nIndex, CELThreat *pPrevThreat );
-	bool RemoveAET( int nAET, CELThreat *pPrevThreat );
-	bool RemoveABT( int nAET, int nABT );
+	bool RemoveAET( unsigned int uiAETID, CELThreat *pPrevThreat );
+	bool RemoveABT( unsigned int uiAETID, unsigned int uiABTID );
 	void Link( CELThreat *pABTThreat, CELThreat *pAETThreat=NULL );
 	void UnLink( CELThreat *pUnLinkABT );
 
@@ -136,16 +126,16 @@ public:
 		if( nDepth <= nLimit ) {
 			if( m_pLeftChild != NULL ) {
 #ifdef _MSC_VER
-                if( m_Idx.uiAET != 0 ) {
-                    TRACE( "\n---- 방사체 AET[%d]", m_Idx.uiAET );
+                if( m_Idx.uiAETID != 0 ) {
+                    TRACE( "\n---- 방사체 AET[%d]", m_Idx.uiAETID );
                 }
 #endif
 				m_pLeftChild->Traverse( nDepth+1, nLimit );
 			}
             else {
 #ifdef _MSC_VER
-                if( m_Idx.uiAET != 0 ) {
-                    TRACE( "\nAET[%d], ABT[%d]", m_Idx.uiAET, m_Idx.uiABT );
+                if( m_Idx.uiAETID != 0 ) {
+                    TRACE( "\nAET[%d], ABT[%d]", m_Idx.uiAETID, m_Idx.uiABTID );
                 }
                 else {
                     TRACE( "\n위협 노드가 없습니다 !" );
@@ -243,7 +233,7 @@ public:
 		// 1. AET 찾기
 		pThreat = m_pLeftChild;
 		while( pThreat != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
-			if( pThreat->m_Idx.uiAET == nAET ) {
+			if( pThreat->m_Idx.uiAETID == nAET ) {
 				break;
 			}
 			pThreat = pThreat->m_pRightChild;
@@ -270,7 +260,7 @@ public:
 		if( pTheAETThreat != NULL ) {
 			pTheABTThreat = pTheAETThreat->m_pLeftChild;
 			while( pTheABTThreat != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
-				if( pTheABTThreat->m_Idx.uiABT == nABT ) {
+				if( pTheABTThreat->m_Idx.uiABTID == nABT ) {
 					break;
 				}
 				pTheABTThreat = pTheABTThreat->m_pRightChild;
@@ -382,7 +372,7 @@ public:
 	 */
 	bool IsRoot() {
 		bool bRet = false;
-		if( m_Idx.uiAET == INVALID_INDEX && m_Idx.uiABT == INVALID_INDEX ) {
+		if( m_Idx.uiAETID == INVALID_INDEX && m_Idx.uiABTID == INVALID_INDEX ) {
 			bRet = true;
 		}
 		return bRet;
@@ -399,7 +389,7 @@ public:
 	 */
 	bool IsAET() {
 		bool bRet = false;
-		if( m_Idx.uiAET != INVALID_INDEX && m_Idx.uiABT == INVALID_INDEX ) {
+		if( m_Idx.uiAETID != INVALID_INDEX && m_Idx.uiABTID == INVALID_INDEX ) {
 			bRet = true;
 		}
 		return bRet;
@@ -416,7 +406,7 @@ public:
 	 */
 	bool IsABT() {
 		bool bRet = false;
-		if( m_Idx.uiAET != INVALID_INDEX && m_Idx.uiABT != INVALID_INDEX ) {
+		if( m_Idx.uiAETID != INVALID_INDEX && m_Idx.uiABTID != INVALID_INDEX ) {
 			bRet = true;
 		}
 		return bRet;
@@ -428,6 +418,82 @@ public:
 // 			bRet = true;
 // 		return bRet;
 // 	}
+
+
+    /**
+     * @brief     NextAETID
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-12-05 15:20:17
+     * @warning
+     */
+    static unsigned int NextAETID()
+    {
+        unsigned int uiAETID=(unsigned int) -1;
+
+        if( m_QueAETID.Pop( & uiAETID ) == INVALID_INDEX ) {
+            uiAETID = (unsigned int) -1;
+        }
+        else {
+            //m_QueAETID.Print();
+        }
+
+        return uiAETID;
+
+    }
+
+    /**
+     * @brief     PushAETID
+     * @param     unsigned int uiAETID
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-12-06 15:35:18
+     * @warning
+     */
+    static bool PushAETID( unsigned int uiAETID )
+    {
+        bool bRet = m_QueAETID.Push( uiAETID );
+        //m_QueAETID.Print();
+        return bRet;
+
+    }
+
+    /**
+     * @brief     ClearAETID
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-12-05 15:20:16
+     * @warning
+     */
+    static void ClearAETID()
+    {
+        unsigned int ui;
+
+        m_QueAETID.Reset();
+
+        if( m_uiBoardID <= 1 ) {
+            for( ui = 1; ui < AETID_OFFSET ; ++ui ) {
+                m_QueAETID.Push( ui );
+            }
+        }
+        else {
+            for( ui = 1 + ( AETID_OFFSET * ( m_uiBoardID - 1 ) ); ui < (unsigned int) ( AETID_OFFSET * m_uiBoardID ); ++ui ) {
+                m_QueAETID.Push( ui );
+            }
+
+        }
+
+        //m_QueAETID.Print();
+
+        return;
+
+    }
 
     /**
      * @brief     모든 노드 총 개수를 리턴한다.
@@ -468,12 +534,12 @@ public:
         return m_iTotalOfABT;
     }
 
-	inline unsigned int GetAETID() { return m_Idx.uiAET; }
-	inline unsigned int GetABTID() { return m_Idx.uiABT; }
-	inline unsigned int GetLOBID() { return m_Idx.uiLOB; }
+	inline unsigned int GetAETID() { return m_Idx.uiAETID; }
+	inline unsigned int GetABTID() { return m_Idx.uiABTID; }
+	inline unsigned int GetLOBID() { return m_Idx.uiLOBID; }
 
-    inline bool RemoveThreat( int nAET ) { return m_pRootThreat->RemoveAET( nAET, m_pRootThreat ); }
-    inline bool RemoveThreat( int nAET, int nABT ) { return m_pRootThreat->RemoveABT( nAET, nABT ); }
+    inline bool RemoveThreat( unsigned int uiAETID ) { return m_pRootThreat->RemoveAET( uiAETID, m_pRootThreat ); }
+    inline bool RemoveThreat( unsigned int uiAETID, unsigned int uiABTID ) { return m_pRootThreat->RemoveABT( uiAETID, uiABTID ); }
 
 };
 

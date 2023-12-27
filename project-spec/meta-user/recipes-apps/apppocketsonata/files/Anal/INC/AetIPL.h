@@ -49,30 +49,15 @@ enum FREQ_BAND
     TOTAL_BAND
 };
 
-// 신호 형태 정의값
-enum enSIGNAL_TYPE
-{
-	ST_NORMAL_PULSE = 1,
-	ST_CW,
-	ST_DOPPLER,
-	ST_HIGHPRF,
-
-	ST_FMOP,
-	ST_CW_FMOP,
-	ST_SHORT,
-	ST_ALL,
-	ST_MAX
-} ;
-
-enum PATTERN_TYPE
-{
-	UNK = 1,
-	SINE,
-	SAW_INC,
-	SAW_DEC,
-	TRI,
-
-};   // same with PRI pattern type
+// enum PATTERN_TYPE
+// {
+// 	UNK = 1,
+// 	SINE,
+// 	SAW_INC,
+// 	SAW_DEC,
+// 	TRI,
+//
+// };   // same with PRI pattern type
 
 #elif defined(_XBAND_)
 enum FREQ_BAND
@@ -90,31 +75,15 @@ enum FREQ_BAND
 	TOTAL_BAND
 };
 
-// 신호 형태 정의값
-enum enSIGNAL_TYPE
-{
-	ST_CW = 0,
-	ST_NORMAL_PULSE,
-
-	ST_DOPPLER,
-	ST_HIGHPRF,
-
-	ST_FMOP,
-	ST_CW_FMOP,
-	ST_SHORT,
-	ST_ALL,
-	ST_MAX
-} ;
-
-enum PATTERN_TYPE
-{
-	UNK = 1,
-	SINE,
-	SAW_INC,
-	SAW_DEC,
-	TRI,
-	MAX_FRQPATTYPE
-};   // same with PRI pattern type
+// enum PATTERN_TYPE
+// {
+// 	UNK = 1,
+// 	SINE,
+// 	SAW_INC,
+// 	SAW_DEC,
+// 	TRI,
+// 	MAX_FRQPATTYPE
+// };   // same with PRI pattern type
 
 #elif defined(_POCKETSONATA_) || defined(_712_)
 
@@ -128,44 +97,9 @@ enum FREQ_BAND
     BAND3,
     BAND4,
     BAND5,
-
     TOTAL_BAND
 };
 
-// 신호 형태 정의값
-enum enSIGNAL_TYPE
-{
-	ST_NORMAL_PULSE = 0,
-	ST_CW,
-
-	ST_FMOPUK,
-    ST_FMOPDN,
-    ST_FMOPUP,
-
-    ST_CW_FMOPUK,
-    ST_CW_FMOPDN,
-    ST_CW_FMOPUP,
-
-    ST_PMOP,
-    ST_CW_PMOP,
-
-	ST_SHORT,
-    ST_DOPPLER,
-    ST_HIGHPRF,
-
-	ST_ALL,
-	ST_MAX
-} ;
-
-// enum PATTERN_TYPE
-// {
-// 	UNK = 0,
-// 	SINE,
-// 	SAW_INC,
-// 	SAW_DEC,
-// 	TRI,
-// 	MAX_FRQPATTYPE
-// };   // same with PRI pattern type
 
 #else
 enum FREQ_BAND
@@ -181,30 +115,16 @@ enum FREQ_BAND
     TOTAL_BAND
 };
 
-// 신호 형태 정의값
-enum enSIGNAL_TYPE
-{
-    ST_NORMAL_PULSE = 1,
-    ST_CW,
-    ST_DOPPLER,
-    ST_HIGHPRF,
 
-	ST_FMOP,
-	ST_CW_FMOP,
-	ST_SHORT,
-	ST_ALL,
-	ST_MAX
-} ;
-
-enum PATTERN_TYPE
-{
-	UNK = 1,
-	SINE,
-	SAW_INC,
-	SAW_DEC,
-	TRI,
-	MAX_FRQPATTYPE
-};   // same with PRI pattern type
+// enum PATTERN_TYPE
+// {
+// 	UNK = 1,
+// 	SINE,
+// 	SAW_INC,
+// 	SAW_DEC,
+// 	TRI,
+// 	MAX_FRQPATTYPE
+// };   // same with PRI pattern type
 
 #endif
 
@@ -221,9 +141,6 @@ enum enANL_FREQ_TYPE
 
     _UNKNOWN_FREQ,
 
-    // _IGNORE_FREQ,
-
-    //MAX_FRQTYPE
 } ;
 
 /**
@@ -242,8 +159,6 @@ enum enANL_PRI_TYPE
     _JITTER_STAGGER,         // 지터 펄스열에서 Stagger 로 분석된것
 
     _UNKNOWN_PRI,
-
-    //MAX_PRITYPE,
 
     _REFSTABLE,
     _REFJITTER
@@ -359,6 +274,14 @@ struct STR_LOWHIGH
 } ;
 #endif
 
+#ifndef _STR_LOWHIGH_FLOAT
+#define _STR_LOWHIGH_FLOAT
+struct STR_LOWHIGH_FLOAT {
+    float fLow;
+    float fHigh;
+};
+#endif
+
 #ifndef _STR_LOWHIGH_TOA
 #define _STR_LOWHIGH_TOA
 struct STR_LOWHIGH_TOA
@@ -400,14 +323,14 @@ struct STR_MINMAX_MEDIAN {
     int iMedian;
 } ;
 
-struct STR_MINMAX_TOA {
+typedef struct stSTR_MINMAX_TOA {
 	_TOA tMean;
 	_TOA tMin;
 	_TOA tMax;
 
-    STR_MINMAX_TOA operator*( const unsigned int &c )
+    stSTR_MINMAX_TOA operator*( const unsigned int &c )
     {
-        STR_MINMAX_TOA stTOA;
+        stSTR_MINMAX_TOA stTOA;
 
         stTOA.tMean = tMean * c;
         stTOA.tMin = tMin * c;
@@ -416,14 +339,14 @@ struct STR_MINMAX_TOA {
         return stTOA;
     }
 
-    void operator=( const STR_MINMAX_TOA &c )
+    void operator=( const stSTR_MINMAX_TOA &c )
     {
         tMean = c.tMean;
         tMin = c.tMin;
         tMax = c.tMax;
     }
 
-} ;
+} STR_MINMAX_TOA;
 
 
 
@@ -463,7 +386,7 @@ struct STR_FRQ {
 }  ;
 
 /* AET용 PRI 구조체 */
-struct STR_PRI {
+typedef struct stSTR_PRI {
     ENUM_AET_PRI_TYPE iType;
     _TOA tMean;
     _TOA tMin;
@@ -475,7 +398,7 @@ struct STR_PRI {
     _TOA tSwtVal[ MAX_FREQ_PRI_STEP  ];    // _spMaxSwtLev
     _TOA tPatPrd;
 
-	STR_PRI() :
+    stSTR_PRI() :
 		iType( ENUM_AET_PRI_TYPE::E_AET_PRI_UNKNOWN ),
 		tMean(0),
 		tMin(0),
@@ -489,10 +412,9 @@ struct STR_PRI {
         memset( tSwtVal, 0, sizeof( tSwtVal ) );
 	}
 
-} ;
+} STR_PRI;
 
 /* AET용 SCAN 구조체 */
-//##ModelId=452B0C510394
 struct STR_AS {
     int iStat;
     int iType;
@@ -506,7 +428,6 @@ struct STR_SEEN_TIME {
 } ;
 
 /* AET용 식별 구조체 */
-//##ModelId=452B0C5103C7
 struct STR_SYSID {
   int coAmbi;
   int iNoIPL[ _spMaxCoSysAmbi ];
@@ -765,7 +686,7 @@ struct STR_NEWAET {
     STR_EXT ext;    // exteded infomation of AET
 }  ;
 #elif defined(_POCKETSONATA_) || defined(_712_)
-typedef struct SRxLOBData STR_NEWAET;
+typedef struct stSRxLOBData STR_NEWAET;
 #elif defined(_SONATA_)
 typedef struct SRxLOBData STR_NEWAET;
 #else

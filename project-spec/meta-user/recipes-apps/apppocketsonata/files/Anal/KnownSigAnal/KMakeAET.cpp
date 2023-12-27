@@ -34,8 +34,10 @@
  * @date      2005-07-28 14:09:48
  * @warning
  */
-CKMakeAET::CKMakeAET( void *pParent, unsigned int uiCoMaxPdw ) : CMakeAET(MAX_LOB)
+CKMakeAET::CKMakeAET( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CMakeAET(MAX_LOB, pThreadName )
 {
+    SetAnalType( enTRK_ANAL );
+
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pKnownSigAnal)
@@ -45,6 +47,8 @@ CKMakeAET::CKMakeAET( void *pParent, unsigned int uiCoMaxPdw ) : CMakeAET(MAX_LO
 
     //m_pAet = NULL;  //GetAet();
     m_pEmitter = CKMakeAET::GetEmitter();
+
+    m_pTheRadarSimilarity = new CRadarSimilarity( m_pKnownSigAnal->m_pSEnvironVariable, m_pKnownSigAnal->m_fFixedFreqMargin, m_pKnownSigAnal->m_fStableMargin );
 
 }
 
@@ -93,10 +97,12 @@ void CKMakeAET::MakeAET( bool bDBInsert )
 {
     PrintFunction
 
-	// 시작 에미터 번호 위치 백업.
-    //nStartAet = m_CoLOB;
+    // 추적관련 모듈 초기화
+    InitKnownIndexEmitter();
 
 	CMakeAET::MakeAET( bDBInsert );
+
+    CMakeAET::PrintAllAET();
 
 	/*! \bug  Dwell 인 경우에는 추적할 에미터 제원으로 업데이트 하도록 한다.
 	    \date 2008-10-29 21:39:09, 조철희
@@ -120,36 +126,40 @@ void CKMakeAET::MakeAET( bool bDBInsert )
 //##ModelId=42E98F300030
 bool CKMakeAET::KnownMakeAET( bool bDBInsert )
 {
-    // int idxLOBData;
-
-    //SRxLOBData *pLOBData;
 	STR_EMITTER *pEmitter;
 
-	MakeAET( bDBInsert );
+    CMakeAET::MakeAET( bDBInsert );
 
 	/*! \bug  m_IdxUpdAet 초기화
 	    \date 2006-06-26 13:43:57, 조철희
 	*/
-    m_IdxUpdAet = -1;
+    m_UpdateSuccessAet = -1;
 
     CalcAllKnownSucessRatio();
 
+    SortAllKnownSucessRatio();
+
 	// 추적 성공인지를 체크한다.
 	// 추출된 펄스열로 에미터가 1개 만들어 질떄 추적 성공으로 한다.
-    m_IdxUpdAet = SelectKnownSuccessLOB();
-    if(GetIdxUpdAet() >= _spZero ) {
-        //   UpdateFreq(pLOBData);
-        //   UpdatePRI(pLOBData);
-
+    m_UpdateSuccessAet = CheckUpdateLOB();
+    if( IsTrackSuccess() == true ) {
 		/*! \bug  에미터로 생성된 펄스열들만 마킹을 해서 새로운 에미터 분석시에 분석하지 못하게 한다.
 			\date 2006-06-29 13:53:26, 조철희
 		*/
 		// 추출된 펄스 Marking
-        pEmitter = GetEmitterFromKnownIndex( (UINT) GetIdxUpdAet() );
+        pEmitter = GetEmitterFromKnownIndex( (UINT) GetUpdateIndexAet() );
         MarkToEmitterPdwIndex( pEmitter, enEXTRACT_MARK );
 	}
+    else {
 
-    return GetIdxUpdAet() >= _spZero;
+    }
+
+    CMakeAET::PrintAllAET();
+
+    // 분석 완료한 개수를 재 저장합니다.
+    m_iAnaledCoLOB = m_iCoLOB;
+
+    return IsTrackSuccess();
 
 }
 
@@ -179,33 +189,57 @@ void CKMakeAET::MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, PULSE_MARK enMarkT
  * @date      2022-04-27, 11:42
  * @warning
  */
-int CKMakeAET::SelectKnownSuccessLOB()
+int CKMakeAET::CheckUpdateLOB()
 {
     int i, iIdxLOB=-1;
 
     int iNumOfPDW, iMaxNumOfPDW=-1;
-    float fKnownSuccessRatio, fMaxKnownSuccessRatio=-1.;
+    int iKnownSuccessPercent;
 
     STR_EMITTER *pEmitter;
 
-    //SRxLOBData *pLOBData;
+    // 펄스열이 가장 많은 위협을 추적 성공으로 결정 합니다.
+    for( i = 0; i < m_iCoLOB; ++i ) {
+        iKnownSuccessPercent = GetKnownSuccessPercent( (unsigned int) i);
 
-    for (i = 0; i < m_iCoLOB; ++i) {
-        fKnownSuccessRatio = GetKnownSuccessRatio(i);
+        pEmitter = GetEmitterFromKnownIndex( ( UINT ) i );
+        iNumOfPDW = ( int ) pEmitter->stPDW.uiCount;
 
-        pEmitter = GetEmitterFromKnownIndex( (UINT) i);
-        iNumOfPDW = (int) pEmitter->stPDW.uiCount;
-
-        // 추적 성공율과 분석한 PDW 개수로 추적 성공 LOB를 선택한다.
-        if( (fMaxKnownSuccessRatio < fKnownSuccessRatio) || \
-            ( ( is_zero<float>( fMaxKnownSuccessRatio - fKnownSuccessRatio) == true) && ( iMaxNumOfPDW <= iNumOfPDW ) ) ) {
-            fMaxKnownSuccessRatio = fKnownSuccessRatio;
+        // 펄스열이 가장 많은 위협을 추적 성공으로 결정 합니다.
+        if( ( iKnownSuccessPercent >= 100 ) && ( iMaxNumOfPDW <= iNumOfPDW ) ) {
             iMaxNumOfPDW = iNumOfPDW;
+
             iIdxLOB = i;
+
         }
     }
 
     return iIdxLOB;
+}
+
+
+/**
+ * @brief     CalcMOPSuccessRatio
+ * @param     SRxLOBData * pLOBData
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-23 20:06:59
+ * @warning
+ */
+float CKMakeAET::CalcSigTypeSuccessRatio( SRxLOBData *pLOBData )
+{
+    bool bRet;
+
+    float fRet = ( float ) 0.;
+
+    bRet = m_pTheRadarSimilarity->CompSigTypeMargin( m_pTrkABT, pLOBData );
+    if( bRet == true ) {
+        fRet = ( float ) 100.;
+    }
+
+    return fRet;
 }
 
 /**
@@ -220,49 +254,45 @@ int CKMakeAET::SelectKnownSuccessLOB()
  */
 float CKMakeAET::CalcFreqSuccessRatio(SRxLOBData *pLOBData)
 {
-    float fRet=0.;
+    bool bRet;
 
-    if (pLOBData->vFreqType == m_pTrkABT->vFreqType) {
-        fRet = 100.;
-    }
-    else {
-        switch (m_pTrkABT->vFreqType) {
-            case ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED:
-                if(pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_AGILE ) {
-                    fRet = 140.;
-                }
-                else {
-                }
-            break;
+    float fRet=(float) 0.;
 
-            case ENUM_AET_FRQ_TYPE::E_AET_FRQ_AGILE:
-                if (pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED) {
-                    fRet = 40.;
-                }
-                else if (pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_PATTERN || pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING) {
-                    fRet = 140.;
-                }
-                else {
-                }
-                break;
-
-
-            case ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING:
-                if (pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_AGILE) {
-                    fRet = 40.;
-                }
-                break;
-
-            case ENUM_AET_FRQ_TYPE::E_AET_FRQ_PATTERN:
-                if (pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_AGILE) {
-                    fRet = 40.;
-                }
-                break;
-
-            default:
-                break;
-
+    bRet = m_pTheRadarSimilarity->CompFreqMargin( m_pTrkABT, pLOBData );
+    if( bRet == true ) {
+        // 타입이 같고 레벨수가
+        if( m_pTrkABT->vFreqType == pLOBData->vFreqType ) {
+            fRet = ( float ) 100.;
         }
+        else {
+            fRet = ( float ) 50.;
+
+            // PRI 형태가 정밀 분석도가 높으면, 점수를 높힘.
+            switch( m_pTrkABT->vFreqType ) {
+                case ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED:
+                    break;
+
+                case ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING:
+                    break;
+
+                case ENUM_AET_FRQ_TYPE::E_AET_FRQ_AGILE:
+                    if( pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_PATTERN ) {
+                        fRet = ( float ) 100.;
+                    }
+                    break;
+
+                case ENUM_AET_FRQ_TYPE::E_AET_FRQ_PATTERN:
+                    if( pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_AGILE ) {
+                        fRet = ( float ) 100.;
+                    }
+                    break;
+
+                default:
+                    break;
+
+            }
+        }
+
     }
 
     return fRet;
@@ -281,52 +311,50 @@ float CKMakeAET::CalcFreqSuccessRatio(SRxLOBData *pLOBData)
  */
 float CKMakeAET::CalcPRISuccessRatio(SRxLOBData *pLOBData)
 {
-    float fRet = 0.;
+    bool bRet;
 
-    if (pLOBData->vPRIType == m_pTrkABT->vPRIType) {
-        fRet = 100.;
-    }
-    else {
-        switch (m_pTrkABT->vPRIType) {
-        case ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED:
-            if (pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH) {
-                fRet = 140.;
-            }
-            else {
-            }
-            break;
+    float fRet = ( float ) 0.;
 
-        case ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER:
-            if (pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER) {
-                fRet = 40.;
-            }
-            else {
-            }
-            break;
+    bRet = m_pTheRadarSimilarity->CompPRIMargin( m_pTrkABT, pLOBData );
+    if( bRet == true ) {
+        if( m_pTrkABT->vPRIType == pLOBData->vPRIType ) {
+            fRet = ( float ) 100.;
+        }
+        else {
+            fRet = ( float ) 50.;
 
-        case ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER:
-            if (pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER || pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN || pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH) {
-                fRet = 140.;
-            }
-            break;
+            // PRI 형태가 정밀 분석도가 높으면, 점수를 높힘.
+            switch( m_pTrkABT->vPRIType ) {
+                case ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED:
+                    break;
 
-        case ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN:
-            if (pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER) {
-                fRet = 40.;
-            }
-            break;
+                case ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER:
+                    if( pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER || pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN ) {
+                        fRet = ( float ) 100.;
+                    }
+                    break;
 
-        case ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH:
-            if (pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER) {
-                fRet = 40.;
-            }
-            break;
+                case ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH:
+                    break;
 
-        default:
-            break;
+                case ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER:
+                    if( pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER ) {
+                        fRet = ( float ) 100.;
+                    }
+                    break;
+
+                case ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN:
+
+                    break;
+
+                default:
+                    break;
+
+            }
 
         }
     }
+
     return fRet;
 
 }
@@ -349,20 +377,89 @@ void CKMakeAET::CalcAllKnownSucessRatio()
 
     SRxLOBData *pLOBData;
 
+#if 0
+    if( m_iCoLOB == 1 ) {
+        memcpy( GetLOBData( (unsigned int) m_iCoLOB ), GetLOBData( m_iCoLOB-1 ), sizeof( SRxLOBData ) );
+
+        pLOBData = GetLOBData( ( unsigned int ) m_iCoLOB );
+        pLOBData->vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_AGILE;
+
+        SetKnownIndexEmitter( m_iCoLOB, 0 );
+
+        ++ m_iCoLOB;
+    }
+
+#endif
+
     for (i = 0; i < m_iCoLOB; ++i) {
-        pLOBData = GetLOBData(i);
+        pLOBData = GetLOBData( ( unsigned int ) i);
 
-        // 주파수 추적 성공율 계산
-        fRatio = CalcFreqSuccessRatio( pLOBData );
+        if( pLOBData != NULL ) {
+            // 신호 형태 성공률 계산
+            fRatio = CalcSigTypeSuccessRatio( pLOBData );
 
-        // PRI 추적 성공율 계산
-        fRatio += CalcPRISuccessRatio(pLOBData);
+            // 주파수 추적 성공율 계산
+            fRatio += CalcFreqSuccessRatio( pLOBData );
 
-        SetKnownSuccessRatio(i, fRatio);
+            // PRI 추적 성공율 계산
+            fRatio += CalcPRISuccessRatio(pLOBData);
+
+            SetKnownSuccessRatio( (unsigned int) i, fRatio);
+        }
+        else {
+            Log( enError, "CalcAllKnownSucessRatio() 에서 잘못된 LOBData를 갖고 왔습니다 !" );
+        }
 
     }
 
     return;
+}
+
+/**
+ * @brief     incSucessRatioCompare
+ * @param     const void * arg1
+ * @param     const void * arg2
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-23 20:20:38
+ * @warning
+ */
+int CKMakeAET::incSucessRatioCompare( const void *arg1, const void *arg2 )
+{
+    int iRet;
+    const STR_KWNLOB *p1, *p2;
+
+    p1 = ( const STR_KWNLOB * ) arg1;
+    p2 = ( const STR_KWNLOB * ) arg2;
+
+    if( p1->stKnownInfo.iKnownSuccessPercent > p2->stKnownInfo.iKnownSuccessPercent ) {
+        iRet = ( -1 );
+    }
+    else if( p1->stKnownInfo.iKnownSuccessPercent < p2->stKnownInfo.iKnownSuccessPercent ) {
+        iRet = ( 1 );
+    }
+    else {
+        iRet = 0;
+    }
+
+    return iRet;
+}
+
+/**
+ * @brief     SortAllKnownSucessRatio
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-23 20:17:17
+ * @warning
+ */
+void CKMakeAET::SortAllKnownSucessRatio()
+{
+    qsort( & m_KwnLOB[0], (unsigned int) m_iCoLOB, sizeof( STR_KWNLOB ), incSucessRatioCompare );
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -475,7 +572,7 @@ void CKMakeAET::MakeUpAET()
             pUpdAet->fPRIMax = m_pTrkABT->fPRIMax;
             pUpdAet->fPRIMin = m_pTrkABT->fPRIMin;
             pUpdAet->fPRIDeviation = m_pTrkABT->fPRIDeviation;
-            pUpdAet->fPRIJitterRatio = m_pTrkABT->fPRIJitterRatio;
+            pUpdAet->fPRIJitterRatio = m_pTrkABT->fPRIJitterPercent;
             pUpdAet->vPRIPositionCount = m_pTrkABT->vPRIPositionCount;
             pUpdAet->vPRIElementCount = m_pTrkABT->vPRIElementCount;
 
@@ -516,7 +613,7 @@ void CKMakeAET::MakeUpAET()
                 pNewAet->fPRIMax = m_pTrkABT->fPRIMax;
                 pNewAet->fPRIMin = m_pTrkABT->fPRIMin;
                 pNewAet->fPRIDeviation = m_pTrkABT->fPRIDeviation;
-                pNewAet->fPRIJitterRatio = m_pTrkABT->fPRIJitterRatio;
+                pNewAet->fPRIJitterRatio = m_pTrkABT->fPRIJitterPercent;
                 pNewAet->vPRIPositionCount = m_pTrkABT->vPRIPositionCount;
                 pNewAet->vPRIElementCount = m_pTrkABT->vPRIElementCount;
 
@@ -558,7 +655,7 @@ void CKMakeAET::MakeUpAET()
 bool CKMakeAET::IsUpdateAet()
 {
 	// 추적 성공 또는 실패인지를 검사한다.
-    return m_KwnLOB[_spZero].stLOBData.uiABTID != _spZero;
+    return m_KwnLOB[_spZero].pstLOBData->uiABTID != _spZero;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -588,9 +685,9 @@ SRxLOBData *CKMakeAET::GetNewLOB()
     SRxLOBData *pLOBData;
 
     for( int i=0 ; i < m_iCoLOB ; ++i ) {
-        pLOBData = GetLOBData(i);
+        pLOBData = GetLOBData( (unsigned int) i );
 
-        if(pLOBData->uiABTID == _spZero ) {
+        if( pLOBData != NULL && pLOBData->uiABTID == _spZero ) {
             pRetLOBData = pLOBData;
         }
 	}
@@ -613,9 +710,9 @@ int CKMakeAET::GetIndexNewAet()
     SRxLOBData *pLOBData;
 
     for( i=0 ; i < m_iCoLOB ; ++i ) {
-        pLOBData = GetLOBData(i);
+        pLOBData = GetLOBData( (unsigned int) i );
 
-        if(pLOBData->uiABTID == _spZero) {
+        if( pLOBData != NULL && pLOBData->uiABTID == _spZero) {
             iIndex = i;
             break;
         }
@@ -637,8 +734,8 @@ SRxLOBData *CKMakeAET::GetUpdLOB()
 {
     SRxLOBData *pSRxLOBData=NULL;
 
-	if( GetIdxUpdAet() >= 0 ) {
-        pSRxLOBData = GetLOBData (GetIdxUpdAet() );
+	if( GetUpdateIndexAet() >= 0 ) {
+        pSRxLOBData = GetLOBData( (unsigned int) GetUpdateIndexAet() );
     }
 
     return pSRxLOBData;
@@ -976,19 +1073,3 @@ UINT CKMakeAET::GetOpInitID()
 {
 	return m_pKnownSigAnal->GetOpInitID();
 }
-
-#ifdef _LOG_ANALTYPE_
-/**
- * @brief     GetLogAnalType
- * @return    bool
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-09-21 12:11:12
- * @warning
- */
-bool CKMakeAET::GetLogAnalType()
-{
-    return m_pKnownSigAnal->GetLogAnalType();
-}
-#endif

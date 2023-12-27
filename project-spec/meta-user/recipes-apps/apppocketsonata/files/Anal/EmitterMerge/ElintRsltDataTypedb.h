@@ -733,7 +733,7 @@ struct SELMERGE_CANDIDATE {
 
 	unsigned int nSeqNum;									// DB 테이블의 SEQ_NUM
 
-	bool bIsFISINTTask;										// FISINT용 과제
+	//bool bIsFISINTTask;										// FISINT용 과제
 
 	//char szELNOT[_MAX_ELNOT_STRING_SIZE_];///< 빔의 ELNOT 정보
 

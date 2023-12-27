@@ -52,8 +52,6 @@ typedef unsigned int SOCKET;
 
 #define _difftime64( A, B)      ( A > B ? ( A - B ) : ( B - A ) )
 
-//#define printf                  _func_kprintf
-
 //////////////////////////////////////////////////////////////////////////
 #elif defined(_GNUCC__)
 #define WAIT_FOREVER		0
@@ -68,6 +66,8 @@ typedef unsigned int SOCKET;
 #define VX_FP_TASK			    0
 
 #define CLOCK_REALTIME	        0
+
+#define NO_WAIT					0
 
 #define OS_MILLISEC(A)          (A)
 #define OS_SEC(A)               (A*1000)
@@ -89,6 +89,10 @@ typedef unsigned int SOCKET;
 #define mkdir   _mkdir
 #define open    _open
 #define write   _write
+
+#define putenv  _putenv
+
+#define OK      (0)
 
 #endif
 

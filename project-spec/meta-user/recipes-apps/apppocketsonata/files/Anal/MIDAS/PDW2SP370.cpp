@@ -148,7 +148,7 @@ bool CPDW2SP370::TransferPDW2SP370( SRxPDWDataRGroup *pS_EL_PDW_DATA, int iRecor
 	pstPDWWord = & m_stPDWWord[0];
 	for( i=0 ; i < iRecords ; ++i ) {
 		AllEndian64( & pS_EL_PDW_DATA->ullTOA, sizeof(long long int) );
-		AllEndian32( & pS_EL_PDW_DATA->uiPulseType, sizeof(struct SRxPDWDataRGroup)- sizeof(long long int) );
+		AllEndian32( & pS_EL_PDW_DATA->uiPulseType, sizeof( SRxPDWDataRGroup)- sizeof(long long int) );
 
 		memset( pstPDWWord, 0, sizeof( union SELSP350_PDWWORDS) );
 

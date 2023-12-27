@@ -144,6 +144,14 @@ void BootShellMain()
     }
 #endif
 
+#ifdef __VXWORKS__
+    // ATA 드라이브, PS 로직 마운트 때문에 지연 추가
+    printf( "\n PS 로직 부팅으로 무려 30초씩이나 대기 합니다...\n" );
+    Sleep( 30 );
+    printf( "\n $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" );
+
+#endif
+
     g_theManSbc = new CManSbc;
     if( g_theManSbc == NULL ) {
         PrintErr( ( "\n [W] 기본 메모리(theManSbc)가 부족합니다 !" ) );
@@ -156,10 +164,25 @@ void BootShellMain()
         WhereIs;
     }
     else {
+        g_pTheSysConfig->SetBoardID( g_theManSbc->GetBoardID() );
+
         g_pTheSysConfig->DisplaySystemVar();
     }
 
+    // 네트워크 설정
+    g_theManSbc->AutoIPAddress();
+
+    // 마운트
+    g_theManSbc->MountDrive();
+
+    // 네트워크 설정
     g_theManSbc->SetTimeBySNMP();
+
+    //
+    g_theManSbc->CreateUDPServer();
+
+    //
+    g_theManSbc->KeyboardHooking();
 
 	theBootShell = new CBootShell;
 	if( theBootShell == NULL ) {
@@ -268,6 +291,8 @@ void CBootShell::Run()
 
 	printf( "\n\n 키 값 (기본=이미지 실행[1]/기본 파일 설치[w]/소프트웨어 업데이트[!]) ? " );
     key = g_theManSbc->GetCommand();
+
+    key = DOWNLOAD_APP;
 
     printf( "\n\n" );
     switch( key ) {

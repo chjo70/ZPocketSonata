@@ -6,9 +6,98 @@
 
 #include <queue>
 #include <stack>
+#include <algorithm>
 
 #include "../../files/Utils/cmultiserver.h"
 
+#include "./ColorListCtrl/ColorListCtrl.h"
+
+enum SCENARIO_MODE {
+    enIDLE_SCENARIO=0,
+
+    enREADY_SCENARIO,
+    enRUN_SCENARIO
+
+};
+
+enum SCENARIO_COMMAND {
+    enSCENARIO_COMMAND_NULL = 0,
+
+    enSCENARIO_COMMAND_RESTART,
+    enSCENARIO_COMMAND_DELETE,
+
+
+};
+
+
+struct STR_AET_LIST {
+    time_t tiTime;
+    COLORREF uiColor;
+
+    unsigned int uiAETID;
+
+    STR_AET_LIST()
+    {
+    }
+
+    STR_AET_LIST( unsigned int i_uiAETID, COLORREF i_uiColor )
+    {
+        uiAETID = i_uiAETID;
+        tiTime = time(NULL);
+
+        uiColor = i_uiColor;
+    }
+};
+
+struct STR_ABT_LIST {
+    time_t tiTime;
+    COLORREF uiColor;
+
+    unsigned int uiAETID;
+    unsigned int uiABTID;
+
+    STR_ABT_LIST()
+    {
+    }
+
+    STR_ABT_LIST( unsigned int i_uiAETID, unsigned int i_uiABTID, COLORREF i_uiColor )
+    {
+        uiAETID = i_uiAETID;
+        uiABTID = i_uiABTID;
+
+        tiTime = time(NULL);
+        uiColor = i_uiColor;
+    }
+};
+
+struct Find_AETID {
+    STR_AET_LIST stAETID;
+
+    Find_AETID( unsigned int uiAETID )
+    {
+        stAETID.uiAETID = uiAETID;
+    }
+
+    bool operator()( STR_AET_LIST i_stAETID )
+    {
+        return ( stAETID.uiAETID == i_stAETID.uiAETID );
+    }
+};
+
+struct Find_ABTID {
+    STR_ABT_LIST stABTID;
+
+    Find_ABTID( unsigned int uiAETID, unsigned int uiABTID )
+    {
+        stABTID.uiAETID = uiAETID;
+        stABTID.uiABTID = uiABTID;
+    }
+
+    bool operator()( STR_ABT_LIST i_stABTID )
+    {
+        return ( stABTID.uiAETID == i_stABTID.uiAETID ) && ( stABTID.uiABTID == i_stABTID.uiABTID );
+    }
+};
 
 struct STR_LIST {
     unsigned int uiID;
@@ -50,6 +139,9 @@ struct STR_RESULT_MESSAGE {
 class CZCCUSimDlg : public CDialogEx
 {
 private:
+    SCENARIO_MODE m_enScenarioMode;
+    SCENARIO_COMMAND m_enScenarioCommand;
+
 	CBitmap m_bmpLampBigOff;
 	CBitmap m_bmpLampBigOn;
 	CBitmap m_bmpLampConnect[6];
@@ -63,9 +155,11 @@ private:
 
 	ENUM_MODE m_enMode;
 
-    vector <unsigned int> m_vecAETID;
-    vector <STR_LIST> m_vecABTID;
-    vector <STR_LIST> m_vecLOBID;
+    vector <STR_AET_LIST> m_vecAETID;
+    vector <STR_ABT_LIST> m_vecABTID;
+
+    //vector <STR_LIST> m_vecABTID;
+    //vector <STR_LIST> m_vecLOBID;
 
     unsigned int m_uiCoAETListItems;
     unsigned int m_uiCoABTListItems;
@@ -80,6 +174,8 @@ private:
     STR_BUTTON_COUNT m_stCountOfButton;
 
     STR_RESULT_MESSAGE m_stResultMessage;
+
+    bool m_bScroll;
 
 // 생성입니다.
 public:
@@ -128,11 +224,14 @@ private:
     // 랜 메시지 전송
 	void Send( void *pLanData=NULL, BOOL bSwap=TRUE );
 
-    int ManageAETID( unsigned int uiAETID );
+    int ManageAETID( unsigned int uiAETID, COLORREF uiColor );
+    int ManageABTID( unsigned int uiAETID, unsigned int uiABTID, COLORREF uiColor );
+    void ClearColorAETID();
+    void ClearColorABTID();
     unsigned int GetRows( unsigned int uiAETID );
     unsigned int GetRows( unsigned int uiAETID, unsigned int uiABTID );
-    void UpdateAETList( unsigned int uiItems, UNI_LAN_DATA *pLanData );
-    void UpdateABTList( unsigned int uiItems, UNI_LAN_DATA *pLanData );
+    void UpdateAETList( unsigned int uiItems, UNI_LAN_DATA *pLanData, COLORREF uiColor );
+    void UpdateABTList( unsigned int uiItems, UNI_LAN_DATA *pLanData, COLORREF uiColor );
 
     void InsertLOBList( UNI_LAN_DATA *pLanData );
 
@@ -141,6 +240,8 @@ private:
     void RemoveClientSocket( STR_CLIENT_SOCKET *pClientSocket );
 
     void DisplayButtonCount();
+
+    BOOL UpdateThreatID();
 
 public:
     // CMultiServer 연결하기 위한 함수 연결
@@ -173,13 +274,23 @@ public:
     void ResultOfScanData( UNI_MSG_DATA *pLanData );
 
     //
+    void ResultOfLostBeamData( UNI_MSG_DATA *pLanData );
     void ResultOfDelete( UNI_MSG_DATA *pLanData );
-    void ResultOfDeleteThreatData( UNI_MSG_DATA *pLanData );
+    void ResultOfDeleteThreatData( UNI_MSG_DATA *pLanData, unsigned int uiDataLength );
     void ResultOfUserDeleteThreatData( UNI_MSG_DATA *pLanData );
     void ResultOfDeleteBeamData( UNI_MSG_DATA *pLanData );
 
     // 에러 메시지
     void ResultOfSysError( UNI_LAN_DATA *pLanData );
+
+    void VectorErase( vector <STR_AET_LIST> &v, unsigned int uiAETID );
+    void VectorErase( vector <STR_ABT_LIST> &v, STR_ABT_LIST &stABT );
+
+    void UpdateThreatInfo();
+
+    void AllScenarioButtonEanble( BOOL bEnable );
+
+    void DisplayStatusMessage( const char *format, ... );
 
 
 protected:
@@ -203,14 +314,23 @@ public:
 	afx_msg void OnBnClickedButtonReqDownload();
     afx_msg void OnBnClickedButtonReqOpvarSetting();
     afx_msg void OnBnClickedButtonReqDelete();
-    CListCtrl m_CListCtrlAET;
-    CListCtrl m_CListCtrlABT;
-    CListCtrl m_CListCtrlLOB;
+    CColorListCtrl m_CListCtrlAET;
+    CColorListCtrl m_CListCtrlABT;
+    CColorListCtrl m_CListCtrlLOB;
 
     afx_msg void OnBnClickedButtonReqScan();
     afx_msg void OnNMClickListAet( NMHDR *pNMHDR, LRESULT *pResult );
     afx_msg void OnNMClickListAbt( NMHDR *pNMHDR, LRESULT *pResult );
     CStatic m_CStaticError;
-    CListCtrl m_ListCtrlLOB;
+    CColorListCtrl m_ListCtrlLOB;
     afx_msg void OnIDClose();
+    afx_msg void OnNMCustomdrawListLob( NMHDR *pNMHDR, LRESULT *pResult );
+    virtual BOOL PreTranslateMessage( MSG *pMsg );
+    afx_msg void OnTimer( UINT_PTR nIDEvent );
+    afx_msg void OnLvnItemchangedListAbt( NMHDR *pNMHDR, LRESULT *pResult );
+    afx_msg void OnLvnBeginScrollListLob( NMHDR *pNMHDR, LRESULT *pResult );
+    afx_msg void OnLvnEndScrollListLob( NMHDR *pNMHDR, LRESULT *pResult );
+    afx_msg void OnBnClickedButtonReqRestartScenario();
+    afx_msg void OnBnClickedButtonReqDeleteScenario();
+    afx_msg void OnBnClickedButtonCancelScenario();
 };

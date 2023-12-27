@@ -55,7 +55,7 @@ public:
 	STR_PDWPARAM* GetPdwParam();
 
 
-    CNMakeAET( void *pParent, unsigned int uicoMaxPdw );
+    CNMakeAET( void *pParent, unsigned int uicoMaxPdw, const char *pThreadName=NULL );
 	virtual ~CNMakeAET();
 
 	// 타 장비 관련 위협 데이터를 생성한다.
@@ -77,7 +77,7 @@ public:
 #endif
 
 #ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
+    bool IsLogAnalType( LogType enLogType );
 #endif
 
 };

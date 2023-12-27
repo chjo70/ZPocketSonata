@@ -105,10 +105,12 @@ int MultiByteToUTF8(wchar_t *pszUniCode, char *pszMultiByte)
 }
 
 #ifdef _MSC_VER
-int ANSIToUTF8( char *pszUTF8, char *pszAnsiCode )
+int ANSIToUTF8( char *pszUTF8, size_t szLength, char *pszAnsiCode )
 {
     BSTR    bstrWide;
     int     nLength;
+
+    *pszUTF8 = NULL;
 
     nLength = MultiByteToWideChar( CP_ACP, 0, pszAnsiCode, lstrlen( pszAnsiCode ) + 1, NULL, NULL );
     bstrWide = SysAllocStringLen( NULL, ( UINT ) nLength );
@@ -117,8 +119,13 @@ int ANSIToUTF8( char *pszUTF8, char *pszAnsiCode )
 
     nLength = WideCharToMultiByte( CP_UTF8, 0, bstrWide, -1, NULL, 0, NULL, NULL );
 
-    WideCharToMultiByte( CP_UTF8, 0, bstrWide, -1, pszUTF8, nLength, NULL, NULL );
-    SysFreeString( bstrWide );
+    if( (size_t) nLength < szLength  ) {
+        WideCharToMultiByte( CP_UTF8, 0, bstrWide, -1, pszUTF8, nLength, NULL, NULL );
+        SysFreeString( bstrWide );
+    }
+    else {
+
+    }
 
     return nLength;
 

@@ -187,8 +187,8 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
                 sprintf_s( buffer, sizeof( buffer ), "%s[%s]/%2d´Ü", g_szAetPriType[( int ) pLOB->vPRIType], g_szAetPatternType[( int ) pLOB->vPRIPatternType], pLOB->vPRIPositionCount );
             }
             else {
-                if( pLOB->fFreqPatternPeriod != 0. ) {
-                    sprintf_s( buffer, sizeof( buffer ), "%s[%s]/%.2f", g_szAetPriType[( int ) pLOB->vPRIType], g_szAetPatternType[( int ) pLOB->vPRIPatternType], pLOB->fFreqPatternPeriod );
+                if( pLOB->fPRIPatternPeriod != 0. ) {
+                    sprintf_s( buffer, sizeof( buffer ), "%s[%s]/%.2f", g_szAetPriType[( int ) pLOB->vPRIType], g_szAetPatternType[( int ) pLOB->vPRIPatternType], pLOB->fPRIPatternPeriod );
                 }
                 else {
                     sprintf_s( buffer, sizeof( buffer ), "%s", g_szAetPriType[( int ) pLOB->vPRIType] );

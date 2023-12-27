@@ -31,13 +31,14 @@ private:
     void AnalysisStart();															///< 입력 PDW 데이터로 추적 분석을 수행합니다.
 
 public:
-    CTrackAnalysis( int iThreadPriority, const char *pClassName=NULL, bool bArrayLanData=false );	///< 초기 멤버 변수값 등을 설정하는 객체 생성자 입니다.
+    CTrackAnalysis( int iThreadPriority, const char *pThreadName=NULL, bool bArrayLanData=false );	///< 초기 멤버 변수값 등을 설정하는 객체 생성자 입니다.
     virtual ~CTrackAnalysis(void);													///< 메모리 해지 등을 처리하고 객체를 소멸합니다.
 
     void Run( key_t key=IPC_PRIVATE );												///< CThread 클래스의 Run() 함수를 호출하여 쓰레드를 생성하게 합니다.
     void _routine();														///< 쓰레드에서 서버 또는 클라이언트를 실행하게 한다.
-    char *GetThreadName() { return m_szThreadName; }						///< 쓰레드명을 리턴합니다.
     STR_MessageData *GetParentMessage() { return m_pMsg; }                  ///< 메시지 데이터를 리턴 합니다.
+
+    const char *GetThreadName() { return m_szThreadName; }
 
     void InitTrackAnalysis();
 

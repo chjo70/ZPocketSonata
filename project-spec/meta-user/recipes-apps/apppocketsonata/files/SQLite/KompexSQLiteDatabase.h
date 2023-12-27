@@ -35,7 +35,7 @@ namespace Kompex
 		//! Closes automatically the connection to a SQLite database file.
 		CSQLiteDatabase();
 
-		/** 
+		/**
 		Overloaded constructor.\n
 		Opens a connection to a SQLite database file.
 
@@ -50,13 +50,13 @@ namespace Kompex
 							In either case the database must already exist, otherwise an error is returned.\n
 							SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE\n
 							The database is opened for reading and writing, \n
-							and is creates it if it does not already exist. 
+							and is creates it if it does not already exist.
 		@param zVfs			Name of VFS module to use\n
 							NULL for default
 		*/
 		CSQLiteDatabase(const char *filename, int flags, const char *zVfs);
 
-		/** 
+		/**
 		Overloaded constructor.\n
 		Opens a connection to a SQLite database file.
 
@@ -71,7 +71,7 @@ namespace Kompex
 							In either case the database must already exist, otherwise an error is returned.\n
 							SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE\n
 							The database is opened for reading and writing, \n
-							and is creates it if it does not already exist. 
+							and is creates it if it does not already exist.
 		@param zVfs			Name of VFS module to use\n
 							NULL for default
 		*/
@@ -100,7 +100,7 @@ namespace Kompex
 							In either case the database must already exist, otherwise an error is returned.\n
 							SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE\n
 							The database is opened for reading and writing, \n
-							and is creates it if it does not already exist. 
+							and is creates it if it does not already exist.
 		@param zVfs			Name of VFS module to use\n
 							NULL for default
 		*/
@@ -121,7 +121,7 @@ namespace Kompex
 							In either case the database must already exist, otherwise an error is returned.\n
 							SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE\n
 							The database is opened for reading and writing, \n
-							and is creates it if it does not already exist. 
+							and is creates it if it does not already exist.
 		@param zVfs			Name of VFS module to use\n
 							NULL for default
 		*/
@@ -190,7 +190,7 @@ namespace Kompex
 
 		//! GetMemoryHighwaterMark() returns the maximum value of used bytes since the high-water mark was last reset.
 		//! @param resetFlag		The memory high-water mark is reset to the current value of GetMemoryUsage() if resetFlag is true.\n
-		//!							The value returned by GetMemoryHighwaterMark(true) is the high-water mark prior to the reset. 
+		//!							The value returned by GetMemoryHighwaterMark(true) is the high-water mark prior to the reset.
 		long long GetMemoryHighwaterMark(bool resetFlag = false) const {return sqlite3_memory_highwater(resetFlag);}
 
 		//! Provided encodings for MoveDatabaseToMemory().
@@ -250,7 +250,7 @@ namespace Kompex
 		//! Returns the approximate number of bytes of heap memory used to store the schema for\n
 		//! all databases associated with the connection - main, temp, and any ATTACH-ed databases.\n
 		//! The full amount of memory used by the schemas is reported, even if the schema memory is\n
-		//! shared with other database connections due to shared cache mode being enabled. 
+		//! shared with other database connections due to shared cache mode being enabled.
 		int GetHeapMemoryUsedToStoreSchemas() const;
 		//! Returns the approximate number of bytes of heap and lookaside memory used by all\n
 		//! prepared statements associated with the database connection.
@@ -268,7 +268,7 @@ namespace Kompex
 		int GetNumberOfDirtyCacheEntries() const;
 		//! Returns zero if all foreign key constraints (deferred or immediate) have been resolved.
 		int GetNumberOfUnresolvedForeignKeys() const;
-						
+
 		//! Returns the highest number of lookaside memory slots that has been checked out.
 		//! @param resetValue	Allows to reset the highest value.
 		int GetHighestNumberOfCheckedOutLookasideMemorySlots(bool resetValue = false);
@@ -304,14 +304,15 @@ namespace Kompex
 	private:
 		//! SQLite db handle
 		struct sqlite3 *m_pDatabaseHandle;
+        //! Is the database currently stored in memory?
+        bool mIsMemoryDatabaseActive;
 		//! Database filename UTF-8
 		std::string mDatabaseFilenameUtf8;
+
 		//! Database filename UTF-16
 		//std::string mDatabaseFilenameUtf16;
-		//! Is the database currently stored in memory?
-		bool mIsMemoryDatabaseActive;
 
-		//! Clean up routine if something failed in MoveDatabaseToMemory() 
+		//! Clean up routine if something failed in MoveDatabaseToMemory()
 		void CleanUpFailedMemoryDatabase(sqlite3 *memoryDatabase, sqlite3 *rollbackDatabase, bool isDetachNecessary, bool isRollbackNecessary, sqlite3_stmt *stmt, const std::string &errMsg, int internalSqliteErrCode);
 
 	};

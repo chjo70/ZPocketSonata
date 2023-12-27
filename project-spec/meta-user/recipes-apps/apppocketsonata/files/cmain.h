@@ -44,7 +44,7 @@ using namespace std;
 void UpdateCPUMode();
 
 
-class CMain {
+class CMain : public CLogName {
 
 private:
     void *m_pParent;

@@ -14,7 +14,7 @@
 
 //////////////////////////////////////////////////////////////
 // 수신 메시지 정의
-enum enTHREAD_REQ_MESSAGE {
+enum enTHREAD_REQ_MESSAGE : unsigned int {
     // 1. 쓰레드 관리 쓰레드 에서 수신 메시지 정의
     // 1.1 프로세스 종료 메시지
     enTHREAD_REQ_START = _START_OPCODE_OF_THREAD_MESSAGE_,

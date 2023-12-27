@@ -385,6 +385,7 @@ REM CALL CopyAll %DELTA_GRAPH_DEST%
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clogname.cpp" />
     <ClCompile Include="..\..\files\Utils\MulDiv64.cpp" />
     <ClCompile Include="ButtonST\BCMenu.cpp" />
     <ClCompile Include="ButtonST\BtnST.cpp" />

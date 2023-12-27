@@ -29,7 +29,7 @@ enum LowHighThreatType { LOWTHREAT=0, HIGHTHREAT, OBSCURITY } ;
 
 class CScanSigAnal;
 
-class CSAnalScan : public CAnalPRI, public CMakeAET
+class CSAnalScan : public CAnalPRI
 {
 private:
     int m_iMinSteadyPAAmplitude;
@@ -87,14 +87,14 @@ private:
     void SaveScanResult( STR_SCANRESULT *pstScanResul );
 
 public:
-    CSAnalScan( void *pParent, unsigned int uicoMaxPdw );
+    CSAnalScan( void *pParent, unsigned int uicoMaxPdw, const char *pThreadName=NULL );
     virtual ~CSAnalScan();
 
     STR_EMITTER *WhichTheMainEmitter();
 
     void SaveScanPulse( STR_PDWINDEX *pPdwIndex );
 
-    STR_PULSE_TRAIN_SEG *GetPulseSeg();
+    STR_PULSE_TRAIN_SEG *GetPulseSeg() override;
 
 	//bool CompMeanDiff(int x, int y, int thresh);
 	//float MeanInArray( UINT *series, UINT co );
@@ -114,7 +114,7 @@ public:
 
     bool KnownAnalysis();
 
-    int FindPeakInHist(unsigned int uiCount, PDWINDEX *pPdwIndex );
+    int FindPeakInHist(unsigned int uiCount, PDWINDEX *pPdwIndex ) override;
     bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return 0; }
     void DeleteAllSeg( STR_EMITTER *pEmitter )  { }
     void ExtractRefStable() { }
@@ -131,12 +131,12 @@ public:
 
     _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount );
 
-    int GetBand();
-    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
+    int GetBand() override;
+    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile ) override;
 
     SRxLOBData *GetLOBData( int index=0 );
 
-    unsigned int GetCoSeg();
+    unsigned int GetCoSeg() override;
 
     //////////////////////////////////////////////////////////////////////////////////////
     int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex );
@@ -148,7 +148,7 @@ public:
     unsigned int GetCoEmitter() { return 0; }
     STR_EMITTER *GetEmitter() { return m_pEmitter; }
     UINT CalcFreqMedian( STR_PULSE_TRAIN_SEG *pSeg );
-    STR_PDWPARAM* GetPdwParam();
+    STR_PDWPARAM* GetPdwParam() ;
 
 	void GetCollectTime( struct timespec *pTimeSpec );
 
@@ -168,8 +168,6 @@ public:
 
     void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) { }
 
-
-
 #if defined(_ELINT_) || defined(_XBAND_)
     EN_RADARCOLLECTORID GetCollectorID();
     char *GetTaskID();
@@ -177,10 +175,6 @@ public:
 
     inline void *GetParentSigAnal() { return ( void * ) m_pScanSigAnal; }
     inline STR_SCANRESULT *GetScanResult() { return & m_stScanResult; }
-
-#ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
-#endif
 
 };
 

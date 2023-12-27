@@ -20,7 +20,7 @@
     UINT PW[MAX_PDW];			/* PDW PULSE WIDTH 파라메터 */  \
     int PA[MAX_PDW];			/* PDW PULSE AMPLITUDE 파라메터 */  \
     UCHAR PMOP[MAX_PDW];		/* PDW PMOP 파라메터        */      \
-    UCHAR FMOP[MAX_PDW];		/* PDW FMOP 파라메터        */      \
+    unsigned short FMOP[MAX_PDW];		/* PDW FMOP 파라메터        */      \
     USHORT MARK[MAX_PDW];	/* PDW MARK ; selected pdw      */      \
     UCHAR BAND[MAX_PDW];		/* 주파수 밴드       */      \
     UCHAR STAT[MAX_PDW];		/* 주파수 밴드       */      \
@@ -35,7 +35,7 @@
     unsigned int *m_pPW;			/* PDW PULSE WIDTH 파라메터 */ \
     int *m_pPA;                     /* PDW PULSE AMPLITUDE 파라메터 */ \
     unsigned char *m_pPMOP;         /* PDW PMOP 파라메터    */ \
-    unsigned char *m_pFMOP;         /* PDW FMOP 파라메터    */ \
+    unsigned short *m_pFMOP;         /* PDW FMOP 파라메터    */ \
     unsigned short *m_pMARK;        /* PDW MARK ; selected pdw  */ \
     UCHAR *m_pBAND;         /* 주파수 밴드                  */ \
     UCHAR *m_pSTAT;         /* 펄스 상태          */          \

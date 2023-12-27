@@ -37,6 +37,7 @@ extern "C" {
 #include "../BootSHell/ManSbc.h"
 
 extern CManSbc *g_theManSbc;
+extern vector<CThread *> g_vecThread;
 
 #define _DEBUG_
 
@@ -185,6 +186,7 @@ void CUrBit::RunTimer()
         m_uiCoURBITTimer = 0;
 
 #ifdef __VXWORKS__
+        WhereIs;
         m_stBIT.bSNMP = g_theManSbc->SetTimeBySNMP();
 
 #endif
@@ -216,10 +218,10 @@ void CUrBit::CheckTasks()
 
     m_stBIT.bTask = true;
 
-#ifdef __VXWORKS__
-    TASK_DESC taskDesc;
-
     for( const auto &cThread : g_vecThread ) {
+#ifdef __VXWORKS__
+        TASK_DESC taskDesc;
+
         cThread->GetTaskInfo( &taskDesc );
 
         // printf( "\n [%s] task status[%d] ", cThread->GetThreadName(), taskDesc.td_status );
@@ -230,20 +232,22 @@ void CUrBit::CheckTasks()
             Log( enError, "타스크[%s]에서 이상 운용됩니다. 관리자에게 문의하세요 !", cThread->GetThreadName() );
 
             sprintf( buffer, "EW신호처리판 [#%d]에서 타스크[%s]에서 이상 동작합니다. 확인하세요 !", (int) g_enBoardId, cThread->GetThreadName() );
-            g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
+            //g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
+            SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
 
             break;
         }
+#endif
 
     }
 
+#ifdef __VXWORKS__
     if( m_stBIT.bTask == true ) {
         Log( enDebug, "[%d] 개의 타스크가 정상 운용 중입니다." , g_vecThread.size() );
     }
     else {
 
     }
-
 #endif
 
 }
@@ -271,7 +275,8 @@ void CUrBit::CheckSBCTemp()
         char buffer[200];
 
         sprintf( buffer, "EW신호처리판 [#%d]에서 보드 온도[%d]도, CPU 온도[%d]도 를 초과했습니다 ! 장치 전원을 차단하세요 !" , (int) g_enBoardId, uiBoardTemp, uiCPUTemp );
-        g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
+       // g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
+        SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
 
         Log( enNormal, "%s", buffer );
 

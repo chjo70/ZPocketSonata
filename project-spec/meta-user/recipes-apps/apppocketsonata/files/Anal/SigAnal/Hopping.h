@@ -24,6 +24,8 @@
 //     enPRI_DWELL
 // };
 
+class CNewSigAnal;
+
 /**
 
     @class   CHopping
@@ -31,9 +33,11 @@
     @details ~
 
 **/
-class CHopping
+class CHopping : public CLogName
 {
 protected:
+    CNewSigAnal *m_pNewSigAnal;
+
     DEFINE_ANAL_PVAR_
 
 public:

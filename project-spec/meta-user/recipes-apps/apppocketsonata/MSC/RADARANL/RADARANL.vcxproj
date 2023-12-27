@@ -62,7 +62,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);..\RADARDIR;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);..\RADARDIR;$(IncludePath);../../files</IncludePath>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
@@ -73,7 +73,7 @@
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir);..\RADARDIR;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);..\RADARDIR;$(IncludePath);../../files</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir);..\RADARDIR;$(IncludePath)</IncludePath>
@@ -236,6 +236,7 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\Identify\Identify.cpp" />
+    <ClCompile Include="..\..\files\Anal\SigAnal\RadarSimilarity.cpp" />
     <ClCompile Include="..\..\files\MinIni\minIni.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -244,6 +245,10 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteBlob.cpp" />
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteDatabase.cpp" />
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteStatement.cpp" />
+    <ClCompile Include="..\..\files\SQLite\sqlite3.c" />
     <ClCompile Include="..\..\files\System\csharedmemory.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -260,6 +265,7 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\clog.cpp" />
+    <ClCompile Include="..\..\files\Utils\clogname.cpp" />
     <ClCompile Include="..\..\files\Utils\programrev.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -308,6 +314,7 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
     <ClInclude Include="..\..\files\Anal\Identify\Identify.h" />
     <ClInclude Include="..\..\files\Anal\Identify\structs.h" />
     <ClInclude Include="..\..\files\Anal\OFP_Main.h" />
+    <ClInclude Include="..\..\files\Anal\SigAnal\RadarSimilarity.h" />
     <ClInclude Include="..\..\files\MinIni\minGlue-ccs.h" />
     <ClInclude Include="..\..\files\MinIni\minGlue-efsl.h" />
     <ClInclude Include="..\..\files\MinIni\minGlue-FatFs.h" />
@@ -319,11 +326,23 @@ CALL CopyAll %RADAR_RD_LIB%, %RADAR_RD_HEADER%, %CONFIGNAME%
     <ClInclude Include="..\..\files\MinIni\wxMinIni.h" />
     <ClInclude Include="..\..\files\ODBC\MSSQL.h" />
     <ClInclude Include="..\..\files\ODBC\odbccore.h" />
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteBlob.h" />
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteDatabase.h" />
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteException.h" />
+    <ClInclude Include="..\..\files\SQLite\KompexSQLitePrerequisites.h" />
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteStatement.h" />
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteStreamRedirection.h" />
+    <ClInclude Include="..\..\files\SQLite\sqlite3.h" />
+    <ClInclude Include="..\..\files\SQLite\sqlite3ext.h" />
+    <ClInclude Include="..\..\files\SQLite\SQLiteCpp.h" />
+    <ClInclude Include="..\..\files\SQLite\Utils.h" />
+    <ClInclude Include="..\..\files\SQLite\VariadicBind.h" />
     <ClInclude Include="..\..\files\System\csharedmemory.h" />
     <ClInclude Include="..\..\files\System\csysconfig.h" />
     <ClInclude Include="..\..\files\Utils\carraymsgdata.h" />
     <ClInclude Include="..\..\files\Utils\ccommonutils.h" />
     <ClInclude Include="..\..\files\Utils\clog.h" />
+    <ClInclude Include="..\..\files\Utils\clogname.h" />
     <ClInclude Include="..\RADARDIR\RadarDirAlgorithm.h" />
     <ClInclude Include="RADARANL.h" />
     <ClInclude Include="RadarAnlAlgorithm.h" />

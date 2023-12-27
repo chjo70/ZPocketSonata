@@ -34,7 +34,7 @@ public:
 
     void Run( key_t key );
     virtual void _routine();
-    virtual char *GetThreadName() { return m_szThreadName; }
+    virtual const char *GetThreadName() { return m_szThreadName; }
 
 private:
     void Alloc();

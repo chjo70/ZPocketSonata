@@ -10,10 +10,11 @@
 **/
 #pragma once
 
+#include "../Utils/clogname.h"
 
 #ifdef _LOG_
 
-#include "../Utils/csingleserver.h"
+//#include "../Utils/csingleserver.h"
 #include "../Utils/csingleclient.h"
 
 #include "../Thread/cemittermerge.h"
@@ -39,6 +40,15 @@
 // 전역 변수를 정의한다.
 #ifdef _MAIN_GLOBALS_
 
+
+#ifdef _MSC_VER
+CSysConfig *g_pTheSysConfig;
+
+#else
+CSysConfig *g_pTheSysConfig;
+
+#endif
+
 #ifdef _LOG_
 // 신호 분석 관련 쓰레드
 CTaskMngr *g_pTheTaskMngr;
@@ -53,7 +63,7 @@ CScanAnalysis *g_pTheScanAnalysis;
 // 통신 관련 쓰레드
 //CMultiServer *g_pTheZYNQSocket;
 CSingleClient *g_pTheCCUSocket;
-//CSingleClient *g_pThePMCSocket;
+CSingleClient *g_pTheCCUDebugSocket;
 
 CClockTimer *g_pTheClockTimer;
 
@@ -70,13 +80,7 @@ STR_RADAR_PDW g_stRadarPDW;
 CLog *g_pTheLog;
 
 
-#ifdef _MSC_VER
-CSysConfig *g_pTheSysConfig;
 
-#else
-extern CSysConfig *g_pTheSysConfig;
-
-#endif
 
 
 // 위협 관리 시스템 변수 값
@@ -136,15 +140,15 @@ extern STR_RADAR_PDW g_stRadarPDW;
 
 //extern CMultiServer *g_pTheZYNQSocket;
 extern CSingleClient *g_pTheCCUSocket;
-extern CSingleClient *g_pThePMCSocket;
+extern CSingleClient *g_pTheCCUDebugSocket;
 
 extern CClockTimer *g_pTheClockTimer;
 
 
 // 쓰레드 관련 정보
-extern vector<CThread *> g_vecThread;
+//extern vector<CThread *> g_vecThread;
 
-extern vector<CTimer *> g_vecTimer;
+//extern vector<CTimer *> g_vecTimer;
 
 #else
 
@@ -205,7 +209,6 @@ public:
 		}
 		else {
 			g_pTheELEnvironVariable = new CELEnvironVariable();
-			//TRACE( "Hellow The g_pTheELEnvironVariable is null pointer !!" );
 		}
 
         return g_pTheELEnvironVariable->GetEnvrionVariable();
@@ -216,12 +219,12 @@ public:
 #ifdef _LOG_
 
 #ifdef __VXWORKS__
-#define Log( A, ... )                   if( A ) g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, ##__VA_ARGS__ )
+#define Log( A, ... )                   if( IsLogAnalType(A) ) g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, GetThreadName(), ##__VA_ARGS__ )
 
 #else
 
 #ifdef _LOG_ANALTYPE_
-#define Log( A, ... )                   if( GetLogAnalType() ) g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, ##__VA_ARGS__ )
+#define Log( A, ... )                   if( IsLogAnalType(A) ) g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, GetThreadName(), ##__VA_ARGS__ )
 #else
 #define Log( A, ... )                   printf( ##__VA_ARGS__ )
 
@@ -229,13 +232,13 @@ public:
 
 #endif
 
-#define LOG_LINEFEED                    g_pTheLog->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, "" )
-#define LOGENTRY                        g_pTheLog->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL )
+#define LOG_LINEFEED                    g_pTheLog->LogMsg( enLineFeed, __FUNCTION__, __FILE__, __LINE__, NULL, "" )
+#define LOGENTRY                        g_pTheLog->LogMsg( enNormal, __FUNCTION__, __FILE__, __LINE__, NULL, "" )
 
 #else
 
 
-#define Log( A, ... )                   g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, ##__VA_ARGS__ )
+#define Log( A, ... )                   g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, GetThreadName(), ##__VA_ARGS__ )
 
 #ifdef _MSC_VER
 #define LOG_LINEFEED                    TRACE0( "\n" )

@@ -21,16 +21,18 @@ protected:
     CNewSigAnal *m_pNewSigAnal;
 
 public:
+    CNGroup( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
+    virtual ~CNGroup();
+
     void Init();
 
-	unsigned int GetColPdw();
+	unsigned int GetCoPDW();
+    unsigned int GetColPDW();
 
 #ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
+    bool IsLogAnalType( LogType enLogType );
 #endif
 
-    CNGroup( void *pParent, unsigned int uiCoMaxPdw );
-    virtual ~CNGroup();
 
 };
 

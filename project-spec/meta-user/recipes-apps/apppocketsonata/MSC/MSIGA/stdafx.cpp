@@ -5,23 +5,34 @@
 
 #include "stdafx.h"
 
-
+#include <process.h>
 
 
 #if _MSC_VER > 1600
 
+char g_szTraceBuffer[8000];
+
 #ifdef _LOG_ANALTYPE_
-bool _TRACE(char *format, ...)
+CRITICAL_SECTION g_CSTrace;
+
+#endif
+
+
+#ifdef _LOG_ANALTYPE_
+bool _TRACE(const char *format, ...)
 {
 #ifdef _DEBUG
-    char buffer[2000];
+    EnterCriticalSection( & g_CSTrace );
+
     va_list argptr;
 
     va_start(argptr, format);
-    vsprintf(buffer, format, argptr);
+    vsprintf( g_szTraceBuffer, format, argptr);
     va_end(argptr);
 
-    OutputDebugString(buffer);
+    OutputDebugString( g_szTraceBuffer );
+
+    LeaveCriticalSection( & g_CSTrace );
 
 #endif
 

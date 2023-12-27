@@ -29,8 +29,6 @@
 class CKnownSigAnal : public CSigAnal
 {
 private:
-    ENUM_ANAL_TYPE m_enAnalType;
-
     SRxABTData *m_pTrkAet;
 
     int m_CoGroup;
@@ -41,6 +39,11 @@ public:
     int m_CoNewAet;
     int m_CoUpdAet;
     STR_PDWINDEX *m_pGrPdwIndex;
+
+    float m_fFixedFreqMargin;
+    float m_fStableMargin;
+
+    SEnvironVariable *m_pSEnvironVariable;
 
     DEFINE_ANAL_VAR_
 
@@ -54,7 +57,8 @@ protected:
 
     unsigned int m_uiMaxPdw;
 
-    unsigned int m_uiCoPdw;
+    unsigned int m_uiColPDW;
+    unsigned int m_uiCoPDW;
     int m_noSbc;
     int m_noCh;
 
@@ -62,14 +66,18 @@ protected:
     STR_STATIC_PDWDATA *m_pstPDWData;
 
 private:
+    void AllocMemory();
+
     bool CheckKnownByAnalysis();
-	void StartOfTrackSignalAnalysis( bool bDBInsert );
+	void StartOfTrackSignalAnalysis( bool bDBInsert, ENUM_ROBUST_ANAL enRobustAnal );
 	void StartOfNewSignalAnalysis( bool bDBInsert );
 
     int GetPLOBIndex();
 
+    bool CheckValidData( STR_STATIC_PDWDATA *pPDWData );
+
 public:
-    CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
+    CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL, const char *pThreadName=NULL );
     virtual ~CKnownSigAnal();
 
     inline void GetCollectTime(struct timespec *pTimeSpec) {
@@ -80,12 +88,14 @@ public:
         return CSigAnal::SaveEmitterPDWFile(pEmitter, m_pstPDWData->stPDW, iPLOBID, bSaveFile);
     }
 
-    void Init();
+    void InitOfKnownSigAnal();
 
-    inline unsigned int GetCoPdw() { return m_uiCoPdw; }
-    inline unsigned int GetColPdw() { return m_uiCoPdw; }
+    inline unsigned int GetCoPdw() { return m_uiCoPDW; }
+    inline unsigned int GetColPdw() { return m_uiColPDW; }
     inline int GetBand() { return m_theGroup->GetBand(); }
     inline int GetCoUpdAet() { return m_CoUpdAet; }
+
+    inline bool IsTrackSuccess() { return m_theMakeAET->IsTrackSuccess(); }
 
     /**
      * @brief     GetMaxPdw
@@ -155,23 +165,14 @@ public:
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
     inline unsigned int GetCoEmitter() { return m_theAnalPRI->GetCoEmitter(); }
 
-    inline SRxLOBData *GetLOBData( int index=0 ) { return m_theMakeAET->GetLOBData(index); }
-    //##ModelId=452B0C52035B
+    inline SRxLOBData *GetLOBData( unsigned int index=0 ) { return m_theMakeAET->GetLOBData(index); }
     inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
-    //##ModelId=452B0C52035C
     inline int GetCoNewAet() { return m_CoNewAet; }
-    //##ModelId=452B0C520363
     inline SRxLOBData *GetNewAet() { return m_theMakeAET->GetNewLOB(); }
-    //##ModelId=452B0C520364
     inline void ClearCoAet() { m_theMakeAET->ClearCoAet(); }
-    //##ModelId=452B0C520365
     inline void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoFromSeg( pPri, pEmitter ); }
     inline CKMakeAET* GetMakeAET() { return m_theMakeAET; }
     inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdLOB(); }
-
-#ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
-#endif
 
     /**
      * @brief     GetTrkAET
@@ -199,8 +200,6 @@ public:
 		return m_CoGroup;
 	}
 
-
-
     void InitVar();
     void ClearColBuffer();
     void SendAllAet();
@@ -210,12 +209,34 @@ public:
 
     void SaveDebug( const char *pSourcefile, int iLines );
 
-    void Init( STR_STATIC_PDWDATA *pstPDWData );
-    void Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, bool bDBInsert=true );
+    void Init( STR_STATIC_PDWDATA *pstPDWData=NULL );
+    void Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, ENUM_ROBUST_ANAL enRobustAnal, unsigned int uiCh, bool bDBInsert=true );
 
     void DISP_FineLOB(SRxLOBData *pLOB) {
         CSigAnal::DISP_FineLOB(pLOB);
     }
+
+// #ifdef _LOG_ANALTYPE_
+//     bool IsLogAnalType( LogType enLogType )
+//     {
+//         bool bRet = true;
+// 
+//         if( g_enLogAnalType == enALL ) {
+//         }
+//         else {
+//             if( enLogType != enError ) {
+//                 if( GetAnalType() == g_enLogAnalType ) {
+// 
+//                 }
+//                 else {
+//                     bRet = false;
+//                 }
+//             }
+//         }
+// 
+//         return bRet;
+//     }
+// #endif
 
 };
 

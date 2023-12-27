@@ -1,4 +1,6 @@
-﻿#pragma once
+﻿
+
+#pragma once
 
 #ifdef MATHFUNCSDLL_EXPORTS
 #define MATHFUNCSDLL_API __declspec(dllexport)
@@ -215,7 +217,7 @@ struct SRxABTData {
 #endif
 
     float fMeanScanPeriod;
-    float fMaxScanPeriod;
+    float fMaxScanPeriod;               // [ms]
     float fMinScanPeriod;
 
 #if defined(_POCKETSONATA_) || defined(_712_)
@@ -223,7 +225,7 @@ struct SRxABTData {
 #endif
 
 #if defined(_POCKETSONATA_) || defined(_712_)
-    bool bHasIntraMod;
+    bool ucMOPType;
 #else
     bool iHasIntraMod;
 #endif
@@ -535,6 +537,8 @@ namespace RadarAnlAlgotirhm
         static MATHFUNCSDLL_API unsigned int GetOpInitID();
 
 #endif
+
+        static MATHFUNCSDLL_API const char *GetThreadName() { return NULL; }
 
 #pragma data_seg( ".ioshare" )
         // static CLog *g_pTheLog;

@@ -465,7 +465,7 @@ void CMultiServer::_routine()
 
                         while( true ) {
 #ifdef _MSC_VER
-                            TRACE( "\nIDX[%d]: DL[%d]", stClientSocket.iIndex, pRcvStat->iTotalRead );
+                            //TRACE( "\nIDX[%d]: DL[%d]", stClientSocket.iIndex, pRcvStat->iTotalRead );
 #endif
 
                             if( pRcvStat->bHeader == false && pRcvStat->iTotalRead >= sizeof( struct STR_LAN_HEADER ) ) {
@@ -494,7 +494,7 @@ void CMultiServer::_routine()
                             }
                             else {
 #ifdef _MSC_VER
-                                TRACE( "\n break while..." );
+                                //TRACE( "\n break while..." );
 #endif
                                 break;
                             }
@@ -638,7 +638,7 @@ void CMultiServer::ProcessLANMessage( int iIndex )
 
     pLanData = m_pstLanData[iIndex];
 
-    TRACE( "\nLanMessage...[0x%x, %d]" , pLanData->stLanHeader.usOpCode, pLanData->stLanHeader.uiLength );
+    //TRACE( "\nLanMessage...[0x%x, %d]" , pLanData->stLanHeader.usOpCode, pLanData->stLanHeader.uiLength );
     m_ptheSBC->QMsgSnd( ( unsigned int ) pLanData->stLanHeader.usOpCode, & pLanData->stLanData, pLanData->stLanHeader.uiLength, GetThreadName() );
 
 #endif

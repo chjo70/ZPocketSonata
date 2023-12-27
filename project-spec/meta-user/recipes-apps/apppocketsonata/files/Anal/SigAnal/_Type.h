@@ -124,14 +124,24 @@ typedef int key_t;
 
 //#define open                    _open
 
+#ifdef _CONSOLE
+
+#else
+
 #define	write					_write
 #define	read					_read
 #define	chmod					_chmod
 
+#ifdef TRACE
 
-//#define CString string
-//#undef TRACE
-//#define TRACE                   _TRACE
+#else
+#define TRACE                   printf
+#endif
+
+#endif
+
+
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,6 +153,7 @@ typedef int key_t;
 
 //#define UINT_MAX                (0xffffffff)
 #define ULONGLONG_MAX   		(0xffffffffffffffff)
+// #define FLT_MAX                 (float) (3.402823466e+38F)
 
 #define  IPC_NOWAIT          	(0)
 

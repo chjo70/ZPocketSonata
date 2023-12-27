@@ -38,9 +38,10 @@
 #define	_spFilterRatio				    (0.95)					// 필터링의 전체 개수의 필터링율의 Threshold
 //#define	_spNeighborTh					(3./_spAMPres)	// Neighbor Threshold
 
-
-#define SEADY_PA_MARGIN                 UDIV( 3.0, _spAMPres )         // 3dBm
-#define SEADY_PA_DEVIATION              UDIV( 1.0, _spAMPres )         // 3dBm
+// Steady 판단 조건
+#define STEADY_MIN_CO_SAMPLING          (20)
+#define STEADY_PA_MARGIN                 (float) (3.0) // UDIV( 3.0, _spAMPres )         // 3dBm
+#define STEADY_PA_DEVIATION              (float) (1) // UDIV( 1.0, _spAMPres )         // 3dBm
 
 
 #endif // !defined(AFX_SDEFINE_H__554E4EC8_E880_4D0F_B7D9_86F03F2A5E3C__INCLUDED_)

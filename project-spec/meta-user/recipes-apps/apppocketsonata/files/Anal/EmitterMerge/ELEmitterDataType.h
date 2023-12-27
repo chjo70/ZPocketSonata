@@ -25,6 +25,8 @@ using namespace std;
 
 #include "ELMsgDefn.h"
 
+#include "../../Include/system.h"
+
 //#include "../Identify/ELCEDLibDataType2.h"
 
 
@@ -404,6 +406,14 @@ union UELMANUALVAL {
 
 }  ;
 
+enum ENUM_TRACK_PROCESS : unsigned int {
+    enTRACK_NotProcessing = 0,				// 추적 초기 상태
+
+    enTRACK_Requesting,					    // 추적 요청 상태
+    enTRACK_Closing,
+
+};
+
 /**
     @enum  ENUM_SCAN_PROCESS
     @brief 빔의 스캔 상태 정보
@@ -426,6 +436,11 @@ enum ENUM_SCAN_PROCESS {
 
 } ;
 
+
+/**
+    @enum  ENUM_CHECK_SCAN_COLLECTING
+    @brief 스캔 수집 단계 정보
+**/
 enum ENUM_CHECK_SCAN_COLLECTING {
     enNEXT_SCAN =0,
     enRETRY_SCAN,
@@ -477,8 +492,12 @@ struct SELABTDATA_EXT {
 //
 //     unsigned int uiSeqNum;
 
-#elif defined(_POCKETSONATA_) || defined(_SONATA_) || defined(_712_)
-	bool bTracking;
+#elif defined(_POCKETSONATA_) || defined(_SONATA_)
+    bool bReqTrack;                     // 위협 관리에서 추적 수행 여부를 결정하는 플레그
+
+    unsigned int uiGlobalCh;                  // 추적 채널 정보
+    ENUM_PCI_DRIVER enPCIDriver;
+    ENUM_TRACK_PROCESS enTracking;                     // 추적 수집/분석을 결정하는 여부 플레그
 
 #endif
 

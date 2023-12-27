@@ -16,7 +16,7 @@
 //#define tPRI_Ref				90
 
 // MBIT 프로그램, 사용자 프로그램, 부트 쉘 프로그램의 메인 타스크의 Priority
-enum {
+enum ENUM_TASK_PRIORITY {
     tUDP_SERVER=90, tCLIENT_SOCKET, tPRI_BOOTSHEL, tPRI_App, tPRI_HTTPDAEMON = 150,
 };
 
@@ -30,7 +30,7 @@ enum {
 
 //////////////////
 // SNTP 프로토콜 정의
-#define TRY_GETSNTP                 (10)
+#define TRY_GETSNTP                 (3)
 #define DEFAULT_SNTP_SERVER_IP		((char *)"192.168.0.200")
 
 

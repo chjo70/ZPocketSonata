@@ -22,16 +22,18 @@
 
 #include "KnownSigAnal.h"
 
+#include "../SigAnal/RadarSimilarity.h"
+
 #ifdef __cplusplus
 
 struct STR_KWNINFO {
-    float fKnownSuccessRatio;   // 추적 성공율 [%]
+    int iKnownSuccessPercent;   // 추적 성공율 [%]
     int iIdxEmitter;            // PRI Emitter Index
 
 } ;
 
 struct STR_KWNLOB {
-    SRxLOBData stLOBData;
+    SRxLOBData *pstLOBData;
     STR_KWNINFO stKnownInfo;
 
 } ;
@@ -39,29 +41,33 @@ struct STR_KWNLOB {
 class CKMakeAET : public CMakeAET
 {
 private :
-    STR_KWNLOB m_KwnLOB[MAX_LOB + 1];       // 추적 성공하면 첫번째 LOB 데이터는 추적 성공한 LOB 정보 임.
+    STR_KWNLOB m_KwnLOB[MAX_LOB];       // 추적 성공하면 첫번째 LOB 데이터는 추적 성공한 LOB 정보 임.
 
     SRxABTData *m_pTrkABT;
+
+    CRadarSimilarity *m_pTheRadarSimilarity;
 
 protected :
     CKnownSigAnal *m_pKnownSigAnal;
 
-    //##ModelId=452B0C5203DC
     int m_iCoNewAet;
-    int m_IdxUpdAet;
+    int m_UpdateSuccessAet;
 
     STR_EMITTER *m_pEmitter;
+
+private:
+    static int incSucessRatioCompare( const void *arg1, const void *arg2 );
 
 public:
     void UpdatePRI( SRxLOBData *pUpdAetPri );
     void UpdateFreq( SRxLOBData *pUpdAetFrq );
 
-    SRxLOBData *GetLOBData(int iIndex) {
-        return &m_KwnLOB[iIndex].stLOBData;
+    SRxLOBData *GetKnownLOBData(unsigned int uiIndex) {
+        return m_KwnLOB[uiIndex].pstLOBData;
     }
 
-    STR_KWNINFO *GetKnownInfo(int iIndex) {
-        return &m_KwnLOB[iIndex].stKnownInfo;
+    STR_KWNINFO *GetKnownInfo(unsigned int uiIndex) {
+        return & m_KwnLOB[uiIndex].stKnownInfo;
     }
 
 
@@ -105,6 +111,9 @@ public:
         return m_iCoLOB;
     }
 
+
+    #define MAX_SUCCESS_RATIO       (300)
+
     /**
      * @brief     SetKnownSuccessRatio
      * @param     int iIndex
@@ -116,9 +125,9 @@ public:
      * @date      2022-05-09, 10:53
      * @warning
      */
-    inline void SetKnownSuccessRatio(int iIndex, float fValue) {
-		if (iIndex <= MAX_LOB) {
-			m_KwnLOB[iIndex].stKnownInfo.fKnownSuccessRatio = fValue;
+    inline void SetKnownSuccessRatio(unsigned int uiIndex, float fValue) {
+		if ( uiIndex < MAX_LOB) {
+			m_KwnLOB[uiIndex].stKnownInfo.iKnownSuccessPercent = IDIV( fValue * (float) 100, MAX_SUCCESS_RATIO );
 		}
 		else {
 		}
@@ -134,8 +143,21 @@ public:
      * @date      2022-05-09, 10:53
      * @warning
      */
-    inline float GetKnownSuccessRatio(int iIndex) {
-        return m_KwnLOB[iIndex].stKnownInfo.fKnownSuccessRatio;
+    inline int GetKnownSuccessPercent(unsigned int uiIndex) {
+        return m_KwnLOB[uiIndex].stKnownInfo.iKnownSuccessPercent;
+    }
+
+    /**
+     * @brief     InitKnownIndexEmitter
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-10-20 14:44:32
+     * @warning
+     */
+    inline void InitKnownIndexEmitter() {
+        memset( & m_KwnLOB[0], 0, sizeof( m_KwnLOB ) );
     }
 
     /**
@@ -149,9 +171,10 @@ public:
      * @date      2022-05-09, 10:53
      * @warning
      */
-    inline void SetKnownIndexEmitter(unsigned int uiIndex, int iIdxEmitter) {
-		if ( uiIndex <= MAX_LOB) {
-			m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter = iIdxEmitter;
+    inline void SetKnownIndexEmitter(unsigned int uiCoLOB, int iIdxEmitter) {
+		if ( uiCoLOB < MAX_LOB) {
+            m_KwnLOB[uiCoLOB].pstLOBData = GetLOBData( uiCoLOB );
+            m_KwnLOB[uiCoLOB].stKnownInfo.iIdxEmitter = iIdxEmitter;
 		}
 		else {
 
@@ -171,7 +194,7 @@ public:
     inline unsigned int GetKnownIndexEmitter(unsigned int uiIndex) {
 		unsigned int uiRet=0;
 
-		if (uiIndex <= MAX_LOB) {
+		if (uiIndex < MAX_LOB) {
 			uiRet = (UINT) m_KwnLOB[uiIndex].stKnownInfo.iIdxEmitter;
 		}
 		return uiRet;
@@ -442,19 +465,26 @@ public:
 
     bool IsUpdateAet();
     void MakeUpAET();
-    int SelectKnownSuccessLOB();
+    int CheckUpdateLOB();
     void CalcAllKnownSucessRatio();
+    void SortAllKnownSucessRatio();
+
+    float CalcSigTypeSuccessRatio( SRxLOBData *pLOBData );
     float CalcFreqSuccessRatio(SRxLOBData *pLOBData);
     float CalcPRISuccessRatio(SRxLOBData *pLOBData);
+
+
     bool KnownMakeAET( bool bDBInsert );
 
 
-    CKMakeAET( void *pParent, unsigned int uiCoMaxPdw );
+    CKMakeAET( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
     virtual ~CKMakeAET();
 
-    bool GetLogAnalType();
-
-    int GetIdxUpdAet() const { return m_IdxUpdAet; }
+    int GetUpdateIndexAet() const { return m_UpdateSuccessAet; }
+    bool IsTrackSuccess()
+    {
+        return m_UpdateSuccessAet >= 0;
+    }
 
 };
 

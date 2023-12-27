@@ -385,6 +385,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/clog.h</locationURI>
 		</link>
 		<link>
+			<name>files/Utils/clogname.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/clogname.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Utils/clogname.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/clogname.h</locationURI>
+		</link>
+		<link>
 			<name>files/Utils/cqueue.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Utils/cqueue.h</locationURI>
@@ -968,6 +978,16 @@
 			<name>files/Anal/SigAnal/PulExt.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/SigAnal/PulExt.h</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/SigAnal/RadarSimilarity.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/SigAnal/RadarSimilarity.cpp</locationURI>
+		</link>
+		<link>
+			<name>files/Anal/SigAnal/RadarSimilarity.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/files/Anal/SigAnal/RadarSimilarity.h</locationURI>
 		</link>
 		<link>
 			<name>files/Anal/SigAnal/SigAnal.cpp</name>

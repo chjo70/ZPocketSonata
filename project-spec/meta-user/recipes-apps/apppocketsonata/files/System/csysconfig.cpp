@@ -105,6 +105,8 @@ void CSysConfig::LoadINI()
     int i, iValue;
     unsigned int uiValue;
 
+    float fValue;
+
     string strValue;
 
     float fValueArray[enMAXPRC - 1];
@@ -119,14 +121,17 @@ void CSysConfig::LoadINI()
 
     ///////////////////////////////////////////////////////////////////////////////////
     // 네트워크 환경 설정
-    GetPrivateProfileString( "NETWORK", "PRIME_SERVER", _DEFAULT_PRIME_SERVER, szBuffer, 100, m_szIniFileName );
+    GetPrivateProfileString( "NETWORK", "RECENT_SERVER", _DEFAULT_RECENT_SERVER, szBuffer, 100, m_szIniFileName );
     SetPrimeServerOfNetwork( szBuffer );
 
-    GetPrivateProfileString( "NETWORK", "SECOND_SERVER", _DEFAULT_PRIME_SERVER, szBuffer, 100, m_szIniFileName );
-    SetSecondServerOfNetwork( szBuffer );
+    //GetPrivateProfileString( "NETWORK", "SECOND_SERVER", _DEFAULT_PRIME_SERVER, szBuffer, 100, m_szIniFileName );
+    //SetSecondServerOfNetwork( szBuffer );
 
     GetPrivateProfileString( "NETWORK", "CCU_SERVER_IP_ADDRESS", _DEFAULT_CCU_SERVER_IP_ADDRESS, szBuffer, 100, m_szIniFileName );
     SetCCUServerOfNetwork( szBuffer );
+
+    GetPrivateProfileString( "NETWORK", "DEBUG_SERVER_IP_ADDRESS", _DEFAULT_DEBUG_SERVER_IP_ADDRESS, szBuffer, 100, m_szIniFileName );
+    SetDebugServerOfNetwork( szBuffer );
 
     iValue = (int) GetPrivateProfileInt( "NETWORK", "SBC_FROM_IP", _DEFAULT_SBC_FROM_IP, m_szIniFileName );
     SetSBCFromIP( iValue );
@@ -179,6 +184,26 @@ void CSysConfig::LoadINI()
 
     uiValue = GetPrivateProfileInt( "SCAN", "CONICAL_MAX_PERIOD_MS", _DEFAULT_CONICAL_MAX_PERIOD_MS, m_szIniFileName );
     SetConcalMaxPeriod( uiValue );
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 필터 범위 정의
+    sprintf( szDefault, "%f", _DEFAULT_WINDOWCELL_DOA_RANGE_ );
+    GetPrivateProfileString( "WINDOWCELL", "DOA_RANGE", szDefault, szBuffer, 100, m_szIniFileName );
+    fValue = ( float ) atof( szBuffer );
+    SetWindowCellDOARange( fValue );
+
+    sprintf( szDefault, "%f", _DEFAULT_WINDOWCELL_FRQ_RANGE_ );
+    GetPrivateProfileString( "WINDOWCELL", "FRQ_RANGE", szDefault, szBuffer, 100, m_szIniFileName );
+    fValue = ( float ) atof( szBuffer );
+    SetWindowCellFRQRange( fValue );
+
+    sprintf( szDefault, "%f", _DEFAULT_WINDOWCELL_FRQ_HOPPING_RATIO_ );
+    GetPrivateProfileString( "WINDOWCELL", "FRQ_HOPPING_RATIO", szDefault, szBuffer, 100, m_szIniFileName );
+    fValue = ( float ) atof( szBuffer );
+    SetWindowCellFRQHoppingRatio( fValue );
+
+
 
     ///////////////////////////////////////////////////////////////////////////////
     // 수신기 Threshold 값 로딩
@@ -255,7 +280,7 @@ void CSysConfig::LoadINI()
     // 위협 라이브러리 버젼 정보
     sprintf( szDefault, "%d" , _DEFAULT_LIB_VERSION_ );
     GetPrivateProfileString( "IPL" , "VERSION" , szDefault, szBuffer, 100, m_szIniFileName );
-    iValue = atoi( szBuffer );
+    //iValue = atoi( szBuffer );
     // uiValue = (unsigned int) abs( iValue );
     // SetIPLVersion( uiValue );
 
@@ -267,15 +292,14 @@ void CSysConfig::LoadINI()
 
     ///////////////////////////////////////////////////////////////////////////////
     // 네트워크 환경 설정
-    strValue = m_theMinIni.gets( "NETWORK", "PRIME_SERVER", _DEFAULT_PRIME_SERVER );
+    strValue = m_theMinIni.gets( "NETWORK", "RECENT_SERVER", _DEFAULT_RECENT_SERVER );
     SetPrimeServerOfNetwork( strValue.c_str() );
 
-    strValue = m_theMinIni.gets( "NETWORK", "SECOND_SERVER", _DEFAULT_PRIME_SERVER );
-    SetSecondServerOfNetwork( strValue.c_str() );
-
     strValue = m_theMinIni.gets( "NETWORK", "CCU_SERVER_IP_ADDRESS", _DEFAULT_CCU_SERVER_IP_ADDRESS );
-
     SetCCUServerOfNetwork( strValue.c_str() );
+
+    strValue = m_theMinIni.gets( "NETWORK", "DEBUG_SERVER_IP_ADDRESS", _DEFAULT_DEBUG_SERVER_IP_ADDRESS );
+    SetDebugServerOfNetwork( strValue.c_str() );
 
     iValue = m_theMinIni.geti( "NETWORK", "SBC_FROM_IP", _DEFAULT_SBC_FROM_IP );
     SetSBCFromIP( iValue );
@@ -285,7 +309,7 @@ void CSysConfig::LoadINI()
 
     ///////////////////////////////////////////////////////////////////////////////
     // 부팅 옵션
-    iValue = m_theMinIni.geti( "BOOT", "TFFS_BOOT", _DEFAULT_SBC_TO_IP );
+    iValue = m_theMinIni.geti( "BOOT", "TFFS_BOOT", _DEFAULT_TFFS_BOOT );
     SetTFFSBoot( iValue );
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -363,6 +387,17 @@ void CSysConfig::LoadINI()
     uiValue = m_theMinIni.geti( "SCAN", "CONICAL_MAX_PERIOD_MS", _DEFAULT_CONICAL_MAX_PERIOD_MS );
     SetConcalMaxPeriod( uiValue );
 
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 필터 범위 정의
+    fValue = m_theMinIni.getf( "WINDOWCELL", "DOA_RANGE", _DEFAULT_WINDOWCELL_DOA_RANGE_ );
+    SetWindowCellDOARange( fValue );
+    //
+    fValue = m_theMinIni.getf( "WINDOWCELL", "FRQ_RANGE", _DEFAULT_WINDOWCELL_FRQ_RANGE_ );
+    SetWindowCellFRQRange( fValue );
+
+    fValue = m_theMinIni.getf( "WINDOWCELL", "FRQ_HOPPING_RATIO", _DEFAULT_WINDOWCELL_FRQ_HOPPING_RATIO_ );
+    SetWindowCellFRQHoppingRatio( fValue );
+
 
     ///////////////////////////////////////////////////////////////////////////////
     // 프로그램 버젼 정보
@@ -409,10 +444,10 @@ void CSysConfig::InitVar()
 #if defined(_POCKETSONATA_) || defined(_712_)
 
     // 수집 채널 초기화
-    memset( m_strConfig.strDetectWindowCell, 0, sizeof(struct STR_WINDOWCELL) * CO_DETECT_CHANNEL );
-    memset( m_strConfig.strTrackWindowCell, 0, sizeof( struct STR_WINDOWCELL) * CO_TRACK_CHANNEL );
-    memset( m_strConfig.strScanWindowCell, 0, sizeof( struct STR_WINDOWCELL) * CO_SCAN_CHANNEL );
-    memset( m_strConfig.strUserWindowCell, 0, sizeof( struct STR_WINDOWCELL) * CO_USER_CHANNEL );
+    memset( m_strConfig.strDetectWindowCell, 0, sizeof( STR_WINDOWCELL) * CO_DETECT_CHANNEL );
+    memset( m_strConfig.strTrackWindowCell, 0, sizeof( STR_WINDOWCELL) * CO_TRACK_CHANNEL );
+    memset( m_strConfig.strScanWindowCell, 0, sizeof( STR_WINDOWCELL) * CO_SCAN_CHANNEL );
+    memset( m_strConfig.strUserWindowCell, 0, sizeof( STR_WINDOWCELL) * CO_USER_CHANNEL );
 
     // 수집 히스토그램 초기화
     memset( m_strConfig.ucColHisto, 0, sizeof(m_strConfig.ucColHisto) );
@@ -529,22 +564,25 @@ bool CSysConfig::GetIPAddress( char *pIPAddress, char *pNetworkName )
  * @param uiCh
  * @param pWindowCell
  */
-void CSysConfig::SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell )
+void CSysConfig::SetWindowCell( unsigned int uiGlobalCh, STR_WINDOWCELL *pWindowCell )
 {
 
-    if( uiCh < CO_DETECT_CHANNEL ) {
-        SetDetectWindowCell( uiCh, pWindowCell );
+    if( uiGlobalCh < CO_DETECT_CHANNEL ) {
+        SetDetectWindowCell( uiGlobalCh, pWindowCell );
     }
 #if CO_TRACK_CHANNEL > 0
-    else if( uiCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL ) {
-        SetTrackWindowCell( uiCh-CO_DETECT_CHANNEL, pWindowCell );
+    else if( uiGlobalCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL ) {
+        SetTrackWindowCell( uiGlobalCh -CO_DETECT_CHANNEL, pWindowCell );
     }
 #endif
-    else if( uiCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL+CO_SCAN_CHANNEL ) {
-        SetScanWindowCell( uiCh-CO_DETECT_CHANNEL-CO_TRACK_CHANNEL, pWindowCell );
+
+#if CO_SCAN_CHANNEL > 0
+    else if( uiGlobalCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL+CO_SCAN_CHANNEL ) {
+        SetScanWindowCell( uiGlobalCh -CO_DETECT_CHANNEL-CO_TRACK_CHANNEL, pWindowCell );
     }
+#endif
     else {
-        SetUserWindowCell( uiCh-CO_DETECT_CHANNEL-CO_TRACK_CHANNEL-CO_SCAN_CHANNEL, pWindowCell );
+        SetUserWindowCell( uiGlobalCh -CO_DETECT_CHANNEL-CO_TRACK_CHANNEL-CO_SCAN_CHANNEL, pWindowCell );
     }
 
 }
@@ -559,47 +597,51 @@ void CSysConfig::SetWindowCell( unsigned int uiCh, STR_WINDOWCELL *pWindowCell )
  */
 void CSysConfig::DisplaySystemVar()
 {
-    char szTFFSBoot[2][20] = { "롬 부팅", "TFTP 부팅" };
+    char szTFFSBoot[2][30] = { "StandAlone(ROM 부팅)", "디버깅(TFTP 부팅)" };
 
     TRACE( "\n" );
-    TRACE( "\n############################# 시스템 환경 설정 값 #############################" );
+    TRACE( "\n################################ 시스템 환경 설정 값 ################################" );
 
-    //printf( "\n\t.보드 식별자              : %d" , m_strConfig.enBoardID );
-    TRACE( "\n\t.프로그램 버젼              : %s" , m_strConfig.szProgramVersion );
-    TRACE( "\n\t.운용 서버 #1               : %s" , m_strConfig.szPrimeServer );
-    TRACE( "\n\t.운용 서버 #2               : %s" , m_strConfig.szSecondServer );
-    TRACE( "\n\t.운용 제어 콘솔 서버        : %s", m_strConfig.szCCUServer );
-    TRACE( "\n\t.SBC IP 시작/종료           : %d/%d", m_strConfig.iSBCFromIP, m_strConfig.iSBCToIP );
-    TRACE( "\n\n" );
+    TRACE( "\n\t.프로그램 버젼 (git 태그)                 : %s", m_strConfig.szProgramVersion );
+    TRACE( "\n\t.보드 식별자 (EW신호처리판)               : %d" , m_strConfig.enBoardID );
+    TRACE( "\n\t.최근 연동 컴퓨터 (SBC 간 연결 IP)        : %s" , GetRecentConnectionOfNetwork() );
+    //TRACE( "\n\t.개발 컴퓨터 (개발 컴퓨터 IP)             : %s" , m_strConfig.szSecondServer );
+    TRACE( "\n\t.운용 제어 콘솔 (운용 제어 콘솔)          : %s", GetCCUServerOfNetwork() );
+    TRACE( "\n\t.디버그 컴퓨터 (위협 정보 디버깅 컴)      : %s", GetDebugServerOfNetwork() );
+    TRACE( "\n\t.장치 내 내부 SBC IP 범위                 : %d/%d", m_strConfig.iSBCFromIP, m_strConfig.iSBCToIP );
 
+    TRACE( "\n" );
     //Log( enNormal, "\t.장비 모드           : %d" , m_strConfig.enMode );
-    TRACE( "\n\t.부팅 옵션                  : %s(%d)" , szTFFSBoot[m_strConfig.iTFFSBoot], m_strConfig.iTFFSBoot );
-    TRACE( "\n\t.라이브러리 버젼            : %d" , m_strConfig.uiIPLVersion );
-    TRACE( "\n\t.CPU 온도 경고 임계값       : %d [도]", m_strConfig.uiCPUTempWarning );
-    TRACE( "\n\n" );
+    TRACE( "\n\t.부팅 옵션                                : %s(%d)" , szTFFSBoot[m_strConfig.iTFFSBoot], m_strConfig.iTFFSBoot );
+    //TRACE( "\n\t.라이브러리 버젼                        : %d" , m_strConfig.uiIPLVersion );
+    TRACE( "\n\t.CPU 온도 경고 임계값(이상시 자동 부팅)   : %d [도]", m_strConfig.uiCPUTempWarning );
 
+    TRACE( "\n" );
+    TRACE( "\n\t.최소 펄스수 (LOB 생성 최소 펄스열 개수)  : %d [개]" , m_strConfig.uiMinAnalPulse );
+    TRACE( "\n\t.기본 위협 삭제 시간 (미식별시 삭제 시간) : %d [초]" , m_strConfig.iEmitterDeleteTime );
+    TRACE( "\n\t.고정 주파수 범위                         : %.1f [MHz]", m_strConfig.fMargin[0] );
+    TRACE( "\n\t.규칙성 펄스열 추출 마진                  : %.1f [us]", m_strConfig.fMargin[1] );
+    TRACE( "\n\t.대역별 방위 그룹화 마진                  : %.2f/%.2f/%.2f/%.2f/%.2f [도]", m_strConfig.fAOAGroup[0], m_strConfig.fAOAGroup[1], m_strConfig.fAOAGroup[2], m_strConfig.fAOAGroup[3], m_strConfig.fAOAGroup[4] );
+    //TRACE( "\n\t.대역별 주파수 그룹화 마진  : %.2f/%.2f/%.2f/%.2f/%.2f [MHz]", m_strConfig.fFRQGroup[0], m_strConfig.fFRQGroup[1], m_strConfig.fFRQGroup[2], m_strConfig.fFRQGroup[3], m_strConfig.fFRQGroup[4] );
 
-    TRACE( "\n\t.최소 펄스수                : %d [개]" , m_strConfig.uiMinAnalPulse );
-    TRACE( "\n\t.기본 위협 삭제 시간        : %d [초]" , m_strConfig.iEmitterDeleteTime );
-    TRACE( "\n\t.고정 주파수 범위           : %.1f [MHz]", m_strConfig.fMargin[0] );
-    TRACE( "\n\t.규칙성 펄스열 추출 마진    : %.1f [us]", m_strConfig.fMargin[1] );
-    TRACE( "\n\t.대역별 방위 그룹화 마진    : %.2f/%.2f/%.2f/%.2f/%.2f [도]", m_strConfig.fAOAGroup[0], m_strConfig.fAOAGroup[1], m_strConfig.fAOAGroup[2], m_strConfig.fAOAGroup[3], m_strConfig.fAOAGroup[4] );
-    TRACE( "\n\t.대역별 주파수 그룹화 마진  : %.2f/%.2f/%.2f/%.2f/%.2f [MHz]", m_strConfig.fFRQGroup[0], m_strConfig.fFRQGroup[1], m_strConfig.fFRQGroup[2], m_strConfig.fFRQGroup[3], m_strConfig.fFRQGroup[4] );
-    TRACE( "\n\n" );
+    TRACE( "\n" );
+    TRACE( "\n\t.고정형 최소 신호 세기 (Steady 판단 세기) : %d [dBM]", m_strConfig.iMinSteadyPAAmplitude );
+    TRACE( "\n\t.원추형 최소/최대 스캔 주기               : %d ~ %d [ms]", m_strConfig.uiMinConicalPeriod, m_strConfig.uiMaxConicalPeriod );
 
-    TRACE( "\n\t.고정형 최소 신호 세기      : %d [dBM]", m_strConfig.iMinSteadyPAAmplitude );
-    TRACE( "\n\t.원추형 최소/최대 스캔 주기 : %d ~ %d [ms]", m_strConfig.uiMinConicalPeriod, m_strConfig.uiMaxConicalPeriod );
+    TRACE( "\n" );
+    TRACE( "\n\t.WC 방위 필터 마진 (위협 최대 이동 고려)  : %.2f [도]" , GetWindowCellDOARange() );
+    TRACE( "\n\t.WC 주파수 필터 마진                      : %.2f [도]", GetWindowCellFRQRange() );
+    TRACE( "\n\t.WC 주파수 호핑률 (미식별 호핑 주파수 율) : %.2f [도]", GetWindowCellFRQHoppingRatio() );
 
-    TRACE( "\n\n" );
-    TRACE( "\n\t.탐지/추적 신규 LOB 개수    : %d [개]", m_strConfig.uiMaxCountOfLOB );
-    TRACE( "\n\n" );
+    TRACE( "\n" );
+    TRACE( "\n\t.탐지/추적 신규 LOB 개수 (탐지/추적 LOB)  : %d [개]", m_strConfig.uiMaxCountOfLOB );
 
-    TRACE( "\n\t.대역별 수신기 방위 오차    : %.2f/%.2f/%.2f/%.2f/%.2f [도]", m_strConfig.fReceiverDOAError[0], m_strConfig.fReceiverDOAError[1], m_strConfig.fReceiverDOAError[2], m_strConfig.fReceiverDOAError[3], m_strConfig.fReceiverDOAError[4] );
-    TRACE( "\n\t.대역별 기본 수신 임계값    : %.2f/%.2f/%.2f/%.2f/%.2f [dBm]", m_strConfig.fRxThreshold[0], m_strConfig.fRxThreshold[1], m_strConfig.fRxThreshold[2], m_strConfig.fRxThreshold[3], m_strConfig.fRxThreshold[4] );
-    TRACE( "\n\n" );
+    TRACE( "\n" );
+    TRACE( "\n\t.대역별 수신기 방위 오차                  : %.2f/%.2f/%.2f/%.2f/%.2f [도]", m_strConfig.fReceiverDOAError[0], m_strConfig.fReceiverDOAError[1], m_strConfig.fReceiverDOAError[2], m_strConfig.fReceiverDOAError[3], m_strConfig.fReceiverDOAError[4] );
+    TRACE( "\n\t.대역별 기본 수신 임계값                  : %.2f/%.2f/%.2f/%.2f/%.2f [dBm]", m_strConfig.fRxThreshold[0], m_strConfig.fRxThreshold[1], m_strConfig.fRxThreshold[2], m_strConfig.fRxThreshold[3], m_strConfig.fRxThreshold[4] );
+    TRACE( "\n" );
 
-
-    TRACE( "\n###############################################################################" );
+    TRACE( "\n####################################################################################" );
 
     TRACE( "\n\n" );
 
@@ -615,14 +657,88 @@ void CSysConfig::DisplaySystemVar()
  * @date      2023-08-22 10:34:09
  * @warning
  */
-void CSysConfig::WriteServerIPAddress( char *pIPAddress )
+void CSysConfig::WritePrimeServerIPAddress( char *pIPAddress )
 {
 #ifdef _MSC_VER
-    WritePrivateProfileString( "NETWORK", "CCU_SERVER_IP_ADDRESS", pIPAddress, m_szIniFileName );
+    WritePrivateProfileString( "NETWORK", "PRIME_SERVER", pIPAddress, m_szIniFileName );
 
 #else
-    m_theMinIni.put( "NETWORK", "CCU_SERVER_IP_ADDRESS", pIPAddress );
+    m_theMinIni.put( "NETWORK", "PRIME_SERVER", pIPAddress );
 
+#endif
+
+}
+
+/**
+ * @brief     WritePresentTime
+ * @param     char * pPresentTime
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-26 17:38:06
+ * @warning
+ */
+void CSysConfig::WritePresentTime( char *pPresentTime )
+{
+#ifdef _MSC_VER
+    WritePrivateProfileString( "NETWORK", "PRESENT_TIME", pPresentTime, m_szIniFileName );
+
+#else
+    m_theMinIni.put( "NETWORK", "PRESENT_TIME", pPresentTime );
+
+#endif
+
+}
+
+
+/**
+ * @brief     GetPresentTime
+ * @param     time_t * pTime
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-26 17:44:21
+ * @warning
+ */
+void CSysConfig::GetPresentTime( struct timespec *pTime )
+{
+    struct tm stTM;
+
+    memset( & stTM, 0, sizeof( tm ) );
+
+#if defined(_MSC_VER) && !defined(_MSC_BOOTSHELL_)
+    char szBuffer[100];
+
+    GetPrivateProfileString( "NETWORK", "PRESENT_TIME", _DEFAULT_PRESENT_TIME, szBuffer, 100, m_szIniFileName );
+    sscanf( szBuffer, "%d_%d_%d_%d_%d_%d", & stTM.tm_year, & stTM.tm_mon, & stTM.tm_mday, & stTM.tm_hour, & stTM.tm_min, & stTM.tm_sec );
+
+#else
+    string strBuffer;
+
+    strBuffer = m_theMinIni.gets( "NETWORK", "PRESENT_TIME", _DEFAULT_PRESENT_TIME );
+
+    //printf( "\nstrBuffer=%s", strBuffer.c_str() );
+    sscanf( strBuffer.c_str(), "%d_%d_%d_%d_%d_%d", & stTM.tm_year, & stTM.tm_mon, & stTM.tm_mday, & stTM.tm_hour, & stTM.tm_min, & stTM.tm_sec );
+
+//     struct tm *timeinfo;
+//     time_t rawtime;
+//
+//     time( & rawtime );
+//     timeinfo = localtime( & rawtime );
+//     printf( "\n %d-%d-%d_%d:%d:%d", timeinfo->tm_year, timeinfo->tm_mon, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec );
+
+#endif
+
+    stTM.tm_year -= 1900;
+    stTM.tm_mon --;
+    (*pTime).tv_sec = (long) mktime( & stTM );
+
+#ifdef _MSC_VER
+    ( *pTime ).tv_usec = 0;
+#else
+    (*pTime).tv_nsec = 0;
 #endif
 
 }

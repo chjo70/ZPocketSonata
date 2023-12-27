@@ -1,7 +1,7 @@
 ﻿/**
 
     @file      CTASKMNGR.H
-    @brief     
+    @brief
     @details   ~
     @author    조철희
     @date      3.05.2023
@@ -82,7 +82,9 @@ private:
     void TaskSummary();
 
     // 인터페이스 관련 함수 모음 입니다.
-    void SendLan( UINT uiOpCode, UINT uiLength, void *pData );
+    //void SendLan( UINT uiOpCode, UINT uiLength, void *pData );
+
+    bool WaitThread( CThread *pThread );
 
     void StopUserCollecting();
 
@@ -108,7 +110,7 @@ public:
 
     virtual ~CTaskMngr(void);
     virtual void _routine();
-    virtual char *GetThreadName() { return m_szThreadName; }
+    virtual const char *GetThreadName() { return m_szThreadName; }
 
 public:
     //void Run( key_t key=IPC_PRIVATE );

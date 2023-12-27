@@ -28,12 +28,9 @@ using namespace std;
 
 #define LENGTH_OF_TASK_ID		(19+1)		//과제ID 문자열 길이 (TBD)
 #define MAX_IDCANDIDATE			(10)
-#define MAX_COLLECTING_LIST		(100)
 
 #define THREE_LEVEL_IDCANDIDATE         (3)
 
-
-#define MAX_LOB_ITEMS					50		//
 
 /**
     @brief
@@ -89,7 +86,7 @@ struct SRxLOBData {
 
 	unsigned int tiContactTime;			// _USE_32BIT_TIME_T 로 선언하면 32비트, 없으면 64비트로 설정됨.
 
-#if defined(_POCKETSONATA_) || defined(_712)
+#if defined(_POCKETSONATA_) || defined(_712_)
 	unsigned short tiContactTimems;
 #else
     unsigned int tiContactTimems;
@@ -191,9 +188,9 @@ struct SRxLOBData {
     ENUM_AET_SCAN_TYPE vScanType;
 	float fMeanScanPeriod;			// [msec]
 
-	unsigned char ucMOPType;				// 인트라 타입
-    unsigned char ucDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
-	float fMOPMaxFreq;			// ??
+    ENUM_MOP_TYPE enMOPType;				// 인트라 타입
+    unsigned char ucDetailMOPType;			// 인트라 세부 타입.
+	float fMOPMaxFreq;
 	float fMOPMinFreq;
 	float fMOPMeanFreq;
 	float fMOPFreqDeviation;
@@ -250,7 +247,7 @@ struct SRxLOBData {
 
 #endif
 
-}  ;
+} ;
 #endif
 
 #ifndef _SRxABTHeader
@@ -288,10 +285,10 @@ struct SRxABTData {
 
 #endif
 
-    float fDOAMean;                                 // [0.1도]
+    float fDOAMean;
     float fDOAMax;
     float fDOAMin;
-    float fDOADeviation;				// [0.1도]
+    float fDOADeviation;
 
     ENUM_AET_FRQ_TYPE vFreqType;
     ENUM_AET_FREQ_PRI_PATTERN_TYPE vFreqPatternType;
@@ -324,7 +321,7 @@ struct SRxABTData {
     float fPRIMax;
     float fPRIMin;
     float fPRIDeviation;			// [1ns]
-    float fPRIJitterRatio;							// [%]
+    float fPRIJitterPercent;							// [%]
 
 #if defined(_POCKETSONATA_) || defined(_712_)
     unsigned char vPRIPositionCount;
@@ -354,7 +351,7 @@ struct SRxABTData {
     int vScanType;
 #endif
 
-    float fMeanScanPeriod;
+    float fMeanScanPeriod;          // [usec]
     float fMaxScanPeriod;			// [usec]
     float fMinScanPeriod;			// [usec]
 
@@ -363,7 +360,8 @@ struct SRxABTData {
 #endif
 
 #if defined(_POCKETSONATA_) || defined(_712_)
-    bool bHasIntraMod;
+    //bool bHasIntraMod;
+    ENUM_MOP_TYPE enMOPType;
 #else
     bool iHasIntraMod;
 #endif
@@ -626,7 +624,6 @@ struct STR_TRKSCNPDWDATA {
 #ifndef SRxScanData_STRUCT
 #define SRxScanData_STRUCT
 struct STR_SCANRESULT {
-
     EN_SCANRESULT enResult;
     unsigned int uiScanPeriod;          //! 스캔 주기
     ENUM_AET_SCAN_TYPE enScanType;      //! 스캔 형태

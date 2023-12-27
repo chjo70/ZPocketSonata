@@ -31,7 +31,7 @@
 
 #include "./InverseMethod/CInverseMethod.h"
 
-#include "../../Utils/clog.h"
+#include "../SigAnal/RadarSimilarity.h"
 
 // 최대 후보 갯수
 #define MAX_MERGE_CANDIDATE_LEVEL			(100)
@@ -68,6 +68,8 @@
 
 //
 #define MAX_LOB_FOR_INHIBIT_PE			(20)
+
+#define MAX_CLEAN_DATABASE              (100)
 
 
 enum enELControlLOB { APPEND_LOB=0, REMOVE_LOB };
@@ -106,9 +108,9 @@ enum ENUM_SCANPROCESS_ERROR {
 * - 해당사항 없음
 */
 #ifdef _MSSQL_
-class CELEmitterMergeMngr : public CMSSQL
+class CELEmitterMergeMngr : public CMSSQL, public CLogName
 #else
-class CELEmitterMergeMngr
+class CELEmitterMergeMngr : public CLogName
 #endif
 {
 private:
@@ -116,7 +118,9 @@ private:
 
     bool m_bMerge;
     bool m_bReqDetect;
-    bool m_bReqTrack;
+
+    UINT m_uiInsertLOBToDB;
+    //bool m_bReqTrack;
 
     //static unsigned int m_uiSeqNum;										///< DB 테이블 번호
 
@@ -202,6 +206,12 @@ private:
     float m_fFixedFreqMargin;
     float m_fStableMargin;
 
+    CRadarSimilarity *m_pTheRadarSimilarity;
+
+#if CO_TRACK_CHANNEL != 0
+    STR_WINDOWCELL_INFO *m_pstrWindowCellInfo[CO_TRACK_CHANNEL];
+#endif
+
 public:
     UINT m_nGetSeqNum;												///< 슬레이브 연동기에서 갖고 올 DB 테이블 번호
 
@@ -240,6 +250,7 @@ private:
  	// 위협 관리
     void NextAETID();
     void NextABTID();
+    void PushAETID( unsigned int uiAETID );
     void RecoverThreat();
     //inline void NextSeqNum( bool bLink2=false ) { if( bLink2 == true ) { ++ m_nGetSeqNum; } else { ++ m_uiSeqNum; } }
 
@@ -271,7 +282,9 @@ private:
     //CELThreat *UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bLOBCluster=false, vector<SELMERGE_CANDIDATE> *pIVecCanOfMergeLOB=NULL, bool bDBInsert=true, UINT nSeqNum=m_uiSeqNum, CELThreat *pSourceThreatAET=NULL, CELThreat *pSourceThreatABT=NULL, bool bRunCluster=true, bool bRunPE=true, bool bGenNewEmitter=false );
     //CELThreat *UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bLOBCluster = false, bool bDBInsert = true, UINT nSeqNum = m_uiSeqNum, CELThreat *pSourceThreatAET = NULL, CELThreat *pSourceThreatABT = NULL, bool bRunCluster = true, bool bRunPE = true, bool bGenNewEmitter = false );
     CELThreat *UpdateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bDBInsert = true, UINT nSeqNum = 0, CELThreat *pSourceThreatAET = NULL, CELThreat *pSourceThreatABT = NULL, bool bRunCluster = true, bool bRunPE = true, bool bGenNewEmitter = false );
-    E_BEAM_EMITTER_STAT IsDeleteThreat( CELThreat *pTheThreat );
+
+    E_BEAM_EMITTER_STAT IsDeleteThreat( E_BEAM_EMITTER_STAT enThreatStat, __time64_t tiLastSeenTime, double dInActivatedTime );
+
     int SelectTheDeletedABT( CELThreat *pTheThreat );
     bool WhichOfOldThreat( CELThreat *pTheThreat1, CELThreat *pTheThreat2 );
 	unsigned int DeleteThreat(CELThreat *pThreatAET, CELThreat *pThreatABT, bool bDeleteAllABT=false );
@@ -316,6 +329,7 @@ private:
     void UpdatePRIInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     float CalcJitterRatio( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePWInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    void UpdateMOPInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdatePAInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, bool bCircularType=false );
     //void UpdateIntraInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     void UpdateIDInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
@@ -403,6 +417,7 @@ private:
     int CompValid( SRxABTData *pABTData );
     bool CompValueRange( SELMERGE_CANDIDATE *pMergeCandidate, SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
     bool CompIDELNOTInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData );
+    bool CompMOPMargin( SRxABTData *pABTData );
     bool CompFreqMargin( SRxABTData *pABTData );
     bool CompPRIMargin( SRxABTData *pABTData );
 //
@@ -497,16 +512,16 @@ private:
     void ABTAETPreSetting();
 
 #ifdef _SQLITE_
-    void SQLiteException( Kompex::SQLiteException *psException );
+    void SQLiteException( Kompex::SQLiteException *psException, const char *pTable=NULL );
 
 #endif
 
 
 public:
 #ifdef _MSSQL_
-    CELEmitterMergeMngr(bool bDBEnable, CODBCDatabase *pMyODBC );
+    CELEmitterMergeMngr(bool bDBEnable, CODBCDatabase *pMyODBC, const char *pThreadName=NULL );
 #else
-    CELEmitterMergeMngr(bool bDBEnable, const char *pFileName );
+    CELEmitterMergeMngr(bool bDBEnable, const char *pFileName, const char *pThreadName=NULL );
 #endif
 
     virtual ~CELEmitterMergeMngr(void);
@@ -519,21 +534,36 @@ public:
     void Start( bool bScanInfo=false );
     void UpdateCEDEOBLibrary();
 
-    void ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanResult=false, bool bIsFilteredLOB = false, bool bCheckLOB = false );
+    bool ManageThreat( SRxLOBHeader* pLOBHeader, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool bScanResult=false, bool bIsFilteredLOB = false, bool bCheckLOB = false );
     bool ManageThreat( SRxLOBHeader* pLOBHeader, STR_SCANRESULT* pSCNData, SLOBOtherInfo *pLOBOtherInfo, bool bIsFilteredLOB=false, bool bCheckLOB=false );
     SELDELETE DeleteThreat();
+    E_BEAM_EMITTER_STAT IsDeleteThreat( CELThreat *pTheThreat );
+
     bool CheckDeleteAET( CELThreat *pThreatAET, CELThreat *pDeleteAET );
     void DeleteThreat( std::vector<SThreatFamilyInfo> *pVecDelThreatInfo, bool bIsMaster, bool bIsReplay );
     void FetchLOBData( std::vector<SRxLOBHeader> *pVecLOBHeader, std::vector<SRxLOBData> *pVecLOBData, UINT uiABTID=0, SRxLOBDataAndGroupIdArray *pSRxLOBDataAndGroupIdArray=NULL );
 
     // 데이터베이스 관련 함수
     bool CleanupDatabase();
+    bool IsCleanDatabase();
     bool GetRecordFromTable( unsigned int *puiCoRecord, const char *pTable );
     bool DeleteToDB( const char *pTable, unsigned int uiCoRecord=0 );
+    bool QueryToDB( const char *pStatement );
     bool DeleteAllDB();
     bool GetAllSchemaTables();
 
     int GetEstimatedTimeScanAnal( unsigned int uiAET, unsigned int uiABT );
+
+
+    // 추적 관련 멤버 함수 모음 입니다.
+    void UpdateTrackWindowCellInfo( SRxABTData *pABTData, SELABTDATA_EXT *pABTExtData, STR_TRKANAL_INFO *pstrAnalInfo, bool bUpdate );
+    void UpdateTrackInfo( SELABTDATA_EXT *pABTExtData, STR_TRKANAL_INFO *pstrAnalInfo );
+    void UpdateWindowCellInfo( STR_TRKANAL_INFO *pstrAnalInfo, SRxABTData *pABTData, bool bUpdate );
+    void CloseWindowCellInfo( unsigned int uiCh, SELABTDATA_EXT *pABTExtData );
+
+    void CalTrackWindowCellInfo( STR_WINDOWCELL_INFO *pstrWindowCellInfo, SRxABTData *pABTData, SRadarMode *pRadarMode, bool bUpdate );
+
+    ENUM_ROBUST_ANAL CheckRobustAnal( SRxABTData *pABTData, ENUM_ROBUST_ANAL i_enRobustAnal );
 
 // 	void FetchLOBData_LINK2( std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxLOBDataGroup> *pVecLOBGrp, std::vector<int> *pVecLinkNum );
 // 	//void FetchLOBData_LINK2( std::vector<SRxLOBData> *pVecLOBData, std::vector<SRxLOBDataGroup> *pVecLOBGrp );
@@ -543,10 +573,20 @@ public:
 // 	bool UserDeleteThreat( int nAET );
 // 	bool UserRemoveThreat( int nAET );
 
-    inline bool RemoveThreat( int nAET ) { return m_pTheThreatRoot->RemoveAET( nAET, m_pTheThreatRoot ); }
-    inline bool RemoveThreat( int nAET, int nABT ) { return m_pTheThreatRoot->RemoveABT( nAET, nABT ); }
+    inline bool RemoveThreat( unsigned int uiAETID ) { return m_pTheThreatRoot->RemoveAET( uiAETID, m_pTheThreatRoot ); }
+    inline bool RemoveThreat( unsigned int uiAETID, unsigned int uiABTID ) { return m_pTheThreatRoot->RemoveABT( uiAETID, uiABTID ); }
 
     inline unsigned int GetABTIndex() { return m_pABTThreat->m_uiIndex; }
+
+    /**
+     * @brief     GetABTScanStep
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-11-08 11:02:41
+     * @warning
+     */
     inline unsigned int GetABTScanStep()
     {
         unsigned int uiScanStep = UINT32_MAX;
@@ -556,19 +596,111 @@ public:
         return uiScanStep;
     }
 
+    /**
+     * @brief     GetABTData
+     * @param     unsigned int uiIndex
+     * @return    SRxABTData *
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-11-08 11:04:39
+     * @warning
+     */
     inline SRxABTData *GetABTData( unsigned int uiIndex ) {
-        return &( m_pUniThreat[uiIndex].uniABT.stABTData );
-    }
-    inline SELABTDATA_EXT *GetABTExtData( unsigned int uiIndex ) {
-        return &( m_pUniThreat[uiIndex].uniABT.stABTExtData );
-    }
-    inline SRxAETData *GetAETData( unsigned int uiIndex ) {
-        return &( m_pUniThreat[uiIndex].uniAET.stAETData );
-    }
-    inline SELAETDATA_EXT *GetAETExtData( unsigned int uiIndex ) {
-        return &( m_pUniThreat[uiIndex].uniAET.stAETExtData );
+        SRxABTData *pABTData = NULL;
+
+        if( uiIndex < TOTAL_ITEMS_OF_THREAT_NODE ) {
+            pABTData = &( m_pUniThreat[uiIndex].uniABT.stABTData );
+        }
+        else {
+            pABTData = &( m_pUniThreat[0].uniABT.stABTData );
+        }
+
+        return pABTData;
     }
 
+    /**
+     * @brief     GetABTExtData
+     * @param     unsigned int uiIndex
+     * @return    SELABTDATA_EXT *
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-11-08 11:05:09
+     * @warning
+     */
+    inline SELABTDATA_EXT *GetABTExtData( unsigned int uiIndex ) {
+        SELABTDATA_EXT *pABTExtData = NULL;
+
+        if( uiIndex < TOTAL_ITEMS_OF_THREAT_NODE ) {
+            pABTExtData = &( m_pUniThreat[uiIndex].uniABT.stABTExtData );
+        }
+        else {
+            pABTExtData = &( m_pUniThreat[0].uniABT.stABTExtData );
+        }
+
+        return pABTExtData;
+    }
+
+
+    /**
+     * @brief     GetAETData
+     * @param     unsigned int uiIndex
+     * @return    SRxAETData *
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-11-08 11:08:36
+     * @warning
+     */
+    inline SRxAETData *GetAETData( unsigned int uiIndex ) {
+        SRxAETData *pAETData = NULL;
+
+        if( uiIndex < TOTAL_ITEMS_OF_THREAT_NODE ) {
+            pAETData = &( m_pUniThreat[uiIndex].uniAET.stAETData );
+        }
+        else {
+            pAETData = &( m_pUniThreat[0].uniAET.stAETData );
+        }
+
+        return pAETData;
+
+    }
+
+    /**
+     * @brief     GetAETExtData
+     * @param     unsigned int uiIndex
+     * @return    SELAETDATA_EXT *
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-11-08 11:08:09
+     * @warning
+     */
+    inline SELAETDATA_EXT *GetAETExtData( unsigned int uiIndex ) {
+        SELAETDATA_EXT *pAETExtData = NULL;
+
+        if( uiIndex < TOTAL_ITEMS_OF_THREAT_NODE ) {
+            pAETExtData = &( m_pUniThreat[uiIndex].uniAET.stAETExtData );
+        }
+        else {
+            pAETExtData = &( m_pUniThreat[0].uniAET.stAETExtData );
+        }
+
+        return pAETExtData;
+
+    }
+
+    /**
+     * @brief     GetReqScanPeriod
+     * @param     unsigned int uiScanStep
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-11-08 11:07:27
+     * @warning
+     */
     inline unsigned int GetReqScanPeriod( unsigned int uiScanStep ) {
         unsigned int uiReqScanPeriod=0;
 
@@ -581,6 +713,21 @@ public:
 
         return uiReqScanPeriod;
 
+    }
+
+    /**
+     * @brief     SetDBEnable
+     * @param     bool bDBEnable
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-11-08 11:05:23
+     * @warning
+     */
+    inline void SetDBEnable( bool bDBEnable )
+    {
+        m_bDBEnable = bDBEnable;
     }
 
 
@@ -596,7 +743,7 @@ public:
 
     // 스캔 결과 관련 함수
     void UpdateABTScanResult();
-
+    void UpdateABTScanType();
 
 //
 // 	inline UINT GetAETIDFromGenNewEmitter() { return m_nAETIDFromGenNewEmitter; }
@@ -630,7 +777,8 @@ public:
     void PrintAllABTData();
 
 #if CO_TRACK_CHANNEL > 0
-    void ManageTrack( STR_DETANAL_INFO *pAnalInfo, SRxLOBData* pLOBData, SLOBOtherInfo *pLOBOtherInfo, bool m_bScanInfo );
+    void ManageTrack();
+    bool CheckTrackWindowCell();
 #endif
 
     void ABTPreSetting( unsigned int uiAETID, unsigned int uiABTID );
@@ -662,22 +810,88 @@ public:
     inline unsigned int GetABTID() { return m_uiABTID; }
     inline unsigned int GetAETID() { return m_uiAETID; }
 
-#if defined(_POCKETSONATA_) || defined(_SONATA_) || defined(_712_)
+#if defined(_POCKETSONATA_) || defined(_SONATA_)
     // 아래는 멤버 변수들에 대한 접근 관련 함수 입니다.
-	inline bool IsTracking() {
+	inline bool IsTracking( CELThreat *pTheThreat ) {
 		bool bRet=false;
 
+        if( pTheThreat->IsAET() == true ) {
+
+        }
+        else if( pTheThreat->IsABT() == true ) {
+
+        }
+        else {
+
+        }
+
 		if (m_pABTExtData != NULL) {
-			bRet = m_pABTExtData->bTracking;
+			bRet = m_pABTExtData->enTracking != enTRACK_NotProcessing;
 		}
 
 		return bRet;
 
 	}
-#endif
 
-    inline bool ReqTrack() const { return m_bReqTrack; }
-    inline void ReqTrack(bool val) { m_bReqTrack = val; }
+    /**
+     * @brief     IsTracking
+     * @param     SELABTDATA_EXT * pABTExtData
+     * @return    bool
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-10-24 13:53:03
+     * @warning
+     */
+    inline bool IsTracking( SELABTDATA_EXT *pABTExtData )
+    {
+        bool bRet = false;
+
+        if( pABTExtData != NULL ) {
+            bRet = ( pABTExtData->enTracking == enTRACK_Requesting );
+        }
+
+        return bRet;
+
+    }
+
+    /**
+     * @brief     ReqTrack
+     * @param     SELABTDATA_EXT * pABTExtData
+     * @return    bool
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-11-05 13:21:19
+     * @warning
+     */
+    inline bool ReqTrack( SELABTDATA_EXT *pABTExtData ) const {
+        bool bRet = false;
+        if( pABTExtData != NULL ) {
+            bRet = pABTExtData->bReqTrack;
+        }
+        return bRet;
+    }
+
+    /**
+     * @brief     ReqTrack
+     * @param     SELABTDATA_EXT * pABTExtData
+     * @param     bool val
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-11-05 13:21:24
+     * @warning
+     */
+    inline void ReqTrack( SELABTDATA_EXT *pABTExtData, bool val) {
+        if( pABTExtData != NULL ) {
+            pABTExtData->bReqTrack = val;
+        }
+
+    }
+
+#endif
 
     inline bool ReqDetect() const { return m_bReqDetect; }
     inline void ReqDetect(bool val) { m_bReqDetect = val; }
@@ -727,7 +941,7 @@ public:
 		ENUM_SCAN_PROCESS enScanProcess= enSCAN_AlreadyDeleting;
 
 #if CO_SCAN_CHANNEL == 0
-        11
+
 #else
 
         if( m_pABTExtData != NULL ) {
@@ -756,10 +970,14 @@ public:
         }
     }
 
-    SRxABTData *GetABTData( unsigned int uiAETID, unsigned int uiABTID );
-    SELABTDATA_EXT *GetABTExtData( unsigned int uiAETID, unsigned int uiABTID );
+    CELThreat *FindABTThreat( unsigned int uiAETID, unsigned int uiABTID );
+
+    SRxABTData *FindABTData( unsigned int uiAETID, unsigned int uiABTID );
+    SELABTDATA_EXT *FindABTExtData( unsigned int uiAETID, unsigned int uiABTID );
 
     E_BEAM_EMITTER_STAT UpdateEmitterStat( E_BEAM_EMITTER_STAT enBeamEmitterStat, E_BEAM_EMITTER_STAT enUpdatedStat );
+
+    inline void UpdateEmitterStat( SELABTDATA_EXT *pABTExtData, E_BEAM_EMITTER_STAT enUpdatedStat ) { pABTExtData->enBeamEmitterStat = enUpdatedStat; }
 
 };
 

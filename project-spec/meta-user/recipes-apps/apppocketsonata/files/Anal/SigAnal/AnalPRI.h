@@ -34,7 +34,7 @@ enum enEMITTER_MERGE_OPTION {
     @details ~
 
 **/
-class CAnalPRI
+class CAnalPRI : public CLogName
 {
 protected:
     DEFINE_ANAL_PVAR_
@@ -159,7 +159,7 @@ private:
     bool CheckMergeOfPatternPulseTrain( enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
 
 public:
-    CAnalPRI( void *pParent, unsigned int uiCoMaxPdw = NEW_COLLECT_PDW );
+    CAnalPRI( void *pParent, unsigned int uiCoMaxPdw = NEW_COLLECT_PDW, const char *pThreadName=NULL );
     virtual ~CAnalPRI();
 
 
@@ -199,17 +199,18 @@ public:
     bool CompAOA( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
 
     void CalcEmitterPW( STR_EMITTER *pEmitter );
+    void CalcEmitterMOP( STR_EMITTER *pEmitter );
 
     void PrintAllEmitter( unsigned int uiStartEmitter=0, const char *pszString=NULL, enANL_FREQ_TYPE enFREQ_TYPE= _UNKNOWN_FREQ, enANL_PRI_TYPE enPRITYpe= _UNKNOWN_PRI );
     bool CheckSawPattern( ENUM_AET_FREQ_PRI_PATTERN_TYPE *pSawPatternType );
     ENUM_AET_FREQ_PRI_PATTERN_TYPE CheckSinePattern();
     UINT CalPrimeDifference();
     void CalTwoPrime( STR_EMITTER *pEmitter );
-    bool GetDtoaRange( STR_PULSE_TRAIN_SEG *pSeg, STR_LOWHIGH *pRange );
+    bool GetDTOARange( STR_PULSE_TRAIN_SEG *pSeg, STR_LOWHIGH *pRange );
     void RemoveNoiseDtoa( UINT count );
     void CalDtoaMeanMinMax( STR_PULSE_TRAIN_SEG *pSeg, STR_LOWHIGH *pRange );
 
-    bool GetDtoaRange( int peak_index, STR_LOWHIGH *pRange );
+    bool GetDTOARange( int peak_index, STR_LOWHIGH *pRange );
     void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
 
     void MakeStaggerLevel( _TOA *pStaggerLevel, int CoStagger );
@@ -275,7 +276,9 @@ public:
 
     bool StaggerAnalysis( STR_EMITTER *pEmitter );
     bool SortSegOfFramePRI( STR_EMITTER *pEmitter );
+    bool CheckStaggerPRI( STR_EMITTER *pEmitter );
     bool FindFramePRI( STR_EMITTER *pEmitter );
+    bool AdjustStaggerLevel( STR_EMITTER *pEmitter, unsigned int uiStep );
 
     void SelectMainSeg(STR_EMITTER *pEmitter);
     bool DecisionEmitter( STR_EMITTER *pEmitter );
@@ -284,9 +287,9 @@ public:
 
 
     enANL_FREQ_TYPE AnalFreqType( STR_EMITTER *pEmitter );
-    enSIGNAL_TYPE AnalSignalType( STR_EMITTER *pEmitter );
+    ENUM_SIGNAL_TYPE AnalSignalType( STR_EMITTER *pEmitter );
 
-    void PatternAnalysis();
+    void PatternAnalysis( bool bFreqPattern=true, bool bPRIPattern=true );
     void StaggerAnalysis();
     void GroupingUnknown();
 
@@ -312,6 +315,10 @@ public:
 
     void InitSeg(STR_EMITTER *pEmitter);
 
+
+    float DifferencePAdBm( int iMax, int iMin );
+
+
     //////////////////////////////////////////////////////////////////////////
     // 가상 함수 선언...
     virtual int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) = 0;
@@ -335,11 +342,6 @@ public:
     virtual void SaveDebug( const char *pSourcefile, int iLines ) = 0;
 
     virtual void *GetParentSigAnal() = 0;
-
-#ifdef _LOG_ANALTYPE_
-    virtual bool GetLogAnalType() = 0;
-#endif
-    
 
 };
 

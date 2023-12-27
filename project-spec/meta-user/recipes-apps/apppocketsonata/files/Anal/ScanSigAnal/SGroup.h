@@ -22,15 +22,11 @@ protected:
 
 public:
 	void MakeOneGroup();
-	unsigned int GetColPdw();
+	unsigned int GetCoPDW();
+    unsigned int GetColPDW();
 
-	CSGroup( void *pParent, unsigned int uicoMaxPdw);
+	CSGroup( void *pParent, unsigned int uicoMaxPdw, const char *pThreadName=NULL );
 	virtual ~CSGroup();
-
-#ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
-#endif
-
 
 };
 

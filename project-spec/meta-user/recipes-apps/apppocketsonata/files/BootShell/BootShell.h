@@ -24,7 +24,7 @@
 
 
 // 부트 쉘 명령어 정의
-enum {
+enum ENUM_BOOTSHELL_COMMAND {
     RUN_APP=0,
 	DOWNLOAD_APP,           // 운용 프로그램 다운로드
 
@@ -58,7 +58,7 @@ enum {
 #define	ATADRV										(const char *) "/ata0"
 #else
 #ifdef _MSC_VER
-#define	ATADRV										(char *) "/ata0:0"
+#define	ATADRV										(const char *) "/ata0:0"
 #else
 #define	ATADRV										(const char *) "/ata0:0"
 #endif

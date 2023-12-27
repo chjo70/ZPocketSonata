@@ -15,7 +15,7 @@ public:
     STR_MessageData *m_pMsg;
 
 public:
-    CCGI( int iKeyId, char *pClassName=NULL, bool bArrayLanData=false );
+    CCGI( int iKeyId, const char *pClassName=NULL, bool bArrayLanData=false );
     virtual ~CCGI();
 
     THREAD_STANDARD_FUNCTION( CCGI )

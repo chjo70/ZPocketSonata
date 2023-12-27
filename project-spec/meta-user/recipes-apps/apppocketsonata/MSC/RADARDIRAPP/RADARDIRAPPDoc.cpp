@@ -81,7 +81,7 @@ void CRADARDIRAPPDoc::Serialize(CArchive& ar)
 		//CRADARDIRAPPView *pView;
         //CRADARDIRAPPView * pView;
 
-        RadarDirAlgotirhm::RadarDirAlgotirhm::Init( pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
+        RadarDirAlgotirhm::RadarDirAlgotirhm::Init( 1, pMainFrame->GetOutputWnd()->GetSafeHwnd(), true );
 
         RadarDirAlgotirhm::RadarDirAlgotirhm::LoadCEDLibrary();
 
@@ -177,6 +177,8 @@ void CRADARDIRAPPDoc::Dump(CDumpContext& dc) const
 
 bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 {
+    int i;
+
 	CString strMainTitle;
 
 	m_pMainFrame=(CMainFrame *) AfxGetApp()->m_pMainWnd;
@@ -185,6 +187,7 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 
 	SRxLOBData *pLOBData;
 	STR_PDWDATA *pstPDWData;
+    STR_PDWINDEX *pstPDWIndex;
 
 	CRADARDIRAPPView *pView;
 	CMainFrame *pMainFrame;
@@ -192,16 +195,27 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 	if (true == ReadDataFile((char*)(LPCTSTR) m_strPathname, (char*)(LPCTSTR)strFilename)) {
 		pstPDWData = m_theDataFile.GetPDWData();
 
-		RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData, false );
+        RadarDirAlgotirhm::RadarDirAlgotirhm::SetMute( 0, false );
+
+		RadarDirAlgotirhm::RadarDirAlgotirhm::Start(pstPDWData, 0, false );
 
 		int nCoLOB = RadarDirAlgotirhm::RadarDirAlgotirhm::GetCoLOB();
 
 		pLOBData = RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
 
+        for( i=0 ; i < nCoLOB ;++i ) {
+            pstPDWIndex = RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOB2PDWData( i );
+        }
+
 		pMainFrame = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 		pView = (CRADARDIRAPPView *)pMainFrame->GetActiveView();
 
 		pView->UpdateLOBData(nCoLOB, pLOBData);
+
+        // 스캔 분석
+        STR_SCANRESULT stScanResult;
+
+        RadarDirAlgotirhm::RadarDirAlgotirhm::Start( pstPDWData, pLOBData, 0, 0, & stScanResult );
 
 		//TRACE( "\n 분석된 LOB 개수 : %d", nCoLOB );
 

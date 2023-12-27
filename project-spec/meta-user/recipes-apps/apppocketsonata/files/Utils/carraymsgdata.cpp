@@ -59,12 +59,18 @@ CArrayMsgData::CArrayMsgData( bool bArrayLanData )
 
     Init();
 
-    Alloc();
+    CArrayMsgData::Alloc();
 
 }
 
 /**
- * @brief CArrayMsgData::~CArrayMsgData
+ * @brief     ~CArrayMsgData
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-16 13:47:12
+ * @warning
  */
 CArrayMsgData::~CArrayMsgData()
 {
@@ -116,13 +122,32 @@ void CArrayMsgData::Alloc()
     if( m_bArrayLanData == true ) {
         for( i=0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
             m_pszArray[i] = ( unsigned char * ) malloc( sizeof(char) * _MAX_LANDATA );
-            SetMark( i );
+            SetMark( i, false );
         }
     }
     else {
         for( i=0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
             m_pszArray[i] = NULL;
         }
+    }
+
+}
+
+/**
+ * @brief     Clear
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-27 15:08:49
+ * @warning
+ */
+void CArrayMsgData::Clear()
+{
+    int i;
+
+    for( i = 0 ; i < SIZE_OF_MSGDATA_ARRAY ; ++i ) {
+        SetMark( i, false );
     }
 
 }
@@ -159,10 +184,17 @@ void CArrayMsgData::Free()
  * @date      2023-05-02 13:43:28
  * @warning
  */
-void CArrayMsgData::SetMark( int iIndex )
+void CArrayMsgData::SetMark( int iIndex, bool bLog )
 {
     m_pszArray[iIndex][0] = ARARAY_MARK_UPPER;
     m_pszArray[iIndex][1] = ARARAY_MARK_LOWER;
+    m_pszArray[iIndex][2] = NULL;
+
+    if( bLog == true ) {
+#ifdef _WIN64
+        TRACE( "\nSetMark [%5s:%3d]", GetThreadName(), iIndex );
+#endif
+    }
 
 }
 
@@ -181,7 +213,7 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 {
     int ucPushIndex;
 
-    Lock();
+    m_theLock.Lock();
     ++ m_ucPushIndex;
     if( m_ucPushIndex >= SIZE_OF_MSGDATA_ARRAY ) {
         m_ucPushIndex = 0;
@@ -195,31 +227,23 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
     if( this != g_pTheLog ) {
 #endif
         if( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER ) {
-#ifdef __VXWORKS__
+
             //int iPriority = _GetPriority();
             //_ChangeTaskPriority( TASK_LOWEST_PRIORITY );
             do {
+#ifdef __VXWORKS__
                 taskDelay( 2 * 77 );
+#else
+                Sleep( 2 );
+#endif
+                PrintDebug( ( unsigned int ) ucPushIndex );
+
                 TRACE( "!" );
                 if( i++ >= MAX_TRY_MARK ) {
                     break;
                 }
             } while( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER );
 
-            //_ChangeTaskPriority( iPriority );
-
-#elif _MSC_VER
-            do {
-                Sleep( 2 );
-
-                if( i++ >= MAX_TRY_MARK ) {
-                    break;
-                }
-            }
-            while( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER );
-#else
-
-#endif
         }
 #ifdef _LOG_
     }
@@ -230,6 +254,8 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
         if( m_pszArray[ucPushIndex][0] != ARARAY_MARK_UPPER && m_pszArray[ucPushIndex][1] != ARARAY_MARK_LOWER ) {
             WhereIs;
             PrintDebug( (unsigned int) ucPushIndex );
+
+
 
 #ifdef __VXWORKS__
 
@@ -273,7 +299,7 @@ int CArrayMsgData::PushLanData( void *pData, unsigned int uiLength )
 
     }
 
-    UnLock();
+    m_theLock.UnLock();
 
     return ucPushIndex;
 }
@@ -289,7 +315,8 @@ void CArrayMsgData::PopLanData( void *pData, int iIndex, unsigned int uiLength )
 
     if( iIndex >= 0 && iIndex < SIZE_OF_MSGDATA_ARRAY ) {
         memcpy( pData, m_pszArray[iIndex], uiLength );
-        SetMark( iIndex );
+        SetMark( iIndex, true );
+
     }
     else {
         TRACE( "ArrayBuffer 인덱스[%d]가 잘못 되었습니다." , iIndex );
@@ -311,7 +338,14 @@ void CArrayMsgData::PopLanData( void *pData, int iIndex, unsigned int uiLength )
 void CArrayMsgData::PrintDebug( unsigned int ucPushIndex )
 {
     int i;
-    TRACE( "\n ucPushIndex=%d\n", ucPushIndex );
+
+    if( (int) ucPushIndex >= 0 ) {
+        TRACE( "\n ucPushIndex=%d\n", ucPushIndex );
+    }
+    else {
+        TRACE( "\n" );
+    }
+
     for( i = 0; i < SIZE_OF_MSGDATA_ARRAY; ++i ) {
         TRACE( "%d=0x%x\t", i, m_pszArray[i][0] );
 //         if( m_pszArray[i][0] != ARARAY_MARK_UPPER ) {

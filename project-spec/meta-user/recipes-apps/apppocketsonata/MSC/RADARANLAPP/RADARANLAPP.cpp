@@ -25,6 +25,8 @@
 #endif
 
 
+
+
 // CRADARANLAPPApp
 
 BEGIN_MESSAGE_MAP(CRADARANLAPPApp, CWinAppEx)

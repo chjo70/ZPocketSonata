@@ -26,7 +26,7 @@
 #include "KompexSQLitePrerequisites.h"
 
 namespace Kompex
-{	
+{
 	//! Exception class for sqlite and KompexSQLiteWrapper errors
 	class _SQLiteWrapperExport SQLiteException
 	{
@@ -39,7 +39,7 @@ namespace Kompex
 		mInternalSqliteResultCode(internalSqliteResultCode)
 		{
 		}
-		
+
 		//! Overloaded constructor
 		SQLiteException(const std::string &filename, unsigned int lineNumber, const char *errDescription = "", int internalSqliteResultCode = -1):
 		mErrorDescription(std::string(errDescription)),
@@ -54,9 +54,9 @@ namespace Kompex
 		inline void Show() const {
             std::cerr << "file: " << mFilename << "\nline number: " << mLineNumber << "\nerror: " << mErrorDescription << std::endl;
         }
-		
+
 		//! Get all error information (filename, line, error message) as std::string.
-		std::string GetString() const 
+		std::string GetString() const
 		{
 			std::stringstream strStream;
 			strStream << "file: " << mFilename << "\nline number: " << mLineNumber << "\nerror: " << std::string(mErrorDescription) << "\n";
@@ -71,7 +71,7 @@ namespace Kompex
 
 		//! Returns the line number in which the error occured.
 		unsigned int GetLineNumber() const {return mLineNumber;}
-		
+
 		//! Returns the SQLite result code. It will also return extended result codes.\n
 		//! Please refer to the following links to see the existing codes.\n
 		//! SQLite Result Codes: http://sqlite.org/c3ref/c_abort.html \n
@@ -98,3 +98,9 @@ namespace Kompex
 #ifndef KOMPEX_EXCEPT
 #define KOMPEX_EXCEPT(errorString, internalSqliteResultCode) throw SQLiteException(__FILE__, __LINE__, errorString, internalSqliteResultCode)
 #endif
+
+#ifndef KOMPEX_O_EXCEPT
+#define KOMPEX_O_EXCEPT(errorString, internalSqliteResultCode) throw Kompex::SQLiteException(__FILE__, __LINE__, errorString, internalSqliteResultCode)
+#endif
+
+

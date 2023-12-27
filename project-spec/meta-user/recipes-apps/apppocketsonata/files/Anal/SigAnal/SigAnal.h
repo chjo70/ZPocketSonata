@@ -23,7 +23,7 @@
 #ifdef _MSSQL_
 class CSigAnal : public CMSSQL, public CRawFile
 #else
-class CSigAnal : public CRawFile
+class CSigAnal : public CRawFile, public CLogName
 #endif
 {
 private:
@@ -45,6 +45,8 @@ private:
     Kompex::CSQLiteDatabase *m_pDatabase;
 
 #endif
+
+    ENUM_ANAL_TYPE m_enAnalType;
 
     bool m_bSaveFile;
 
@@ -85,7 +87,55 @@ protected:
     STR_PDWDATA m_stSavePDWData;        // 분석한 LOB를 근거로 파일로 저장하기 위한 데이터 포인터
 
 private:
+    /*
+    template<typename T>
+    void SortingTOAOfPDW( const T &pPDWData )
+    {
+        unsigned int uiCoPDW;
 
+        // 1. 기준 TOA 를 찾습니다.
+        //     _PDW *pPDW;
+        // pPDW = pPDWData->pstPDW;
+        // unsigned int uiCoPDW, uiCoDestPDW;//
+        // uiCoPDW = pPDWData->GetTotalPDW();
+        //  _TOA tFirstTOA, tDiffTOA;
+    //     if( pPDWData->GetTotalPDW() >= _spTwo ) {
+    //         tDiffTOA = pPDW[1].GetTOA();
+    //         tDiffTOA = tDiffTOA - pPDW[0].GetTOA();
+    //
+    //         if( tDiffTOA >= CPOCKETSONATAPDW::EncodeTOAs( 100 ) ) {
+    //             // TRACE( "\n 역전 입니다." );
+    //         }
+    //
+    //     }
+
+#if 0
+        unsigned int ui;
+        _PDW *pDestPDW, *pSrcPDW;
+
+        // 2. False PDW 를 버린다.
+        pSrcPDW = pPDWData->pstPDW;
+        pDestPDW = pPDWData->pstPDW;
+        for( ui = 0; ui < uiCoPDW; ++ui ) {
+            if( pSrcPDW->GetFalsePDW() == 0 ) {
+                memcpy( pDestPDW, pSrcPDW, sizeof( _PDW ) );
+                ++ pDestPDW;
+                ++ uiCoDestPDW;
+            }
+
+            ++ pSrcPDW;
+
+        }
+        pPDWData->SetTotalPDW( uiCoDestPDW );
+#endif
+
+        // 3. TOA 순으로 정렬 합니다.
+        _PDW *pPDW = pPDWData->pstPDW;
+        uiCoPDW = pPDWData->GetTotalPDW();
+        qsort( pPDW, ( size_t ) uiCoPDW, sizeof( _PDW ), incTOACompare );
+    }
+
+    */
 
 protected:
     void DeleteAllFiles();
@@ -102,10 +152,10 @@ protected:
     bool InsertToDB_LOB( SRxLOBData *pLOBData );
 
 public:
-    CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName );
+    CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName, const char *pThreadName=NULL );
     virtual ~CSigAnal();
 
-	void AllocMemory( const char *pSQLiteFileName );
+	void AllocMemory();
 
     void NextStep() { ++m_uiStep; }
     void SetStep( unsigned int uiStep ) { m_uiStep=uiStep; }
@@ -128,7 +178,7 @@ public:
 #ifdef _SQLITE_
     void SQLiteException( Kompex::SQLiteException *psException );
 #endif
-    bool CleanupDatabase();
+
     bool InsertToDB_Position( SRxLOBData *pLOBData, bool bFreqSeq );
 
     //! 출력 관련 함수
@@ -137,6 +187,9 @@ public:
 	unsigned int GetOpInitID();
     void MakeAnalDirectory( UNION_HEADER* pUniHeader, bool bLog=true );
     void MakeDebugDirectory( UNION_HEADER *pUniHeader, bool bLog = true );
+
+    void SortingTOAOfPDW( STR_PDWDATA *pPDWData );
+    void SortingTOAOfPDW( STR_STATIC_PDWDATA *pPDWData );
 
     /**
      * @brief     GetAnalDirectory
@@ -390,6 +443,34 @@ public:
 
 #endif
     }
+
+#ifdef _LOG_ANALTYPE_
+
+    inline void SetAnalType( ENUM_ANAL_TYPE enAnalType )
+    {
+        m_enAnalType = enAnalType;
+    }
+
+    bool IsLogAnalType( LogType enLogType )
+    {
+        bool bRet = true;
+
+        if( g_enLogAnalType == enALL ) {
+        }
+        else {
+            if( enLogType != enError ) {
+                if( m_enAnalType & g_enLogAnalType ) {
+
+                }
+                else {
+                    bRet = false;
+                }
+            }
+        }
+
+        return bRet;
+    }
+#endif
 
     /**
      * @brief     GetRawDataFilename

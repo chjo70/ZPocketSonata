@@ -79,7 +79,7 @@ CDeltaGraphView2::~CDeltaGraphView2()
 {
 	CloseGraph();
     FreeBuffer();
-	
+
 }
 
 void CDeltaGraphView2::DoDataExchange(CDataExchange* pDX)
@@ -107,12 +107,12 @@ BOOL CDeltaGraphView2::PreCreateWindow(CREATESTRUCT& cs)
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/12 14:04:18
- * @warning   
+ * @warning
  */
  void CDeltaGraphView2::OnInitialUpdate()
 {
@@ -139,14 +139,14 @@ BOOL CDeltaGraphView2::PreCreateWindow(CREATESTRUCT& cs)
 }
 
  /**
- * @brief     
+ * @brief
  * @param     TCHAR * pszBuffer
  * @param     CWnd * pDlgItem
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/02/03 22:03:34
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::UpdateToolTip( TCHAR *pszBuffer, CWnd *pDlgItem  )
 {
@@ -156,13 +156,13 @@ void CDeltaGraphView2::UpdateToolTip( TCHAR *pszBuffer, CWnd *pDlgItem  )
 }
 
  /**
-  * @brief     
+  * @brief
   * @param     ENUM_SUB_GRAPH enSubGraph
   * @return    void
   * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version   0.0.1
   * @date      2020/03/12 22:43:37
-  * @warning   
+  * @warning
   */
 void CDeltaGraphView2::DrawGraph( ENUM_SUB_GRAPH enSubGraph )
 {
@@ -184,7 +184,7 @@ void CDeltaGraphView2::DrawGraph( ENUM_SUB_GRAPH enSubGraph )
 		iFilteredDataItems = m_pDoc->GetFilteredRealDataItems();
 
  		InitGraph( enSubGraph );
- 
+
  		ShowGraph( enSubGraph, iFileIndex );
 	}
 
@@ -194,12 +194,12 @@ void CDeltaGraphView2::DrawGraph( ENUM_SUB_GRAPH enSubGraph )
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/15 16:52:33
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::ClearGraph()
 {
@@ -214,14 +214,14 @@ void CDeltaGraphView2::ClearGraph()
 }
 
 /**
- * @brief     
+ * @brief
  * @param     UINT
  * @param     CPoint point
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/17 0:32:33
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
@@ -261,12 +261,12 @@ CDeltaGraphDoc* CDeltaGraphView2::GetDocument() const // µð¹ö±×µÇÁö ¾ÊÀº ¹öÀüÀº 
 // CDeltaGraphView ¸Þ½ÃÁö Ã³¸®±â
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/17 1:04:34
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::InitVar()
 {
@@ -287,12 +287,12 @@ void CDeltaGraphView2::InitVar()
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/05/21 15:45:21
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::ClearFilterSetup( STR_FILTER_SETUP *pstrFilterSetup )
 {
@@ -319,12 +319,12 @@ void CDeltaGraphView2::ClearFilterSetup( STR_FILTER_SETUP *pstrFilterSetup )
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/05/21 16:05:58
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::ClearZoomInfo()
 {
@@ -337,12 +337,12 @@ void CDeltaGraphView2::ClearZoomInfo()
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/17 1:04:31
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::InitStatic()
 {
@@ -355,12 +355,12 @@ void CDeltaGraphView2::InitStatic()
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/17 1:03:15
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::InitButton()
 {
@@ -369,12 +369,12 @@ void CDeltaGraphView2::InitButton()
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/15 17:14:07
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::InitCombo()
 {
@@ -417,12 +417,12 @@ void CDeltaGraphView2::InitCombo()
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/05/21 11:40:12
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::InitToolTip()
 {
@@ -433,12 +433,12 @@ void CDeltaGraphView2::InitToolTip()
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/05/21 11:44:19
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::FreeBuffer()
 {
@@ -447,13 +447,13 @@ void CDeltaGraphView2::FreeBuffer()
 }
 
 /**
- * @brief     
+ * @brief
  * @param     ENUM_SUB_GRAPH enSubGraph
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/05/21 11:39:24
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::SetCombo( ENUM_SUB_GRAPH enSubGraph )
 {
@@ -464,25 +464,25 @@ void CDeltaGraphView2::SetCombo( ENUM_SUB_GRAPH enSubGraph )
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/09 14:06:43
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 {
 	RECT rect;
 
 	if( enSubGraph == enUnselectedSubGraph ) {
-		
-		if( m_hPE ) { 
-			PEdestroy( m_hPE ); 
+
+		if( m_hPE ) {
+			PEdestroy( m_hPE );
 		}
 
         GetClientRect( &rect );
-		m_hPE = PEcreate(PECONTROL_SGRAPH, WS_VISIBLE, &rect, m_hWnd, 1001); 
+		m_hPE = PEcreate(PECONTROL_SGRAPH, WS_VISIBLE, &rect, m_hWnd, 1001);
 
 		if( m_hPE )
 		{
@@ -527,8 +527,8 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 			PEvsetEx(m_hPE, PEP_dwaSUBSETCOLORS, 0, 4, dwArray, 0);
 
 			// subset line types //
-// 			int nLineTypes[] = { PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, 
-// 				PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, 
+// 			int nLineTypes[] = { PELT_MEDIUMSOLID, PELT_MEDIUMSOLID,
+// 				PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID,
 // 				PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID};
 // 			PEvset(m_hPE, PEP_naSUBSETLINETYPES, nLineTypes, 8);
 
@@ -538,7 +538,7 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 // 				PEPT_SQUARESOLID, PEPT_DIAMONDSOLID, PEPT_UPTRIANGLESOLID };
 
 			int nPointTypes[] = { PEPT_DOTSOLID, PEPT_DOTSOLID,
-				PEPT_SQUARESOLID, PEPT_DOWNTRIANGLESOLID, PEPT_DOTSOLID, 
+				PEPT_SQUARESOLID, PEPT_DOWNTRIANGLESOLID, PEPT_DOTSOLID,
 				PEPT_SQUARESOLID, PEPT_DIAMONDSOLID, PEPT_UPTRIANGLESOLID };
 
 
@@ -585,7 +585,7 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 
 			PEnset(m_hPE, PEP_nUNDOZOOMMENU, PEMC_HIDE);
 
-			// Set cursor related properties 
+			// Set cursor related properties
 			// v9 feature
 			//PEnset(m_hPE, PEP_nCURSORPROMPTLOCATION, PECPL_TRACKING_TOOLTIP);
 			//PEnset(m_hPE, PEP_nCURSORPROMPTSTYLE, PECPS_YVALUE);
@@ -602,7 +602,7 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
             PEnset(m_hPE, PEP_bSCROLLINGHORZZOOM, TRUE);
 
             PEnset( m_hPE, PEP_bTRACKINGCUSTOMDATATEXT, TRUE );
-            PEnset( m_hPE, PEP_nCURSORPROMPTLOCATION, PECPL_TRACKING_TEXT ); // v9 new floating text prompt 
+            PEnset( m_hPE, PEP_nCURSORPROMPTLOCATION, PECPL_TRACKING_TEXT ); // v9 new floating text prompt
             PEnset( m_hPE, PEP_bCURSORPROMPTTRACKING, TRUE );
             PEnset( m_hPE, PEP_nCURSORPROMPTSTYLE, PECPS_YVALUE );
 
@@ -739,12 +739,12 @@ void CDeltaGraphView2::InitGraph( ENUM_SUB_GRAPH enSubGraph )
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/09 14:06:41
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::CloseGraph()
 {
@@ -754,12 +754,12 @@ void CDeltaGraphView2::CloseGraph()
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/09 14:06:45
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 {
@@ -1132,16 +1132,16 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 
 // 				PEvsetcellEx(m_hPE, PEP_faXDATA, 0, i+(iFileIndex*IQ_ITEMS), & fVal );
 // 				PEvsetcellEx(m_hPE, PEP_faYDATA, 0, i+(iFileIndex*IQ_ITEMS), pfY);
-// 
+//
 // 				if( enSubGraph == enSubMenu_1 ) {
 // 					PEvsetcellEx(m_hPE, PEP_faXDATA, 1, i+(iFileIndex*IQ_ITEMS), & fVal );
 // 					PEvsetcellEx(m_hPE, PEP_faYDATA, 1, i+(iFileIndex*IQ_ITEMS), pfY2 );
-// 
+//
 // 					++pfY2;
 // 				}
-// 
-// 
-// 					
+//
+//
+//
 // 				}
 
 				// Ã¹¹øÀç ½Ã°£ ¸¶Å© ¾ø¾Ö±â
@@ -1194,7 +1194,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 		dMaxX = 100;
 
 		PEvset(m_hPE, PEP_fZOOMMINX, & dMinX, 1 );
-		PEvset(m_hPE, PEP_fZOOMMAXX, & dMaxX, 1 );	
+		PEvset(m_hPE, PEP_fZOOMMAXX, & dMaxX, 1 );
 		//PEvset( m_hPE, PEP_fZOOMMINY, & strZoomInfo.dZoomMinY, 1);
 		//PEvset( m_hPE, PEP_fZOOMMAXY, & strZoomInfo.dZoomMaxY, 1);
 
@@ -1213,7 +1213,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
 }
 
 /**
- * @brief     
+ * @brief
  * @param     UINT nType
  * @param     int cx
  * @param     int cy
@@ -1221,7 +1221,7 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/09 16:15:53
- * @warning   
+ * @warning
  */
  void CDeltaGraphView2::OnSize(UINT nType, int cx, int cy)
 {
@@ -1241,17 +1241,17 @@ void CDeltaGraphView2::ShowGraph( ENUM_SUB_GRAPH enSubGraph, int iFileIndex )
  		::MoveWindow( m_hPE, rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top, FALSE );
  	}
 
-	
+
 }
 
 
  /**
-  * @brief     
+  * @brief
   * @return    void
   * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version   0.0.1
   * @date      2020/03/12 22:41:47
-  * @warning   
+  * @warning
   */
 void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 {
@@ -1268,18 +1268,18 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 	//ClearGraph();
     //InitGraph( ( ENUM_SUB_GRAPH ) iCombo );
 	DrawGraph( (ENUM_SUB_GRAPH) iCombo );
-	
+
 
 }
 
 
  /**
-  * @brief     
+  * @brief
   * @return    void
   * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version   0.0.1
   * @date      2020/03/13 0:32:46
-  * @warning   
+  * @warning
   */
  void CDeltaGraphView2::OnCbnSelchangeComboLinetype()
  {
@@ -1293,8 +1293,8 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 		case 0 :
 			{
 				// subset line types //
-				int nLineTypes[] = { PELT_THINSOLID, PELT_THINSOLID, 
-					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, 
+				int nLineTypes[] = { PELT_THINSOLID, PELT_THINSOLID,
+					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID,
 					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID};
 				PEvset(m_hPE, PEP_naSUBSETLINETYPES, nLineTypes, 2);
 
@@ -1309,8 +1309,8 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 		case 1 :
 			{
 				// subset line types //
-				int nLineTypes[] = { PELT_THINSOLID, PELT_THINSOLID, 
-					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, 
+				int nLineTypes[] = { PELT_THINSOLID, PELT_THINSOLID,
+					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID,
 					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID};
 				PEvset(m_hPE, PEP_naSUBSETLINETYPES, nLineTypes, 2);
 
@@ -1324,8 +1324,8 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 		case 2 :
 			{
 				// subset line types //
-				int nLineTypes[] = { PELT_DOT, PELT_DOT, 
-					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, 
+				int nLineTypes[] = { PELT_DOT, PELT_DOT,
+					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID,
 					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID};
 				PEvset(m_hPE, PEP_naSUBSETLINETYPES, nLineTypes, 2);
 
@@ -1340,8 +1340,8 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 			{
 				PEnset(m_hPE, PEP_nPLOTTINGMETHOD, PEGPM_SPLINE );
 				// subset line types //
-				int nLineTypes[] = { PELT_DOT, PELT_DOT, 
-					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, 
+				int nLineTypes[] = { PELT_DOT, PELT_DOT,
+					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID,
 					PELT_MEDIUMSOLID, PELT_MEDIUMSOLID, PELT_MEDIUMSOLID};
 				PEvset(m_hPE, PEP_naSUBSETLINETYPES, nLineTypes, 2);
 
@@ -1362,16 +1362,16 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 
 	 ::InvalidateRect(m_hPE, NULL, FALSE);
 	 ::UpdateWindow(m_hPE);
- 
+
  }
- 
+
  /**
-  * @brief     
+  * @brief
   * @return    void
   * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version   0.0.1
   * @date      2020/03/14 15:59:22
-  * @warning   
+  * @warning
   */
  void CDeltaGraphView2::OnBnClickedButtonFilterApply()
  {
@@ -1397,7 +1397,7 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 	}
 
  }
- 
+
  /**
   * @brief		GetFilterSetup
   * @param		STR_FILTER_SETUP * pstrFilterSetup
@@ -1407,7 +1407,7 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
   * @author		Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version		0.0.1
   * @date		2021/01/06 16:18:25
-  * @warning		
+  * @warning
   */
  void CDeltaGraphView2::GetFilterSetup( STR_FILTER_SETUP *pstrFilterSetup, ENUM_SUB_GRAPH enSubGraph, ENUM_DataType enDataType )
  {
@@ -1498,12 +1498,12 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
  }
 
  /**
-  * @brief     
+  * @brief
   * @return    void
   * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version   0.0.1
   * @date      2020/05/21 14:06:04
-  * @warning   
+  * @warning
   */
  void CDeltaGraphView2::UpdateFilterToolTip()
  {
@@ -1525,21 +1525,21 @@ void CDeltaGraphView2::OnCbnSelchangeComboYaxis()
 // 	 if( m_strFilterSetup.dPAMin != -DBL_MAX && m_strFilterSetup.dPAMax != DBL_MAX ) {
 // 		 iCnt += _stprintf_s( & szBuffer[iCnt], _countof(szBuffer)-iCnt, _T("¼¼±â %.1f ~ %.1f[dBm]\r"), m_strFilterSetup.dPAMin, m_strFilterSetup.dPAMax );
 // 	 }
-// 
+//
 // 	 if( iCnt != 0 ) {
 // 		szBuffer[iCnt-1] = NULL;
 // 	 }
-// 
+//
 // 	 UpdateToolTip( szBuffer, GetDlgItem(IDC_BUTTON_FILTER_APPLY) );
  }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/03/15 16:26:20
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::OnBnClickedButtonFilterDeapply()
 {
@@ -1586,15 +1586,15 @@ void CDeltaGraphView2::OnBnClickedButtonRunSigAnal()
 
  	if( enDataType == en_PDW_DATA ) {
  		m_pDoc->ReadDataFile( iFileIndex, & strFilterSetup );
- 
+
  	}
  	else {
  		m_pDoc->ReadDataFile( iFileIndex );
- 
+
  		iFilteredDataItems += m_pDoc->GetFilteredDataItems();
 
 	}
- 
+
 
 	// ¾Æ·¡¿¡ ÀÎÅÍ ½ÅÈ£ ºÐ¼® °á°ú Ã¢ È£Ãâ...
 	{
@@ -1608,14 +1608,14 @@ void CDeltaGraphView2::OnBnClickedButtonRunSigAnal()
 
 
  /**
-  * @brief     
+  * @brief
   * @param     WPARAM wParam
   * @param     LPARAM lParam
   * @return    BOOL
   * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version   0.0.1
   * @date      2020/03/15 21:10:27
-  * @warning   
+  * @warning
   */
 BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 {
@@ -1625,11 +1625,11 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 		if( (HIWORD(wParam) == PEWN_CUSTOMTRACKINGDATATEXT) ) {
 			double dX, dY;
             HOTSPOTDATA hsd;
-			
+
 			ENUM_DataType enDataType;
 
-			TCHAR buffer[200]; 
-			TCHAR szBuffer[200]; 
+			TCHAR buffer[200];
+			TCHAR szBuffer[200];
 
             PEvget(m_hPE, PEP_structHOTSPOTDATA, &hsd);
 
@@ -1638,7 +1638,7 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
             }
             else {
 			PEvget(m_hPE, PEP_fCURSORVALUEX, &dX);
-                
+
             }
 			PEvget(m_hPE, PEP_fCURSORVALUEY, &dY);
 
@@ -1774,7 +1774,7 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 				_stprintf_s(buffer, _countof(buffer), TEXT("Point Label is %s"), buffer2);
 			}
 			else {
-				// v9 features 
+				// v9 features
 /*
 				int nResult;
 				nResult = PEsearchsubsetpointindex(m_hPE, pt.x, pt.y);
@@ -1811,7 +1811,7 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 		}
 		else if( HIWORD(wParam) == PEWN_ZOOMIN ) {
 			AddZoomInfo();
-			
+
 		}
 
 	}
@@ -1821,12 +1821,12 @@ BOOL CDeltaGraphView2::OnCommand(WPARAM wParam, LPARAM lParam)
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/05/21 16:04:05
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::AddZoomInfo()
 {
@@ -1867,7 +1867,7 @@ void CDeltaGraphView2::AddZoomInfo()
  * @author		Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version		0.0.1
  * @date		2020/12/28 16:47:36
- * @warning		
+ * @warning
  */
 void CDeltaGraphView2::UpdateZoomButton()
 {
@@ -1890,13 +1890,13 @@ void CDeltaGraphView2::UpdateZoomButton()
 }
 
  /**
-  * @brief     
+  * @brief
   * @param     HOTSPOTDATA * pHSD
   * @return    void
   * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version   0.0.1
   * @date      2020/03/17 0:38:15
-  * @warning   
+  * @warning
   */
 void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
 {
@@ -1934,11 +1934,11 @@ void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
 		m_CStaticX1.SetBold( TRUE, TRUE );
 		m_CStaticX1.SetBackgroundColor( ::GetSysColor(COLOR_GRAYTEXT), TRUE );
 		m_CStaticX2.SetBackgroundColor( ::GetSysColor(COLOR_BTNFACE), TRUE );
-		
+
 		m_CStaticX1.SetWindowText( szBuffer );
 		m_fX1 = fValue;
 		sprintf_s( szBuffer, _countof(szBuffer), _T("%.3f"), m_fX1-m_fX2 );
-		
+
 	 }
 	 else {
 		 m_CStaticX2.SetBold( TRUE, TRUE );
@@ -1957,14 +1957,14 @@ void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
  }
 
 /**
- * @brief     
+ * @brief
  * @param     float fValue
  * @param     ENUM_DataType enDataType
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/05/21 11:27:24
- * @warning   
+ * @warning
  */
  float CDeltaGraphView2::SetXUnit( float fValue, ENUM_DataType enDataType )
 {
@@ -2008,12 +2008,12 @@ void CDeltaGraphView2::SetData( HOTSPOTDATA *pHSD )
 
 
  /**
-  * @brief     
+  * @brief
   * @return    void
   * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
   * @version   0.0.1
   * @date      2020/03/17 0:32:16
-  * @warning   
+  * @warning
   */
 void CDeltaGraphView2::OnCbnSelchangeComboPointsize()
 {
@@ -2077,18 +2077,18 @@ void CDeltaGraphView2::SetGraphPointsize()
 
 
 /**
- * @brief     
+ * @brief
  * @param     MSG * pMsg
  * @return    BOOL
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/05/21 12:03:23
- * @warning   
+ * @warning
  */
 BOOL CDeltaGraphView2::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: ¿©±â¿¡ Æ¯¼öÈ­µÈ ÄÚµå¸¦ Ãß°¡ ¹×/¶Ç´Â ±âº» Å¬·¡½º¸¦ È£ÃâÇÕ´Ï´Ù.
-	if(pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE) 
+	if(pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE)
 		return TRUE;
 	else
 		m_pTip->RelayEvent(pMsg);
@@ -2097,12 +2097,12 @@ BOOL CDeltaGraphView2::PreTranslateMessage(MSG* pMsg)
 }
 
 /**
- * @brief     
+ * @brief
  * @return    void
  * @author    Á¶Ã¶Èñ (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2020/05/21 15:46:46
- * @warning   
+ * @warning
  */
 void CDeltaGraphView2::OnBnClickedButtonFilterZoomout()
 {
@@ -2146,14 +2146,14 @@ void CDeltaGraphView2::OnCbnSelchangeComboDv()
 	// TODO: ¿©±â¿¡ ÄÁÆ®·Ñ ¾Ë¸² Ã³¸®±â ÄÚµå¸¦ Ãß°¡ÇÕ´Ï´Ù.
 	ShowGraph( m_enSubGraph );
 // 	int iCombo= m_CComboDV.GetCurSel();
-// 
+//
 // 	switch( iCombo ) {
 // 		case 0 :
 // 			break;
-// 
+//
 // 		case 1 :
 // 			break;
-// 
+//
 // 		case 2 :
 // 			break;
 // 	}

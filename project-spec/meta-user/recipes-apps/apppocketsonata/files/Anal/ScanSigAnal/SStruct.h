@@ -24,6 +24,14 @@ struct STR_LOWHIGH
 } ;
 #endif
 
+#ifndef _STR_LOWHIGH_FLOAT
+#define _STR_LOWHIGH_FLOAT
+struct STR_LOWHIGH_FLOAT {
+    float fLow;
+    float fHigh;
+};
+#endif
+
 /**
     @struct STR_SCANPT
     @brief

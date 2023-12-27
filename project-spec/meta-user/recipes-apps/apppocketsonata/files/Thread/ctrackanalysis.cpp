@@ -9,7 +9,7 @@
 #include "ctrackanalysis.h"
 #include "cemittermerge.h"
 
-#include "../Utils/csingleserver.h"
+//#include "../Utils/csingleserver.h"
 #include "../Utils/csingleclient.h"
 //#include "../Utils/cmultiserver.h"
 
@@ -25,7 +25,7 @@
  * @param iKeyId
  * @param pClassName
  */
-CTrackAnalysis::CTrackAnalysis( int iThreadPriority, const char *pClassName, bool bArrayLanData ) : CThread( iThreadPriority, pClassName, bArrayLanData )
+CTrackAnalysis::CTrackAnalysis( int iThreadPriority, const char *pThreadName, bool bArrayLanData ) : CThread( iThreadPriority, pThreadName, bArrayLanData )
 {
 
 #ifdef _SQLITE_
@@ -43,9 +43,9 @@ CTrackAnalysis::CTrackAnalysis( int iThreadPriority, const char *pClassName, boo
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILEEXTNAME );
 #endif
 
-    m_pTheKnownSigAnal = new CKnownSigAnal( KWN_COLLECT_PDW, false, szSQLiteFileName );
+    m_pTheKnownSigAnal = new CKnownSigAnal( KWN_COLLECT_PDW, false, szSQLiteFileName, CThread::GetThreadName() );
 #else
-    m_pTheKnownSigAnal = new CKnownSigAnal( KWN_COLLECT_PDW, false );
+    m_pTheKnownSigAnal = new CKnownSigAnal( KWN_COLLECT_PDW, false, NULL, GetThreadName() );
 
 #endif
 
@@ -163,34 +163,48 @@ void CTrackAnalysis::AnalysisStart()
     //LOGENTRY;
     int iCoLOB;
 
+    SRxLOBData *pLOBData;
+
     STR_TRKSCNPDWDATA *pTrkPDWData;
 
-    Log( enDebug, " TRK: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiReqStatus, m_pMsg->x.strCollectInfo.uiABTID );
-
+    // Log( enDebug, " 추적: Analyzing the PDW[%d] in the Ch[%d] for the B[%d]..." , m_pMsg->x.strCollectInfo.uiTotalPDW, m_pMsg->x.strCollectInfo.uiReqStatus, m_pMsg->x.strCollectInfo.uiABTID );
     //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
 
     // 1. 추적 신호 분석을 호출한다.
     pTrkPDWData = ( STR_TRKSCNPDWDATA *) GetRecvData();
-    m_pTheKnownSigAnal->Start( & pTrkPDWData->strPDW, & pTrkPDWData->strABTData );
+    m_pTheKnownSigAnal->Start( & pTrkPDWData->strPDW, & pTrkPDWData->strABTData, m_pRecvTrackAnalInfo->enRobustAnal, m_pRecvTrackAnalInfo->uiGlobalCh );
 
-    // 2. 분석 결과를 병합/식별 쓰레드에 전달한다.
-    STR_DETANAL_INFO strAnalInfo;
-
+    // 2. 추적 성공한 LOB 에 대해서 해당 방사체/빔 번호를 할당 합니다. 나머지 LOB들에 대해서는 0 /0 으로 초기화된 LOB 들을 신규 처리하도록 합니다.
     iCoLOB = m_pTheKnownSigAnal->GetCoLOB();
 
-    // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
-    iCoLOB = min( (int) (_MAX_LANDATA / sizeof( struct SRxLOBData) - 1), iCoLOB);
+    pLOBData = m_pTheKnownSigAnal->GetLOBData();
+    if( pLOBData != NULL ) {
+        if( m_pTheKnownSigAnal->IsTrackSuccess() ) {
+            pLOBData->uiABTID = m_pRecvTrackAnalInfo->uiABTID;
+            pLOBData->uiAETID = m_pRecvTrackAnalInfo->uiAETID;
 
-    strAnalInfo.Set( enLEFT_PCI_DRIVER, ( unsigned int ) iCoLOB, m_pMsg->x.strCollectInfo.uiReqStatus, enTrackCollectBank, m_pMsg->x.strDetAnalInfo.uiAETID, m_pMsg->x.strDetAnalInfo.uiABTID, 0 );
-    //strAnalInfo.uiAETID = m_pMsg->x.strDetAnalInfo.uiAETID;
-    //strAnalInfo.uiABTID = m_pMsg->x.strCollectInfo.uiABTID;
+        }
 
-    // PDW 헤더 정보 저장
-    //memcpy(&strAnalInfo.uniPDWHeader, &pTrkPDWData->strPDW.x, sizeof(union UNION_HEADER));
+        //! LOB 개수 설정
+        m_pRecvTrackAnalInfo->uiTotalLOB = (unsigned int) iCoLOB;
 
-    //SRxLOBData *pLOBData = m_pTheKnownSigAnal->GetLOBData();
+        // 3.1 추적에서 분석된 LOB 들을 위협 관리로 전송합니다.
+        if( iCoLOB > 0 ) {
+            // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
+            iCoLOB = min( (int) (_MAX_LANDATA / sizeof( struct SRxLOBData) - 1), iCoLOB );
 
-    g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, m_pTheKnownSigAnal->GetLOBData(), sizeof( struct SRxLOBData), (unsigned int) iCoLOB, & strAnalInfo, sizeof(STR_DETANAL_INFO), GetThreadName() );
+            g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, pLOBData, sizeof( struct SRxLOBData), (unsigned int) iCoLOB, m_pRecvTrackAnalInfo, sizeof( STR_TRKANAL_INFO ), GetThreadName() );
+        }
+        // 3.2 추적 분석에서 수집이 안되서 분석이 전혀 없거나 수집은 충분히 되었지만 분석이 안 된 경우, 추적 채널을 재할당합니다.
+        else {
+            m_pstrTrackAnalInfo->Set( m_pRecvTrackAnalInfo->uiGlobalCh, m_pRecvTrackAnalInfo->enPCIDriver, 0, enTrackCollectBank, m_pRecvTrackAnalInfo->uiAETID, m_pRecvTrackAnalInfo->uiABTID, enNO_ROBUST_ANALYSIS );
+            g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_FAIL, GetUniMessageData(), sizeof( union UNI_MSG_DATA ), GetThreadName() );
+
+        }
+    }
+    else {
+
+    }
 
 }
 
@@ -205,8 +219,6 @@ void CTrackAnalysis::AnalysisStart()
  */
 void CTrackAnalysis::InitTrackAnalysis()
 {
-
-    Log( enNormal, "테이블을 삭제합니다." );
-    m_pTheKnownSigAnal->DeleteDB_RAW( "RAWDATA" );
+    CThread::Clear();
 
 }

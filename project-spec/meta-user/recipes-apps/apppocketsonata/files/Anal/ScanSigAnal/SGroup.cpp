@@ -20,8 +20,10 @@
  * @param pParent
  * @param coMaxPdw
  */
-CSGroup::CSGroup( void *pParent, unsigned int uicoMaxPdw ) : CGroup(uicoMaxPdw)
+CSGroup::CSGroup( void *pParent, unsigned int uicoMaxPdw, const char *pThreadName ) : CGroup(uicoMaxPdw, pThreadName )
 {
+    SetAnalType( enSCN_ANAL );
+
 	m_pScanSigAnal = ( CScanSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pScanSigAnal)
@@ -50,9 +52,23 @@ CSGroup::~CSGroup()
  * @date      2006-01-27 11:20:12
  * @warning
  */
-unsigned int CSGroup::GetColPdw()
+unsigned int CSGroup::GetCoPDW()
 {
-	return m_pScanSigAnal->GetColPdw();
+	return m_pScanSigAnal->GetCoPDW();
+}
+
+/**
+ * @brief     GetColPDW
+ * @return    unsigned int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-11 18:47:56
+ * @warning
+ */
+unsigned int CSGroup::GetColPDW()
+{
+    return m_pScanSigAnal->GetColPDW();
 }
 
 /**
@@ -70,7 +86,7 @@ void CSGroup::MakeOneGroup()
 	PDWINDEX *pPdwIndex;
 
 #if defined(_POCKETSONATA_) || defined(_712_)
-    m_nBand = g_enBoardId;
+    m_nBand = (int) g_enBoardId;
 #else
     m_nBand = 0;
 #endif
@@ -85,19 +101,3 @@ void CSGroup::MakeOneGroup()
 
 }
 
-#ifdef _LOG_ANALTYPE_
-/**
- * @brief     GetLogAnalType
- * @return    bool
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-09-21 12:12:14
- * @warning
- */
-bool CSGroup::GetLogAnalType()
-{
-    return m_pScanSigAnal->GetLogAnalType();
-}
-
-#endif

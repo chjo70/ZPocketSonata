@@ -25,7 +25,7 @@
 
 
 // 클래스 내의 정적 멤버변수 값 정의
-COperationConsole* COperationConsole::m_pInstance[2] = { nullptr, nullptr } ;
+//COperationConsole* COperationConsole::m_pInstance[2] = { nullptr, nullptr } ;
 
 
 /**
@@ -41,11 +41,12 @@ COperationConsole* COperationConsole::m_pInstance[2] = { nullptr, nullptr } ;
  * @date      2023-02-03 10:19:09
  * @warning
  */
-COperationConsole::COperationConsole( int iKeyId, int iIndex, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData, true )
+COperationConsole::COperationConsole( int iKeyId, const char *pThreadName, bool bArrayLanData ) : CThread( iKeyId, pThreadName, bArrayLanData, true )
 {
    //LOGENTRY;
 
-   m_iIndex = iIndex;
+   //m_iIndex = iIndex;
+
 }
 
 /**
@@ -71,19 +72,16 @@ COperationConsole::~COperationConsole(void)
  * @date      2023-02-03 10:19:17
  * @warning
  */
-void COperationConsole::ReleaseInstance()
-{
-    if(m_pInstance[m_iIndex])
-    {
-        int iIndex;
-
-        //LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
-
-        iIndex = m_iIndex;
-        delete m_pInstance[iIndex];
-        m_pInstance[iIndex] = NULL;
-    }
-}
+// void COperationConsole::ReleaseInstance()
+// {
+//     if(m_pInstance)
+//     {
+//         //LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
+// 
+//         delete m_pInstance;
+//         m_pInstance = NULL;
+//     }
+// }
 
 
 /**
@@ -212,7 +210,7 @@ void COperationConsole::_routine()
                 }
             }
             else {
-                Log( enError, "메시지 흐름에 잘못된 명령[0x%X]을 수신했습니다 !", m_pMsg->uiOpCode );
+                Log( enError, "메시지 흐름 또는 운용 모드[%d]에 잘못된 명령[0x%X]을 수신했습니다 !", g_pTheTaskMngr->GetMode(), m_pMsg->uiOpCode );
             }
         }
     }

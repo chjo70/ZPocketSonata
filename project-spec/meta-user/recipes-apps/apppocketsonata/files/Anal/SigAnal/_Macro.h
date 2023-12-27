@@ -268,6 +268,9 @@ T _diffabs( T x, T y)
 #define IFRQMhzLOW( A )         CPOCKETSONATAPDW::EncodeFREQMHzFloor( A )
 #define IFRQMhzHGH( A )         CPOCKETSONATAPDW::EncodeFREQMHzCeiling( A )
 
+#define IFRQCNVLOW( A )			CPOCKETSONATAPDW::EncodeFREQMHzFloor( A )
+#define IFRQCNVHGH( A )			CPOCKETSONATAPDW::EncodeFREQMHzCeiling( A )
+
 #define TOAusCNV( A )           CPOCKETSONATAPDW::DecodeTOAus( A )
 #define IFTOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
 #define I_TOAusCNV( A )         (int) ( CPOCKETSONATAPDW::DecodeTOAus( A ) + 0.5 )
@@ -278,16 +281,18 @@ T _diffabs( T x, T y)
 #define ITTOAusCNV( A )			CPOCKETSONATAPDW::EncodeTOAus( A )
 
 #define PWCNV( A )				CPOCKETSONATAPDW::DecodePWus( A )
-#define I_PWCNV( A )			IMUL( CPOCKETSONATAPDW::DecodePWus( A ), 1.0 )
+#define I_PWCNV( A )			IMUL( CPOCKETSONATAPDW::DecodePWns( A ), 1.0 )
 #define IPWCNV( A )			    CPOCKETSONATAPDW::EncodePWns( A )
 
 
 #define IPWCNVLOW( A )			CPOCKETSONATAPDW::EncodePWFloor( A )
-#define IPWCNVHGH( A )			CPOCKETSONATAPDW::EncodePWCeiling( A )
+#define IPWCNVHGH( A )			CPOCKETSONATAPDW::EncodePW( A )
 
 #define AOACNV( A )             CPOCKETSONATAPDW::DecodeDOA( A )
 #define I_AOACNV( A )           IMUL( CPOCKETSONATAPDW::DecodeDOA( A ), 1.0 )
 #define IAOACNV( A )            CPOCKETSONATAPDW::EncodeDOA( A )
+#define IAOACNVLOW( A )         CPOCKETSONATAPDW::EncodeDOAFloor( A )
+#define IAOACNVHGH( A )         CPOCKETSONATAPDW::DecodeDOACeiling( A )
 #define FAOACNV( A )            CPOCKETSONATAPDW::DecodeDOA( A )
 
 #define AddAOA(A, B)            ( ( (int)A + (int)B + (int) MAX_AOA_BIT) % (int) MAX_AOA_BIT )
@@ -297,6 +302,8 @@ T _diffabs( T x, T y)
 #define PACNV( A )				CPOCKETSONATAPDW::DecodePA( A )
 #define I_IPACNV( A )			IMUL( CPOCKETSONATAPDW::DecodePA( A ), 1.0 )
 #define IPACNV( A )				CPOCKETSONATAPDW::EncodePA( A )  // ( (A), _spAMPres )
+#define IPACNVLOW( A )			CPOCKETSONATAPDW::EncodePAFloor( A )
+#define IPACNVHGH( A )			CPOCKETSONATAPDW::EncodePA( A )
 
 #define FPACNV( A )				(float)( FMUL( (A), _spAMPres ) - (float) 110. )
 
@@ -405,14 +412,13 @@ T _diffabs( T x, T y)
 #endif
 
 #if defined(_WIN32)
-//#define printf                  Printf
+
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-  // void Printf( char *format, ... );
 
 #ifdef __cplusplus
 }
@@ -464,20 +470,20 @@ extern "C"
     __pragma (warning(pop))
 
 
-// 
-// 
+//
+//
 // #if defined(M68K) && !defined(_MBIT)
 // 1
 // #define WhereIs       printf( "...in %s file, %d line(s)1" , strrchr(__FILE__,'\\'), __LINE__ )
 // #define Hold          printf( "\n Press Any Key...." ), WhereIs, sc_getc()
 // #endif
-// 
+//
 // #if defined(M68K) && defined(_MBIT)
 // 1
 // #define WhereIs       RC_Print( "...in %s file, %d line(s)2" , strrchr(__FILE__,'\\'), __LINE__ )
 // #define Hold          RC_Print( "\n Press Any Key...." ), WhereIs, sc_getc()
 // #endif
-// 
+//
 // #if !defined(M68K) && !defined(_MBIT)
 // #ifndef WhereIs
 // 1
@@ -485,7 +491,7 @@ extern "C"
 // // 신뢰성 때문에 '+1' 을 생략함.
 // 1
 // #define WhereIs									TRACE( "...in %s 파일, %d 라인" , strrchr(__FILE__,'\\') ? strrchr(__FILE__,'\\') : __FILE__ , __LINE__ )
-// 
+//
 // #else
 // #ifdef __VXWORKS__
 // 1
@@ -493,15 +499,15 @@ extern "C"
 // #else
 // 1
 // #define WhereIs									printf( "...in %s file, %d line(s)" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/')+1 : __FILE__ , __LINE__ )
-// 
+//
 // #endif
-// 
+//
 // #endif
-// 
+//
 // #endif
-// 
+//
 // #define Hold          printf( "\n Press Any Key...." ), WhereIs, sc_getc()
-// 
+//
 // #endif
 
 void _InitResolution();
@@ -513,27 +519,29 @@ void _InitResolution();
 float _spOneSec;
 float _spOneMilli;
 float _spOneMicrosec;
-float _spOneNanosec;
+//float _spOneNanosec;
 
-float _spAMPres;
-float _spAOAres;
 float _spTOAres;
-float _spPWres;
+//float _spPWres;
 
 #if defined(_ELINT_)
 float _frqRes[ELINT::enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
+float _spAOAres;
 
 #elif defined(_701_)
 float _frqRes[_701::enUnknown_BW + 1] = { (float) 0.001, (float) 0.001, (float) 0.0 };
+float _spAOAres;
 
 #elif defined(_XBAND_)
 float _frqRes[XBAND::enUnknown_BW+1] = { (float) 0.001, (float) 0.001, (float) 0.0 } ;
+float _spAOAres;
 //float _frqRes[en50MHZ_BW+1] = { (float) 0.117, (float) 1.875 } ;
 
 #elif defined(_POCKETSONATA_) || defined(_712_)
 float _frqRes[POCKETSONATA::enUnknown_BW + 1] = { (float) 0.117, (float) 65.104167, (float) 0.0 } ;
 
 #else
+float _spAMPres;
 //float _frqRes[POCKETSONATA::enUnknown_BW+1] = { (float) 0.117, (float) 65.104167, (float) 0.0 } ;
 
 #endif
@@ -543,12 +551,18 @@ float _frqRes[POCKETSONATA::enUnknown_BW + 1] = { (float) 0.117, (float) 65.1041
 extern float _spOneSec;
 extern float _spOneMilli;
 extern float _spOneMicrosec;
-extern float _spOneNanosec;
+//extern float _spOneNanosec;
 
+#ifdef _ELINT
+#elif defined(_POCKETSONATA_) || defined(_712_)
+#else
 extern float _spAMPres;
-extern float _spAOAres;
+
+#endif
+
+
 extern float _spTOAres;
-extern float _spPWres;
+//extern float _spPWres;
 
 
 // #if defined(_ELINT_)

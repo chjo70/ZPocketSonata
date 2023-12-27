@@ -64,6 +64,9 @@
     <Filter Include="소스 파일\Anal\SigAnal">
       <UniqueIdentifier>{67f87db7-3dd1-4a22-af12-8ce655562918}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\SQLite">
+      <UniqueIdentifier>{f3b29898-cdca-4736-b77f-bfd7d1e7138c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -152,6 +155,24 @@
     </ClCompile>
     <ClCompile Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastS.cpp">
       <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Anal\SigAnal\RadarSimilarity.cpp">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clogname.cpp">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteBlob.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteDatabase.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\KompexSQLiteStatement.cpp">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\SQLite\sqlite3.c">
+      <Filter>소스 파일\SQLite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +352,45 @@
     </ClInclude>
     <ClInclude Include="..\..\files\Anal\EmitterMerge\DistanceLeastSquare\DistanceLeastS.h">
       <Filter>소스 파일\Anal\EmitterMerge\DistanceLeastSquare</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Anal\SigAnal\RadarSimilarity.h">
+      <Filter>소스 파일\Anal\SigAnal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clogname.h">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteBlob.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteDatabase.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteException.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLitePrerequisites.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteStatement.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\KompexSQLiteStreamRedirection.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\sqlite3.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\sqlite3ext.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\SQLiteCpp.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\Utils.h">
+      <Filter>소스 파일\SQLite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\files\SQLite\VariadicBind.h">
+      <Filter>소스 파일\SQLite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

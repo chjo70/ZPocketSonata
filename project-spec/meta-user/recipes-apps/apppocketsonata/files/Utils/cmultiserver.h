@@ -86,7 +86,7 @@ public:
 
     void Run();												///< CThread 클래스의 Run() 함수를 호출하여 쓰레드를 생성하게 합니다.
     virtual void _routine();											///< 쓰레드에서 서버 또는 클라이언트를 실행하게 한다.
-    virtual char *GetThreadName() { return m_szThreadName; }			///< 쓰레드명을 리턴합니다.
+    //virtual char *GetThreadName() { return m_szThreadName; }			///< 쓰레드명을 리턴합니다.
 
 
     // 상속 받았을 때 부모 클래스에서 호출

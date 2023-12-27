@@ -19,7 +19,7 @@ CCGI* CCGI::m_pInstance = nullptr;
  * @param pClassName
  * @param bArrayLanData
  */
-CCGI::CCGI( int iKeyId, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
+CCGI::CCGI( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData )
 {
     LOGENTRY;
 

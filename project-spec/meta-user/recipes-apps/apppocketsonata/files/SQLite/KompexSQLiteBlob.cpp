@@ -86,7 +86,7 @@ void SQLiteBlob::ReadBlob(void *buffer, int numberOfBytes, int offset)
 	if((offset + numberOfBytes) > GetBlobSize()) {
 		KOMPEX_EXCEPT("ReadBlob() offset and numberOfBytes exceed the BLOB size", -1);
     }
-		
+
     int iSql=sqlite3_blob_read(mBlobHandle, buffer, numberOfBytes, offset);
 
     if( iSql == SQLITE_OK ) {
@@ -100,7 +100,7 @@ void SQLiteBlob::ReadBlob(void *buffer, int numberOfBytes, int offset)
         KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
     }
 
-// 
+//
 // 	switch(sqlite3_blob_read(mBlobHandle, buffer, numberOfBytes, offset))
 // 	{
 // 		case SQLITE_OK:

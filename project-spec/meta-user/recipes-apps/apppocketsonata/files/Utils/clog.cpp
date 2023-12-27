@@ -117,7 +117,7 @@ CLog::CLog( int iThreadPriority, const char *pClassName, bool bArrayLanData )
     strcat( m_szLogFullName, szDate );
 
     // 로그 타스크 활성화
-    m_bLogThread = true;
+    m_bLogThread = false;
 
 }
 
@@ -227,7 +227,6 @@ void CLog::_routine()
                     break;
 
                 case enREQ_OP_START:
-                    WhereIs;
                     Start();
                     break;
 
@@ -346,6 +345,11 @@ void  CLog::WriteAndPrint()
 void CLog::Start()
 {
     //PrintDebug();
+#ifdef _LOG_
+    CThread::Clear();
+#else
+
+#endif
 
 }
 
@@ -358,7 +362,7 @@ void CLog::Start()
  * @param iLine
  * @param pStr
  */
-void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... )
+void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pThreadName, const char *fmt, ... )
 {
     char szLog[LOG_DIR_SIZE * 5];
 
@@ -413,6 +417,12 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
     default :
         break;
     }
+    if( pThreadName != NULL ) {
+        strcat( szLog, "{" );
+        strcat( szLog, pThreadName );
+        strcat( szLog, "}" );
+        strcat( szLog, "\t" );
+    }
 
     if(fmt != NULL ) {
         nLength = strlen(szLog);
@@ -466,14 +476,14 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #endif
         }
         else {
-            TRACE0( szLog );
+            TRACE( "%s", szLog);
         }
 #endif
 
     }
     else if( nType == enLineFeed ) {
 #ifdef _MSC_VER
-        TRACE0( "\n" );
+        TRACE( "\n" );
 #endif
     }
     else {
@@ -499,7 +509,10 @@ void CLog::Lock()
     if( m_bLogThread == false ) {
 #ifdef _MSC_VER
         //TRACE( "\nLock()" );
+#ifndef _CONSOLE
         m_cs.Lock();
+#endif
+
 #elif defined(__VXWORKS__)
         sem_wait( & m_mutex );
 #else
@@ -529,7 +542,12 @@ void CLog::UnLock()
 
     if( m_bLogThread == false ) {
 #ifdef _MSC_VER
+
+#ifndef _CONSOLE
         m_cs.Unlock();
+
+#endif
+
 #elif defined(__VXWORKS__)
         sem_post( & m_mutex );
 #else
@@ -546,7 +564,7 @@ void CLog::UnLock()
 
 #ifdef _LOG_ANALTYPE_
 /**
- * @brief     GetLogAnalType
+ * @brief     쓰레드 없이 호출할 떄는 아래 함수가 호출됩니다.
  * @return    bool
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
@@ -554,7 +572,7 @@ void CLog::UnLock()
  * @date      2023-09-21 14:03:46
  * @warning
  */
-bool GetLogAnalType()
+bool IsLogAnalType( LogType enLogType )
 {
 
     return true;

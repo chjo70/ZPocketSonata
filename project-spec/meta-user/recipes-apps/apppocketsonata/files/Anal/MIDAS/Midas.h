@@ -18,6 +18,8 @@ using namespace std;
 
 #include "PDWIQ.h"
 
+#include "../../Utils/clog.h"
+
 #define XOR_I_DATA			(0x8A5A)
 #define XOR_Q_DATA			(0x8A5A)
 
@@ -34,7 +36,7 @@ using namespace std;
 #pragma pack( push, 1 )
 
 
-#define _PUT_ARRAY_VALUE( A, B, C )      if( B < sizeof(A) ) {   \
+#define _PUT_ARRAY_VALUE( A, B, C )      if( (size_t) B < sizeof(A) ) {   \
                                             A[B] = C;   }
 
 
@@ -522,7 +524,7 @@ union UNI_ADJUNCT_TYPE {
  * @warning
  */
 //class CMIDASBlueFileFormat : public CRawFile, public CPDW2SP370
-class CMIDASBlueFileFormat : public CRawFile
+class CMIDASBlueFileFormat : public CRawFile, public CLogName
 {
 protected:
     unsigned int m_uiSizeOfExtend;
@@ -584,8 +586,9 @@ private:
 public:
     CMIDASBlueFileFormat(void);
     ~CMIDASBlueFileFormat(void);
-    bool SaveMIDASFormat( char *pMidasFileName, EnumSCDataType enFileType, int i_pstReadFile, int i_nFileRawDataStartOffset, SEL_KEYWORD_VALUE & stKeywordValue, char *pInputFilename=NULL, char *pTaskID=NULL );
 
+
+    bool SaveMIDASFormat( char *pMidasFileName, EnumSCDataType enFileType, int i_pstReadFile, int i_nFileRawDataStartOffset, SEL_KEYWORD_VALUE *pstKeywordValue, char *pInputFilename, char *pTaskID );
     bool SaveMIDASFormat( const char *pMidasFileName, EnumSCDataType enFileType, _PDW *pPDWData, SEL_KEYWORD_VALUE *pstKeywordValue );
 
     void MakeMIDASFileName( char *pstOutFilePathName, char *pstFileName, EnumSCDataType eDataType );

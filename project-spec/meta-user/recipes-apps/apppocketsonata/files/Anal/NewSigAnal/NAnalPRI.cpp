@@ -67,8 +67,10 @@ int CNAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:10:00
 //
-CNAnalPRI::CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw) : CAnalPRI( pParent, uiCoMaxPdw)
+CNAnalPRI::CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CAnalPRI( pParent, uiCoMaxPdw, pThreadName )
 {
+    SetAnalType( enDET_ANAL );
+
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pNewSigAnal)
@@ -486,9 +488,9 @@ void CNAnalPRI::SaveDebug( const char *pSourcefile, int iLines )
  * @date      2023-09-21 12:01:36
  * @warning
  */
-bool CNAnalPRI::GetLogAnalType()
-{
-    return m_pNewSigAnal->GetAnalType();
-}
+// bool CNAnalPRI::IsLogAnalType()
+// {
+//     return m_pNewSigAnal->GetAnalType();
+// }
 
 #endif

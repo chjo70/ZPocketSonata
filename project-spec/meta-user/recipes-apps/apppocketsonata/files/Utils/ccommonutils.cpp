@@ -33,7 +33,7 @@
 
 #include <random>
 
-std::default_random_engine generator;
+std::default_random_engine g_generator;
 
 #elif __VXWORKS__
 #include <taskLib.h>
@@ -63,7 +63,7 @@ std::default_random_engine generator;
 #include "../Include/globals.h"
 
 #ifdef _LOG_
-extern CSingleClient *g_pTheCCUSocket;
+//extern CSingleClient *g_pTheCCUSocket;
 
 #endif
 
@@ -95,7 +95,7 @@ bool CCommonUtils::IsValidMinMax( float fMin, float fMax )
 {
     bool bRet = true;
 
-    if( fMin > fMax || is_zero<float>( fMax ) == 0 ) {
+    if( fMin > fMax || is_zero<float>( fMax ) == true ) {
         bRet = false;
     }
 
@@ -158,86 +158,6 @@ void CCommonUtils::GetCollectTime( unsigned int *ptiContactTime, unsigned int *p
 #endif
 
 }
-
-// void CCommonUtils::SendLan( UINT uiOpCode )
-// {
-//     CCommonUtils::SendLan( uiOpCode, NULL, 0 );
-//
-// }
-
-/**
- * @brief opcode, data 를 입력받아서 랜으로 송신한다.
- * @param uiOpCode
- * @param uiLength
- * @param pData
- */
-// void CCommonUtils::SendLan( UINT uiOpCode, void *pData, UINT uiLength )
-// {
-// #ifdef _USRDLL
-//
-// #else
-// #if defined(_ELINT_) || defined(_XBAND_)
-//
-// #elif _POCKETSONATA_
-// #ifndef _CGI_LIST_
-//     // 마스터 보드에서는 랜 메시지를 CCU 장치로 전송한다.
-//     if( g_enBoardId == enMaster ) {
-//         if( g_pTheCCUSocket != NULL ) {
-//             g_pTheCCUSocket->SendLan( uiOpCode, pData, uiLength );
-//
-//         }
-//
-//         // EA 경우에 AET 관련 메세지를 전달한다.
-// //         if( g_pThePMCSocket != NULL ) { //&& ( uiOpCode == esAET_NEW_CCU || uiOpCode == esAET_UPD_CCU || uiOpCode == esAET_DEL_CCU ) ) {
-// //             g_pThePMCSocket->SendLan( uiOpCode, pData, uiLength );
-// //         }
-//
-//     }
-//     // 클라이언트 보드 인 경우에는 랜 메시지를 마스터 보드에 전달한다.
-//     else {
-// //         if( g_pTheZYNQSocket != NULL ) {
-// //             //g_pTheZYNQSocket->SendLan( uiOpCode, pData, uiLength );
-// //         }
-// //         else {
-// //
-// //         }
-//     }
-// #endif
-// #endif
-//
-// #endif
-//
-// }
-
-/**
- * @brief CCommonUtils::CloseSocket
- */
-// void CCommonUtils::CloseSocket()
-// {
-// #ifdef _USRDLL
-//
-// #else
-// #if defined(_ELINT_) || defined(_XBAND_)
-//
-// #elif _POCKETSONATA_
-// #ifndef _CGI_LIST_
-//     if( g_enBoardId == enMaster ) {
-//         if( g_pTheCCUSocket != NULL ) {
-//             g_pTheCCUSocket->CloseSocket();
-//         }
-//
-//     }
-//     else {
-//
-//     }
-// #endif
-// #endif
-//
-// #endif
-//
-// }
-
-
 
 #ifdef _MSC_VER
 
@@ -360,7 +280,7 @@ float CCommonUtils::NormalDistribution( float fMean, float fDevi )
 
     std::normal_distribution<float> distribution( fMean, fDevi );
 
-    fRet = distribution( generator );
+    fRet = distribution( g_generator );
     return fRet;
 
 }
@@ -695,7 +615,7 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
     int     src_fd;
     int     dest_fd;
     struct  stat sts;
-    char    read_data_buf[4096], write_data_buff[4096];
+    char    read_data_buff[4096];
     int     tmp_errno;
     int iSize;
 
@@ -725,22 +645,23 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
             _close(src_fd);
             errno = tmp_errno; // close가 초기화한 errno를 복구함
             WhereIs;
-            //return -1;
         }
         else {
             do {
-                iSize = read(src_fd, read_data_buf, 4096);
+                iSize = read(src_fd, read_data_buff, 4096);
                 if( iSize <= 0 ) {
                     break;
                 }
                 iRet += iSize;
 
-                memcpy( write_data_buff, read_data_buf, sizeof(char)*(size_t) iSize );
-                while(write(dest_fd, write_data_buff, (unsigned int) iSize ) == -1) {
+                write( dest_fd, read_data_buff, ( unsigned int ) iSize );
+#if 0
+                if( iWrite == -1 ) {
                     if(errno == EINTR) {
                         /* signal이 발생한 경우에는 재작업 */
                         continue;
-                    } else {
+                    }
+                    else {
                         /* disk가 full났거나 무슨 일이 있음. */
                         tmp_errno = errno;
                         _close(src_fd);
@@ -748,6 +669,7 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
                         errno = tmp_errno;
                     }
                 }
+#endif
             }
             while( true );
 
@@ -784,12 +706,18 @@ int CCommonUtils::CopySrcToDstFile( const char *src_file, const char *dest_file,
 }
 
 /**
- * @brief CCommonUtils::timespec_diff
- * @param result
- * @param start
- * @param stop
+ * @brief     DiffTimespec
+ * @param     struct timespec * result
+ * @param     struct timespec * start
+ * @param     struct timespec * stop
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-22 09:03:19
+ * @warning
  */
-void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop )
+void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start, struct timespec *stop, char *pStrMessage )
 {
     struct timespec tsNow;
 
@@ -823,6 +751,14 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
     }
 
 #endif
+
+    if( pStrMessage != NULL ) {
+#ifdef _MSC_VER
+        printf( "\n %s[%d.%d ms]", pStrMessage, result->tv_sec, result->tv_usec / 1000 );
+#else
+        printf( "\n %s[%d.%d ms]", pStrMessage, result->tv_sec, result->tv_nsec / 1000000 );
+#endif
+    }
 
     return;
 }
@@ -871,6 +807,7 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 #if defined(_POCKETSONATA_) || defined(_712_)
     unsigned int i;
 
+    printf( "\n" );
     for( i=0 ; i < pPDWData->GetTotalPDW() ; ++i ) {
         printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
                 pPDW->tTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->tTOA-ullfirstTOA ), \
@@ -951,13 +888,13 @@ void CCommonUtils::AllSwapData16( void *pData, unsigned int uiLength )
  * @date      2023-06-07 10:49:11
  * @warning
  */
-void CCommonUtils::AllSwapData32( void *pData, unsigned int uiLength )
+void CCommonUtils::AllSwapData32( void *pData, size_t szLength )
 {
-    UINT i;
+    size_t i;
     UINT *pWord;
 
     pWord = (UINT *) pData;
-    for( i=0 ; i < uiLength; i+=sizeof(int) ) {
+    for( i=0 ; i < szLength; i+=sizeof(int) ) {
         swapByteOrder( *pWord );
         ++ pWord;
     }
@@ -1718,7 +1655,11 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
             break;
 
         case enNUP_THREAT_DATA:
-            *pszString = "방사체/빔/LOB 데이터";
+            *pszString = "방사체/빔 변경";
+            break;
+
+        case enLST_THREAT_DATA:
+            *pszString = "방사체/빔 소실";
             break;
 
         case enTHREAD_LOG:
@@ -1727,6 +1668,14 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
 
         case enRES_SYSERROR:
             *pszString = "에러";
+            break;
+
+        case enRES_USER_DELETE_THREAT_DATA:
+            *pszString = "사용자 요구 삭제 요청";
+            break;
+
+        case enDEL_THREAT_DATA :
+            *pszString = "위협 삭제";
             break;
 
         default:
@@ -1745,7 +1694,6 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
     //LOGMSG3( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", szOpcode, pHeader->uiOpCode, pHeader->uiLength );
 
 }
-
 
 /**
  * @brief     PrintAllPDW
@@ -1853,7 +1801,7 @@ void CCommonUtils::MakeOnePDW( char *pszBuffer, UZPOCKETPDW *pstPDW )
     uiFreq = UMUL( FFRQMhzCNV( 0, pstPDW->stHwPdwDataRf.uiFreq ), 1 );
     uiAOA = pstPDW->stHwPdwDataRf.uiAOA;
     uiPW = I_PWCNV( pstPDW->stHwPdwDataRf.uiPW );
-    iPA = (int) IMUL( PACNV( pstPDW->stHwPdwDataRf.uiPA ), 1 );
+    iPA = (int) F2I( PACNV( pstPDW->stHwPdwDataRf.uiPA ) );
     sprintf( pszBuffer, "[%3d] %1d[%1d%1d/%2d %4d[%4d] %4d[MHz] %8d[us] %8d[dBm] 0x%016llx %1c", ( unsigned int ) pstPDW->stHwPdwDataRf.Index, ( unsigned int ) pstPDW->stHwPdwDataRf.CwPulse, \
         ( unsigned int ) pstPDW->stHwPdwDataRf.Pmop, ( unsigned int ) pstPDW->stHwPdwDataRf.Fmop, ( unsigned int ) pstPDW->stHwPdwDataRf.FmopDir, \
         uiAOA, ( unsigned int ) pstPDW->stHwPdwDataRf.uiAOA, uiFreq, uiPW, iPA, pstPDW->stHwPdwDataRf.ullTOA, o_x[pstPDW->stHwPdwDataRf.FalsePdw] );

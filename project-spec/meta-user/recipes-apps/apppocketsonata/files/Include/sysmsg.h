@@ -33,8 +33,22 @@
 #pragma pack( push, 1 )
 
 struct SELDELETE {
+    UINT uiAETID;
+    UINT uiABTID;
+
+};
+
+struct SELLOST {
+    UINT uiAETID;
+    UINT uiABTID;
+
+};
+
+struct SEL_RESULT_DELETE_USERSCAN {
     UINT uiAET;
     UINT uiABT;
+
+    UINT uiStatus;
 
 };
 
@@ -60,9 +74,10 @@ struct SELUSERSCANRESULT {
     @brief  랜 메시지 정의
 **/
 struct STR_LAN_HEADER {
+    unsigned short usOpCode;
     unsigned char ucSource;
     unsigned char ucDestination;
-    unsigned short usOpCode;
+
 
     unsigned int uiLength;
 
@@ -79,16 +94,12 @@ enum ENUM_MODE {
     //enES_MODE=1,
     //enEW_MODE,
     enNOT_READY_MODE = 0,
-
     enREADY_MODE,
-
     enOP_Mode,
 
 //    enANAL_Mode=0x80,
-
 //     enANAL_ES_MODE=enANAL_Mode | enES_MODE,
 //     enANAL_EW_MODE=enANAL_Mode | enEW_MODE,
-
 
 };
 
@@ -204,6 +215,9 @@ enum enRES_MESSAGE {
 
     enRES_USERSCAN,
     enRES_USER_DELETE_THREAT_DATA,
+
+    enUPD_SCAN_THREAT_DATA,                  // 내부적인 메시지 입니다. 이 코드는 enNUP_THREAT_DATA 코드로 대체하야 랜으로 전송합니다.
+    enNEW_THREAT_DATA,                      // 내부적인 메시지 입니다. 이 코드는 enNUP_THREAT_DATA 코드로 대체하야 랜으로 전송합니다.
 
     enRES_SYSERROR = _START_OPCODE_OF_SYSERROR_,
 
@@ -377,6 +391,8 @@ union UNI_LAN_DATA {
     unsigned int uiMode;
 
     SELDELETE stDelete;
+
+    SEL_RESULT_DELETE_USERSCAN stDeleteUserScan;
 
     SELREQSCAN stReqScan;
 

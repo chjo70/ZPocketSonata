@@ -32,25 +32,25 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-27 10:41:42
 //
-CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName)
+CScanSigAnal::CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName, const char *pThreadName ) : CSigAnal(uiCoMaxPdw, bDBThread, pFileName, pThreadName )
 {
 
-    m_enAnalType = enSCN_ANAL;
+    SetAnalType( enSCN_ANAL );
 
 	InitVar();
 
 	// 신호 분석 관련 클래스 생성
-	m_theGroup = new CSGroup( this, uiCoMaxPdw);
-	m_thePulExt = new CSPulExt( this, uiCoMaxPdw);
+	m_theGroup = new CSGroup( this, uiCoMaxPdw, pThreadName );
+	m_thePulExt = new CSPulExt( this, uiCoMaxPdw, pThreadName );
 
 	// 스캔 분석 관련 클래스 생성
-    m_theAnalScan = new CSAnalScan( this, uiCoMaxPdw);
+    m_theAnalScan = new CSAnalScan( this, uiCoMaxPdw, pThreadName );
 
 	m_uiMaxPdw = uiCoMaxPdw;
 
 	//-- 조철희 2006-02-17 15:23:06 --//
 	m_uiNoCh = _spZero;
-	m_uiCoPdw = _spZero;
+	m_uiCoPDW = _spZero;
 	m_uinoEMT = _spZero;
 
 	m_pSeg = GetPulseSeg();
@@ -80,6 +80,113 @@ CScanSigAnal::~CScanSigAnal()
 }
 
 /**
+ * @brief     Start
+ * @param     STR_PDWDATA * pstPDWData
+ * @param     SRxLOBData * pLOBData
+ * @param     unsigned int uiScanStep
+ * @param     unsigned int uiReqScanPeriod
+ * @param     STR_SCANRESULT * pstScanResult
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-21 13:51:44
+ * @warning
+ */
+void CScanSigAnal::Start( STR_PDWDATA *pstPDWData, SRxLOBData *pLOBData, unsigned int uiScanStep, unsigned int uiReqScanPeriod, STR_SCANRESULT *pstScanResult )
+{
+    SRxABTData stABTData;
+    STR_STATIC_PDWDATA stPDWData;
+
+    if( pLOBData != NULL ) {
+        MakeStaticPDWData( & stPDWData, pstPDWData );
+        MakeLOB2ABTData( & stABTData, pLOBData );
+
+        Start( & stPDWData, & stABTData, uiScanStep, uiReqScanPeriod, pstScanResult );
+    }
+
+}
+
+/**
+ * @brief     MakeLOB2ABTData
+ * @param     STR_PDWDATA * pstPDWData
+ * @param     SRxLOBData * pLOBData
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-21 14:27:18
+ * @warning
+ */
+void CScanSigAnal::MakeLOB2ABTData( SRxABTData *pstABTData, SRxLOBData *pLOBData )
+{
+    memset( pstABTData, 0, sizeof( SRxABTData ) );
+
+    // 방위
+    pstABTData->fDOAMean = pLOBData->fDOAMean;
+    pstABTData->fDOAMax = pLOBData->fDOAMax;
+    pstABTData->fDOAMin = pLOBData->fDOAMin;
+    pstABTData->fDOADeviation = pLOBData->fDOADeviation;
+
+    // 주파수
+    pstABTData->vFreqType = pLOBData->vFreqType;
+    pstABTData->vFreqPatternType = pLOBData->vFreqPatternType;
+
+    pstABTData->fFreqPatternPeriodMean = pLOBData->fFreqPatternPeriod;
+    pstABTData->fFreqPatternPeriodMin = pLOBData->fFreqPatternPeriod;
+    pstABTData->fFreqPatternPeriodMax = pLOBData->fFreqPatternPeriod;
+    pstABTData->fFreqMean = pLOBData->fFreqMean;
+    pstABTData->fFreqMax = pLOBData->fFreqMax;
+    pstABTData->fFreqMin = pLOBData->fFreqMin;
+    pstABTData->fFreqDeviation = pLOBData->fFreqDeviation;
+
+    pstABTData->vFreqPositionCount = pLOBData->vFreqPositionCount;
+    pstABTData->vFreqElementCount = pLOBData->vFreqElementCount;
+
+    memcpy( pstABTData->fFreqSeq, pLOBData->fFreqSeq, sizeof( pLOBData->fFreqSeq ) );
+
+    // PRI
+    pstABTData->vPRIType = pLOBData->vPRIType;
+    pstABTData->vPRIPatternType = pLOBData->vPRIPatternType;
+
+    pstABTData->fPRIPatternPeriodMean = pLOBData->fPRIPatternPeriod;
+    pstABTData->fPRIPatternPeriodMin = pLOBData->fPRIPatternPeriod;
+    pstABTData->fPRIPatternPeriodMax = pLOBData->fPRIPatternPeriod;
+    pstABTData->fPRIMean = pLOBData->fPRIMean;
+    pstABTData->fPRIMax = pLOBData->fPRIMax;
+    pstABTData->fPRIMin = pLOBData->fPRIMin;
+    pstABTData->fPRIDeviation = pLOBData->fPRIDeviation;
+    pstABTData->fPRIJitterPercent = pLOBData->fPRIJitterRatio;
+
+    pstABTData->vPRIPositionCount = pLOBData->vPRIPositionCount;
+    pstABTData->vPRIElementCount = pLOBData->vPRIElementCount;
+
+    memcpy( pstABTData->fPRISeq, pLOBData->fPRISeq, sizeof( pLOBData->fPRISeq ) );
+
+}
+
+void CScanSigAnal::MakeStaticPDWData( STR_STATIC_PDWDATA *pStaticPDWData, STR_PDWDATA *pstPDWData )
+{
+    unsigned int ui, uiTotalPDW;
+
+    //pstPDWData->SetPDWID( 0 );
+
+    // 헤더 복사
+    //printf( "\n 밴드: %d, 보드: %d, 시간: %d, 개수 : %d", pPDWData->x.ps.uiBand, pPDWData->x.ps.uiBoardID, pPDWData->x.ps.stCommon.tColTime, pPDWData->x.ps.stCommon.uiTotalPDW );
+    memcpy( &pStaticPDWData->x, & pstPDWData->x, sizeof( UNION_HEADER ) );
+
+    // 데이터 복사
+    uiTotalPDW = pstPDWData->GetTotalPDW();
+
+    _PDW *pstPDW = pstPDWData->pstPDW;
+    for( ui = 0; ui < uiTotalPDW; ++ui ) {
+        pStaticPDWData->LoadPDWData( ui, pstPDW );
+        ++ pstPDW;
+    }
+
+}
+
+/**
  * @brief     스캔 분석을 시작합니다.
  * @param     STR_STATIC_PDWDATA * pPDWData
  * @param     SRxABTData * pScnAet
@@ -95,6 +202,8 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pABTData, 
     unsigned int uiTotalPDW;
     char buffer[400];
 
+    char szScanResult[10][20] = { "", "실패", "수집 부족", "펄스열 부족", "성공", "재수집", "셀 변경", "미식별" };
+
     // 추적할 에미터를 복사한다.
     m_pABTData = pABTData;
 
@@ -103,7 +212,7 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pABTData, 
     // 신호 분석 관련 초기화.
     Init( pstPDWData );
 
-    sprintf( buffer, "==== 스캔 분석 시작[%dth, Co:%d]", GetStep(), m_uiCoPdw );
+    sprintf( buffer, "================ 스캔 분석 시작[%dth, AET/ABT:%04d/%04d, 수집 개수:%d/%d]", GetStep(), pABTData->uiAETID, pABTData->uiABTID, m_uiCoPDW, m_uiColPDW );
     CCommonUtils::WallMakePrint( buffer, '=' );
     Log( enNormal, "%s", buffer);
 
@@ -111,6 +220,8 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pABTData, 
     SATATIC_PDWDATA_TO_PDWDATA( pstPDWData );
 
     InsertRAWData( & m_stSavePDWData, _spZero, (int) uiScanStep, true );
+
+    // CCommonUtils::Disp_FinePDW( & m_stSavePDWData );
 
     // 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
     uiTotalPDW = pstPDWData->GetTotalPDW();
@@ -138,7 +249,11 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pABTData, 
 	// 스캔 분석 결과를 저장한다.
     //SaveScanInfo( nResult, m_pScnAet );
 
-    sprintf( buffer, "================ 스캔 분석 종료 : [%s(%d)] %.2f[ms]", g_szAetScanType[(unsigned int) m_pstrScnResult->enScanType], m_pstrScnResult->enScanType, FDIV( m_pstrScnResult->uiScanPeriod, _spOneMilli ) );
+#if 0
+    pstScanResult->enResult = _spAnalFail;
+#endif
+
+    sprintf( buffer, "================ 스캔 분석 종료 : [%s:%s(%d)] %.2f[ms]", szScanResult[ m_pstrScnResult->enResult ], g_szAetScanType[(unsigned int) m_pstrScnResult->enScanType], m_pstrScnResult->enScanType, FDIV( m_pstrScnResult->uiScanPeriod, _spOneMilli ) );
     CCommonUtils::WallMakePrint( buffer, '=' );
     Log( enNormal, "%s", buffer);
 
@@ -292,8 +407,11 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
     // 신호 수집 개수 정의
     if (pstPDWData != NULL) {
 		MakeAnalDirectory( &pstPDWData->x, false );
+        MakeDebugDirectory( &pstPDWData->x, false );
 
-        memcpy(&m_stSavePDWData.x, &pstPDWData->x, sizeof(union UNION_HEADER));
+        m_uiColPDW = m_pstPDWData->GetTotalPDW();
+
+        memcpy(&m_stSavePDWData.x, &pstPDWData->x, sizeof( UNION_HEADER));
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
         SetPDWID(m_pstPDWData->GetPDWID());
@@ -302,13 +420,13 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
 		// SetBandWidth( m_pstPDWData->GetBandWidth() );
 
         // 신호 수집 개수 정의
-        m_uiCoPdw = pstPDWData->GetTotalPDW();
+        m_uiCoPDW = pstPDWData->GetTotalPDW();
 
     }
     else {
         SetPDWID(_spZero);
 
-        m_uiCoPdw = _spZero;
+        m_uiCoPDW = _spZero;
 
         SetStorePDW( _spZero );
 
@@ -343,7 +461,7 @@ void CScanSigAnal::ScanExtractPulseInit( unsigned int uinoEMT, unsigned int uino
 // 	m_pPdwBank = & stSPDW;
 
 	// 신호 수집 개수 정의
-    m_uiCoPdw = 100; // m_pPdwBank->count;
+    m_uiCoPDW = 100; // m_pPdwBank->count;
 
 	// stScnAet의 인덱스 저장
 	m_uinoEMT = uinoEMT;
@@ -428,6 +546,9 @@ void CScanSigAnal::SaveEmitterPDWFile( STR_EMITTER *pEmitter, int iPLOBID, bool 
  */
 void CScanSigAnal::SaveDebug( const char *pSourcefile, int iLines )
 {
+    Log( enError, "스캔 분석에서 소스[%s], 라인[%d]에 예기치 않은 에러가 발생했습니다 !", pSourcefile, iLines );
+
+    InsertRAWData( & m_stSavePDWData, 0, -1, false );
 
 }
 
@@ -556,33 +677,3 @@ void CScanSigAnal::SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID )
 #endif
 
 }
-
-#ifdef _LOG_ANALTYPE_
-/**
- * @brief     GetLogAnalType
- * @return    bool
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-09-21 11:52:09
- * @warning
- */
-bool CScanSigAnal::GetLogAnalType()
-{
-    bool bRet=true;
-
-    if( g_enLogAnalType == enALL ) {
-    }
-    else {
-        if( m_enAnalType == g_enLogAnalType ) {
-
-        }
-        else {
-            bRet = false;
-        }
-    }
-
-    return bRet;
-}
-
-#endif

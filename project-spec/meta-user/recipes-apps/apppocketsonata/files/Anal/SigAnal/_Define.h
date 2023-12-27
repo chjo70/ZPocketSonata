@@ -29,8 +29,8 @@ enum EN_SCANRESULT {
     _spAnalSuc,
     _spReCol,
     _spModWc,
-    _spReqAnalScn,
-    _spDetTyp,
+    //_spReqAnalScn,
+    //_spDetTyp,
     _spScanUnkown
 } ;
 
@@ -117,11 +117,11 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #ifdef _MSC_VER
 #define KWN_COLLECT_PDW				(200)			// 추적 분석용 최대 수집 개수
-#define SCN_COLLECT_PDW				(1024)          // 스캔 분석용 최대 수집 개수
+#define SCN_COLLECT_PDW				(1024-1)        // 스캔 분석용 최대 수집 개수
 
 #else
-#define KWN_COLLECT_PDW				(100)			// 추적 분석용 최대 수집 개수
-#define SCN_COLLECT_PDW				(1010)          // 스캔 분석용 최대 수집 개수
+#define KWN_COLLECT_PDW				(200)			// 추적 분석용 최대 수집 개수
+#define SCN_COLLECT_PDW				(1024-1)        // 스캔 분석용 최대 수집 개수
 
 #endif
 
@@ -183,9 +183,9 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 /*! \bug  탐지 분석에 기본 지터율 추출을 최대 54% 까지 추출하게 함.
     \date 2008-10-25 18:01:37, 조철희
 */
-#define	MAX_JITTER_P				(54)				// 최대 54% 까지 존재
-#define	MAX_JITTER_P_FOR_PT			(MAX_JITTER_P+5)	// 최대 54% 까지 존재
-#define MAX_JITTER_R				(float) ( MAX_JITTER_P / 100. )
+#define	MAX_JITTER_P				(27)				// +- 지터율 입니다.
+#define	MAX_JITTER_P_FOR_PT			(MAX_JITTER_P+3)	// 최대 54% 까지 존재
+//#define MAX_JITTER_R				(float) ( MAX_JITTER_P / 100. )
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -204,7 +204,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define PRI_MAX                     (20000)             // [us]
 
 
-#define DTOA_HISTOGRAM_RES_US       (10)
+#define DTOA_HISTOGRAM_RES_US       (2)
 #define DTOA_BIN					(PRI_MAX/DTOA_HISTOGRAM_RES_US)
 
 //////////////////////////////////////////////////////////////////////////
@@ -273,7 +273,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // 아래는 PDW의 해당 항목의 비트 수를 고려해서 값을 설정해야 한다.
 // 이 값으로 그룹화 최대 BIN 수를 결정합니다.
 #define MAX_FREQ_BIT                    (0x10000000)            // 주파수 최대 값
-#define MAX_AOA_BIT       			    (0x1000)                // 방위 최대 값
+#define MAX_AOA_BIT       			    (3600) // (0x1000)                // 방위 최대 값
 #define	MAX_PW_BIT					    (0x1000000)             // 펄스폭 최대 값
 #define	MAX_PA_BIT					    (0x10000)               // 신호세기 최대 값
 

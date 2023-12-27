@@ -534,11 +534,13 @@ namespace CEDSignalType
 		enumSignalUndefined = 0,
         enumPulsed,
         enumCW,
+        enumFMOP,
+        enumPMOP,
         enumEA
 
 #else
 		enumSignalUndefined = -1,
-		enumPulsed = 0,	//기본값
+		enumPulsed = 0,
 		enumCW,
 		enumEA
 #endif
@@ -658,11 +660,14 @@ namespace ScanType
         enumUndefinedScanType = INT_MAX,                        //아무것도 표시되지 않음
 
         enumA_Circular = 1,										// 탐지형
+        enumU_Uni_Directional_Sector_Plane_Undertermined = 2,		// 섹터형(탐지형)
+        enumV_Bi_Directional_Sector_Plane_Undetermined = 3,			// 섹터형(탐지형)
+        enumF_Conical = 4,											// 추적형
+        enumD_Non_Scanning = 5,										// 추적형
+
         enumB_Horizontal_Sector_Bi_directional,					// 섹터형(탐지형)
         enumC_Vertical_Sector_Bi_directional,					// 섹터형(탐지형)
-        enumD_Non_Scanning = 5,										// 추적형
         enumE_Irregular,										// Unknown
-        enumF_Conical=4,											// 추적형
         enumG_Lobe_Switching,									// 추적형
         enumH_Orthogonal_or_Interleaved_Sectors,				// 탐색형
         enumJ_Raster,											// 섹터형(탐지형)
@@ -673,8 +678,6 @@ namespace ScanType
         enumR_Other_Combination_Patterns,						// Unknown
         enumS_Vertical_Sector_Uni_Directional,					// 섹터형(탐지형)
         enumT_Horizontal_Sector,								// 섹터형(탐지형)
-        enumU_Uni_Directional_Sector_Plane_Undertermined=2,		// 섹터형(탐지형)
-        enumV_Bi_Directional_Sector_Plane_Undetermined=3,			// 섹터형(탐지형)
         enumZ_Undetermined										// Unknown
     };
 
@@ -1977,7 +1980,7 @@ struct SRadarMOP_CW
 		fMOP_CW_DutyCycleMin=0.0f;
 		fMOP_CW_DutyCycleMax=0.0f;
 
-                strMOP_CW_PatternName = "";
+        strMOP_CW_PatternName = "";
 
 		vecRadarMOP_CW_Values = vector <SRadarMOP_CW_Values>();
 
@@ -2110,6 +2113,7 @@ struct SRadarMode_Spot_Values
     }
 };
 
+//
 struct SRadarInfo
 {
     unsigned int uiRadarIndex;								// 레이더 인덱스
@@ -2138,6 +2142,7 @@ struct SRadarInfo
         szDeviceELNOT[0] = 0;
         szELNOT[0] = 0;
         szNickName[0] = 0;
+        szRadarName[0] = 0;
         //szPlaceNameKor[0] = 0;
         //szWeaponSys[0] = 0;
         //szPlatform[0] = 0;
@@ -2165,14 +2170,13 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     EnumFunctionCodes eFunctionCode;                                        // 기능코드 Enum
     EnumValidationCode eValidation;                                         // 상태: 레이더 모드가 검증되었는지 여부 (VALIDATION_CODE참조)
     unsigned int uiRadarModePriority;                                                 // 우선순위
-    bool bIgnoreFreqType;                                                   // 주파수 세부 관계없이 동일 빔으로 관리
-    bool bIgnorePRIType;                                                    // PRI 세부 관계없이 동일 빔으로 관리
+    //bool bIgnoreFreqType;                                                   // 주파수 세부 관계없이 동일 빔으로 관리
+    //bool bIgnorePRIType;                                                    // PRI 세부 관계없이 동일 빔으로 관리
 
     char szModulationCode[_MAX_SIZE_OF_MODULATIONCODE];
 
     char szModeCode[_MAX_MODECODE_STRING_SIZE_];
     char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-
 
 	int iTimeInactivated;										// 비활성화 시간
 
@@ -2182,7 +2186,7 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     CEDSignalType::EnumSignalType eSignalType;					//신호형태 (Pulsed, CW, EA) enum형태
 
     // 극성
-    PolizationCode::EnumPolizationCode ePolarization;			//극성 (POLARIZATION_CODE 참조)
+    //PolizationCode::EnumPolizationCode ePolarization;			//극성 (POLARIZATION_CODE 참조)
 
     // 주파수
     RadarModeFreqType::EnumRadarModeFreqType eRF_Type;			// 주파수형태 (Pulsed, CW, EA) enum형태
@@ -2196,8 +2200,8 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     float fRF_PatternPeriodMax;                                 // RF 패턴 주기 (USEC) 최대
     float fRF_MeanMin;                                          // RF 평균 최소
     float fRF_MeanMax;                                          // RF 평균 최대
-    float fRF_RangeMin;                                         // 주파수 필터링 정보
-    float fRF_RangeMax;
+    //float fRF_RangeMin;                                         // 주파수 필터링 정보
+    //float fRF_RangeMax;
 
     // PRI
     RadarModePRIType::EnumRadarModePRIType ePRI_Type;			// PRI 형태 (Pulsed, CW, EA) enum형태
@@ -2214,13 +2218,13 @@ struct SRadarMode : SRadarInfo //, SParamSetAssociations		//레이더 모드 (�
     // 펄스폭
     float fPD_TypicalMin;                                       // PD TYPICAL 값 (USEC) 최소
     float fPD_TypicalMax;                                       // PD TYPICAL 값 (USEC) 최대
-    float fPD_RangeMin;                                         // 펄스폭 필터링 정보
-    float fPD_RangeMax;
+    //float fPD_RangeMin;                                         // 펄스폭 필터링 정보
+    //float fPD_RangeMax;
 
     //* 스캔
     ScanType::EnumScanType eScanPrimaryType;				// 주 스캔타입 코드(SCAN_TYPE_CODE참조)
     float fScanPrimaryTypicalMin;						// 주 스캔 주기값의 TYPICAL (SEC) 최소
-    float fScanPrimaryTypicalMax;						// 주 스캔 주기값의 TYPICAL (SEC) 최대
+    float fScanPrimaryTypicalMax;						// 주 스캔 주기값의 TYPICAL (SEC) 최대, [us]
     ScanType::EnumScanType eScanSecondaryType;				// 부 스캔타입 코드(SCAN_TYPE_CODE참조)
     float fScanSecondaryTypicalMin;						// 부 스캔 주기값의 TYPICAL (SEC)
     float fScanSecondaryTypicalMax;						// 부 스캔 주기값의 TYPICAL (SEC)

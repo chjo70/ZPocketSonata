@@ -25,7 +25,7 @@ protected:
     static STR_PULSE_TRAIN_SEG *m_pSeg;
 
 public:
-    CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw );
+    CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
     virtual ~CNAnalPRI();
 
 	//inline void MergeGrouping() { CAnalPRI::MergeGrouping(); }
@@ -62,7 +62,7 @@ public:
     void SaveDebug( const char *pSourcefile, int iLines );
 
 #ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
+    bool IsLogAnalType();
 #endif
 
 };

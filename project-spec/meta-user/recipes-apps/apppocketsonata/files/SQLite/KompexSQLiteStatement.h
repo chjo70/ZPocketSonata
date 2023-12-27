@@ -729,10 +729,11 @@ namespace Kompex
 		//! Returns the column number for a given column name.
 		int GetAssignedColumnNumber(const std::string &columnName) const;
 
+        //! Database pointer
+        CSQLiteDatabase *mDatabase;
+
 		//! SQL statement
 		struct sqlite3_stmt *mStatement;
-		//! Database pointer
-		CSQLiteDatabase *mDatabase;
 
 		//! typedef for UTF-8 transaction statements
 		typedef std::map<unsigned short /* transaction id */, std::pair<const char* /* sql */, bool /* memory allocated */> > TTransactionSQL;

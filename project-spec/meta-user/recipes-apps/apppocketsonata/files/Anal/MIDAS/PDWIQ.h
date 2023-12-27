@@ -17,7 +17,7 @@ struct SRxIQDataRGroup1
 {
 	short sQData;	//int->float
 	short sIData;	//int->float
-	
+
 };
 
 struct SRxIFDataRGroupEEEI
@@ -45,11 +45,11 @@ struct SRxIQData {
 	int iSearchBandID;
 	unsigned int uiRelatedPDWSN;
 	int iChannelNumber;
-	int	iAETID;	
+	int	iAETID;
 	int iLOBID;
 	unsigned int uiNumOfSample;
 	unsigned int _reserved;
-}; 
+};
 
 /*!
  * @struct	SRxIFData
@@ -72,7 +72,7 @@ struct SRxPDWData
 	int iSDFID;
 	unsigned char aucTaskID[LENGTH_OF_TASK_ID];
 	int iSearchBandID;
-	int	iAETID;	
+	int	iAETID;
 	int	iLOBID;
 	int	iNumOfPDW;
 

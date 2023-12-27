@@ -22,6 +22,20 @@
 
 #endif
 
+// 로그 타입 사용자가 원하는 대로 정의
+enum LogType {
+    enDebug = 0,
+    enNormal,
+    enLineFeed,
+    enNoLineFeed,
+
+    enWarning,
+    enError,
+    enEnd,
+};
+
+#include "clogname.h"
+
 #ifdef _LOG_
 #include "../Utils/cthread.h"
 #endif
@@ -48,20 +62,10 @@
 // 로그 헤더에 날짜를 추가 하도록 정의 합니다.
 //#define _LOG_DATA_ENABLED_
 
-// 로그 타입 사용자가 원하는 대로 정의
-enum LogType {
-    enDebug=0,
-    enNormal,
-    enLineFeed,
-    enNoLineFeed,
 
-    enWarning,
-    enError,
-    enEnd,
-};
 
 #ifdef _LOG_ANALTYPE_
-bool GetLogAnalType();
+bool IsLogAnalType( LogType enLogType );
 
 #endif
 
@@ -91,7 +95,11 @@ private:
 #endif
 
 #ifdef _MSC_VER
+
+#ifndef _CONSOLE
     CCriticalSection m_cs;
+#endif
+
 #else
     sem_t m_mutex;
 #endif
@@ -127,7 +135,7 @@ public:
 
     inline bool IsLock() { return m_bcs==true; }
 
-    void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... );
+    void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *pThreadName, const char *fmt, ... );
     //void LogMsg( int nType, const char *fmt, ... );
 
     void Start();
@@ -138,7 +146,7 @@ public:
     void _routine();
 
 
-    char *GetThreadName() { return m_szThreadName; }
+    const char *GetThreadName() { return m_szThreadName; }
     STR_MessageData *GetParentMessage() { return m_pMsg; }                          ///< 메시지 데이터를 리턴 합니다.
 #endif
 

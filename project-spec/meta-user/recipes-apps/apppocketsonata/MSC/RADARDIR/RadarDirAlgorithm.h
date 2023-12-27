@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#ifdef _MSC_VER
 #ifdef MATHFUNCSDLL_EXPORTS
 #define MATHFUNCSDLL_API __declspec(dllexport)
 
@@ -7,16 +8,31 @@
 #define MATHFUNCSDLL_API __declspec(dllimport)
 #endif
 
+#else
+#define HWND				unsigned int
+#define MATHFUNCSDLL_API
+
+#endif
+
+
+#include "Anal/NewSigAnal/NewSigAnal.h"
+#include "Anal/ScanSigAnal/ScanSigAnal.h"
+#include "Anal/SigAnal/_CED_Define.h"
+#include "Anal/SigAnal/_Define.h"
+#include "Anal/SigAnal/SysPara.h"
 
 #define WM_USER_LOGMSG				(7011)
 
 
 #ifdef _USRDLL
-#include "../../files/Anal/SigAnal/_CED_Define.h"
+
+#include "Anal/SigAnal/_CED_Define.h"
+#include "Anal/SigAnal/_Define.h"
+#include "Anal/SigAnal/SysPara.h"
 
 #else
 
-#include "./_CED_Define.h"
+//#include "./_CED_Define.h"
 
 #ifndef ENUM_BOARDID
 #define ENUM_BOARDID
@@ -38,7 +54,7 @@ enum ENUM_BoardID {
 // 수집 뱅크 종류 정의
 #ifndef _ENUM_COLLECTBANK
 #define _ENUM_COLLECTBANK
-enum ENUM_COLLECTBANK {
+enum ENUM_COLLECTBANK : unsigned int {
     enUnknownCollectBank = 0,
 
     enDetectCollectBank = 1,
@@ -57,10 +73,6 @@ enum ENUM_COLLECTBANK {
 
 
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
-
-#ifndef MAX_PDW
-//#define MAX_PDW						(4096)
-#endif
 
 
 
@@ -739,6 +751,16 @@ struct STR_PDWDATA {
 }  ;
 #endif
 
+#ifndef _ENUM_MOP_TYPE
+#define _ENUM_MOP_TYPE
+enum ENUM_MOP_TYPE : unsigned char {
+    E_MOP_UNKNOWN = 0,
+    E_MOP_FMOP,
+    E_MOP_PMOP,
+};
+
+#endif
+
 #ifndef MAX_FREQ_PRI_STEP
 #define MAX_FREQ_PRI_STEP				(32)
 #endif
@@ -957,176 +979,179 @@ enum class ENUM_AET_SCAN_STAT : unsigned char {
 #ifndef _SRxLOBData_STRUCT
 #define _SRxLOBData_STRUCT
 struct SRxLOBData {
-    unsigned int uiPDWID;
+	unsigned int uiPDWID;
 
-    unsigned int uiPLOBID;
+	unsigned int uiPLOBID;
 
-    unsigned int uiLOBID;
-    unsigned int uiABTID;
-    unsigned int uiAETID;
+	unsigned int uiLOBID;
+	unsigned int uiABTID;
+	unsigned int uiAETID;
 
-    unsigned int tiContactTime;			// _USE_32BIT_TIME_T 로 선언하면 32비트, 없으면 64비트로 설정됨.
+	unsigned int tiContactTime;			// _USE_32BIT_TIME_T 로 선언하면 32비트, 없으면 64비트로 설정됨.
 
-#if defined(_POCKETSONATA_) || defined(_712)
-    unsigned short tiContactTimems;
+#if defined(_POCKETSONATA_) || defined(_712_)
+	unsigned short tiContactTimems;
 #else
-    unsigned int tiContactTimems;
+	unsigned int tiContactTimems;
 #endif
 
-    char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
+	char szPrimaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+	char szPrimaryModeCode[_MAX_SIZE_OF_MODECODE];								// 1번째 ELNOT
 
-    char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
-    char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
+	char szSecondaryELNOT[_MAX_ELNOT_STRING_SIZE_];
+	char szSecondaryModeCode[_MAX_SIZE_OF_MODECODE];							// 2번째 ELNOT
 
-    char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
-    char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
+	char szTertiaryELNOT[_MAX_ELNOT_STRING_SIZE_];												// 3번째 ELNOT
+	char szTertiaryModeCode[_MAX_SIZE_OF_MODECODE];
 
-    char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
+	char szModulationCode[_MAX_MODECODE_STRING_SIZE_];
 
 #if defined(_XBAND_) || defined(_ELINT_)
-    char szRadarName[_MAX_RADARMODE_NAME_SIZE];
-    char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
+	char szRadarName[_MAX_RADARMODE_NAME_SIZE];
+	char szFuncCode[_MAX_FUNCTIONCODE_STRING_SIZE_];
 #endif
 
-    char szNickName[_MAX_NICKNAME_STRING_SIZE_];
+	char szNickName[_MAX_NICKNAME_STRING_SIZE_];
 
 #ifdef _ELINT_
-    int iPolarization;          // 극성
-    int iRatioOfPOL;            // 극성 신뢰도
+	int iPolarization;          // 극성
+	int iRatioOfPOL;            // 극성 신뢰도
 
 #endif
 
 #if defined(_POCKETSONATA_) || defined(_712_)
-    unsigned char vSignalType;
+	unsigned char vSignalType;
 #else
-    unsigned int vSignalType;
+	unsigned int vSignalType;
 #endif
 
-    float fDOAMean;             // [0.1도]
-    float fDOAMax;
-    float fDOAMin;
-    float fDOADeviation;		// [0.1도]
-    float fDOAMode;             // DOA 최빈수
+	float fDOAMean;             // [0.1도]
+	float fDOAMax;
+	float fDOAMin;
+	float fDOADeviation;		// [0.1도]
+	float fDOAMode;             // DOA 최빈수
 
-    unsigned int uiDIRatio;					// [1 %]
+	unsigned int uiDIRatio;					// [1 %]
 
-    ENUM_AET_FRQ_TYPE vFreqType;
-    ENUM_AET_FREQ_PRI_PATTERN_TYPE vFreqPatternType;
+	ENUM_AET_FRQ_TYPE vFreqType;
+	ENUM_AET_FREQ_PRI_PATTERN_TYPE vFreqPatternType;
 
-    float fFreqPatternPeriod;                       // [us]
-    float fFreqMean;				// [10KHz]
-    float fFreqMax;
-    float fFreqMin;
-    float fFreqDeviation;
-    float fFreqMode;            // Freq 최빈수
+	float fFreqPatternPeriod;                       // [us]
+	float fFreqMean;				// [10KHz]
+	float fFreqMax;
+	float fFreqMin;
+	float fFreqDeviation;
+	float fFreqMode;            // Freq 최빈수
 
 #if defined(_POCKETSONATA_) || defined(_712_)
-    unsigned char vFreqPositionCount;
-    unsigned char vFreqElementCount;
+	unsigned char vFreqPositionCount;
+	unsigned char vFreqElementCount;
 #else
-    int vFreqPositionCount;
-    int vFreqElementCount;
+	int vFreqPositionCount;
+	int vFreqElementCount;
 #endif
 
-    float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
+	float fFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 
-    ENUM_AET_PRI_TYPE vPRIType;
-    ENUM_AET_FREQ_PRI_PATTERN_TYPE vPRIPatternType;
+	ENUM_AET_PRI_TYPE vPRIType;
+	ENUM_AET_FREQ_PRI_PATTERN_TYPE vPRIPatternType;
 
-    float fPRIPatternPeriod;		// [us]
-    float fPRIMean;				// [1ns]
-    float fPRIMax;
-    float fPRIMin;
-    float fPRIDeviation;		// [1ns]
-    float fPRIMode;             // PRI 최빈수
-    float fPRIJitterRatio;		// [%]
+	float fPRIPatternPeriod;		// [us]
+	float fPRIMean;				// [1ns]
+	float fPRIMax;
+	float fPRIMin;
+	float fPRIDeviation;		// [1ns]
+	float fPRIMode;             // PRI 최빈수
+	float fPRIJitterRatio;		// [%]
 
 #if defined(_POCKETSONATA_) || defined(_712_)
-    unsigned char vPRIPositionCount;
-    unsigned char vPRIElementCount;
+	unsigned char vPRIPositionCount;
+	unsigned char vPRIElementCount;
 #else
-    int vPRIPositionCount;
-    int vPRIElementCount;
+	int vPRIPositionCount;
+	int vPRIElementCount;
 #endif
 
-    float fPRISeq[MAX_FREQ_PRI_STEP];
+	float fPRISeq[MAX_FREQ_PRI_STEP];
 
-    float fPWMean;				// 1ns
-    float fPWMax;
-    float fPWMin;
-    float fPWDeviation;
-    float fPWMode;              // 펄스폭 최빈수
+	float fPWMean;				// 1ns
+	float fPWMax;
+	float fPWMin;
+	float fPWDeviation;
+	float fPWMode;              // 펄스폭 최빈수
 
-    float fPAMean;
-    float fPAMax;
-    float fPAMin;
-    float fPADeviation;
-    float fPAMode;              // 신호세기 최빈수
+	float fPAMean;
+	float fPAMax;
+	float fPAMin;
+	float fPADeviation;
+	float fPAMode;              // 신호세기 최빈수
 
 #if defined(_XBAND_) || defined(_ELINT_)
 #elif defined(_POCKETSONATA_) || defined(_712_)
-    unsigned char vScanType;
-    float fMeanScanPeriod;			// [msec]
+	ENUM_AET_SCAN_TYPE vScanType;
+	float fMeanScanPeriod;			// [msec]
 
-    unsigned char ucMOPType;				// 인트라 타입
-    unsigned char ucDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
-    float fMOPMaxFreq;			// ??
-    float fMOPMinFreq;
-    float fMOPMeanFreq;
-    float fMOPFreqDeviation;
+	ENUM_MOP_TYPE enMOPType;				// 인트라 타입
+	unsigned char ucDetailMOPType;			// 인트라 세부 타입.
+	float fMOPMaxFreq;
+	float fMOPMinFreq;
+	float fMOPMeanFreq;
+	float fMOPFreqDeviation;
 
 #else
-    int vScanType;
-    float fScanPeriod;			// [msec]
+	ENUM_AET_SCAN_TYPE vScanType;
+	float fScanPeriod;			// [msec]
 
-    int iMOPType;				// 인트라 타입
-    int iDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
-    float fMOPMaxFreq;			// ??
-    float fMOPMinFreq;
-    float fMOPMeanFreq;
-    float fMOPFreqDeviation;
+	int iMOPType;				// 인트라 타입
+	int iDetailMOPType;			// 인트라 세부 타입. 항공에서 줄 수 있는것인지(?)
+	float fMOPMaxFreq;			// ??
+	float fMOPMinFreq;
+	float fMOPMeanFreq;
+	float fMOPFreqDeviation;
 
-    float fPitchAngle;
-    float fRollAngle;
-    float fHeadingAngle;
-    float fAltitude;
-    int iValidity;
+	float fPitchAngle;
+	float fRollAngle;
+	float fHeadingAngle;
+	float fAltitude;
+	int iValidity;
+
 #endif
 
 #if defined(_XBAND_) || defined(_ELINT_)
-    int iIsStoreData;
+		int iIsStoreData;
 #endif
 
-    unsigned int uiNumOfCollectedPDW;			// 신호 수집 개수
-    unsigned int uiNumOfAnalyzedPDW;             // 분석된 PDW 개수
+	unsigned int uiNumOfCollectedPDW;			// 신호 수집 개수
+	unsigned int uiNumOfAnalyzedPDW;             // 분석된 PDW 개수
 
 #if defined(_XBAND_) || defined(_ELINT_)
-    int iNumOfIQ;
+	int iNumOfIQ;
+
 #endif
 
-    char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
-    unsigned int uiRadarModeIndex;
+	char szRadarModeName[_MAX_RADARMODE_NAME_SIZE];
+	unsigned int uiRadarModeIndex;
 
-    unsigned int uiRadarIndex;                  // 레이더 인덱스 : ELNOT
+	unsigned int uiRadarIndex;                  // 레이더 인덱스 : ELNOT
 
-    float fCollectLatitude;
-    float fCollectLongitude;
+	float fCollectLatitude;
+	float fCollectLongitude;
 
 #if defined(_POCKETSONATA_) || defined(_712_)
 
 #elif defined(_ELINT_) || defined(_XBAND_) || defined(_701_)
-    char aucTaskID[LENGTH_OF_TASK_ID];
-    int	iCollectorID;
-    unsigned int uiSeqNum;
+	char aucTaskID[LENGTH_OF_TASK_ID];
+	int	iCollectorID;
+	unsigned int uiSeqNum;
 
 #else
 #endif
 
 #if defined(_ELINT_) || defined(_XBAND_)
-    unsigned int uiOpInitID;
+	unsigned int uiOpInitID;
 
 #endif
+
 
 };
 #endif
@@ -1190,23 +1215,46 @@ RadarDirAlgotirhm::RadarDirAlgotirhm::Start( & stPDWData );
 */
 namespace RadarDirAlgotirhm
 {
+
+    static int g_iCoreOfSigAnal;
+	static STR_PDWDATA gstPDWData;
+	static CSysPara *gpSysPara;
+    static CNewSigAnal **gpTheNewSigAnal;
+    static CScanSigAnal *gpTheScanSigAnal;
+
 	// This class is exported from the MathFuncsDll.dll
 	class RadarDirAlgotirhm
 	{
+	private:
+        static int g_iMax;
+
 	public:
-		static MATHFUNCSDLL_API void Init( HWND hWnd=0, bool bLocal=false );
-		static MATHFUNCSDLL_API void SetMute( bool bEnable );
-		static MATHFUNCSDLL_API void SWInit();
+		~RadarDirAlgotirhm() {
+			Close();
+		}
 
-		static MATHFUNCSDLL_API void Close();
+		static MATHFUNCSDLL_API void Init( int iMaxNewSigAnal=1, HWND hWnd=0, bool bLocal=false );
+        static MATHFUNCSDLL_API void SetMute( bool bEnable, int iCoreOfSigAnal = 0 );
+        static MATHFUNCSDLL_API void SWInit();
 
-		static MATHFUNCSDLL_API void Start( STR_PDWDATA *pPDWData, bool bDBInsert=false );
-        static MATHFUNCSDLL_API void LoadCEDLibrary();
+        static MATHFUNCSDLL_API void Close( int iSigANal=0 );
+        static MATHFUNCSDLL_API void CloseAll();
 
-		static MATHFUNCSDLL_API int GetCoLOB();
-		static MATHFUNCSDLL_API SRxLOBData *GetLOBData();
+        static MATHFUNCSDLL_API void Start( STR_UZPOCKETPDW *pstUZPOCKETPDW, int iSigAnal=0, bool bDBInsert=false );
+        static MATHFUNCSDLL_API void Start( STR_PDWDATA *pPDWData, int iSigAnal=0, bool bDBInsert=false );
+        static MATHFUNCSDLL_API void Start( STR_PDWDATA *pPDWData, SRxLOBData *pLOBData, unsigned int uiScanStep, unsigned int uiReqScanPeriod, STR_SCANRESULT *pstScanResult );
+        static MATHFUNCSDLL_API bool LoadCEDLibrary();
+        static MATHFUNCSDLL_API bool LoadEOBLibrary();
 
-        static MATHFUNCSDLL_API unsigned int GetOpInitID();
+        static MATHFUNCSDLL_API int GetCoLOB( int iSigAnal=0 );
+        static MATHFUNCSDLL_API SRxLOBData *GetLOBData( int iSigANal=0 );
+        static MATHFUNCSDLL_API STR_PDWINDEX *GetLOB2PDWData( unsigned int uiLOBIndex, int iSigANal = 0 );
+
+        static MATHFUNCSDLL_API unsigned int GetOpInitID( int iSigAnal = 0 );
+
+        static MATHFUNCSDLL_API const char *GetThreadName() { return NULL;  };
+
+        static MATHFUNCSDLL_API unsigned int UZPOCKETPDW2PDWData( STR_PDWDATA *pPDWData, STR_UZPOCKETPDW *pstUZPOCKETPDW);
 
 #pragma data_seg( ".ioshare" )
         // static CLog *g_pTheLog;
@@ -1216,6 +1264,3 @@ namespace RadarDirAlgotirhm
 	};
 
 }
-
-
-

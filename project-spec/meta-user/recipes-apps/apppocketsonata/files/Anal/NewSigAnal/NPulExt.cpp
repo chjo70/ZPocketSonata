@@ -31,8 +31,10 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:03:29
 //
-CNPulExt::CNPulExt( void *pParent, unsigned int uiCoMaxPdw ) : CPulExt(uiCoMaxPdw)
+CNPulExt::CNPulExt( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CPulExt(uiCoMaxPdw, pThreadName )
 {
+    SetAnalType( enDET_ANAL );
+
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
     //m_CoPulseTrains = 0;
@@ -88,7 +90,6 @@ void CNPulExt::Init()
 */
 void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 {
-    char buffer[200];
     struct timespec nowTime;
 
     CCommonUtils::GetCollectTime( &nowTime );
@@ -167,7 +168,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
                         비교해서 유사 펄스열이면, 기본 규칙성 펄스열을 제거한다.
             \date 2006-05-19 17:59:24, 조철희
     */
-    DiscardPulseTrain( nRefSeg, nExtSeg );
+    DropPulseTrain( nRefSeg, nExtSeg );
 
 #elif defined( _EXTRACT_PULSE_METHOD5_ )
 
@@ -217,9 +218,11 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
     //ExtractJitter( _STABLE + _JITTER_RANDOM );
 
     // 펄스열의 인덱스를 조사해서 겹쳐져 있으면 그 중 한개를 버린다.
-    DiscardPulseTrain();
+    DropPulseTrain();
 
 #ifdef _MSC_VER
+    char buffer[200];
+
     sprintf( buffer, "---------------- 기준 펄스열 추출 : %d[ns]", ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
     CCommonUtils::WallMakePrint( buffer, '-' );
     Log( enDebug, "%s", buffer );
@@ -485,8 +488,9 @@ void CNPulExt::ClearAllMark()
  * @date      2023-09-21 11:57:45
  * @warning
  */
-bool CNPulExt::GetLogAnalType()
+bool CNPulExt::IsLogAnalType( LogType enLogType )
 {
-    return m_pNewSigAnal->GetLogAnalType();
+    return m_pNewSigAnal->IsLogAnalType( enLogType );
 }
+
 #endif

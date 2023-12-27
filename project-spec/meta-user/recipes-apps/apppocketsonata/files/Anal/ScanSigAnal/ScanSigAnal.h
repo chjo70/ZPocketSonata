@@ -48,7 +48,8 @@ protected:
     STR_STATIC_PDWDATA *m_pstPDWData;
 
     unsigned int m_uiNoCh;
-    unsigned int m_uiCoPdw;
+    unsigned int m_uiCoPDW;
+    unsigned int m_uiColPDW;
     unsigned int m_uinoEMT;
 
     CSGroup *m_theGroup;
@@ -60,7 +61,7 @@ protected:
     STR_SCANRESULT *m_pstrScnResult;
 
 public:
-    CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
+    CScanSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL, const char *pThreadName = NULL );
     virtual ~CScanSigAnal();
 
     inline void GetCollectTime(struct timespec *pTimeSpec) {
@@ -75,7 +76,6 @@ public:
     inline STR_STATIC_PDWDATA *GetPDWData() { return m_pstPDWData; }
     inline unsigned int GetNoEMT() { return m_uinoEMT; }
     inline unsigned int GetScanNoCh() { return m_uiNoCh; }
-    inline unsigned int GetColPdw() { return m_uiCoPdw; }
 
     inline int CalcAoaMeanByHistAoa( STR_PDWINDEX *pSrcIndex ) { return m_theGroup->CalcAoaMeanByHistAoa( pSrcIndex ); }
     inline STR_PDWINDEX *GetFrqAoaGroupedPdwIndex() { return m_theGroup->GetFrqAoaGroupedPdwIndex(); }
@@ -95,7 +95,8 @@ public:
     inline SRxLOBData *GetLOBData(int index=0) { return m_theAnalScan->GetLOBData(index); }
 
     inline int GetBand() { return m_theGroup->GetBand(); }
-    inline unsigned int GetCoPdw() { return m_uiCoPdw; }
+    inline unsigned int GetCoPDW() { return m_uiCoPDW; }
+    inline unsigned int GetColPDW() { return m_uiColPDW; }
     inline unsigned int GetCoSeg() { return m_thePulExt->m_uiCoSeg; }
     inline SRxABTData *GetScnAET() { return m_pABTData; }
     inline STR_PDWPARAM* GetPdwParam() { return m_thePulExt->GetPdwParam(); }
@@ -111,12 +112,15 @@ public:
 
     void Start( STR_PDWDATA *pPDWData, STR_MANAET *pManAet );
     void Start( STR_PDWDATA *pPDWData, STR_UPDAET *pUpdAet );
-    void Start( STR_STATIC_PDWDATA *pPDWData, SRxABTData *pABTData, unsigned int uiScanStep, unsigned int uiReqScanPeriod, STR_SCANRESULT *pstScanResult );
+    void Start( STR_PDWDATA *pPDWData, SRxLOBData *pABTData, unsigned int uiScanStep, unsigned int uiReqScanPeriod, STR_SCANRESULT *pstScanResult );
     // void Start( STR_PDWDATA *pPDWData, STR_EMITTER *pEmitter, STR_PULSE_TRAIN_SEG *pSeg, STR_UPDAET *pUpdAet );
+    void Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pABTData, unsigned int uiScanStep, unsigned int uiReqScanPeriod, STR_SCANRESULT *pstScanResult );
     void SendScanResult( UINT nResult );
+    void MakeLOB2ABTData( SRxABTData *pstABTData, SRxLOBData *pLOBData );
     STR_SCANPT *GetScanPulseTrain( int noCh );
-    //void GetScanRes( ENUM_AET_SCAN_TYPE *penScanType, float *pScanPrd );
     UINT GetCoScanPulse();
+
+    void MakeStaticPDWData( STR_STATIC_PDWDATA *pStaticPDWData, STR_PDWDATA *pstPDWData );
 
     void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
@@ -128,10 +132,6 @@ public:
     void ScanSigAnalInit( unsigned int uinoEMT=0, int noCh=0 );
 
     void SaveDebug( const char *pSourcefile, int iLines );
-
-#ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
-#endif
 
 };
 

@@ -55,8 +55,10 @@ using namespace std;
 
 #include "../Utils/carraymsgdata.h"
 
+#include "../Utils/clock.h"
 
-#define LENGTH_OF_CLASSNAME                 (30)
+
+#define LENGTH_OF_CLASSNAME                 (10)
 
 
 #define NO_ECHO                             (0)
@@ -70,12 +72,15 @@ using namespace std;
 #define TASK_DEFAULT_PRIORITY               (100)
 #define TASK_LOWEST_PRIORITY                (TASK_DEFAULT_PRIORITY+50)
 
+#define WAIT_THREAD_MAX_RESPOND             (10)
+
 
 enum TASK_PRIORITY {
     en_LOG_PRIORITY = TASK_DEFAULT_PRIORITY,
 
     en_TASK_MANAGER_PRIORITY,
     en_RECLAN_PRIORITY,
+    en_RECLAN2_PRIORITY,
     en_BIT_PRIORITY,
     en_EMTMERGE_PRIORITY,
     en_COLLECT_PRIORITY,
@@ -91,11 +96,11 @@ enum TASK_PRIORITY {
 #define THREAD_STANDARD_FUNCTION(A)    \
 void Run( key_t key=IPC_PRIVATE ); \
 virtual void _routine();    \
-char *GetThreadName() { return m_szThreadName; } \
+const char *GetThreadName() { return m_szThreadName; } \
 STR_MessageData *GetParentMessage() { return m_pMsg; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
-        m_pInstance = new A( g_iKeyId++, #A, true ); \
+        m_pInstance = new A( g_iKeyId++, (const char *) #A, true ); \
     } \
     return m_pInstance; } \
 static void ReleaseInstance() { \
@@ -110,18 +115,18 @@ static bool IsThereInstance() { \
     } \
     return bRet; }
 
+//virtual const char *GetThreadName() { return m_szThreadName; }
 // 오직 CTaskMngr 에서만 사용하는 정의문 입니다.
 #define THREAD_STANDARD_FUNCTION_2(A )    \
 void Run( key_t key=IPC_PRIVATE ); \
 virtual void _routine();    \
-virtual const char *GetThreadName() { return m_szThreadName; } \
 static A* GetInstance() { \
     if(m_pInstance == NULL) { \
         char szSQLiteFileName[100]; \
         strcpy( szSQLiteFileName, CEDEOB_SQLITE_FOLDER ); \
         strcat( szSQLiteFileName, "/" ); \
         strcat( szSQLiteFileName, CEDEOB_SQLITE_FILENAME ); \
-        m_pInstance = new A( g_iKeyId++, (char*) #A, true, (char*) szSQLiteFileName ); \
+        m_pInstance = new A( g_iKeyId++, (const char*) #A, true, (char*) szSQLiteFileName ); \
     } \
     return m_pInstance; } \
 static void ReleaseInstance() { \
@@ -159,7 +164,7 @@ enum ENUM_RCVMSG {
 /**
  * @brief 쓰레드간의 메시지 데이터 구조체 정의
  */
-struct STR_MessageData {
+typedef struct stSTR_MessageData {
 #ifdef __linux__
     long mtype;
 #endif
@@ -183,13 +188,13 @@ struct STR_MessageData {
     int iArrayIndex;
     unsigned int uiArrayLength;
 
-    STR_MessageData()
+    stSTR_MessageData()
     {
         memset( & x, 0, sizeof( union UNI_MSG_DATA ) );
         uiArrayLength = 0;
     };
 
-} ;
+} STR_MessageData;
 
 #if defined(_MSC_VER)
 class CThreadContext
@@ -215,7 +220,7 @@ public:
 /**
  * @brief 쓰레드 클래스
  */
-class CThread : public CArrayMsgData
+class CThread : public CLock, public CArrayMsgData
 {
 private:
     // 송신할 때 사용하는 메시지 데이터
@@ -234,12 +239,6 @@ private:
     HANDLE m_hSleepEvent;
 
     queue<STR_MessageData> m_queue;
-
-#if _MSC_VER <= 1600 || _AFXDLL
-	CCriticalSection m_cs;
-#else
-	std::mutex m_mutex;
-#endif
 
 #elif defined(__VXWORKS__)
     sem_t m_mutex;
@@ -286,11 +285,13 @@ protected:
     // 송신할 때 사용하는 메시지 데이터
     STR_COLLECT_INFO *m_pstrCollectInfo;
     STR_DETANAL_INFO *m_pstrDetectAnalInfo;
+    STR_TRKANAL_INFO *m_pstrTrackAnalInfo;
     STR_SCANANAL_INFO *m_pstrScanAnalInfo;
 
     // 수신할 때 사용하는 메시지 데이터
     STR_COLLECT_INFO *m_pRecvCollectInfo;
     STR_DETANAL_INFO *m_pRecvDetectAnalInfo;
+    STR_TRKANAL_INFO *m_pRecvTrackAnalInfo;
     STR_SCANANAL_INFO *m_pRecvScanAnalInfo;
 
 private:
@@ -313,6 +314,8 @@ public:
     void ShowQueueMessae( int iLevel = 0 );
 
     void ChangeTaskPriority( int iPriority );
+
+    void Clear();
 
 #ifdef _MSC_VER
     void Run( void *(*pFunc)(void*) );
@@ -396,6 +399,8 @@ public:
 
     void SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName=NULL );
 
+    const char *GetThreadName() { return m_szThreadName; }
+
 #ifdef _MSC_VER
     inline key_t GetKeyId() { return 0; }
 
@@ -456,49 +461,40 @@ public:
     inline key_t GetKeyId() { return m_MsgKeyID; }
 #endif
 
-    void Lock() {
-#ifdef _MSC_VER
-#if _MSC_VER <= 1600 || _AFXDLL
-        m_cs.Lock();
-#elif defined(__VXWORKS__)
-        printf( "\n set up lock()...");
-#else
-        std::unique_lock<std::mutex> lk(m_mutex);
-#endif
-#else
-        sem_wait( & m_mutex );
-#endif
-
-    }
-
-    void UnLock() {
-#ifdef _MSC_VER
-#if _MSC_VER <= 1600 || _AFXDLL
-        m_cs.Unlock();
-#elif defined(__VXWORKS__)
-        printf( "\n set up unlock()...");
-#else
-
-#endif
-#else
-        sem_post( & m_mutex );
-#endif
-
-    }
-
     int QMsgRcvSize();
+
+    //const const char *GetThreadName() { return m_szThreadName; }
 
     inline STR_MessageData *GetRecvDataMessage() { return & m_RcvMsg; }
 
+    /**
+     * @brief     BackupRecvUNIDataMessage
+     * @param     UNI_MSG_DATA * pUniMsgData
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-12-27 11:26:26
+     * @warning
+     */
     inline void BackupRecvUNIDataMessage( UNI_MSG_DATA *pUniMsgData )
     {
-        memcpy( & m_RcvBackupUniMsg, & m_RcvMsg, sizeof( union UNI_MSG_DATA ) );
-        memcpy( &m_RcvMsg.x, pUniMsgData, sizeof( union UNI_MSG_DATA ) );
+        memcpy( & m_RcvBackupUniMsg, & m_RcvMsg, sizeof( STR_MessageData ) );
+        memcpy( &m_RcvMsg.x, pUniMsgData, sizeof( UNI_MSG_DATA ) );
     }
 
+    /**
+     * @brief     RestoreRecvUNIDataMessage
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2023-12-27 11:26:23
+     * @warning
+     */
     inline void RestoreRecvUNIDataMessage()
     {
-        memcpy( & m_RcvMsg.x, & m_RcvBackupUniMsg, sizeof( union UNI_MSG_DATA ) );
+        memcpy( & m_RcvMsg, & m_RcvBackupUniMsg, sizeof( STR_MessageData ) );
 
     }
 
@@ -513,6 +509,7 @@ public:
     inline UNI_MSG_DATA *GetUniMessageData() { return &m_uniMsgData; }
     inline STR_COLLECT_INFO *GetCollectInfo() { return m_pstrCollectInfo; }
     inline STR_DETANAL_INFO *GetDetectAnalInfo() { return m_pstrDetectAnalInfo; }
+    inline STR_TRKANAL_INFO *GetTrackAnalInfo() { return m_pstrTrackAnalInfo; }
     inline STR_SCANANAL_INFO *GetScanAnalInfo() { return m_pstrScanAnalInfo; }
 
     inline void SetSendDisable() { m_bSendEnable = false; }
@@ -523,7 +520,6 @@ public:
     static void *CallBack( void *pArg );
 
     virtual void _routine() { }
-    virtual char *GetThreadName() { return NULL; }
     virtual STR_MessageData *GetParentMessage() = 0;
 
     //pthread_create(&thread,NULL,thread_routine, NULL);

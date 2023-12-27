@@ -141,9 +141,11 @@ T CalcMode( STR_EMITTER *pEmitter, T *pData, T mean )
  * @date      2005-09-30 16:33:17
  * @warning
  */
-CMakeAET::CMakeAET( unsigned int uiCoMaxLOB )
+CMakeAET::CMakeAET( unsigned int uiCoMaxLOB, const char *pThreadName )
 {
-    bool bRet=true;
+    //bool bRet=true;
+
+    SetThreadName( pThreadName );
 
     // 고정형 주파수 및 규칙성 펄스열 마진
     float *pFvalue = g_pTheSysConfig->GetMargin();
@@ -155,17 +157,10 @@ CMakeAET::CMakeAET( unsigned int uiCoMaxLOB )
 
     m_uiCoAnalPdw = 0;
 
-    m_pLOBData = ( SRxLOBData * ) malloc( sizeof( struct SRxLOBData ) * m_uiCoMaxLOB );
-
-    if( m_pLOBData == NULL ) {
-        bRet = false;
-        printf( "\n [W] m_pLOBData's memory allocation error !" );
-        WhereIs;
-    }
-
-    if( bRet == false ) {
-        printf( "\n [W] 에미터 생성 클래스 생성자 실패 !" );
-    }
+    // LOB 데이터 메모리 할당
+    m_vecLOBData.reserve( m_uiCoMaxLOB );
+    // LOB - PDW 데이터 메모리 할당
+    m_vecLOB2PDWData.reserve( m_uiCoMaxLOB );
 
 #if 0
     STR_EMITTER strEmitter;
@@ -205,7 +200,7 @@ CMakeAET::CMakeAET( unsigned int uiCoMaxLOB )
  */
 CMakeAET::~CMakeAET()
 {
-    free( m_pLOBData );
+
 }
 
 /**
@@ -233,6 +228,10 @@ void CMakeAET::Init()
 
     m_pPdwParam = GetPdwParam();
 
+    //
+    m_vecLOBData.clear();
+    m_vecLOB2PDWData.clear();
+
 }
 
 /**
@@ -252,10 +251,18 @@ void CMakeAET::MakeAET( bool bDBInsert )
     m_iCoEmitter = (int) GetCoEmitter();
 
     pEmitter = & m_pEmitter[0];
+
+
     for( i=0 ; i < m_iCoEmitter ; ++i, ++pEmitter ) {
         if( pEmitter->enMark == NORMAL_EMITTER && m_iCoLOB < (int) m_uiCoMaxLOB ) {
             // 에미터 생성하기
             MakeLOBDataFromEmitter(m_iCoLOB, pEmitter, i );
+
+#ifdef __VXWORKS__
+            m_vecLOB2PDWData.push_back( pEmitter->stPDW );
+#else
+            m_vecLOB2PDWData.emplace_back( pEmitter->stPDW );
+#endif
 
             SetKnownIndexEmitter( (UINT) m_iCoLOB, i );
 
@@ -413,7 +420,11 @@ void CMakeAET::MakeStaggerPRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
     // 이상 에미터 제원은 삭제 또는 제원을 변경한다.
     // 스태거일 때는 PRI 제원을 확인하여 Jitter율이 작거나 PRI 범위 STABLE_MARGIN 범위에 들면 STABLE로 간주한다.
     //-- 조철희 2005-09-29 15:53:46 --//
-    pPri->fJtrPer = FDIV(100 * (pPri->tMax - pPri->tMin), pPri->tMean);
+
+
+    // pPri->fJtrPer = FDIV(100 * (pPri->tMax - pPri->tMin), pPri->tMean);
+    pPri->fJtrPer = TCalcJitterPercent<_TOA>( pPri->tMax - pPri->tMin, pPri->tMean );
+
     if (TCompMeanDiff<_TOA>(pPri->tMax, pPri->tMin, 2 * m_tStableMargin ) == true) {
         pPri->iType = ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED;
     }
@@ -651,7 +662,7 @@ void CMakeAET::MakePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter )
 {
     STR_PULSE_TRAIN_SEG *pSeg;
 
-    memset( pPRI, 0, sizeof( struct STR_PRI ) );
+    memset( pPRI, 0, sizeof( STR_PRI ) );
 
     // PRI 값을 산출할 때는 병합된 펄스열로부터 계산한다.
     // 이전에는 주 펄스열로부터 계산했는데 가장 많은 개수를 가진 펄스열이
@@ -707,7 +718,7 @@ void CMakeAET::MakePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter )
 
     // 지터율 과 레벨값을 저장한다.
     //pPRI->fJtrPer = FDIV( 100. * (pPRI->tMax - pPRI->tMin), pPRI->tMean );
-	pPRI->fJtrPer = TCalcJitterRatio<_TOA>( (pPRI->tMax - pPRI->tMin), pPRI->tMean );
+	pPRI->fJtrPer = TCalcJitterPercent<_TOA>( (pPRI->tMax - pPRI->tMin), pPRI->tMean );
 
     //pPri->swtLev = pEmitter->stag_dwell_element_cnt;
 
@@ -732,7 +743,7 @@ void CMakeAET::MakePRIInfoFromSeg(STR_PRI *pPri, STR_EMITTER *pEmitter)
 
     STR_PULSE_TRAIN_SEG *pSeg;
 
-    memset( pPri, 0, sizeof( struct STR_PRI) );
+    memset( pPri, 0, sizeof( STR_PRI) );
 
     // PRI 값을 산출할 때는 병합된 펄스열로부터 계산한다.
     // 이전에는 주 펄스열로부터 계산했는데 가장 많은 개수를 가진 펄스열이
@@ -1215,7 +1226,7 @@ void CMakeAET::PrintAllEmitter()
 //     UINT i, hist[4];
 //     PDWINDEX *pPdwIndex;
 //     unsigned int uiCount = pPdw->uiCount;
-// 
+//
 //     pPdwIndex = pPdw->pIndex;
 //     _EQUALS5( hist[0], hist[1], hist[2], hist[3], 0 )
 //     for( i=0 ; i < uiCount; ++i ) {
@@ -1223,7 +1234,7 @@ void CMakeAET::PrintAllEmitter()
 //         ++ pPdwIndex;
 //         ++ hist[ max_channel ];
 //     }
-// 
+//
 //     max_channel = 0;
 //     if( hist[1] > hist[max_channel] ) {
 //         max_channel = 1;
@@ -1234,7 +1245,7 @@ void CMakeAET::PrintAllEmitter()
 //     if( hist[3] > hist[max_channel] ) {
 //         max_channel = 3;
 //     }
-// 
+//
 //     // 최소 개수는 무의미하게 처리하게 함.
 //     return max_channel;
 // }
@@ -1255,118 +1266,120 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
 {
     STR_MINMAX stVal;
     STR_MINMAX_SDEV stVal2;
-    SRxLOBData *pLOBData;
+    SRxLOBData stLOBData;
 
     float fDiff;
 
     // LOB 데이터를 생성하기 위한 LOB 데이터 얻기
-    pLOBData = GetLOBData(iLOBData);
-
-    memset( pLOBData, 0, sizeof( struct SRxLOBData) );
+    memset( & stLOBData, 0, sizeof( struct SRxLOBData) );
 
     //////////////////////////////////////////////////////////////////////////
 
-    pLOBData->uiPDWID = GetPDWID();
+    stLOBData.uiPDWID = GetPDWID();
 
-    pLOBData->uiPLOBID = (unsigned int) ( iLOBData + 1 );
-    pLOBData->uiLOBID = _spZero;
-    pLOBData->uiABTID = _spZero;
-    pLOBData->uiAETID = _spZero;
+    stLOBData.uiPLOBID = (unsigned int) ( iLOBData + 1 );
+    stLOBData.uiLOBID = _spZero;
+    stLOBData.uiABTID = _spZero;
+    stLOBData.uiAETID = _spZero;
 
     // 시간 정보
-    CCommonUtils::GetCollectTime( (unsigned int *) &pLOBData->tiContactTime, &pLOBData->tiContactTimems );
+    CCommonUtils::GetCollectTime( (unsigned int *) & stLOBData.tiContactTime, & stLOBData.tiContactTimems );
 
     // 신호 형태
 #if defined(_POCKETSONATA_) || defined(_712_)
-    pLOBData->vSignalType = (unsigned char) pEmitter->enSignalType;
+    stLOBData.vSignalType = (unsigned char) pEmitter->enSignalType;
 #else
     pLOBData->vSignalType = ( int ) pEmitter->enSignalType;
 #endif
 
     // 방위
     MakeAOAInfoFromSeg( & stVal2, pEmitter );
-    pLOBData->fDOAMean = FAOACNV( stVal2.iMean );			//FTOAsCNV( stVal.mean );
-    pLOBData->fDOAMax = FAOACNV( stVal2.iMax );
-    pLOBData->fDOAMin = FAOACNV( stVal2.iMin );
-    pLOBData->fDOAMode = FAOACNV( stVal2.iMode );
-    fDiff = pLOBData->fDOAMax - pLOBData->fDOAMin;
+    stLOBData.fDOAMean = FAOACNV( stVal2.iMean );			//FTOAsCNV( stVal.mean );
+    stLOBData.fDOAMax = FAOACNV( stVal2.iMax );
+    stLOBData.fDOAMin = FAOACNV( stVal2.iMin );
+    stLOBData.fDOAMode = FAOACNV( stVal2.iMode );
+    fDiff = stLOBData.fDOAMax - stLOBData.fDOAMin;
     if( fDiff < 0 ) {
-        pLOBData->fDOADeviation = (float) 360.0 + fDiff;
+        stLOBData.fDOADeviation = (float) 360.0 + fDiff;
     }
     else {
-        pLOBData->fDOADeviation = fDiff;
+        stLOBData.fDOADeviation = fDiff;
     }
 
-    //pLOBData->fDOASDeviation = stVal2.fsdev;
+    //stLOBData.fDOASDeviation = stVal2.fsdev;
 
     // DI 율
-    pLOBData->uiDIRatio = MakeDIInfoFromSeg( pEmitter );							// [0.1%]
+    stLOBData.uiDIRatio = MakeDIInfoFromSeg( pEmitter );							// [0.1%]
 
 	//////////////////////////////////////////////////////////////////////////
 	// 주파수 정보 생성
-	MakeFreqLOBDataFromEmitter(pLOBData, pEmitter);
+	MakeFreqLOBDataFromEmitter( & stLOBData, pEmitter);
 
 
     //////////////////////////////////////////////////////////////////////////
     // PRI 정보 생성
-	MakePRILOBDataFromEmitter(pLOBData, pEmitter);
+	MakePRILOBDataFromEmitter( & stLOBData, pEmitter);
 
 
     //////////////////////////////////////////////////////////////////////////
     // 펄스폭 생성
     MakePWInfoFromSeg( & stVal, pEmitter );
-    pLOBData->fPWMean = PWCNV( stVal.iMean ); //CDecode::DecodePWns( stVal.iMean );			//, _spOneMicrosec );
-    pLOBData->fPWMax = PWCNV( stVal.iMax );
-    pLOBData->fPWMin = PWCNV( stVal.iMin );
-    pLOBData->fPWMode = PWCNV( stVal.iMode );
-    pLOBData->fPWDeviation = pLOBData->fPWMax - pLOBData->fPWMin;
+    stLOBData.fPWMean = PWCNV( stVal.iMean ); //CDecode::DecodePWns( stVal.iMean );			//, _spOneMicrosec );
+    stLOBData.fPWMax = PWCNV( stVal.iMax );
+    stLOBData.fPWMin = PWCNV( stVal.iMin );
+    stLOBData.fPWMode = PWCNV( stVal.iMode );
+    stLOBData.fPWDeviation = stLOBData.fPWMax - stLOBData.fPWMin;
 
     //////////////////////////////////////////////////////////////////////////
     // 신호 세기 생성
     MakePAInfoFromSeg( & stVal, pEmitter );
-    pLOBData->fPAMax = PACNV( stVal.iMax );
-    pLOBData->fPAMean = PACNV( stVal.iMean );
-    pLOBData->fPAMin = PACNV( stVal.iMin );
-    pLOBData->fPAMode = PACNV( stVal.iMode );
-    pLOBData->fPADeviation = pLOBData->fPAMax - pLOBData->fPAMin;
+    stLOBData.fPAMax = PACNV( stVal.iMax );
+    stLOBData.fPAMean = PACNV( stVal.iMean );
+    stLOBData.fPAMin = PACNV( stVal.iMin );
+    stLOBData.fPAMode = PACNV( stVal.iMode );
+    stLOBData.fPADeviation = stLOBData.fPAMax - stLOBData.fPAMin;
+
+    //////////////////////////////////////////////////////////////////////////
+    // 인트라 생성
+    MakeMOPInfoFromSeg( & stLOBData, pEmitter );
 
     //////////////////////////////////////////////////////////////////////////
     // 기타 정보 저장
-    pLOBData->uiNumOfCollectedPDW = m_uiCoPdw;
-    pLOBData->uiNumOfAnalyzedPDW = pEmitter->stPDW.uiCount;
+    stLOBData.uiNumOfCollectedPDW = m_uiCoPdw;
+    stLOBData.uiNumOfAnalyzedPDW = pEmitter->stPDW.uiCount;
 
 #if defined(_ELINT_) || defined(_XBAND_)
-	pLOBData->iIsStoreData = IsStorePDW();
+	stLOBData.iIsStoreData = IsStorePDW();
 
-    pLOBData->iCollectorID = GetCollectorID();
-    memcpy( pLOBData->aucTaskID, GetTaskID(), sizeof(pLOBData->aucTaskID) );
+    stLOBData.iCollectorID = GetCollectorID();
+    memcpy( stLOBData.aucTaskID, GetTaskID(), sizeof(stLOBData.aucTaskID) );
 #endif
 
     // 수집소 위치 정보 저장
 #if defined(_ELINT_) || defined(_XBAND_)
-    if( pLOBData->iCollectorID >= RADARCOL_1 && pLOBData->iCollectorID <= RADARCOL_3 ) {
-         pLOBData->fCollectLatitude = (float) dRCLatitude[pLOBData->iCollectorID];
-         pLOBData->fCollectLongitude = (float) dRCLongitude[pLOBData->iCollectorID];
+    if( stLOBData.iCollectorID >= RADARCOL_1 && stLOBData.iCollectorID <= RADARCOL_3 ) {
+         stLOBData.fCollectLatitude = (float) dRCLatitude[stLOBData.iCollectorID];
+         stLOBData.fCollectLongitude = (float) dRCLongitude[stLOBData.iCollectorID];
     }
     else {
-         pLOBData->fCollectLatitude = 0.0;
-         pLOBData->fCollectLongitude = 0.0;
+         stLOBData.fCollectLatitude = 0.0;
+         stLOBData.fCollectLongitude = 0.0;
     }
 #else
-    //pLOBData->fCollectLatitude = 0.0;
-    //pLOBData->fCollectLongitude = 0.0;
+    //stLOBData.fCollectLatitude = 0.0;
+    //stLOBData.fCollectLongitude = 0.0;
 
 #endif
 
-    //memset( pLOBData->aucRadarName, 0, sizeof(pLOBData->aucRadarName) );
-    //pLOBData->uiRadarModeIndex = _spZero;
-    //pLOBData->iThreatIndex = _spZero;
+    //memset( stLOBData.aucRadarName, 0, sizeof(stLOBData.aucRadarName) );
+    //stLOBData.uiRadarModeIndex = _spZero;
+    //stLOBData.iThreatIndex = _spZero;
 
-    //pLOBData->uiSeqNum = 0;
+    //stLOBData.uiSeqNum = 0;
 
 #if defined(_ELINT_) || defined(_XBAND_)
     //STR_PDWDATA *pPDWData = m_pNewSigAnal->GetPDWData();
-    //memcpy( pLOBData->aucTaskID, GetTaskID(), sizeof(pLOBData->aucTaskID) );
+    //memcpy( stLOBData.aucTaskID, GetTaskID(), sizeof(stLOBData.aucTaskID) );
 #elif defined(_POCKETSONATA_) || defined(_712_)
 
 #else
@@ -1374,8 +1387,14 @@ void CMakeAET::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int 
 #endif
 
 #ifdef _XBAND_
-	pLOBData->uiOpInitID = GetOpInitID();
+	stLOBData.uiOpInitID = GetOpInitID();
 
+#endif
+
+#ifdef __VXWORKS__
+	m_vecLOBData.push_back( stLOBData );
+#else
+    m_vecLOBData.emplace_back( stLOBData );
 #endif
 
 }
@@ -1431,6 +1450,52 @@ void CMakeAET::MakeFreqLOBDataFromEmitter( SRxLOBData *pLOBData, STR_EMITTER *pE
 }
 
 /**
+ * @brief     MakeMOPInfoFromSeg
+ * @param     SRxLOBData * pLOBData
+ * @param     STR_EMITTER * pEmitter
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-08 17:12:40
+ * @warning
+ */
+void CMakeAET::MakeMOPInfoFromSeg( SRxLOBData *pLOBData, STR_EMITTER *pEmitter )
+{
+    // MOP 형태 설정
+    if( pEmitter->uiStat >= (unsigned int) STAT_CHIRPTRI && pEmitter->uiStat <= ( unsigned int ) STAT_CW_CHIRPUK ) {
+        pLOBData->enMOPType = E_MOP_FMOP;
+        if( pEmitter->uiStat == ( unsigned int ) STAT_CHIRPTRI || pEmitter->uiStat == ( unsigned int ) STAT_CW_CHIRPTRI ) {
+            pLOBData->ucDetailMOPType = 0;
+        }
+        else if( pEmitter->uiStat == ( unsigned int ) STAT_CHIRPUP || pEmitter->uiStat == ( unsigned int ) STAT_CW_CHIRPUP ) {
+            pLOBData->ucDetailMOPType = 1;
+        }
+        else if( pEmitter->uiStat == ( unsigned int ) STAT_CHIRPDN || pEmitter->uiStat == ( unsigned int ) STAT_CW_CHIRPDN ) {
+            pLOBData->ucDetailMOPType = 2;
+        }
+        else {
+            pLOBData->ucDetailMOPType = 3;
+        }
+    }
+    else if( pEmitter->uiStat >= ( unsigned int ) STAT_PMOP && pEmitter->uiStat <= ( unsigned int ) STAT_CW_PMOP ) {
+        pLOBData->enMOPType = E_MOP_PMOP;
+        pLOBData->ucDetailMOPType = 3;
+    }
+    else {
+        pLOBData->enMOPType = E_MOP_UNKNOWN;
+        pLOBData->ucDetailMOPType = 3;
+    }
+
+    // FMOP 통계치 설정
+    pLOBData->fMOPMaxFreq = CPOCKETSONATAPDW::DecodeFMOPBW( pEmitter->stFMOPFreq.iMax );
+    pLOBData->fMOPMinFreq = CPOCKETSONATAPDW::DecodeFMOPBW( pEmitter->stFMOPFreq.iMin );
+    pLOBData->fMOPMeanFreq = CPOCKETSONATAPDW::DecodeFMOPBW( pEmitter->stFMOPFreq.iMean );
+    pLOBData->fMOPFreqDeviation = pLOBData->fMOPMaxFreq - pLOBData->fMOPMinFreq;
+
+}
+
+/**
  * @brief     MakePRILOBDataFromEmitter
  * @param     SRxLOBData * pLOBData
  * @param     STR_EMITTER * pEmitter
@@ -1464,7 +1529,7 @@ void CMakeAET::MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmi
 	pLOBData->fPRIMin = (float) TOAusCNV(stPri.tMin);
 	pLOBData->fPRIDeviation = (float) TOAusCNV(stPri.tMax - stPri.tMin);
 	pLOBData->fPRIMode = (float) TOAusCNV(stPri.tMode);
-	pLOBData->fPRIJitterRatio = (float) stPri.fJtrPer;
+    pLOBData->fPRIJitterRatio = ( float ) stPri.fJtrPer;
 
 #if defined(_POCKETSONATA_) || defined(_712_)
 	pLOBData->vPRIPositionCount = (unsigned char) stPri.iSwtLev;
@@ -1492,11 +1557,13 @@ void CMakeAET::MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmi
 void CMakeAET::PrintAllAET()
 {
     int i;
+    unsigned int j=0;
 
-    Log( enDebug, "에미터 생성 개수 : %d(개)", m_iCoLOB- m_iAnaledCoLOB );
+    Log( enDebug, "[%s] 에미터 생성 개수 : %d(개)", GetAnalName(), m_iCoLOB- m_iAnaledCoLOB );
 
     for( i = m_iAnaledCoLOB ; i < m_iCoLOB; ++i ) {
-        DISP_FineLOB( & m_pLOBData[i] );
+        DISP_FineLOB( GetLOBData((unsigned int) i) );
+        ++j;
     }
 
 }

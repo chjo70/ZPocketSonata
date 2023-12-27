@@ -32,6 +32,9 @@
 
 #include "../EmitterMerge/InverseMethod/CInverseMethod.h"
 
+
+#include "../../Utils/clock.h"
+
 // #define FILTER_LONGLAT_RANGE					(3)
 //
 // #define M2NMM(A)				(int) ( ( A / 1.852 ) + 0.5 )
@@ -122,6 +125,7 @@ struct STR_H000 {
 #endif
 
 #include "../../Utils/clog.h"
+//#include "../../Utils/clogname.h"
 
 #if defined(_POCKETSONATA_) || defined(_712_)
 #define FLIB_FREQ_RES_MHZ               (1)
@@ -157,7 +161,7 @@ struct STR_HOPPINGDWELL_INDEX {
 #ifdef _MSSQL_
 class CELSignalIdentifyAlg : CMSSQL
 #else
-class CELSignalIdentifyAlg
+class CELSignalIdentifyAlg : public CLogName, public CLock
 #endif
 {
  protected:
@@ -186,16 +190,17 @@ class CELSignalIdentifyAlg
     // 미식별 번호 관리
     static STR_FLIB *m_pFLib;											///< 주파수 테이블화 저장소, 기본형-0, 실무형-1
 
-    int m_iH000;													    ///< 미식별 번호
+    static unsigned int m_uiRadar;
+    static unsigned int m_uiRadarMode;
+    static unsigned int m_uiThreat;
 
     static SEnvironVariable *m_pSEnvironVariable;			            ///< 시스템 설정값 환경 포인터
 
-    int m_iRadar;
-    int m_iRadarMode;
     static std::vector<SRadarMode> m_vecRadarMode;						///< 레이더 모드 구조체
 
-    int m_iThreat;
     static std::vector<SThreat> m_vecThreat;			                ///< EOB 식별하기 위한 장비 목록 값
+
+    int m_iH000;													    ///< 미식별 번호
 
     STR_EOB_RESULT *m_pEOBResult;			                            ///< EOB 식별 결과를 저장하기 위한 임시 저장소
 
@@ -238,9 +243,13 @@ private:
     void (CELSignalIdentifyAlg::*IdentifyFrq[EndOfIdentifyFrq])( void *pLOBData, bool bLOB );
     void (CELSignalIdentifyAlg::*IdentifyPri[EndOfIdentifyPri])( void *pLOBData, bool bLOB );
 
+
 private:
     float CalcFreqMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode);
     float CalcPRIMatchRatio(EnumMATCHRATIO enMatchRatio, SRadarMode *pRadarMode);
+
+    inline SRadarMode *GetRadarMode( unsigned int uiRadarModeIndex ) { return uiRadarModeIndex == 0 ? NULL : & m_vecRadarMode[uiRadarModeIndex - 1]; }
+    inline SThreat *GetThreat( unsigned int uiIndex ) { return uiIndex == 0 ? NULL : &m_vecThreat[uiIndex - 1]; }
 
 
  public:
@@ -278,6 +287,7 @@ private:
 	void CallPriFunc(unsigned char nCall, SRxABTData *pABTData) { (this->*IdentifyPri[nCall])(pABTData, false); }
 
  	void IdentifySigType( int iSignalType );
+    void IdentifyMOPType( ENUM_MOP_TYPE enMOPType );
  	void FilterBand( STR_LIB_RANGE *pFrqLow, STR_LIB_RANGE *pFrqHgh, STR_FLOWHIGH *pBand, UINT *cotoIpl );
  	void InitIdentifyTable();
 	void InitFixedFreqIdentifyTable();
@@ -305,7 +315,7 @@ private:
     // EOB 데이터 로딩 관련 함수
     bool LoadEOBLibrary();
     void InitDeviceData();
-    bool LoadDeviceData( int *pnThreat );
+    bool LoadDeviceData( unsigned int *pnThreat );
 
     // CED 데이터 로딩 관련 함수
  	bool LoadCEDLibrary();
@@ -332,29 +342,34 @@ private:
 
     char *GetFunctionCode( EnumFunctionCodes eFunctionCode );
 
+    SRadarMode *IGetRadarMode( unsigned int uiRadarModeIndex );
+    SThreat *IGetThreat( unsigned int uiIndex );
+
     template <typename T>
     void Identify( T *pData, bool bIdentifyScan=true )
     {
-        // 3. 위협 데이터의 신호 식별
-        IdentifyFreqPRI( pData );
+        if( pData != NULL ) {
+            // 3. 위협 데이터의 신호 식별
+            IdentifyFreqPRI( pData );
 
-        // 5. 펄스폭 식별
-        IdentifyPW( pData->fPWMin, pData->fPWMax );
+            // 5. 펄스폭 식별
+            IdentifyPW( pData->fPWMin, pData->fPWMax );
 
-        // 6. 스캔 식별
-        if( bIdentifyScan == true ) {
+            // 6. 스캔 식별
+            if( bIdentifyScan == true ) {
 #if defined(_POCKETSONATA_) || defined(_712_)
-            IdentifyScan( pData->vScanType, pData->fMeanScanPeriod, FDIV( pData->fPRIMean * (float) 2., 1000. ) );
+                IdentifyScan( pData->vScanType, FMUL(pData->fMeanScanPeriod, 1000) , FMUL( pData->fPRIMean, (float) 2. ) );
 #else
-            IdentifyScan( pData->iScanType, pData->fMeanScanPeriod, FDIV( pData->fPRIMean * ( float ) 2., 1000. ) );
+                IdentifyScan( pData->iScanType, pData->fMeanScanPeriod, FDIV( pData->fPRIMean * ( float ) 2., 1000. ) );
 #endif
+            }
+
+            // 8. 일치율 식별
+            IdentifyMatchRatio();
+
+            // 9. 후보를 정렬한다.
+            SortThreatLevel();
         }
-
-        // 8. 일치율 식별
-        IdentifyMatchRatio();
-
-        // 9. 후보를 정렬한다.
-        SortThreatLevel();
 
     }
 
@@ -581,7 +596,7 @@ private:
     }
 
 	template <typename T>
-	bool CompSwitchLevel( T *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries )
+	bool TCompSwitchLevel( T *series, vector <SRadarRF_Values> *pvecRadarRF_Values, SRadarRF_SequenceNumIndex *pRF_SequenceNumIndex, UINT coSeries )
 	{
 		UINT i, j;
 		UINT index;
@@ -618,7 +633,7 @@ private:
 	}
 
 	template <typename T>
-	bool CompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
+	bool TCompSwitchLevel( T *pSeries1, T *pSeries2, int coSeries, T margin )
 	{
 		int i, j, k;
 		int index1;
@@ -661,9 +676,6 @@ private:
  	inline UINT GetCoIdCandi() { return m_toLib; }
  	//inline void ClearH000() { m_vecH000.clear(); }
 
-    inline SRadarMode * GetRadarMode( unsigned int uiRadarModeIndex ) { return uiRadarModeIndex == 0 ? NULL : & m_vecRadarMode[uiRadarModeIndex -1]; }
-    inline SThreat * GetThreat( unsigned int uiIndex ) { return uiIndex==0 ? NULL : &m_vecThreat[uiIndex-1]; }
-
 //
 // 	// CED 관련 함수
 // 	char *GetElintNotation( int nRadarModeIndex, int iAETID, int iABTID, EnumLibType enLibType=E_EL_LIB_TYPE_NORMAL, bool bGround=false );									// ELINT Notation
@@ -704,11 +716,11 @@ private:
 // 	void RemoveDuplicateIndex( int *pCount, int *pIndex, int nMax );
 
 #if defined(_SQLITE_)
-    CELSignalIdentifyAlg( const char *pFileName );
+    CELSignalIdentifyAlg( const char *pFileName, const char *pThreadName=NULL );
 #elif _MSSQL_
-    CELSignalIdentifyAlg( CODBCDatabase *pODBCDataBase );
+    CELSignalIdentifyAlg( CODBCDatabase *pODBCDataBase, const char *pThreadName=NULL );
 #else
-    CELSignalIdentifyAlg( const char *pFileName );
+    CELSignalIdentifyAlg( const char *pFileName, const char *pThreadName );
 #endif
 
 	virtual ~CELSignalIdentifyAlg();
@@ -724,7 +736,7 @@ protected:
 
 	void InitRadarModeData();
 
-    bool LoadRadarModeData( int *pnRadarMode );
+    bool LoadRadarModeData( unsigned int *pnRadarMode );
 #ifdef _SQLITE_
 	void GetRadarModeFromStatement(SRadarMode *pRadarMode, Kompex::SQLiteStatement *pStatment);
     void GetThreatFromStatement( SThreat *pThreat, Kompex::SQLiteStatement *pStatment );
@@ -737,8 +749,8 @@ protected:
     bool LoadRadarMode_RFSequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_RFSequence );
     bool LoadRadarMode_PRISequence( vector<SRadarMode_Sequence_Values> *pVecRadarMode_PRISequence );
 
-    bool LoadRadarMode_RFSpot(vector<SRadarMode_Spot_Values> *pVecRadarMode_RFSpot, int nMaxRadarMode);
-    bool LoadRadarMode_PRISpot(vector<SRadarMode_Spot_Values> *pVecRadarMode_PRISpot, int nMaxRadarMode);
+    bool LoadRadarMode_RFSpot(vector<SRadarMode_Spot_Values> *pVecRadarMode_RFSpot, unsigned int uiMaxRadarMode);
+    bool LoadRadarMode_PRISpot(vector<SRadarMode_Spot_Values> *pVecRadarMode_PRISpot, unsigned int uiMaxRadarMode);
 
     //bool LoadThreatData( int *pnThreat, SThreat *pThreat, int iMaxItems );
 
@@ -752,7 +764,6 @@ protected:
     RadarModePRIType::EnumRadarModePRIType GetPRIType( int iPRIType );
     ScanType::EnumScanType GetScanType( int iScanType );
     EnumValidationCode GetValidationCode( int iValidation );
-
 
 };
 

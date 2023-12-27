@@ -28,7 +28,7 @@ class CKnownSigAnal;
 class CKAnalPRI : public CAnalPRI
 {
 private:
-    SRxABTData *m_pTrkAet;
+    SRxABTData *m_pTrkABT;
 
 protected:
     CKnownSigAnal *m_pKnownSigAnal;
@@ -36,7 +36,7 @@ protected:
     static STR_PULSE_TRAIN_SEG *m_pSeg;
 
 public:
-    CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw );
+    CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
     virtual ~CKAnalPRI();
     //inline void SetAnalSeg( int coSeg ) { CAnalPRI::SetAnalSeg( coSeg ); }
 
@@ -76,7 +76,7 @@ public:
 
     bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge=false );
 
-    bool KnownAnalysis();
+    bool KnownAnalysis( ENUM_ROBUST_ANAL enRobustAnal );
 
     CMakeAET* GetMakeAET();
 
@@ -85,10 +85,6 @@ public:
     inline void *GetParentSigAnal() { return ( void * ) m_pKnownSigAnal; }
 
     void SaveDebug( const char *pSourcefile, int iLines );
-
-#ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
-#endif
 
 };
 

@@ -261,19 +261,21 @@ bool CRawFile::RawOpenFile( const char *filename, int iMode )
 
     }
     else if( ( ( unsigned int ) iMode & O_CREAT ) == O_CREAT ) {
-#if 1
-        int iFileMode=_chmod(filename, 222);
-        if ( iFileMode == 0) {
-            iResult = remove(filename);
-            if ( iResult != 0) {
-                TRACE("[W] 파일을 삭제할 수 없습니다 !!!" );
+#ifdef _WIN64
+        int iFileMode = _chmod( filename, 222 );
+        if( iFileMode == 0 ) {
+            iResult = remove( filename );
+            if( iResult != 0 ) {
+                TRACE( "[W] 파일을 삭제할 수 없습니다 !!!" );
             }
         }
+
 #else
         iResult = remove( filename );
         if( iResult != 0 ) {
             TRACE( "[W] 파일을 삭제할 수 없습니다 !!!" );
         }
+
 #endif
 
     }
@@ -287,13 +289,16 @@ bool CRawFile::RawOpenFile( const char *filename, int iMode )
         TRACE( "\n[W] 파일[%s]을 생성하지 못합니다 !", filename );
 	}
 	else {
-			
+
 #ifdef _MSC_VER
-        int iFileMode;
-        
-        iFileMode = _chmod( filename, 222 );
-        
-#endif        
+#ifdef _WIN64
+         _chmod( filename, 222 );
+#else
+
+
+#endif
+
+#endif
 
 #if defined(__linux__) || defined(__VXWORKS__)
         strcpy( m_fullname, filename );
@@ -331,7 +336,8 @@ unsigned int CRawFile::Write( void *pData, unsigned int uiSize )
 {
     int iWrite=0;
 
-    if( uiSize > 0 && pData != NULL && m_fid > 0 ) {
+    //if( uiSize > 0 && pData != NULL && m_fid > 0 ) {
+    if( pData != NULL && m_fid > 0 ) {
     	//printf( "\n Write[%p], Size[%d], m_fid[%d]" , pData, c_size, m_fid );
 	    iWrite = _write( m_fid, (char *) pData, uiSize );
         if( iWrite > 0 ) {
@@ -506,7 +512,7 @@ bool CRawFile::CreateDir( const TCHAR *pPath )
 
 #ifdef _MSC_VER
                 CreateDirectory( dirName, NULL );
-                //mkdir( dirName );
+
 #elif defined(__linux__)
                 mkdir( dirName, 0766 );
 #else

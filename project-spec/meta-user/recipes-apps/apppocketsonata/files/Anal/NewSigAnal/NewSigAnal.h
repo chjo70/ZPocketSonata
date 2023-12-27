@@ -30,13 +30,14 @@
 class CNewSigAnal : public CSigAnal
 {
 private:
-    ENUM_ANAL_TYPE m_enAnalType;
+    
 
     unsigned int m_uiPDWID;
 
     int m_CoGroup;
-    UINT m_uiMaxPdw;
-    UINT m_uiCoPdw;
+    UINT m_uiMaxPDW;
+    UINT m_uiColPDW;
+    UINT m_uiCoPDW;
     STR_PDWINDEX *m_pGrPdwIndex;
     STR_PDWDATA *m_pPDWData;            // 수집한 데이터 포인터
 
@@ -52,12 +53,10 @@ public:
     CNAnalPRI *m_theAnalPRI;
     CNMakeAET *m_theMakeAET;
 
-	//CIntraSigAnal *m_pTheIntraSigAnal;
-
     DEFINE_ANAL_VAR_
 
 private:
-	void AallocMemory();
+	void AllocMemory();
     void InitAllVar();
 	void StartOfSignalAnalysis( bool bDBInsert );
 
@@ -69,11 +68,12 @@ private:
     int GetPLOBIndex();
 
 public:
-    CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL);
+    CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL, const char *pThreadName=NULL );
     virtual ~CNewSigAnal();
 
     //void InitVar(enum ANALYSIS_MODE analMode);
-    void LoadCEDLibrary();
+    bool LoadCEDLibrary();
+    bool LoadEOBLibrary();
 
     inline void DeleteAllFiles() {
         CSigAnal::DeleteAllFiles();
@@ -90,7 +90,7 @@ public:
      * @warning
      */
     inline unsigned int GetCoPdw() {
-        return m_uiCoPdw;
+        return m_uiCoPDW;
     }
     /**
      * @brief     GetBand
@@ -149,12 +149,13 @@ public:
 
     inline void DISP_FineLOB( SRxLOBData *pNewAet ) { CSigAnal::DISP_FineLOB( pNewAet ); }
 
-    inline SRxLOBData *GetLOBData(int index=0 ) { return m_theMakeAET->GetLOBData(index); }
+    inline SRxLOBData *GetLOBData(unsigned int index=0 ) { return m_theMakeAET->GetLOBData(index); }
+    inline STR_PDWINDEX *GetLOB2PDWData( unsigned int uiLOBIndex ) { return m_theMakeAET->GetLOB2PDWData( uiLOBIndex ); }
 
     //inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
 
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
-    inline unsigned int GetColPdw() { return m_uiCoPdw; }
+    inline unsigned int GetColPdw() { return m_uiCoPDW; }
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -203,13 +204,13 @@ public:
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET *GetMakeAET() { return m_theMakeAET; }
 
-    inline ENUM_ANAL_TYPE GetAnalType() { return m_enAnalType; }
+    //inline ENUM_ANAL_TYPE GetAnalType() { return m_enAnalType; }
 
-    inline void SetColPdw(UINT coPdw ) { m_uiCoPdw=coPdw; }
+    inline void SetColPdw(UINT coPdw ) { m_uiCoPDW=coPdw; }
 
     //inline unsigned int GetCoPulseTrains() { return m_thePulExt->m_CoPulseTrains; }
     //inline void SetCoPulseTrains( UINT coPulses ) { m_thePulExt->m_CoPulseTrains=coPulses; }
-    inline unsigned int GetMaxPdw() { return m_uiMaxPdw; }
+    inline unsigned int GetMaxPdw() { return m_uiMaxPDW; }
 
 
     inline int GetCoGroup() { return m_CoGroup; }
@@ -228,10 +229,6 @@ public:
     bool CheckKnownByAnalysis();
 
     void SaveDebug( const char *pSourcefile, int iLines );
-
-#ifdef _LOG_ANALTYPE_
-    bool GetLogAnalType();
-#endif
 
 };
 

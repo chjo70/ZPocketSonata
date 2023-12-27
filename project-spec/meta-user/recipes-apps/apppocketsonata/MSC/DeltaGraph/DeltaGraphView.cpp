@@ -16,7 +16,8 @@
 
 //#include "../ShuDeltaGraph/Log/LogDebug.h"
 
-#define IPACNV(A)    (unsigned int) ( ( A + ( float ) PDW_PA_RANGE ) / POCKETSONATA::_fPARes + A )
+//#define IPACNV(A)    (unsigned int) ( ( A + ( float ) PDW_PA_RANGE ) / POCKETSONATA::_fPARes + A )
+#define IPACNV(A)       CPOCKETSONATAPDW::EncodePA( A )
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -156,6 +157,7 @@ void CDeltaGraphView::InitSpinCtrl()
 }
 
 #define TEXT_WIDTH			(10)
+#define _COLUMNS_OF_LIST_   (20)
 /**
  * @brief
  * @return    void
@@ -170,18 +172,20 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 
 	if( m_pDoc->GetDataType() == en_PDW_DATA || m_pDoc->GetDataType() == en_PDW_DATA_CSV ) {
 		if( bInit == true ) {
-			m_CListRawData.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | 0x00004000);
-			//m_CListPDW.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT );
+            int i;
+            char szList[_COLUMNS_OF_LIST_][40] = { "순서#", "Normal/CW", " PMOP", "FMOP/Dir/BW[MHz]", "      TOA[s]/TOA[s]", "    DTOA[s]", " DI", "방위[도]  ", "주파수[MHz]    ", "신호세기[dBm]", "펄스폭[ns]", "채널#", "FalsePDW", "  Edge" };
 
-			m_CListRawData.InsertColumn( j++, _T("순서"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("순서  ")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("신호 형태"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호 형태")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("TOA[s]/TOA"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("              TOA[s]/TOA[s]")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("DTOA[us]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("     DTOA[s]")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("DV"), LVCFMT_CENTER, TEXT_WIDTH*strlen(_T("  DV")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("방위[도]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("방위[도]")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("주파수[MHz]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("주파수[MHz]  ")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("신호세기[dBm]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("신호세기[dBm]")), -1 );
-			m_CListRawData.InsertColumn( j++, _T("펄스폭[ns]"), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T("펄스폭[ns]")), -1 );
+            //CFont font;
+            //font.CreatePointFont( 70, "D2Coding" );
+
+			m_CListRawData.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | 0x00004000);
+            //m_CListRawData.SetFont( & font );
+
+            m_CListRawData.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT );
+
+            for( i = 0; i < _COLUMNS_OF_LIST_; ++i ) {
+			    m_CListRawData.InsertColumn( j++, _T( szList[i] ), LVCFMT_RIGHT, TEXT_WIDTH*strlen(_T( szList[i])), -1 );
+            }
 
 			//m_CListPDW.SetGridLines(TRUE);
 			//m_CListPDW.SetCheckboxeStyle(RC_CHKBOX_NORMAL); // Enable checkboxes
@@ -279,9 +283,18 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	_TOA *pllTOA;
 	CString strVal;
 
-	void *pData;
+	void *pRealData, *pData;
 	STR_PDWREALDATA *pPDWRealData =NULL;
+
+    STR_PDWDATA *pPDWData;
+    _PDW *pPDW;
+
 	STR_IQ_DATA *pIQData=NULL;
+
+    char szFmopDir[4][10] = { "삼각", "증가형", "다운형", "모름" };
+    char szSignalType[2][10] = { "Normal", "CW" };
+    char szOX[2][10] = { "O", "X" };
+    char szInBand[2][10] = { "In-Band", "Out-Band" };
 
 	uiPDWDataItems = m_pDoc->GetPDWDataItems();
 
@@ -290,12 +303,16 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	if( uiPDWDataItems != 0 ) {
 		//bPhaseData = m_pDoc->IsPhaseData();
 		enDataType = m_pDoc->GetDataType();
-		pData = m_pDoc->GetRealData();
+        pData = m_pDoc->GetData();
+		pRealData = m_pDoc->GetRealData();
 
 		Log( enNormal, _T("목록창에 데이터 삽입 시작합니다.") );
 
 		if (enDataType == en_PDW_DATA || enDataType == en_PDW_DATA_CSV ) {
-            pPDWRealData = (STR_PDWREALDATA *) pData;
+            pPDWData = ( STR_PDWDATA * ) pData;
+            pPDW = pPDWData->pstPDW;
+            pPDWRealData = (STR_PDWREALDATA *) pRealData;
+
 			if( pPDWRealData != NULL ) {
 				pdTOA = pPDWRealData->pdTOA;
 				pfDTOA = pPDWRealData->pfDTOA;
@@ -312,7 +329,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 // 				pfPh3 = pPDWData->pfPh3;
 // 				pfPh4 = pPDWData->pfPh4;
 
-				for( i=0 ; i < (int) uiPDWDataItems ; ++i ) {
+				for( i=0 ; i < (int) uiPDWDataItems ; ++i, ++pPDW ) {
 					j = 1;
 
 					//strVal.Format( _T("%7d") , (m_pDoc->GetFileIndex()*PDW_ITEMS)+i );
@@ -320,34 +337,44 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 					//m_CListPDW.InsertItem( i, strVal );
 					m_CListRawData.AddItem(strVal);
 
-					strVal.Format( _T("%d") , *pcType );
+                    strVal.Format( _T( "%s" ), szSignalType[pPDW->GetCWPulse() & 0x01 ] );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
+                    strVal.Format( _T( "%s" ), szOX[(int)(pPDW->GetPMOP()==0)] );
+                    m_CListRawData.SetItemText( i, j++, strVal );
+
+                    strVal.Format( _T( "%s/%s/%.1f" ), szOX[( int ) ( pPDW->GetFMOP() == 0 )], szFmopDir[pPDW->GetFMOPDir() & 0x03 ], CPOCKETSONATAPDW::DecodeFMOPBW( pPDW->GetFMOPBW() ) );
+                    m_CListRawData.SetItemText( i, j++, strVal );
+
 					strVal.Format( _T("%12.6f/%llu") , *pdTOA*1., *pllTOA );
-					//strVal.Format( _T("%12.3f") , *pfTOA*1. );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%12.3f") , FMUL( *pfDTOA, 1000000. ) );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
-					if( *pcDV == _spOne ) {
-						m_CListRawData.SetItemText( i, j++, _T("O") );
-					}
-					else {
-						m_CListRawData.SetItemText( i, j++, _T("X") );
-					}
+                    strVal.Format( _T( "%s" ), szOX[pPDW->GetDI() & 0x01] );
+                    m_CListRawData.SetItemText( i, j++, strVal );
 
-					strVal.Format( _T("%4.1f") , *pfAOA );
+					strVal.Format( _T("%4.1f/0x%04X") , *pfAOA, pPDW->GetAOA() );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
-					strVal.Format( _T("%8.3f/%u") , *pfFreq/1000000., (unsigned int) FDIV( *pfFreq, 1000. ) );
+					strVal.Format( _T("%8.3f/%8u") , *pfFreq/1000000., pPDW->GetFrequency() );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
-					strVal.Format( _T("%5.2f/%d") , *pfPA, IPACNV( *pfPA ) );
+					strVal.Format( _T("%5.2f/%5d") , *pfPA, pPDW->GetPulseamplitude() );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
-					strVal.Format( _T("%5.1f") , *pfPW*1000000000. );
+					strVal.Format( _T("%5.1f/%5d") , *pfPW*1000000000., pPDW->GetPulsewidth() );
 					m_CListRawData.SetItemText( i, j++, strVal );
+
+                    strVal.Format( _T( "%d" ), pPDW->GetChannel() );
+                    m_CListRawData.SetItemText( i, j++, strVal );
+
+                    strVal.Format( _T( "%s" ), szOX[pPDW->GetFalsePDW() & 0x1 ] );
+                    m_CListRawData.SetItemText( i, j++, strVal );
+
+                    strVal.Format( _T( "%s" ), szInBand[pPDW->GetEdge() & 0x01 ] );
+                    m_CListRawData.SetItemText( i, j++, strVal );
 
 					++ pdTOA;
 					++ pfDTOA;

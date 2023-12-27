@@ -2,15 +2,6 @@
 
 #include "../SigAnal/_Type.h"
 
-//#include "..\..\CEFCOMMON\CommonMngr.h"
-
-// namespace SELTASKDB
-// {
-// 	struct SELDBEnvVar;
-// 	struct SELDBEnvVarRpt;
-// 	struct SELDBEnvVarIdnf;
-// }
-
 #define _DEFAULT_PPG_TYPE_RATE				(10)			// GUI 에 반영할 것
 #define _DEFAULT_SIGNAL_TYPE_RATE			(10)
 #define _DEFAULT_FREQ_TYPE_RATE				(10)
@@ -82,12 +73,12 @@ class CELEnvironVariable
 {
 private:
 	SEnvironVariable m_stEnvironVariable;
-	
+
 public:
     CELEnvironVariable(void);
-    virtual ~CELEnvironVariable(void);	
-	
-	
+    virtual ~CELEnvironVariable(void);
+
+
 public:
 	SEnvironVariable *GetEnvrionVariable();
 
@@ -100,135 +91,135 @@ public:
 // 	* @return      bool   성공 시 true, 실패 시 false
 // 	*/
 // 	bool LoadEnvVars(SELEnvVarSet& i_stData);
-// 	
+//
 // 	/**
 // 	* @brief       환경변수 재로딩 함수
 // 	* @param       bool i_bIsServer   서버 여부
 // 	* @return      bool   성공 시 true, 실패 시 false
 // 	*/
 // 	bool ReloadEnvVars(bool i_bIsServer = false);
-// 	
+//
 // 	/**
 // 	* @brief       환경변수를 DB에 저장하기 위한 함수
 // 	* @param       SELEnvVarSet & i_stData   환경변수 구조체
 // 	* @return      bool   성공 시 true, 실패 시 false
 // 	*/
-// 	bool InsertEnvVarsToDB(SELEnvVarSet& i_stData); //SELTASKDB::SELDBEnvVar& i_stData, std::vector<SELTASKDB::SELDBEnvVarRpt>& i_vecRpt);	
-// 	
+// 	bool InsertEnvVarsToDB(SELEnvVarSet& i_stData); //SELTASKDB::SELDBEnvVar& i_stData, std::vector<SELTASKDB::SELDBEnvVarRpt>& i_vecRpt);
+//
 // 	/**
 // 	* @brief       TacRep 우선순위 문자열정보 획득함수
-// 	* @param       std::vector<std::string> & i_vecData 문자열 벡터   
+// 	* @param       std::vector<std::string> & i_vecData 문자열 벡터
 // 	* @return      bool   성공 시 true, 실패 시 false
 // 	*/
 // 	bool GetTacRepPriorityStrings(std::vector<std::string>& i_vecData);
-// 	
+//
 // 	/**
 // 	* @brief       TacRep 국적 문자열정보 획득함수
 // 	* @param       std::vector<std::string> & i_vecData   국적 문자열 벡터
 // 	* @return      bool   성공 시 true, 실패 시 false
 // 	*/
 // 	bool GetTacRepNationalityStrings(std::vector<std::string>& i_vecData);
-// 	
+//
 // 	/**
 // 	* @brief       TacElint 국적 문자열정보 획득함수
-// 	* @param       std::vector<std::string> & i_vecData  국적 문자열 벡터 
+// 	* @param       std::vector<std::string> & i_vecData  국적 문자열 벡터
 // 	* @return      bool   성공 시 true, 실패 시 false
 // 	*/
 // 	bool GetTacElintNationalityStrings(std::vector<std::string>& i_vecData);
-// 	
+//
 // 	/**
 // 	* @brief       UniformC 국적 문자열정보 획득점수
-// 	* @param       std::vector<std::string> & i_vecData  국적 문자열 벡터  
+// 	* @param       std::vector<std::string> & i_vecData  국적 문자열 벡터
 // 	* @return      bool   성공 시 true, 실패 시 false
 // 	*/
 // 	bool GetUniformCNationalityStrings(std::vector<std::string>& i_vecData);
-// 	
+//
 // 	/**
 // 	* @brief       UniformC 신호종류 문자열정보 획득함수
-// 	* @param       std::vector<std::string> & i_vecData  신호종류 문자열 벡터  
+// 	* @param       std::vector<std::string> & i_vecData  신호종류 문자열 벡터
 // 	* @return      bool   성공 시 true, 실패 시 false
 // 	*/
 // 	bool GetUniformCSigKindStrings(std::vector<std::string>& i_vecData);
-// 	
+//
 // 	/**
 // 	* @brief       EOB 라이브러리 타입 획득함수
 // 	* @return      EnumLibType   라이브러리 타입
 // 	*/
 // 	EnumLibType GetEOBLibType();
-// 	
+//
 // 	/**
 // 	* @brief       CED 라이브러리 타입 획득함수
 // 	* @return      EnumLibType   라이브러리 타입
 // 	*/
 // 	EnumLibType GetCEDLibType();
-// 
-// public:	
+//
+// public:
 // 	//SELTASKDB::SELDBEnvVar* GetEnvVars();	//LJN_DEL
-// 	
+//
 // 	/**
 // 	* @brief       신호식별 관련 환경변수 정보 획득함수
 // 	* @return      SELTASKDB::SELDBEnvVarIdnf*   신호식별 구조체 포인터
 // 	*/
 // 	SELTASKDB::SELDBEnvVarIdnf* GetIdnfEnvVars();
-// 
-// 	
+//
+//
 // 	/**
 // 	* @brief       CW 초핑간격 환경변수 값 획득함수
 // 	* @return      unsigned int   CW 초핑간격 값
 // 	*/
 // 	unsigned int GetVarCwChopInterval();
-// 	
+//
 // 	/**
 // 	* @brief       CW 판정펄스폭 환경변수 값 획득함수
 // 	* @return      unsigned int   CW 판정펄스폭
 // 	*/
 // 	unsigned int GetVarCwDescisionPw();
-// 	
+//
 // 	/**
 // 	* @brief       CW 초핑카운트 값 획득함수
 // 	* @return      unsigned int   CW 초핑카운트 값
 // 	*/
 // 	unsigned int GetVarCwChopCount();
 // 	//unsigned int GetVarNRTThreshold();//LJN_DEL
-// 	
-// 	
+//
+//
 // 	/**
 // 	* @brief       광대역스펙트럼 단위수집시간 환경변수 값 획득함수
-// 	* @return      unsigned int  단위수집시간 
+// 	* @return      unsigned int  단위수집시간
 // 	*/
 // 	unsigned int GetMtskWbSpUnitCollTime();
-// 	
+//
 // 	/**
 // 	* @brief       광대역스펙트럼 단위수집개수 환경변수 값 획득함수
 // 	* @return      unsigned int   단위수집개수
 // 	*/
 // 	unsigned int GetMtskWbSpUnitCollNum();
-// 	
+//
 // 	/**
 // 	* @brief       회전방탐 단위수집시간 환경변수 값 획득함수
 // 	* @return      unsigned int   단위수집시간
 // 	*/
 // 	unsigned int GetMtskSpinDFUnitCollTime();
-// 	
+//
 // 	/**
 // 	* @brief       회전방탐 단위수집개수 환경변수 값 획득함수
 // 	* @return      unsigned int   단위수집개수
 // 	*/
 // 	unsigned int GetMtskSpinDFUnitCollNum();
-// 	
+//
 	/**
 	* @brief       DV 비율 환경변수 값 획득함수
 	* @return      unsigned int   DV비율
 	*/
  	unsigned int GetMtskDVRatio();
-// 	
-// 	
+//
+//
 // 	/**
 // 	* @brief       LOB생성을 위한 최소 펄스 수 환경변수 값 획득함수
 // 	* @return      unsigned int   최소펄스 수
 // 	*/
 // 	unsigned int GetEmmgNumOfMinPulseToLOB();
-	
+
 	/**
 	* @brief       빔 형성을 위한 최소 LOB 개수 환경변수 값 획득함수
 	* @return      unsigned int   LOB 개수

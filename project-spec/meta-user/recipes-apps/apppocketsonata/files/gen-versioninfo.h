@@ -1,7 +1,7 @@
 //GIT-VS-VERSION-GEN.bat generated resource header.
-#define GEN_VER_VERSION_STRING   "EST.284.g8821d.dirty\0" 
-#define GEN_VER_DIGITAL_VERSION  EST,284,g8821d,0 
-#define GEN_VER_VERSION_HEX      0x0000011C00000000 
+#define GEN_VER_VERSION_STRING   "EST.319.g4d7f4.dirty\0" 
+#define GEN_VER_DIGITAL_VERSION  EST,319,g4d7f4,0 
+#define GEN_VER_VERSION_HEX      0x0000013F00000000 
 #define GEN_VER_COMMENT_STRING   "Major Version Release\0" 
 #define GEN_VER_PRIVATE_FLAG     VS_FF_PRIVATEBUILD 
 #define GEN_VER_PRIVATE_STRING   "Custom Build\0" 

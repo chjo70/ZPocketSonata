@@ -8,7 +8,7 @@
 #include "cscananalysis.h"
 #include "cemittermerge.h"
 
-#include "../Utils/csingleserver.h"
+//#include "../Utils/csingleserver.h"
 //#include "../Utils/cmultiserver.h"
 
 #include "../Include/globals.h"
@@ -29,7 +29,7 @@
  * @date      2023-01-04 16:44:46
  * @warning
  */
-CScanAnalysis::CScanAnalysis( int iThreadPriority, const char *pClassName, bool bArrayLanData ) : CThread( iThreadPriority, pClassName, bArrayLanData )
+CScanAnalysis::CScanAnalysis( int iThreadPriority, const char *pThreadName, bool bArrayLanData ) : CThread( iThreadPriority, pThreadName, bArrayLanData )
 {
 
 #ifdef _SQLITE_
@@ -47,9 +47,9 @@ CScanAnalysis::CScanAnalysis( int iThreadPriority, const char *pClassName, bool 
     strcat( szSQLiteFileName, EMITTER_SQLITE_FILEEXTNAME );
 #endif
 
-    m_pTheScanSigAnal = new CScanSigAnal(SCN_COLLECT_PDW, false, szSQLiteFileName);
+    m_pTheScanSigAnal = new CScanSigAnal(SCN_COLLECT_PDW, false, szSQLiteFileName, CThread::GetThreadName() );
 #else
-    m_pTheScanSigAnal = new CScanSigAnal( SCN_COLLECT_PDW, false);
+    m_pTheScanSigAnal = new CScanSigAnal( SCN_COLLECT_PDW, false, GetThreadName() );
 
 #endif
 
@@ -169,9 +169,7 @@ void CScanAnalysis::AnalysisStart()
 
     STR_SCANRESULT *pScanResult;
 
-    Log( enDebug, "스캔 : 위협[%d/%d] 에 대해서, 채널[%d], 스캔분석 요청주기 [%d ms] 에서 PDW[%d 개] 를 분석합니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiCh, m_pRecvScanAnalInfo->uiReqScanPeriod, m_pScnPDWData->strPDW.GetTotalPDW() );
-
-    //CCommonUtils::Disp_FinePDW( ( STR_PDWDATA *) GetRecvData() );
+    Log( enDebug, "스캔 : 위협[%d/%d] 에 대해서, 채널[%3d], 스캔분석 요청주기 [%d ms] 에서 PDW[%d 개] 를 분석합니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiCh, m_pRecvScanAnalInfo->uiReqScanPeriod, m_pScnPDWData->strPDW.GetTotalPDW() );
 
     // 1. 스캔 신호 분석을 호출한다.
     m_pTheScanSigAnal->Start( & m_pScnPDWData->strPDW, & m_pScnPDWData->strABTData, m_pRecvScanAnalInfo->uiScanStep, m_pRecvScanAnalInfo->uiReqScanPeriod, & m_pRecvScanAnalInfo->stScanResult );
@@ -183,7 +181,7 @@ void CScanAnalysis::AnalysisStart()
     if( pScanResult->enResult == EN_SCANRESULT::_spAnalSuc ) {
         MakeLOBData();
 
-        //?     LOB 데이터화 해서 병합으로 보내는게 좋지 않을까 ? 아니면 분석 결과면 보내는게 낳을까 ?
+        //? LOB 데이터화 해서 병합으로 보내는게 좋지 않을까 ? 아니면 분석 결과면 보내는게 낳을까 ?
         //date 	2023-03-21 09:39:53
         g_pTheEmitterMerge->QMsgSnd( enTHREAD_SCANANAL_RESULT, & m_stLOBData, _spOne, sizeof( struct SRxLOBData ), GetUniMessageData(), sizeof( UNI_MSG_DATA ), GetThreadName() );
     }
@@ -205,13 +203,12 @@ void CScanAnalysis::AnalysisStart()
  */
 void CScanAnalysis::MakeLOBData()
 {
-    SRxLOBData *pLOBData;
+    // SRxLOBData *pLOBData;
 
-    pLOBData = m_pTheScanSigAnal->GetLOBData( 0 );
-    memcpy( & m_stLOBData, pLOBData, sizeof( SRxLOBData ) );
+    //pLOBData = m_pTheScanSigAnal->GetLOBData( 0 );
+    //memcpy( & m_stLOBData, pLOBData, sizeof( SRxLOBData ) );
 
-    m_stLOBData.uiPDWID = 0;
-    m_stLOBData.uiPLOBID = 0;
+    memset( & m_stLOBData, 0, sizeof( SRxLOBData ) );
 
     // 방사체/빔 번호 저장
     m_stLOBData.uiAETID = m_pRecvScanAnalInfo->uiAETID;
@@ -221,6 +218,10 @@ void CScanAnalysis::MakeLOBData()
     CCommonUtils::GetCollectTime( &m_stLOBData.tiContactTime, &m_stLOBData.tiContactTimems );
 
     m_stLOBData.uiNumOfCollectedPDW = m_pScnPDWData->strPDW.GetTotalPDW();
+    m_stLOBData.uiNumOfAnalyzedPDW = m_pScnPDWData->strPDW.GetTotalPDW();
+
+    m_stLOBData.vScanType = m_pRecvScanAnalInfo->stScanResult.enScanType;
+    m_stLOBData.fMeanScanPeriod = ( float ) TOAmsCNV( m_pRecvScanAnalInfo->stScanResult.uiScanPeriod );
 
 //     if( m_pstABTData != NULL ) {
 //     STR_SCANRESULT *pScanResult = m_pTheScanSigAnal->GetScanResult();
@@ -275,9 +276,7 @@ void CScanAnalysis::InitScanAnalysis()
 
     m_pstABTData = NULL;
 
-    // 테이블 삭제하기
-    Log( enNormal, "테이블을 삭제합니다." );
-    m_pTheScanSigAnal->DeleteDB_RAW( "RAWDATA" );
+    CThread::Clear();
 
 }
 

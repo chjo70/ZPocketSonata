@@ -15,7 +15,11 @@
 #define OS_ONE_MILLISEC								(0.1)
 
 #ifndef WhereIs
-#define WhereIs									    TRACE( "...in %s 파일 %d 라인" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/') : __FILE__ , __LINE__ )
+#ifdef __VXWORKS__
+#define WhereIs									    TRACE( (char *) "...in %s 파일 %d 라인" , strrchr(__FILE__,'/') ? strrchr(__FILE__,'/') : __FILE__ , __LINE__ )
+#else
+#define WhereIs									    TRACE( (const char *) "...in %s 파일 %d 라인" , strrchr(__FILE__,'\\') ? strrchr(__FILE__,'\\') : __FILE__ , __LINE__ )
+#endif
 #endif
 
 #ifndef PrintErr
