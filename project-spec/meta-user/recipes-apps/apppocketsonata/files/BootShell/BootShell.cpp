@@ -289,35 +289,44 @@ void CBootShell::Run()
     // 네트워크 메모리 값 전시합니다.
     g_theManSbc->ShowNetMemory();
 
-	printf( "\n\n 키 값 (기본=이미지 실행[1]/기본 파일 설치[w]/소프트웨어 업데이트[!]) ? " );
-    key = g_theManSbc->GetCommand();
+    printf( "\n g_pTheSysConfig->GetTFFSBoot()=%d", g_pTheSysConfig->GetTFFSBoot() );
 
-    key = DOWNLOAD_APP;
+    if( g_pTheSysConfig->GetTFFSBoot() == 1 ) {
+        printf( "\n\n TFTP 디버깅 모드 입니다." );
 
-    printf( "\n\n" );
-    switch( key ) {
-        case INSTALL_WEB :
-            g_theManSbc->InstallWeb();
-            break;
+        g_theManSbc->InitDataBase();
+        g_theManSbc->DownloadApp();
+        g_theManSbc->RunApp( enDownloadApp );
+    }
+    else {
+        printf( "\n\n 키 값 (기본=이미지 실행[1]/기본 파일 설치[w]/소프트웨어 업데이트[!]) ? " );
+        key = g_theManSbc->GetCommand();
 
-        case RUN_APP :
-        	g_theManSbc->InitDataBase();
-            g_theManSbc->RunApp( enATAApp );
-            break;
+        printf( "\n\n" );
+        switch( key ) {
+            case INSTALL_WEB :
+                g_theManSbc->InstallWeb();
+                break;
 
-        case WRITE_APP_FLASH :
-            g_theManSbc->DownloadAndROMWriteApp();
-            g_theManSbc->RunApp( enATAApp );
-            break;
+            case RUN_APP :
+        	    g_theManSbc->InitDataBase();
+                g_theManSbc->RunApp( enATAApp );
+                break;
 
-        case DOWNLOAD_APP :
-        	g_theManSbc->InitDataBase();
-            g_theManSbc->DownloadApp();
-            g_theManSbc->RunApp( enDownloadApp );
-            break;
+            case WRITE_APP_FLASH :
+                g_theManSbc->DownloadAndROMWriteApp();
+                g_theManSbc->RunApp( enATAApp );
+                break;
 
-        default :
-            break;
+            case DOWNLOAD_APP :
+        	    g_theManSbc->InitDataBase();
+                g_theManSbc->DownloadApp();
+                g_theManSbc->RunApp( enDownloadApp );
+                break;
+
+            default :
+                break;
+        }
     }
 
 }

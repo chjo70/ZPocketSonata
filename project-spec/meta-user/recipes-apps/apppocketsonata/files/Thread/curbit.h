@@ -30,6 +30,8 @@ class CUrBit : public CThread
 private:
     int m_nBoardID;																	///< 보드 ID 입니다.
 
+    LogType m_enLogType;
+
     unsigned int m_uiCoURBITTimer;
 
 #ifdef __ZYNQ_BOARD__
@@ -40,6 +42,9 @@ private:
 
     //UNI_ES_IBIT m_stESIbit;														///< 초기자체점검 결과 저장소 입니다.
     //STR_ES_CBIT m_stESCbit;														///< 연속자체점검 결과 저장소 입니다.
+
+    std::string m_strSQLiteFileName;
+    std::string m_strSQLiteFolder;
 
 public:
     STR_MessageData *m_pMsg;														///< 수신 메시지 데이터를 임시 저장하기 위한 저장소 입니다.
@@ -58,6 +63,7 @@ private:
 
     void CheckSBCTemp();
     void CheckTasks();
+    void CheckDatabase();
 
 #ifdef __ZYNQ_BOARD__
     // 모듈 자체점검 함수

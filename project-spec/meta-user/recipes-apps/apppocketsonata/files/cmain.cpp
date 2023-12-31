@@ -311,9 +311,9 @@ void Start( int iArgc, char *iArgv[], void *pParent )
 
 #ifdef _LOG_ANALTYPE_
 #ifdef _MSC_VER
-    g_enLogAnalType = enALL; //  enALL; // enSCN_ANAL; // enALL; //  enDET_ANAL;
+    g_enLogAnalType = enDET_ANAL; //  enALL; // enSCN_ANAL; // enALL; //  enDET_ANAL;
 #else
-    g_enLogAnalType = enALL;
+    g_enLogAnalType = enDET_ANAL; // enSCN_ANAL;
 #endif
 
 #endif
@@ -405,6 +405,11 @@ void Start( int iArgc, char *iArgv[], void *pParent )
     TRACE( "\n\n" );
 
     theMain.Run( iArgc, iArgv, pParent );
+
+#ifdef __VXWORKS__
+    Sleep( 100 );
+
+#endif
 
 }
 
@@ -662,7 +667,6 @@ void CMain::CreateMngrThread()
  */
 void CMain::CreateAnalThread()
 {
-
     g_pTheEmitterMerge = new CEmitterMerge( en_EMTMERGE_PRIORITY, ( const char * ) "MRG", true );
     g_pTheEmitterMerge->Run();
     g_pTheSignalCollect = new CSignalCollect( en_COLLECT_PRIORITY, ( const char * ) "COL", true );
@@ -1126,7 +1130,6 @@ void Check64bitArithmetic()
 
     _TOA x;
 
-
     x = 0xffffffffffffffff;
     x = x / 0xfffffffffffffff;
     if( x != 16 ) {
@@ -1146,6 +1149,7 @@ void Check64bitArithmetic()
         TRACE( "\nSBC에 탑재된 프로세서는 64비트 연산을 지원 합니다." );
 
     }
+    TRACE( "\n" );
 
 }
 
@@ -1469,7 +1473,7 @@ void cpsq()
     CCommonUtils::getStringPresentTime( buffer, sizeof( buffer ), true );
 
     strSrcFileName = string_format( "%s%s/%s/%s", RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY, EMITTER_SQLITE_FILEEXTNAME );
-    strDestFilename = string_format( "%s/%s/%s_%d_%s", ATADRV, SQLITE_DIRECTORY, buffer, g_enBoardId, EMITTER_SQLITE_FILEEXTNAME );
+    strDestFilename = string_format( "%s/%s/%s_%d_%s", SHARED_DATA_DIRECTORY, SQLITE_DIRECTORY, buffer, g_enBoardId, EMITTER_SQLITE_FILEEXTNAME );
 
     iCopy = CCommonUtils::CopySrcToDstFile( strSrcFileName.c_str(), strDestFilename.c_str(), 1, 0077 );
     if( iCopy <= 0 ) {

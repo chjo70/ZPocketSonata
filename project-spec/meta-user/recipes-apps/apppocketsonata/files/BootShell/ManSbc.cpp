@@ -756,7 +756,7 @@ bool CManSbc::SetTimeBySNMP()
     int iTry;
 	UINT _date, _time;
 
-	STATUS sntpc_status, settime_status;
+	STATUS sntpc_status=-1, settime_status;
 	struct timespec tspec;
 
     g_bSNTP = false;

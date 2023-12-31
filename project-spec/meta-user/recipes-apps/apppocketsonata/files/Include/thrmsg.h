@@ -88,6 +88,9 @@ enum enTHREAD_REQ_MESSAGE : unsigned int {
     enTHREAD_REQ_COLEND = enREQ_STOP,
     enTHREAD_REQ_RAWDATA = enREQ_RAWDATA,
 
+    // 관리 관련 메시지
+    enTHREAD_REQ_CLEANUP,
+
     // 로그 관련 메시지
     enTHREAD_LOG,
 

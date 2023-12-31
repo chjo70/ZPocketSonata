@@ -192,8 +192,8 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
 
     // 신호 수집 개수 정의
     if( pPDWData != NULL ) {
-        MakeAnalDirectory( &pPDWData->x, false );
-        MakeDebugDirectory( &pPDWData->x, false );
+        //MakeAnalDirectory( &pPDWData->x, false );
+        //MakeDebugDirectory( &pPDWData->x, false );
 
         memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof( UNION_HEADER) );
 

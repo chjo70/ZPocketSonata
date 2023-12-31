@@ -32,6 +32,8 @@ enum LogType {
     enWarning,
     enError,
     enEnd,
+
+    enNull
 };
 
 #include "clogname.h"

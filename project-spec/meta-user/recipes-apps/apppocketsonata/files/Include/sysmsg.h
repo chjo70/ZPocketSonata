@@ -91,15 +91,10 @@ struct STR_LAN_HEADER {
     @brief 운용 모드 정의
 **/
 enum ENUM_MODE {
-    //enES_MODE=1,
-    //enEW_MODE,
     enNOT_READY_MODE = 0,
     enREADY_MODE,
     enOP_Mode,
 
-//    enANAL_Mode=0x80,
-//     enANAL_ES_MODE=enANAL_Mode | enES_MODE,
-//     enANAL_EW_MODE=enANAL_Mode | enEW_MODE,
 
 };
 

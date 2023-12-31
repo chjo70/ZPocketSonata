@@ -845,7 +845,7 @@ void CCollectBank::StartTrackChannel( unsigned int uiCh, SRxABTData *pABTData, S
     // 세팅하기
     StartWindowCell( pWindowCell );
 
-    Log( enNormal, "추적 : 위협[%d/%d]을 채널[%3d], 방위[%.1f~%.1f 도], 주파수[%d~%d MHz], 시간[%.2f 초]를 설정합니다.", \
+    Log( enNormal, "추적 : 위협[%d/%d]을 채널[%3d], 방위[%.1f~%.1f 도], 주파수[%d~%d MHz], 시간[%.2f 초]를 설정", \
         pABTData->uiAETID, pABTData->uiABTID, uiCh, FAOACNV( pWindowCell->strAOA.iLow), FAOACNV( pWindowCell->strAOA.iHigh ), \
         UDIV( pWindowCell->strFreq.iLow, 1000 ), UDIV( pWindowCell->strFreq.iHigh, 1000 ), \
         FDIV( pWindowCell->uiMaxCollectTimeMssec, 1000. ) );
@@ -1046,7 +1046,7 @@ int CCollectBank::StartScanChennel( SRxABTData *pABTData, SRadarMode *pRadarMode
         // 세팅하기
         StartWindowCell( pWindowCell );
 
-        Log( enNormal, "스캔 : 위협[%d/%d]을 채널[%3d], 방위[%d~%d 도], 주파수[%d~%d MHz], 세기[%.1f~%.1f dBm], 시간[%.2f 초]를 스캔 설정합니다.", \
+        Log( enNormal, "스캔 : 위협[%d/%d]을 채널[%3d], 방위[%d~%d 도], 주파수[%d~%d MHz], 세기[%.1f~%.1f dBm], 시간[%.2f 초]를 스캔 설정", \
             pABTData->uiAETID, pABTData->uiABTID, iCh, UDIV( pWindowCell->strAOA.iLow, 10 ), UDIV( pWindowCell->strAOA.iHigh, 10 ), \
             UDIV(pWindowCell->strFreq.iLow, 1000), UDIV(pWindowCell->strFreq.iHigh, 1000), \
             CPOCKETSONATAPDW::DecodePA( pWindowCell->strPA.iLow), CPOCKETSONATAPDW::DecodePA( pWindowCell->strPA.iHigh), \

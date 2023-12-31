@@ -59,7 +59,8 @@ extern std::string g_strPCIDrverDirection[en_ELEMENT_PCI_DRIVER];
 
     try {
 #ifdef __VXWORKS__
-        m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( false, szSQLiteFileName, GetThreadName() );
+        //! DB에 위협 관리 삽입할 때, true 로 설정 합니다.
+        m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( true, szSQLiteFileName, GetThreadName() );
 #else
         m_pTheEmitterMergeMngr = new CELEmitterMergeMngr( true, szSQLiteFileName, CThread::GetThreadName() );
 #endif
@@ -279,7 +280,6 @@ void CEmitterMerge::_routine()
 
                 case enTHREAD_TIMER:
                     DeleteThreat();
-                    ManageDatabase();
                     break;
 
                 case enTHREAD_REQ_SHUTDOWN :
@@ -297,6 +297,10 @@ void CEmitterMerge::_routine()
                 case enTHREAD_RELOAD_LIBRARY :
                     // Log( enDebug, " 큐 크기가 [%d] 입니다.", QMsgRcvSize() );
                     ReloadLibrary();
+                    break;
+
+                case enTHREAD_REQ_CLEANUP :
+                    CleanupDatabase();
                     break;
 
                 default:
@@ -1279,9 +1283,17 @@ void CEmitterMerge::UpdateScanResult()
 //             SendNewUpd();
 //         }
 
+        // 5.  스캔 결과를 LOB/빔/방사체 데이터로 전달합니다.
+        SendNewUpd( enUPD_SCAN_THREAT_DATA );
+
+        // 5.1 스캔 결과를 확인하기 위해서 전달홥니다.
+        if( m_pTheEmitterMergeMngr->IsUserReqScan() == true ) {
+            SendUserReqScanResult();
+        }
+
+        // 6. 사용자 스캔 분석 플레그를 클리어 합니다.
         m_pTheEmitterMergeMngr->ResetUserReqScan();
 
-        SendNewUpd( enUPD_SCAN_THREAT_DATA );
     }
     else {
         Log( enError, "m_pLOBData 값이 NULL 입니다 !" );
@@ -1319,6 +1331,9 @@ void CEmitterMerge::UpdateScanFail()
         else {
             SendSelfScanResult();
         }
+
+        // 4.1 사용자 리셋 플레그 클리어 합니다.
+        m_pTheEmitterMergeMngr->ResetUserReqScan();
 
     }
 
@@ -1422,10 +1437,7 @@ void CEmitterMerge::SendUserReqScanResult()
 
     SRxABTData *pABTData;
 
-    // 1. 사용자 리셋 플레그 클리어 합니다.
-    m_pTheEmitterMergeMngr->ResetUserReqScan();
-
-    // 2. 스캔 결과 메시지를 랜으로 전송 합니다.
+    // 1. 스캔 결과 메시지를 랜으로 전송 합니다.
     stUserScanResult.uiAET = m_pRecvScanAnalInfo->uiAETID;
     stUserScanResult.uiABT = m_pRecvScanAnalInfo->uiABTID;
     stUserScanResult.enScanType = m_pRecvScanAnalInfo->stScanResult.enScanType;
@@ -1460,10 +1472,7 @@ void CEmitterMerge::SendSelfScanResult()
 
     SRxABTData *pABTData;
 
-    // 1. 사용자 리셋 플레그 클리어 합니다.
-    m_pTheEmitterMergeMngr->ResetUserReqScan();
-
-    // 2. 스캔 결과 메시지를 랜으로 전송 합니다.
+    // 1. 스캔 결과 메시지를 랜으로 전송 합니다.
     stUserScanResult.uiAET = m_pRecvScanAnalInfo->uiAETID;
     stUserScanResult.uiABT = m_pRecvScanAnalInfo->uiABTID;
     stUserScanResult.enScanType = m_pRecvScanAnalInfo->stScanResult.enScanType;
@@ -1503,25 +1512,57 @@ void CEmitterMerge::SwapScanResult( SELUSERSCANRESULT *pstUserScanResult )
 
 #endif
 
+#ifdef _SQLITE_
 /**
- * @brief     데이터 베이스를 유지 관리한다.
+ * @brief     CleanupDatabase
  * @return    void
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
- * @date      2023-03-19 16:50:28
+ * @date      2023-12-28 10:38:28
  * @warning
  */
-void CEmitterMerge::ManageDatabase()
+void CEmitterMerge::CleanupDatabase()
 {
+    printf( "\n CleanupDatabase..." );
 
-    if( g_pTheTaskMngr != NULL && g_pTheTaskMngr->GetMode() == enOP_Mode ) {
-        if( m_pTheEmitterMergeMngr->IsCleanDatabase() == true ) {
-            m_pTheEmitterMergeMngr->CleanupDatabase();
-        }
+    BackupDatabase();
+
+    m_pTheEmitterMergeMngr->CleanupDatabase();
+
+}
+
+/**
+ * @brief     BackupDatabase
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-28 10:13:05
+ * @warning
+ */
+void CEmitterMerge::BackupDatabase()
+{
+    int iCopy;
+    string strSrcFileName, strDestFilename;
+    char buffer[100];
+
+    CCommonUtils::getStringPresentTime( buffer, sizeof( buffer ), true );
+
+    strSrcFileName = string_format( "%s%s/%s/%s", RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY, EMITTER_SQLITE_FILEEXTNAME );
+    strDestFilename = string_format( "%s/%s/%s_%d_%s", SHARED_DATA_DIRECTORY, SQLITE_DIRECTORY, buffer, g_enBoardId, EMITTER_SQLITE_FILEEXTNAME );
+
+    iCopy = CCommonUtils::CopySrcToDstFile( strSrcFileName.c_str(), strDestFilename.c_str(), 1, 0077 );
+    if( iCopy <= 0 ) {
+        Log( enError, "파일[%s]에서 [%s]으로 정상적으로 복사하지 못했습니다. 담당자에게 문의하세요 !", strSrcFileName.c_str(), strDestFilename.c_str() );
+    }
+    else {
+        Log( enNormal, "파일[%s]에서 [%s]으로 정상적으로 복사했습니다.", strSrcFileName.c_str(), strDestFilename.c_str() );
     }
 
 }
+
+#endif
 
 /**
  * @brief     SetSaveFile

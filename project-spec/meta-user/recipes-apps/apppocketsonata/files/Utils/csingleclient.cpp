@@ -140,11 +140,9 @@ CSingleClient::CSingleClient( int iKeyId, const char *pClassName, COperationCons
         //m_vecServerAddress.push_back( g_pTheSysConfig->GetRecentConnectionOfNetwork() );
 
         m_vecServerAddress.push_back( g_pTheSysConfig->GetDebugServerOfNetwork() );
-
-        //m_vecServerAddress.push_back( g_pTheSysConfig->GetCCUServerOfNetwork() );
-#else
-        m_vecServerAddress.push_back( DEV_SERVER );
         m_vecServerAddress.push_back( g_pTheSysConfig->GetCCUServerOfNetwork() );
+#else
+        m_vecServerAddress.push_back( g_pTheSysConfig->GetDebugServerOfNetwork() );
 #endif
 
     }
@@ -349,7 +347,7 @@ void CSingleClient::RunClient()
         for( const auto & strServerIPAddress : m_vecServerAddress ) {
 
 #ifdef __VXWORKS__
-            if( uiTryConnect++ % 4000 == 0 ) {
+            if( uiTryConnect++ % 3000 == 0 ) {
                 TRACE( "\n[클라이언트:%s] [%s/%d] 연결하려 합니다.\n", GetThreadName(), strServerIPAddress.c_str(), m_usPort );
             }
 #else
@@ -1075,7 +1073,7 @@ void CSingleClient::OnConnect( struct sockaddr_in *pAddr )
             WhereIs;
         }
         else {
-            Log( enNormal, "디버그 콘솔을 구동하지 않습니다" );
+            // Log( enNormal, "디버그 콘솔을 구동하지 않습니다" );
         }
 #endif
 

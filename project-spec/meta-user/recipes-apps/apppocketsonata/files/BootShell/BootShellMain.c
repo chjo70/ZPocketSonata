@@ -74,7 +74,7 @@ void Main()
     //////////////////////////////////////////////////////////////////////////
     LoadBootParameter();
 
-    printf( "\n 소형 전자전장비(APECS-II) 자체개발, 부트 쉘 프로그램, %s, 전자전 연구소, 2021., 2022., 2023." , VERSION );
+    printf( "\n 소형 전자전장비(APECS-II) 자체개발, 부트 쉘 프로그램, %s, 전자전 연구소, 2021., 2022., 2023., 2024" , VERSION );
 
 #ifdef __VXWORKS__
     printf( "\n 컴파일 날짜 : %s\n\n" , creationDate );

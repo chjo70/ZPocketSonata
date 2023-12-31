@@ -94,7 +94,7 @@
 #else
 #define EMITTER_SQLITE_FOLDER       (const char *) "d:/rawdata"
 #endif
-#define EMITTER_SQLITE_FILEEXTNAME     (const char *) "emitter.sqlite3"
+#define EMITTER_SQLITE_FILEEXTNAME  (const char *) "emitter.sqlite3"
 
 #define EMITTER_SQLITE_FILENAME     (const char *) "emitter"
 

@@ -140,6 +140,8 @@ private:
 protected:
     void DeleteAllFiles();
 
+
+
 #ifdef _MSSQL_
     CODBCDatabase *GetCODBCDatabase();
 #endif
@@ -165,7 +167,7 @@ public:
     void SetSaveFile(bool val) {
 		m_bSaveFile = val;
 	}
-    void Initialize();
+    void Init();
 
     void InitResolution();
 
@@ -185,11 +187,13 @@ public:
     void DISP_FineLOB(SRxLOBData *pLOB);
 
 	unsigned int GetOpInitID();
-    void MakeAnalDirectory( UNION_HEADER* pUniHeader, bool bLog=true );
+    void MakeAnalDirectory( UNION_HEADER* pUniHeader, time_t ti=0 );
     void MakeDebugDirectory( UNION_HEADER *pUniHeader, bool bLog = true );
 
     void SortingTOAOfPDW( STR_PDWDATA *pPDWData );
     void SortingTOAOfPDW( STR_STATIC_PDWDATA *pPDWData );
+
+    void InitUnionHeader( UNION_HEADER *pstUnionHeader, ENUM_COLLECTBANK enCollectBank= enUnknownCollectBank );
 
     /**
      * @brief     GetAnalDirectory
@@ -471,6 +475,17 @@ public:
         return bRet;
     }
 #endif
+
+
+    void MakeDirectory( time_t ti, ENUM_COLLECTBANK enCollectBank )
+    {
+        UNION_HEADER stUnionHeader;
+
+        InitUnionHeader( & stUnionHeader, enCollectBank );
+
+        MakeAnalDirectory( & stUnionHeader, ti );
+        MakeDebugDirectory( & stUnionHeader, ti );
+    }
 
     /**
      * @brief     GetRawDataFilename

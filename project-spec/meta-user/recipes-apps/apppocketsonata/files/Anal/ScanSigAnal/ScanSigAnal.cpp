@@ -406,8 +406,8 @@ void CScanSigAnal::Init( STR_STATIC_PDWDATA *pstPDWData)
 
     // 신호 수집 개수 정의
     if (pstPDWData != NULL) {
-		MakeAnalDirectory( &pstPDWData->x, false );
-        MakeDebugDirectory( &pstPDWData->x, false );
+		//MakeAnalDirectory( &pstPDWData->x, false );
+        //MakeDebugDirectory( &pstPDWData->x, false );
 
         m_uiColPDW = m_pstPDWData->GetTotalPDW();
 

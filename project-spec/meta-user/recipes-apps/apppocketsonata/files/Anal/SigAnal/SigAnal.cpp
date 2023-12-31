@@ -99,14 +99,12 @@ CSigAnal::CSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pSQLiteF
 
     m_bDBThread = bDBThread;
 
-    Initialize();
+    Init();
 
 	AllocMemory();
 
     // DB 관련 변수 초기화
     InitDataFromDB();
-
-
 
 }
 
@@ -190,11 +188,13 @@ void CSigAnal::AllocMemory()
  * @date      2022-04-18, 13:18
  * @warning
  */
-void CSigAnal::Initialize()
+void CSigAnal::Init()
 {
+
     m_strAnalDirectory.clear();
 
     memset( &m_stSavePDWData, 0, sizeof( m_stSavePDWData ) );
+
 }
 
 /**
@@ -582,12 +582,13 @@ void CSigAnal::InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, int iScanStep, 
 
 	if ( m_bSaveFile == true || bInsertDB == false ) {
 #if defined(_POCKETSONATA_) || defined(_712_)
-        if( bInsertDB == false ) {
-            bRet = CreateDir( GetDebugDirectory() );
-        }
-        else {
-            bRet = CreateDir( GetAnalDirectory() );
-        }
+//         if( bInsertDB == false ) {
+//             bRet = CreateDir( GetDebugDirectory() );
+//         }
+//         else {
+//             bRet = CreateDir( GetAnalDirectory() );
+//         }
+        bRet = CreateDir( GetAnalDirectory() );
 
 		if (bRet == true) {
 			// 순수 신호 수집한 데이터
@@ -789,9 +790,6 @@ bool CSigAnal::InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID)
             catch (Kompex::SQLiteException &sException) {
                 Log(enError, " m_pszSQLString[%s]", m_pszSQLString);
                 bRet = false;
-                //std::cerr << "\nException Occured" << std::endl;
-				//sException.Show();
-                //std::cerr << "SQLite result code: " << sException.GetSqliteResultCode() << std::endl;
                 Log( enError, "SQLite 에러[%d] : %s", sException.GetSqliteResultCode(), sException.GetErrorDescription().c_str() );
             }
         }
@@ -1519,7 +1517,7 @@ unsigned int CSigAnal::GetOpInitID()
  * @date      2023-01-24 11:54:06
  * @warning
  */
-void CSigAnal::MakeAnalDirectory( UNION_HEADER* pUniHeader, bool bLog )
+void CSigAnal::MakeAnalDirectory( UNION_HEADER* pUniHeader, time_t ti )
 {
 
     if( m_strAnalDirectory.empty() == true ) {
@@ -1536,12 +1534,30 @@ void CSigAnal::MakeAnalDirectory( UNION_HEADER* pUniHeader, bool bLog )
         m_strAnalDirectory = string_format( "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.xb.GetCollectorID(), pPDWData->x.xb.aucTaskID );
 
 #elif defined(_POCKETSONATA_) || defined(_712_)
-        if( pUniHeader->ps.uiBoardID <= enPRC5 && \
-            ( pUniHeader->ps.enCollectBank >= ENUM_COLLECTBANK::enDetectCollectBank ) && ( pUniHeader->ps.enCollectBank <= ENUM_COLLECTBANK::enUserCollectBank ) ) {
-            m_strAnalDirectory = string_format( /* ( const char * ) */ "%s/BRD_%d/%s", ( const char * ) SHARED_DATA_DIRECTORY, pUniHeader->ps.uiBoardID, g_szCollectBank[( int ) pUniHeader->ps.enCollectBank] );
+
+        if( ti != 0 ) {
+            char buffer[100];
+            CCommonUtils::getFileNamingDesignatedTime( buffer, sizeof( buffer ), ti );
+
+            if( pUniHeader->ps.uiBoardID <= enPRC5 && \
+                ( pUniHeader->ps.enCollectBank >= ENUM_COLLECTBANK::enDetectCollectBank ) && ( pUniHeader->ps.enCollectBank <= ENUM_COLLECTBANK::enUserCollectBank ) ) {
+                m_strAnalDirectory = string_format( "%s/BRD_%d/%s/%s", ( const char * ) SHARED_DATA_DIRECTORY, pUniHeader->ps.uiBoardID, g_szCollectBank[( int ) pUniHeader->ps.enCollectBank], buffer );
+            }
+            else {
+                m_strAnalDirectory = string_format( "%s/BRD_0/%s/%s", ( const char * ) SHARED_DATA_DIRECTORY, g_szCollectBank[0], buffer );
+            }
+
         }
         else {
-            m_strAnalDirectory = string_format( /* ( const char * ) */ "%s/BRD_0/%s", ( const char * ) SHARED_DATA_DIRECTORY, g_szCollectBank[0] );
+            if( pUniHeader->ps.uiBoardID <= enPRC5 && \
+                ( pUniHeader->ps.enCollectBank >= ENUM_COLLECTBANK::enDetectCollectBank ) && ( pUniHeader->ps.enCollectBank <= ENUM_COLLECTBANK::enUserCollectBank ) ) {
+                m_strAnalDirectory = string_format( "%s/BRD_%d/%s", ( const char * ) SHARED_DATA_DIRECTORY, pUniHeader->ps.uiBoardID, g_szCollectBank[( int ) pUniHeader->ps.enCollectBank] );
+            }
+            else {
+                m_strAnalDirectory = string_format( "%s/BRD_0/%s", ( const char * ) SHARED_DATA_DIRECTORY, g_szCollectBank[0] );
+            }
+
+
         }
 
 #elif defined(_SONATA_)
@@ -1557,9 +1573,7 @@ void CSigAnal::MakeAnalDirectory( UNION_HEADER* pUniHeader, bool bLog )
         //m_strAnalDirectory.clear();
     }
 
-    if( bLog ) {
-        Log( enNormal, "수집 데이터 저장 위치는 [%s] 입니다.", m_strAnalDirectory.c_str() );
-    }
+    Log( enNormal, "수집 데이터 저장 위치는 [%s] 입니다.", m_strAnalDirectory.c_str() );
 
 }
 
@@ -1594,18 +1608,18 @@ void CSigAnal::MakeDebugDirectory( UNION_HEADER *pUniHeader, bool bLog )
 #ifdef __VXWORKS__
         if( pUniHeader->ps.uiBoardID <= enPRC5 && \
             ( pUniHeader->ps.enCollectBank >= ENUM_COLLECTBANK::enDetectCollectBank ) && ( pUniHeader->ps.enCollectBank <= ENUM_COLLECTBANK::enUserCollectBank ) ) {
-            m_strDebugDirectory = string_format( /* ( const char * ) */ "%s/BRD_%d/DEBUG/%s", (const char * ) ATADRV, pUniHeader->ps.uiBoardID, g_szCollectBank[(int)pUniHeader->ps.enCollectBank] );
+            m_strDebugDirectory = string_format( "%s/BRD_%d/DEBUG/%s", (const char * ) ATADRV, pUniHeader->ps.uiBoardID, g_szCollectBank[(int)pUniHeader->ps.enCollectBank] );
         }
         else {
-            m_strDebugDirectory = string_format( /* ( const char * ) */ "%s/BRD_0/DEBUG/%s", ( const char * ) ATADRV, g_szCollectBank[0] );
+            m_strDebugDirectory = string_format( "%s/BRD_0/DEBUG/%s", ( const char * ) ATADRV, g_szCollectBank[0] );
         }
 #else
         if( pUniHeader->ps.uiBoardID <= enPRC5 && \
             ( pUniHeader->ps.enCollectBank >= ENUM_COLLECTBANK::enDetectCollectBank ) && ( pUniHeader->ps.enCollectBank <= ENUM_COLLECTBANK::enUserCollectBank ) ) {
-            m_strDebugDirectory = string_format( /* ( const char * ) */ "%s/BRD_%d/DEBUG/%s", ( const char * ) SHARED_DATA_DIRECTORY, pUniHeader->ps.uiBoardID, g_szCollectBank[( int ) pUniHeader->ps.enCollectBank] );
+            m_strDebugDirectory = string_format( "%s/BRD_%d/DEBUG/%s", ( const char * ) SHARED_DATA_DIRECTORY, pUniHeader->ps.uiBoardID, g_szCollectBank[( int ) pUniHeader->ps.enCollectBank] );
         }
         else {
-            m_strDebugDirectory = string_format( /* ( const char * ) */ "%s/BRD_0/DEBUG/%s", ( const char * ) SHARED_DATA_DIRECTORY, g_szCollectBank[0] );
+            m_strDebugDirectory = string_format( "%s/BRD_0/DEBUG/%s", ( const char * ) SHARED_DATA_DIRECTORY, g_szCollectBank[0] );
         }
 
 #endif
@@ -1641,9 +1655,38 @@ void CSigAnal::MakeDebugDirectory( UNION_HEADER *pUniHeader, bool bLog )
  */
 void CSigAnal::DeleteAllFiles()
 {
+    int i;
+
     UNION_HEADER stUnionHeader;
 
-    memset( &stUnionHeader, 0, sizeof( UNION_HEADER ) );
+    InitUnionHeader( & stUnionHeader );
+
+    Log( enNormal, "공유 폴더에 저장된 수집 데이터 모두 파일 지우기..." );
+    for( i=(int) enDetectCollectBank; i <= (int) enScanCollectBank ; ++i ) {
+        m_strAnalDirectory.clear();
+
+        stUnionHeader.ps.enCollectBank = ( ENUM_COLLECTBANK) i;
+        MakeAnalDirectory( & stUnionHeader );
+
+        CCommonUtils::DeleteAllFile( GetAnalDirectory() );
+    }
+    m_strAnalDirectory.clear();
+
+}
+
+/**
+ * @brief     InitUnionHeader
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-28 14:19:59
+ * @warning
+ */
+void CSigAnal::InitUnionHeader( UNION_HEADER *pstUnionHeader, ENUM_COLLECTBANK enCollectBank )
+{
+
+    memset( pstUnionHeader, 0, sizeof( UNION_HEADER ) );
 
 #ifdef _ELINT_
     // m_strAnalDirectory = string_format( "%s\\수집소_%d\\%s", SHARED_DATA_DIRECTORY, pPDWData->el.enCollectorID, pPDWData->el.aucTaskID );
@@ -1655,7 +1698,8 @@ void CSigAnal::DeleteAllFiles()
     // m_strAnalDirectory = string_format( "%s/수집소_%d/%s", SHARED_DATA_DIRECTORY, pPDWData->x.xb.GetCollectorID(), pPDWData->x.xb.aucTaskID );
 
 #elif defined(_POCKETSONATA_) || defined(_712_)
-    stUnionHeader.ps.uiBoardID = (unsigned int) g_enBoardId;
+    pstUnionHeader->ps.uiBoardID = ( unsigned int ) g_enBoardId;
+    pstUnionHeader->ps.enCollectBank = enCollectBank;
     //stUnionHeader.ps.enCollectBank = ;
 
 #elif defined(_SONATA_)
@@ -1664,18 +1708,6 @@ void CSigAnal::DeleteAllFiles()
 #else
 
 #endif
-    int i;
-
-    Log( enNormal, "공유 폴더에 저장된 수집 데이터 모두 파일 지우기..." );
-    for( i=(int) enDetectCollectBank; i <= (int) enScanCollectBank ; ++i ) {
-        m_strAnalDirectory.clear();
-
-        stUnionHeader.ps.enCollectBank = ( ENUM_COLLECTBANK) i;
-        MakeAnalDirectory( & stUnionHeader, false );
-
-        CCommonUtils::DeleteAllFile( GetAnalDirectory() );
-    }
-    m_strAnalDirectory.clear();
 
 }
 

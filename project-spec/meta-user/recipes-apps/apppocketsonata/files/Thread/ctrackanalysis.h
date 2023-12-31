@@ -42,6 +42,11 @@ public:
 
     void InitTrackAnalysis();
 
+    void MakeDirectory( time_t ti, ENUM_COLLECTBANK enCollectBank )
+    {
+        m_pTheKnownSigAnal->MakeDirectory( ti, enCollectBank );
+    }
+
 };
 
 #endif // CTRACKANALYSIS_H

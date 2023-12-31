@@ -734,7 +734,7 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
     }
 
 #ifdef _MSC_VER
-    if ((tsNow.tv_usec - start->tv_usec) < 0) {
+    if ( tsNow.tv_usec < start->tv_usec) {
         result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
         result->tv_usec = tsNow.tv_usec - start->tv_usec + 1000000;
     } else {
@@ -742,7 +742,7 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
         result->tv_usec = tsNow.tv_usec - start->tv_usec;
     }
 #else
-    if ((tsNow.tv_nsec - start->tv_nsec) < 0) {
+    if ( tsNow.tv_nsec < start->tv_nsec ) {
         result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
         result->tv_nsec = tsNow.tv_nsec - start->tv_nsec + 1000000000;
     } else {
@@ -1904,4 +1904,72 @@ void CCommonUtils::WallMakePrint( char delimeter, int iColumns, char *fmt, ... )
 
 }
 
+/**
+ * @brief     GetRawFileSize
+ * @param     char * pPathFileName
+ * @return    unsigned long long int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-30 15:03:52
+ * @warning
+ */
+unsigned long long int CCommonUtils::GetRawFileSize( char *pPathFileName )
+{
+    unsigned long long int ullRet64 = 0;
 
+#if defined(__linux__) || defined(__VXWORKS__)
+    struct stat statbuf;
+
+    if( stat( pPathFileName, & statbuf ) != 0 ) {
+        ullRet64 = ULONGLONG_MAX;
+    }
+    else {
+        ullRet64 = statbuf.st_size;
+    }
+
+#else
+    struct _stati64 statbuf;
+
+    if( _stati64( pPathFileName, & statbuf ) != 0 ) {
+        ullRet64 = 0;
+    }
+    else {
+        ullRet64 = ( unsigned long long int ) statbuf.st_size;
+    }
+#endif
+    return ullRet64;
+
+}
+
+/**
+ * @brief     DiskFreeSpace
+ * @param     char * szDiskName
+ * @return    unsigned long long int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-30 15:22:42
+ * @warning
+ */
+unsigned long long int CCommonUtils::DiskFreeSpace( char *szDiskName )
+{
+    unsigned long long int ullDiskFreeSpace = -1;
+
+#ifdef __VXWORKS__
+    struct statfs SStatFs;
+
+    if( statfs( szDiskName, & SStatFs ) == OK ) {
+    		ullDiskFreeSpace = ( unsigned long long int ) ( ( float ) SStatFs.f_bsize * ( float ) SStatFs.f_bavail );
+    }
+    else {
+        perror( "szDiskName" );
+        printf( "\n [W] [%s] 드라이브가 잘못됐습니다. ", szDiskName );
+    }
+
+#else
+
+#endif
+
+    return ullDiskFreeSpace;
+}

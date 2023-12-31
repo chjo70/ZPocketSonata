@@ -50,8 +50,10 @@ public:
 
     const char *GetThreadName() { return m_szThreadName; }
 
-    //void LogMsg( int nType, const char *pszFunction, const char *pszFile, const int iLine, const char *fmt, ... ) { }
-    //void LogMsg( int nType, const char *fmt, ... ) { }
+    void MakeDirectory( time_t ti, ENUM_COLLECTBANK enCollectBank )
+    {
+        m_pTheScanSigAnal->MakeDirectory( ti, enCollectBank );
+    }
 
 
 };

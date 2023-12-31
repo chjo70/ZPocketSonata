@@ -52,6 +52,8 @@ CTrackAnalysis::CTrackAnalysis( int iThreadPriority, const char *pThreadName, bo
     //m_pTheSysPara = new CSysPara();
     _SAFE_NEW( m_pTheSysPara, CSysPara() )
 
+    m_pMsg = NULL;
+
     InitTrackAnalysis();
 
 }
@@ -219,6 +221,11 @@ void CTrackAnalysis::AnalysisStart()
  */
 void CTrackAnalysis::InitTrackAnalysis()
 {
+
+    if( m_pMsg != NULL ) {
+        m_pTheKnownSigAnal->MakeDirectory( m_pMsg->x.tiNow, enTrackCollectBank );
+    }
+
     CThread::Clear();
 
 }

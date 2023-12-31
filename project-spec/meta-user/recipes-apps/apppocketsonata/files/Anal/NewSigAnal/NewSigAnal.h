@@ -30,7 +30,7 @@
 class CNewSigAnal : public CSigAnal
 {
 private:
-    
+
 
     unsigned int m_uiPDWID;
 
@@ -229,6 +229,11 @@ public:
     bool CheckKnownByAnalysis();
 
     void SaveDebug( const char *pSourcefile, int iLines );
+
+    void MakeDirectory( time_t ti, ENUM_COLLECTBANK enCollectBank )
+    {
+        CSigAnal::MakeDirectory( ti, enCollectBank );
+    }
 
 };
 

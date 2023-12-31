@@ -65,6 +65,8 @@ CDetectAnalysis::CDetectAnalysis( int iThreadPriority, const char *pThreadName, 
     m_PDWData.pstPDW = NULL;
     m_PDWData.pstPDW = new _PDW [sizeof( _PDW ) * MAX_PDW];
 
+    m_pMsg = NULL;
+
     InitDetectAnalysis();
 
 }
@@ -172,6 +174,7 @@ void CDetectAnalysis::_routine()
                     InitDetectAnalysis();
                     break;
 
+                ///////////////////////////////////////////////////////////////////////////////////
                 // 위협 정보 관련 메시지
                 case enTHREAD_DETECTANAL_START :
                     MakePDWData();
@@ -207,12 +210,9 @@ void CDetectAnalysis::_routine()
  */
 void CDetectAnalysis::InitDetectAnalysis()
 {
-    // 테이블 삭제하기
-    //char szTable[10] = "RAWDATA";
-    //Log( enNormal, "[%s] 테이블을 삭제합니다.", szTable );
-    //m_pTheNewSigAnal->DeleteDB_RAW( szTable );
-
-    // m_pTheNewSigAnal->CleanupDatabase();
+    if( m_pMsg != NULL ) {
+        m_pTheNewSigAnal->MakeDirectory( m_pMsg->x.tiNow, enDetectCollectBank );
+    }
 
     CThread::Clear();
 

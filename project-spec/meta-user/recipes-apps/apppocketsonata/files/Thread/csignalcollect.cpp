@@ -363,7 +363,7 @@ void CSignalCollect::CompleteCollecting()
     unsigned int uiReqStatusBit;
 
     //printf( "\nm_pRecvCollectInfo->uiReqStatus[%p]", & m_pRecvCollectInfo->uiReqStatus[1] );
-    printf( "\n uiReqStatusBit={%d/%d/%d}", m_pRecvCollectInfo->uiReqStatus[0], m_pRecvCollectInfo->uiReqStatus[1], m_pRecvCollectInfo->uiReqStatus[2] );
+    printf( "uiReqStatusBit={%d/%d/%d}\n", m_pRecvCollectInfo->uiReqStatus[0], m_pRecvCollectInfo->uiReqStatus[1], m_pRecvCollectInfo->uiReqStatus[2] );
 
     // 탐지 필터 수집 확인
     uiReqStatusBit = m_pRecvCollectInfo->uiReqStatus[enDetectCollectBank - 1];

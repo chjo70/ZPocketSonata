@@ -513,7 +513,6 @@ void CELEmitterMergeMngr::Init()
 	RecoverThreat();
 
     // 관련 테이블 삭제하기
-    // DeleteAllDB();
     CleanupDatabase();
 
 #if CO_TRACK_CHANNEL != 0
@@ -11922,7 +11921,6 @@ bool CELEmitterMergeMngr::InsertToDB_LOB( SRxLOBData *pLOBData, SELLOBDATA_EXT *
 			// do not forget to clean-up
 			stmt.FreeQuery();
 
-
 		}
 		catch( Kompex::SQLiteException &sException) {
             SQLiteException( & sException, (const char *) "LOBDATA" );
@@ -13825,8 +13823,6 @@ bool CELEmitterMergeMngr::CleanupDatabase()
 
     char buffer[200];
 
-    m_uiInsertLOBToDB = 0;
-
     sprintf( buffer, "데이터베이스 정리" );
     CCommonUtils::WallMakePrint( buffer, '~' );
     Log( enNormal, "%s", buffer );
@@ -13837,27 +13833,6 @@ bool CELEmitterMergeMngr::CleanupDatabase()
     }
 
     return bRet;
-}
-
-/**
- * @brief     IsCleanDatabase
- * @return    bool
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-12-18 10:56:03
- * @warning
- */
-bool CELEmitterMergeMngr::IsCleanDatabase()
-{
-    bool bRet=false;
-
-    if( m_uiInsertLOBToDB++ > MAX_CLEAN_DATABASE ) {
-        bRet = true;
-    }
-
-    return bRet;
-
 }
 
 /**

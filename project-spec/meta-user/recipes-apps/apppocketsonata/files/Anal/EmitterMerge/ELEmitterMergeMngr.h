@@ -119,7 +119,6 @@ private:
     bool m_bMerge;
     bool m_bReqDetect;
 
-    UINT m_uiInsertLOBToDB;
     //bool m_bReqTrack;
 
     //static unsigned int m_uiSeqNum;										///< DB 테이블 번호
@@ -211,6 +210,7 @@ private:
 #if CO_TRACK_CHANNEL != 0
     STR_WINDOWCELL_INFO *m_pstrWindowCellInfo[CO_TRACK_CHANNEL];
 #endif
+
 
 public:
     UINT m_nGetSeqNum;												///< 슬레이브 연동기에서 갖고 올 DB 테이블 번호
@@ -545,7 +545,6 @@ public:
 
     // 데이터베이스 관련 함수
     bool CleanupDatabase();
-    bool IsCleanDatabase();
     bool GetRecordFromTable( unsigned int *puiCoRecord, const char *pTable );
     bool DeleteToDB( const char *pTable, unsigned int uiCoRecord=0 );
     bool QueryToDB( const char *pStatement );

@@ -55,6 +55,8 @@ CScanAnalysis::CScanAnalysis( int iThreadPriority, const char *pThreadName, bool
 
     _SAFE_NEW( m_pTheSysPara, CSysPara() )
 
+    m_pMsg = NULL;
+
     InitScanAnalysis();
 }
 
@@ -275,6 +277,10 @@ void CScanAnalysis::InitScanAnalysis()
     m_pScnPDWData = NULL;
 
     m_pstABTData = NULL;
+
+    if( m_pMsg != NULL ) {
+        m_pTheScanSigAnal->MakeDirectory( m_pMsg->x.tiNow, enScanCollectBank );
+    }
 
     CThread::Clear();
 

@@ -442,10 +442,14 @@ void CTaskMngr::AnalysisStart( bool bOut )
 #endif
 
     // 분석 시작
-    g_pTheEmitterMerge->QMsgSnd( enREQ_OP_START );
-    g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_START );
-    g_pTheTrackAnalysis->QMsgSnd( enREQ_OP_START );
-    g_pTheScanAnalysis->QMsgSnd( enREQ_OP_START );
+    time_t ti;
+
+    ti = time( NULL );
+
+    g_pTheEmitterMerge->QMsgSnd( enREQ_OP_START, & ti, sizeof( time_t ), GetThreadName() );
+    g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_START, & ti, sizeof( time_t ), GetThreadName() );
+    g_pTheTrackAnalysis->QMsgSnd( enREQ_OP_START, & ti, sizeof( time_t ), GetThreadName() );
+    g_pTheScanAnalysis->QMsgSnd( enREQ_OP_START, & ti, sizeof( time_t ), GetThreadName() );
     g_pTheLog->QMsgSnd( enREQ_OP_START );
 
 #ifdef __VXWORKS__
@@ -596,6 +600,8 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
     }
     CCommonUtils::WallMakePrint( buffer, '#', MAX_SCREEN_COLUMNS );
     Log( enNormal, "%s", buffer );
+
+    printf( "\n\n" );
 
 }
 

@@ -241,13 +241,13 @@ public:
 #define Log( A, ... )                   g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, GetThreadName(), ##__VA_ARGS__ )
 
 #ifdef _MSC_VER
-#define LOG_LINEFEED                    TRACE0( "\n" )
-#define LOGMSG( A, B )                  TRACE( B )
-#define LOGMSG1( A, B, C )              TRACE( B, C )
-#define LOGMSG2( A, B, C, D )           TRACE( B, C, D )
-#define LOGMSG3( A, B, C, D, E )        TRACE( B, C, D, E )
-#define LOGMSG4( A, B, C, D, E, F )     TRACE( B, C, D, E, F )
-#define LOGMSG5( A, B, C, D, E, F, G )  TRACE( B, C, D, E, F, G )
+// #define LOG_LINEFEED                    TRACE0( "\n" )
+// #define LOGMSG( A, B )                  TRACE( B )
+// #define LOGMSG1( A, B, C )              TRACE( B, C )
+// #define LOGMSG2( A, B, C, D )           TRACE( B, C, D )
+// #define LOGMSG3( A, B, C, D, E )        TRACE( B, C, D, E )
+// #define LOGMSG4( A, B, C, D, E, F )     TRACE( B, C, D, E, F )
+// #define LOGMSG5( A, B, C, D, E, F, G )  TRACE( B, C, D, E, F, G )
 
 
 

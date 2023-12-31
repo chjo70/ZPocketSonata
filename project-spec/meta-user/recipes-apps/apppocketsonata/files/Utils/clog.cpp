@@ -47,7 +47,6 @@ bool CLog::m_bcs=false;
 
 unsigned int CLog::m_uiCoLog = 0;
 
-
 /**
  * @brief     로그 책체를 생성합니다.
  * @return
@@ -59,25 +58,10 @@ unsigned int CLog::m_uiCoLog = 0;
  */
 CLog::CLog()
 {
-#ifdef _MSC_VER
-#else
-    if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
-        perror( "세마포어 실패" );
-    }
-#endif
-
-#ifdef __VXWORKS__
-
-#else
-
-#endif
-
-    m_bLogThread = false;
 
     Init();
 
 }
-
 /**
  * @brief     CLog
  * @param     int iThreadPriority
@@ -98,8 +82,6 @@ CLog::CLog( int iThreadPriority, const char *pClassName, bool bArrayLanData )
 {
     char szDate[LOG_DIR_SIZE];
 
-    m_bLogThread = false;
-
     Init();
 
     // 로그 파일 생성 합니다.
@@ -118,6 +100,14 @@ CLog::CLog( int iThreadPriority, const char *pClassName, bool bArrayLanData )
 
     // 로그 타스크 활성화
     m_bLogThread = false;
+
+#if 0
+    printf( "\n\n\n\n Locking in 10 sec..................." );
+    Lock();
+    Sleep( 10 );
+    UnLock();
+
+#endif
 
 }
 
@@ -147,6 +137,15 @@ CLog::~CLog()
 void CLog::Init()
 {
     m_uiCoLog = 0;
+
+    m_bLogThread = false;
+
+#ifdef _MSC_VER
+#else
+    if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
+        perror( "세마포어 실패" );
+    }
+#endif
 
 #ifdef _LOG_
     m_pMsg = NULL;
@@ -179,6 +178,8 @@ void CLog::Init()
 #ifdef _LOG_
     m_pMsg = GetRecvDataMessage();
 #endif
+
+
 
 }
 
@@ -374,123 +375,154 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 
     size_t nLength; // nLengthTime;
 
-	Lock();
+    if( nType != enNull ) {
+	    Lock();
 
-    szLog[0] = 0;
+        szLog[0] = 0;
+
 #ifdef _MSC_VER
-    if( enNoLineFeed != nType ) {
+        if( enNoLineFeed != nType ) {
 #ifdef _LOG_DATA_ENABLED_
-        sprintf( szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay, tmSystem.wHour, tmSystem.wMinute, tmSystem.wSecond, tmSystem.wMilliseconds );
+            sprintf( szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", tmSystem.wYear, tmSystem.wMonth, tmSystem.wDay, tmSystem.wHour, tmSystem.wMinute, tmSystem.wSecond, tmSystem.wMilliseconds );
 #else
-        sprintf( szLog, "\n" );
-#endif
-    }
+
+#ifdef __VXWORKS__
 
 #else
-    if( enNoLineFeed != nType ) {
+            sprintf( szLog, "\n" );
+#endif
+
+
+#endif
+        }
+
+#else
+        if( enNoLineFeed != nType ) {
 #ifdef _LOG_DATA_ENABLED_
-        sprintf( szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
+            sprintf( szLog, "\n%d-%02d-%02d %02d:%02d:%02d.%03d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, (int)( tv.tv_usec / 1000. ) );
 #else
-        sprintf( szLog, "\n" );
+
+
+#ifdef __VXWORKS__
+#ifdef _LOGMSG_
+
+#else
+            // sprintf( szLog, "\n" );
 #endif
-    }
+#else
+            sprintf( szLog, "\n" );
 #endif
 
-    switch( nType ) {
-    case enNormal :
-        strcat( szLog, "[NORMAL]\t" );
-        break;
-    case enDebug :
-        strcat( szLog, "[DEBUG ]\t" );
-        break;
-    case enEnd :
-        strcat( szLog, "[END   ]\t" );
-        break;
 
-    case enLineFeed :
-        break;
+#endif
+        }
+#endif
 
-    case enError :
-        strcat( szLog, "[ERROR ]\t" );
-        break;
+        switch( nType ) {
+        case enNormal :
+            strcat( szLog, "[NORMAL]\t" );
+            break;
+        case enDebug :
+            strcat( szLog, "[DEBUG ]\t" );
+            break;
+        case enEnd :
+            strcat( szLog, "[END   ]\t" );
+            break;
 
-    default :
-        break;
-    }
-    if( pThreadName != NULL ) {
-        strcat( szLog, "{" );
-        strcat( szLog, pThreadName );
-        strcat( szLog, "}" );
-        strcat( szLog, "\t" );
-    }
+        case enLineFeed :
+            break;
 
-    if(fmt != NULL ) {
+        case enError :
+            strcat( szLog, "[ERROR ]\t" );
+            break;
+
+        default :
+            break;
+        }
+        if( pThreadName != NULL ) {
+            strcat( szLog, "{" );
+            strcat( szLog, pThreadName );
+            strcat( szLog, "}" );
+            strcat( szLog, "\t" );
+        }
+
+        if(fmt != NULL ) {
+            nLength = strlen(szLog);
+            va_start( args, fmt);
+            vsprintf( & szLog[nLength], fmt, args );
+            va_end( args );
+
+            //strcat( & m_szLog[nLength], fmt );
+
+#ifdef _LOG_WHERE
+            sprintf( szFileLine, "\t\tat [%s:%d{%s}]" , pszFile, iLine, pszFunction );
+#endif
+        }
+        else {
+#ifdef _LOG_WHERE
+            sprintf( szFileLine, "[%s:%d{%s}]" , pszFile, iLine, pszFunction );
+#endif
+        }
+
+#ifdef _LOG_WHERE
+        if( szFileLine[0] != 0 ) {
+            strcat( m_szLog, szFileLine );
+        }
+#endif
+
+        //sprintf( szExtra, "[%2d]" , int iThreadID );
+        //strcat( m_szLog, szExtra );
+
         nLength = strlen(szLog);
-        va_start( args, fmt);
-        vsprintf( & szLog[nLength], fmt, args );
-        va_end( args );
-
-        //strcat( & m_szLog[nLength], fmt );
-
-#ifdef _LOG_WHERE
-        sprintf( szFileLine, "\t\tat [%s:%d{%s}]" , pszFile, iLine, pszFunction );
-#endif
-    }
-    else {
-#ifdef _LOG_WHERE
-        sprintf( szFileLine, "[%s:%d{%s}]" , pszFile, iLine, pszFunction );
-#endif
-    }
-
-#ifdef _LOG_WHERE
-    if( szFileLine[0] != 0 ) {
-        strcat( m_szLog, szFileLine );
-    }
-#endif
-
-    //sprintf( szExtra, "[%2d]" , int iThreadID );
-    //strcat( m_szLog, szExtra );
-
-    nLength = strlen(szLog);
-    if( nLength > 4 ) {
+        if( nLength > 4 ) {
 #if defined(__VXWORKS__)
-        if( m_bLogThread == true ) {
-
+            if( m_bLogThread == true ) {
 #ifdef _LOG_
-            //_func_kprintf( szLog );
-            QMsgSnd( enTHREAD_LOG, szLog, strlen(szLog), _spOne, & m_pMsg->x, sizeof( union UNI_MSG_DATA ), NULL );
+                //_func_kprintf( szLog );
+                QMsgSnd( enTHREAD_LOG, szLog, strlen(szLog), _spOne, & m_pMsg->x, sizeof( union UNI_MSG_DATA ), NULL );
 
 #else
 
 #endif
 
-        }
-        else {
-            printf( szLog );
-        }
+            }
+            else {
+#ifdef _LOGMSG_
+                szLog[nLength] = '\n';
+                szLog[nLength+1] = 0;
+                puts( szLog );
+            	logMsg( szLog, 0, 0, 0, 0, 0, 0 );
+#else
+            	puts( szLog );
+
+#endif
+
+            }
 
 #else
-        if( m_bLogThread == true ) {
+            if( m_bLogThread == true ) {
 #ifdef _LOG_
-            QMsgSnd( enTHREAD_LOG, szLog, (unsigned int) strlen(szLog), _spOne, & m_pMsg->x, sizeof( union UNI_MSG_DATA ), NULL );
+                QMsgSnd( enTHREAD_LOG, szLog, (unsigned int) strlen(szLog), _spOne, & m_pMsg->x, sizeof( union UNI_MSG_DATA ), NULL );
 #endif
-        }
-        else {
-            TRACE( "%s", szLog);
-        }
+            }
+            else {
+                TRACE( "%s", szLog);
+            }
 #endif
 
-    }
-    else if( nType == enLineFeed ) {
+        }
+        else if( nType == enLineFeed ) {
 #ifdef _MSC_VER
-        TRACE( "\n" );
+            TRACE( "\n" );
 #endif
-    }
-    else {
-        // printf( "AAA" );
-    }
+        }
+        else {
+            // printf( "AAA" );
+        }
 
-    UnLock();
+        UnLock();
+
+    }
 
 }
 

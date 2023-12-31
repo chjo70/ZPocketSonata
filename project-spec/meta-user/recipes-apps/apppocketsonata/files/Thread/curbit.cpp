@@ -62,7 +62,20 @@ CUrBit::CUrBit( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThre
 
     m_uiCoURBITTimer = 0;
 
+    m_strSQLiteFileName = string_format( "%s/%s", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILEEXTNAME );
+
+    m_strSQLiteFolder = string_format( "%s", SD_CARD );
+    printf( "\n m_strSQLiteFolder=[%s]", m_strSQLiteFolder.c_str() );
+
+    // DMA 설정
+    InitHW();
+
+    //GetBoardID();
+    InitIBit();
+
     Init();
+
+    m_enLogType = enNormal;
 
 }
 
@@ -117,8 +130,7 @@ void CUrBit::_routine()
     m_pLanData = GeLanData();
 
     while( m_bThreadLoop ) {
-        if( QMsgRcv( enTIMER, OS_SEC( URBIT_TIMER ) ) == -1 ) {
-            // if( QMsgRcv() == -1 ) {
+        if( QMsgRcv( enTIMER, OS_SEC( URBIT_TIMER )) == -1 ) {
             perror( "QMsgRcv(CUrBit)" );
         }
 
@@ -131,6 +143,10 @@ void CUrBit::_routine()
         }
 
         switch( m_pMsg->uiOpCode ) {
+            case enREQ_OP_START :
+                Init();
+                break;
+
             ///////////////////////////////////////////////////////////////////////////////////
             // 운용 제어 관련 메시지 처리
             case enCGI_REQ_IBIT:
@@ -144,7 +160,6 @@ void CUrBit::_routine()
                 break;
 
             case enTHREAD_TIMER:
-                Log( enNormal, "주기적으로 자체점검을 수행합니다. !!" );
                 RunTimer();
                 break;
 
@@ -181,13 +196,27 @@ void CUrBit::_routine()
  */
 void CUrBit::RunTimer()
 {
+    if( g_pTheTaskMngr != NULL && g_pTheTaskMngr->GetMode() == enOP_Mode ) {
+        m_enLogType = enNormal;
+    }
+    else {
+        m_enLogType = enNull;
+    }
+
+    Log( m_enLogType, "주기적으로 자체점검을 수행합니다. !!" );
+
+#ifdef __VXWORKS__
+    logMsg( "주기적으로 자체점검을 수행합니다. !!\n", 0, 0, 0, 0, 0, 0 );
+
+#endif
+
     ++ m_uiCoURBITTimer;
     if( m_uiCoURBITTimer >= SNTP_TIMER / URBIT_TIMER ) {
         m_uiCoURBITTimer = 0;
 
 #ifdef __VXWORKS__
-        WhereIs;
-        m_stBIT.bSNMP = g_theManSbc->SetTimeBySNMP();
+            WhereIs;
+            m_stBIT.bSNMP = g_theManSbc->SetTimeBySNMP();
 
 #endif
 
@@ -199,8 +228,43 @@ void CUrBit::RunTimer()
     // 타스크(프로세스) 상태를 체크 합니다.
     CheckTasks();
 
-    //
+    // 데이터베이스를 관리 합니다.
+    CheckDatabase();
 
+    // 로그 형식 복귀
+    m_enLogType = enNormal;
+
+}
+
+/**
+ * @brief     CheckDatabase
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-28 10:34:06
+ * @warning
+ */
+void CUrBit::CheckDatabase()
+{
+    unsigned long long int ullFileSize, ullFreeSpace;
+
+    ullFileSize = CCommonUtils::GetRawFileSize( (char *) m_strSQLiteFileName.c_str() );
+    ullFreeSpace = CCommonUtils::DiskFreeSpace( ( char * ) m_strSQLiteFolder.c_str() );
+
+    printf( "ullFreeSpace=[%llu], ullFileSize[%llu]\n", ullFreeSpace, ullFileSize );
+
+    if( ullFreeSpace < MINIMUM_FREESPACE_OF_RAMDRIVE ) {
+        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
+        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
+        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
+        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
+        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
+        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
+        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_REQ_CLEANUP );
+
+    }
 
 }
 
@@ -243,7 +307,7 @@ void CUrBit::CheckTasks()
 
 #ifdef __VXWORKS__
     if( m_stBIT.bTask == true ) {
-        Log( enDebug, "[%d] 개의 타스크가 정상 운용 중입니다." , g_vecThread.size() );
+        Log( m_enLogType, "[%d] 개의 타스크가 정상 운용 중입니다." , g_vecThread.size() );
     }
     else {
 
@@ -278,12 +342,12 @@ void CUrBit::CheckSBCTemp()
        // g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
         SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
 
-        Log( enNormal, "%s", buffer );
+        Log( enError, "%s", buffer );
 
         m_stBIT.bTemp = false;
     }
     else {
-        Log( enNormal, "보드 온도 [%d]도, CPU 온도 [%d]도 로 정상 운용 입니다.", uiBoardTemp, uiCPUTemp );
+        Log( m_enLogType, "보드 온도 [%d]도, CPU 온도 [%d]도 로 정상 운용 입니다.", uiBoardTemp, uiCPUTemp );
     }
 
 #else
@@ -310,12 +374,6 @@ void CUrBit::Init()
     //
     m_theGPIO.OpenChannel( 309 );
 #endif
-
-    // DMA 설정
-    InitHW();
-
-    //GetBoardID();
-    InitIBit();
 
 }
 

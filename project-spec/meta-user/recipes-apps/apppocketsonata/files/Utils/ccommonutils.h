@@ -141,8 +141,6 @@ std::string string_format( const char *pFormat, Args ... args )
 }
 
 
-
-
 class CCommonUtils
 {
 private:
@@ -209,6 +207,9 @@ public:
     static int Random( int iMin, int iMax );
 
     static float NormalDistribution( float fMean, float fDevi );
+
+    static unsigned long long int GetRawFileSize( char *pPathFileName );
+    static unsigned long long int DiskFreeSpace( char *szDiskName );
 
     // 타입 변환시 사용하는 함수 모음
     //static unsigned int INT2UINT( int iValue );

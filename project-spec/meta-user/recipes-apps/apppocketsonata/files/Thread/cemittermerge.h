@@ -108,7 +108,8 @@ private:
     void SendLanByTime( unsigned int uiOpcode, STR_TRKANAL_INFO *pRecvTrackAnalInfo, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData );
     void SwapAETData( SAETData *pstAET );
 
-    void ManageDatabase();
+    void CleanupDatabase();
+    void BackupDatabase();
 
     void MakeLOBData( SRxLOBData *pLOBData );
 
