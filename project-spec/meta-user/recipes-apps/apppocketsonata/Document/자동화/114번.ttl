@@ -1,0 +1,47 @@
+; Sample macro for Tera Term
+;  Telnet login
+
+; open Tera Term
+;   command line = 'TERATERM myhost.mydomain' (telnet)
+; 다음의 connect 다음에 원하는 서버의 IP주소를 할당하자.
+
+
+
+
+hostname = '192.168.0.114'
+username = 'root'
+password = 'root'
+command = 'ssh root@node1'
+
+msg = hostname
+
+
+strconcat msg ':23 /telnet /auth=password /user='
+strconcat msg username
+strconcat msg ' /passwd='
+strconcat msg password
+
+; messagebox 'complete' 'Title'
+
+connect msg
+
+settitle '연결 EW신호처리판 #5'
+
+; set username
+UsernamePrompt = 'login:'
+PasswordPrompt = 'Password:'
+
+
+;wait   UsernamePrompt
+;sendln 'youraccount'
+;wait   PasswordPrompt
+; 다음에 암호를 등록(별표로 표시했음)
+
+
+sendln 'ioRedirect'
+
+wait '전역'
+
+sendln 'he'
+
+end

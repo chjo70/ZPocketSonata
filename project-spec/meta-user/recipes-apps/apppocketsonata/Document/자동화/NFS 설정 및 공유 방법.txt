@@ -1,0 +1,61 @@
+
+
+
+
+
+ifAddrSet( "memac0", "192.168.0.113" )
+
+
+
+#####################################################################################
+## SBC 상에서 SNTP 확인하는 방법
+sntpcTimeGet( "192.168.0.100", 3000, 0x100000 )
+
+
+
+
+
+#####################################################################################
+## windows 에서 NFS 설치 및 환경 설정 방법
+1. Administrator 로 NFS Start/Portmap 서비스를 실행 시킨다.
+2. 단축 아이콘에서 속성을 Admin 실행 선택을 설정한다.
+2. Firewall.bat 를 Admin 계정으로 실행 시킨다.
+3. Firewall 을 해지 한다....
+
+
+
+
+
+#####################################################################################
+## SBC 상에서 NFS 접근 확인하는 방법
+status = hostAdd( ( char * ) "NFS_HOST2", pHostIPAddress );
+nfsMount( "NFS_HOST1", "192.168.0.100", "/d/rawdata" );
+
+
+
+#####################################################################################
+## 네크워크 연결 
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>mount
+
+로컬    원격                                 속성
+-------------------------------------------------------------------------------
+
+
+
+
+C:\Windows\system32>mount -o anon 192.168.0.100:/d/rawdata z:
+z: 현재 192.168.0.100:/d/rawdata에 성공적으로 연결되어 있습니다.
+
+명령을 완료했습니다.
+
+C:\Windows\system32>mount -o anon 192.168.0.100:/d/rawdata z:
+
+* 접근이 되는데 쓰기 권한이 안 되는 경우는, GID/PID 를 0 으로 설정해야 함.
+Registry 에서 
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ClientForNFS\CurrentVersion\Default 에 AnonymousGID 를 DWORD 값으로 0
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ClientForNFS\CurrentVersion\Default 에 AnonymousUID 를 DWORD 값으로 0
+으로 설정해서 재부팅 후 연결 과정을 하면 됨
