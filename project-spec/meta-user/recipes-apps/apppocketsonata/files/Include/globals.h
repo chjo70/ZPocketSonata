@@ -229,7 +229,7 @@ public:
 #define ElseLog( A, ... )               if( ! IsLogAnalType(A) ) { TRACE( ##__VA_ARGS__ ); }
 #else
 #define Log( A, ... )                   printf( ##__VA_ARGS__ )
-#define ElseLog( A, ... )               if( ! IsLogAnalType(A) ) printf( ##__VA_ARGS__ )
+#define ElseLog( A, ... )               if( ! IsLogAnalType(A) ) { printf( ##__VA_ARGS__ ); }
 
 #endif
 
