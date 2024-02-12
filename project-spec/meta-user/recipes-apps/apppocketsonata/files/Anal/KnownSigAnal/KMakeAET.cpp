@@ -62,6 +62,7 @@ CKMakeAET::CKMakeAET( void *pParent, unsigned int uiCoMaxPdw, const char *pThrea
 //##ModelId=42E98F300032
 CKMakeAET::~CKMakeAET()
 {
+    _SAFE_DELETE( m_pTheRadarSimilarity )
 
 }
 
@@ -111,7 +112,7 @@ void CKMakeAET::MakeAET( bool bDBInsert )
     //m_CoMakeAet = m_CoLOB;
 
     // 분석 완료한 개수를 재 저장합니다.
-    m_iAnaledCoLOB = m_iCoLOB;
+    m_iCoAnalLOB = m_iCoLOB;
 
 }
 
@@ -123,41 +124,70 @@ void CKMakeAET::MakeAET( bool bDBInsert )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 18:47:54
 //
-//##ModelId=42E98F300030
 bool CKMakeAET::KnownMakeAET( bool bDBInsert )
 {
+    int i;
 	STR_EMITTER *pEmitter;
 
     CMakeAET::MakeAET( bDBInsert );
 
-	/*! \bug  m_IdxUpdAet 초기화
-	    \date 2006-06-26 13:43:57, 조철희
-	*/
-    m_UpdateSuccessAet = -1;
-
+    // 1. 추적 일치율 계산하기
     CalcAllKnownSucessRatio();
 
+    // 2. 일치율에 따라 정렬하기
     SortAllKnownSucessRatio();
 
+    // 3. 추적 성공 결정 하기
 	// 추적 성공인지를 체크한다.
 	// 추출된 펄스열로 에미터가 1개 만들어 질떄 추적 성공으로 한다.
-    m_UpdateSuccessAet = CheckUpdateLOB();
+    m_UpdateSuccessAet = DecisionToUpdateLOB();
     if( IsTrackSuccess() == true ) {
+        unsigned int uiNumOfAnalyzedPDW = 0, uiNumOfCollectedPDW = 0;
+
 		/*! \bug  에미터로 생성된 펄스열들만 마킹을 해서 새로운 에미터 분석시에 분석하지 못하게 한다.
 			\date 2006-06-29 13:53:26, 조철희
 		*/
 		// 추출된 펄스 Marking
-        pEmitter = GetEmitterFromKnownIndex( (UINT) GetUpdateIndexAet() );
-        MarkToEmitterPdwIndex( pEmitter, enEXTRACT_MARK );
+        for( i=0 ; i < m_iCoLOB ; ++i ) {
+            if( m_KwnLOB[i].stKnownInfo.iKnownSuccessPercent >= TRACK_SUCCESS_RATIO ) {
+                pEmitter = GetEmitterFromKnownIndex( (UINT) i );
+
+                uiNumOfAnalyzedPDW += m_KwnLOB[i].pstLOBData->uiNumOfAnalyzedPDW;
+                uiNumOfCollectedPDW += m_KwnLOB[i].pstLOBData->uiNumOfCollectedPDW;
+
+                MarkToEmitterPdwIndex( pEmitter, enEXTRACT_MARK );
+            }
+            else {
+                break;
+            }
+        }
+
+        //? #추후 : 90% 이상의 추적 성공한 에미터들에 대해서 하나의 에미터로 생성해야 함.
+        // 1차적으로 개수만 추적 성공한 에미터를 업데이트 함.
+        m_KwnLOB[m_UpdateSuccessAet].pstLOBData->uiNumOfAnalyzedPDW = uiNumOfAnalyzedPDW;
+        m_KwnLOB[m_UpdateSuccessAet].pstLOBData->uiNumOfCollectedPDW = uiNumOfCollectedPDW;
+
+        memcpy( & m_stKnownSuccessLOBData, m_KwnLOB[m_UpdateSuccessAet].pstLOBData, sizeof(SRxLOBData) );
+
+        MakeKnownSuccessLOBData( & m_stKnownSuccessLOBData );
 	}
     else {
+
+#ifdef _DEBUG
+        //? #디버깅 : 추적 실패 확인용 입니다.
+        TRACE( "*****추적 실패\n" );
+
+        CalcAllKnownSucessRatio();
+
+        SortAllKnownSucessRatio();
+#endif
 
     }
 
     CMakeAET::PrintAllAET();
 
     // 분석 완료한 개수를 재 저장합니다.
-    m_iAnaledCoLOB = m_iCoLOB;
+    m_iCoAnalLOB = m_iCoLOB;
 
     return IsTrackSuccess();
 
@@ -189,34 +219,38 @@ void CKMakeAET::MarkToEmitterPdwIndex( STR_EMITTER *pEmitter, PULSE_MARK enMarkT
  * @date      2022-04-27, 11:42
  * @warning
  */
-int CKMakeAET::CheckUpdateLOB()
+int CKMakeAET::DecisionToUpdateLOB()
 {
-    int i, iIdxLOB=-1;
+    int i, iIdxLOB = -1, uiSumOfPDW=0;
 
     int iNumOfPDW, iMaxNumOfPDW=-1;
     int iKnownSuccessPercent;
 
-    STR_EMITTER *pEmitter;
+    SRxLOBData *pLOBData;
 
     // 펄스열이 가장 많은 위협을 추적 성공으로 결정 합니다.
     for( i = 0; i < m_iCoLOB; ++i ) {
         iKnownSuccessPercent = GetKnownSuccessPercent( (unsigned int) i);
 
-        pEmitter = GetEmitterFromKnownIndex( ( UINT ) i );
-        iNumOfPDW = ( int ) pEmitter->stPDW.uiCount;
+        pLOBData = GetLOBData( ( UINT ) i );
+        if( pLOBData != NULL ) {
+            iNumOfPDW = ( int ) pLOBData->uiNumOfAnalyzedPDW;
+            uiSumOfPDW += iNumOfPDW;
 
-        // 펄스열이 가장 많은 위협을 추적 성공으로 결정 합니다.
-        if( ( iKnownSuccessPercent >= 100 ) && ( iMaxNumOfPDW <= iNumOfPDW ) ) {
-            iMaxNumOfPDW = iNumOfPDW;
+            // 펄스열이 가장 많은 위협을 추적 성공으로 결정 합니다.
+            if( ( iKnownSuccessPercent >= TRACK_SUCCESS_RATIO ) && ( iMaxNumOfPDW <= iNumOfPDW ) ) {
+                iMaxNumOfPDW = iNumOfPDW;
 
-            iIdxLOB = i;
+                iIdxLOB = i;
 
+            }
+        }
+        else {
         }
     }
 
     return iIdxLOB;
 }
-
 
 /**
  * @brief     CalcMOPSuccessRatio
@@ -235,6 +269,31 @@ float CKMakeAET::CalcSigTypeSuccessRatio( SRxLOBData *pLOBData )
     float fRet = ( float ) 0.;
 
     bRet = m_pTheRadarSimilarity->CompSigTypeMargin( m_pTrkABT, pLOBData );
+    if( bRet == true ) {
+        fRet = ( float ) 100.;
+    }
+
+    return fRet;
+}
+
+
+/**
+ * @brief     CalcMOPSuccessRatio
+ * @param     SRxLOBData * pLOBData
+ * @return    float
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-10-23 20:06:59
+ * @warning
+ */
+float CKMakeAET::CalcMOPTypeSuccessRatio( SRxLOBData *pLOBData )
+{
+    bool bRet;
+
+    float fRet = ( float ) 0.;
+
+    bRet = m_pTheRadarSimilarity->CompMOPTypeMargin( m_pTrkABT, pLOBData );
     if( bRet == true ) {
         fRet = ( float ) 100.;
     }
@@ -329,12 +388,13 @@ float CKMakeAET::CalcPRISuccessRatio(SRxLOBData *pLOBData)
                     break;
 
                 case ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER:
-                    if( pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER || pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN ) {
+                    if( /* pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER || */ pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER || pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN ) {
                         fRet = ( float ) 100.;
                     }
                     break;
 
                 case ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH:
+                    fRet = ( float ) 100.;
                     break;
 
                 case ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER:
@@ -393,10 +453,14 @@ void CKMakeAET::CalcAllKnownSucessRatio()
 
     for (i = 0; i < m_iCoLOB; ++i) {
         pLOBData = GetLOBData( ( unsigned int ) i);
+        //pLOBData->vFreqPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SAW_TRI;
 
         if( pLOBData != NULL ) {
             // 신호 형태 성공률 계산
             fRatio = CalcSigTypeSuccessRatio( pLOBData );
+
+            // MOP 형태 성공률 계산
+            fRatio += CalcMOPTypeSuccessRatio( pLOBData );
 
             // 주파수 추적 성공율 계산
             fRatio += CalcFreqSuccessRatio( pLOBData );
@@ -471,6 +535,7 @@ void CKMakeAET::SortAllKnownSucessRatio()
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-25 14:03:44
 //
+
 bool CKMakeAET::CompPRI( SRxLOBData *pNewPri, SRxABTData *pTrkPri )
 {
 	int i;
@@ -804,10 +869,10 @@ int CKMakeAET::VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount)
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
-void CKMakeAET::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
-{
-	m_pKnownSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
-}
+// void CKMakeAET::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+// {
+// 	m_pKnownSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
+// }
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -1073,3 +1138,25 @@ UINT CKMakeAET::GetOpInitID()
 {
 	return m_pKnownSigAnal->GetOpInitID();
 }
+
+#ifdef _DEBUG
+bool CKMakeAET::IsValid()
+{
+    unsigned int i;
+    bool bRet = true;
+
+    if( GetCoLOB() == 0 ) {
+        bRet = false;
+    }
+
+    for( i=0; i < (unsigned int) GetCoLOB() ; ++i ) {
+        //! #추후 : 지터 인데 PRI 지터율이 0% 인 경우
+        if( m_KwnLOB[i].pstLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER && is_zero<float>( m_KwnLOB[i].pstLOBData->fPRIJitterRatio ) == true ) {
+            bRet = false;
+        }
+    }
+
+    return bRet;
+}
+
+#endif

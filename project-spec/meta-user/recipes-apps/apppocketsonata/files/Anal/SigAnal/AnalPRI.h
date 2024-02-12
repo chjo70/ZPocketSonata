@@ -19,7 +19,7 @@
 #include "Hopping.h"
 
 // 병합 방법 정의
-enum enEMITTER_MERGE_OPTION {
+enum ENUM_EMITTER_MERGE_OPTION {
     enMERGE_LEFT=0,		// pEmitter1 과 pEmitter2 에서 pEmitter1 으로 합한다.
 	enMERGE_RIGHT,		// pEmitter1 과 pEmitter2 에서 pEmitter2 으로 합한다.
     enNO_MERGE
@@ -73,8 +73,8 @@ private:
     _TOA *m_pSampleToa;
     int *m_pSampleData;
     int *m_pNormData;
-    float m_skewness;
-    float m_kurtosis;
+    float m_fSkewness;
+    float m_fKurtosis;
 
     unsigned int m_uiCoData;
     _TOA *m_ptDataX;
@@ -127,13 +127,13 @@ private:
     bool CheckStaggerLevel( STR_EMITTER *pStaggerEmitter, int iMatch, int iLevelCount );
 
 	// 에미터 병합 및 비교 관련 함수 모음
-	enEMITTER_MERGE_OPTION WhichMerge(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2);
-	bool CheckMergeEmitter(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, enEMITTER_MERGE_OPTION *pMrgOption);
-    void CheckStablePRIMergeEmitter( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, enEMITTER_MERGE_OPTION *pMrgOption, bool *pBret );
-    void CheckStaggerPRIMergeEmitter( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, enEMITTER_MERGE_OPTION *pMrgOption, bool *pBret );
-    void CheckJitterPRIMergeEmitter( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, enEMITTER_MERGE_OPTION *pMrgOption, bool *pBret );
+	ENUM_EMITTER_MERGE_OPTION WhichMerge(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2);
+	bool CheckMergeEmitter(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, ENUM_EMITTER_MERGE_OPTION *pMrgOption);
+    void CheckStablePRIMergeEmitter( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, ENUM_EMITTER_MERGE_OPTION *pMrgOption, bool *pBret );
+    void CheckStaggerPRIMergeEmitter( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, ENUM_EMITTER_MERGE_OPTION *pMrgOption, bool *pBret );
+    void CheckJitterPRIMergeEmitter( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, ENUM_EMITTER_MERGE_OPTION *pMrgOption, bool *pBret );
 
-	void MergeEmitter(STR_EMITTER *pDstEmitter, STR_EMITTER *pSrcEmitter, enEMITTER_MERGE_OPTION enMergeOption);
+	void MergeEmitter(STR_EMITTER *pDstEmitter, STR_EMITTER *pSrcEmitter, ENUM_EMITTER_MERGE_OPTION enMergeOption);
 
     void CheckStablePRIHarmonic( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, UINT *puiRet );
     void CheckStaggerPRIHarmonic( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, UINT *puiRet );
@@ -149,26 +149,24 @@ private:
 
     unsigned int CountOfEmitter( unsigned int uiStartEmitter, enANL_FREQ_TYPE enFREQ_TYPE, enANL_PRI_TYPE enPRI_TYPE );
 
-    bool CheckIncludePulseTrain( enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
+    bool CheckIncludePulseTrain( ENUM_EMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
     // bool CheckDwellPulseTrain( enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
-    bool CheckMergeOfPulseTrain( enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
-    bool CheckMergeOfStablePulseTrain( enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
-    bool CheckMergeOfStaggerPulseTrain( enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
-    bool CheckMergeOfJitterPulseTrain( enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
-    bool CheckMergeOfDwellPulseTrain( enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
-    bool CheckMergeOfPatternPulseTrain( enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
+    bool CheckMergeOfPulseTrain( ENUM_EMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
+    bool CheckMergeOfStablePulseTrain( ENUM_EMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
+    bool CheckMergeOfStaggerPulseTrain( ENUM_EMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
+    bool CheckMergeOfJitterPulseTrain( ENUM_EMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
+    bool CheckMergeOfDwellPulseTrain( ENUM_EMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
+    bool CheckMergeOfPatternPulseTrain( ENUM_EMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION, STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
 
 public:
-    CAnalPRI( void *pParent, unsigned int uiCoMaxPdw = NEW_COLLECT_PDW, const char *pThreadName=NULL );
+    CAnalPRI( void *pParent, ENUM_ANAL_TYPE enAnalType, unsigned int uiCoMaxPdw = NEW_COLLECT_PDW, const char *pThreadName=NULL );
     virtual ~CAnalPRI();
 
 
-    //void CalHopLevel( STR_EMITTER *pEmitter );
-    //bool IsHopping( STR_EMITTER *pEmitter );
     float IMeanInArray( int *series, UINT co );
 
-    void DNSAnalysis();
-    bool CheckDNSPossibility(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2);
+    //void DNSAnalysis();
+    //bool CheckDNSPossibility(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2);
     void MergePdwIndexInEmitter(STR_EMITTER *pEmitter);
     int CalcDiffAOA(int iAOA1, int iAOA2);
     bool CheckOverlapSeg(STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2);
@@ -199,6 +197,7 @@ public:
     bool CompAOA( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
 
     void CalcEmitterPW( STR_EMITTER *pEmitter );
+    void CalcEmitterPA( STR_EMITTER *pEmitter );
     void CalcEmitterMOP( STR_EMITTER *pEmitter );
 
     void PrintAllEmitter( unsigned int uiStartEmitter=0, const char *pszString=NULL, enANL_FREQ_TYPE enFREQ_TYPE= _UNKNOWN_FREQ, enANL_PRI_TYPE enPRITYpe= _UNKNOWN_PRI );
@@ -216,14 +215,14 @@ public:
     void MakeStaggerLevel( _TOA *pStaggerLevel, int CoStagger );
     bool CheckFreqHopping( STR_EMITTER *pEmitter );
     bool VerifyStaggerLevel( STR_EMITTER *pStaggerEmitter, STR_EMITTER *pEmitter=NULL );
-    void KurtosisSkewness();
+    void KurtosisSkewness( STR_PULSE_TRAIN_SEG *pSeg=NULL );
     bool CompareAllStaggerLevel( STR_EMITTER *pEmitter, STR_PULSE_TRAIN_SEG *pSeg );
     //int GetMaxPdw();
 
     bool DwellAnalysis( STR_EMITTER *pEmitter );
     bool ExtractDwellPT();
     bool FindBin( UINT bin );
-    bool FindDtoa( _TOA priMean );
+    bool FindDTOA( _TOA priMean );
     bool FindDwellLevel();
     bool FindDwellLevel( STR_EMITTER *pEmitter );
     void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange=NULL );
@@ -265,7 +264,7 @@ public:
     bool CompFreq( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2 );
     bool BinSearchInPdwIndex( int from, int to, int search_value );
 
-    void SelectMainEmitter( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, enEMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION );
+    void SelectMainEmitter( STR_EMITTER *pEmitter1, STR_EMITTER *pEmitter2, ENUM_EMITTER_MERGE_OPTION *penEMITTER_MERGE_OPTION );
     int ExtractStagger( STR_EMITTER *pEmitter, UINT framePri );
     bool FindRefFramePri( UINT dtoa );
     //_TOA CheckFramePRI( STR_EMITTER *pEmitter );
@@ -278,7 +277,7 @@ public:
     bool SortSegOfFramePRI( STR_EMITTER *pEmitter );
     bool CheckStaggerPRI( STR_EMITTER *pEmitter );
     bool FindFramePRI( STR_EMITTER *pEmitter );
-    bool AdjustStaggerLevel( STR_EMITTER *pEmitter, unsigned int uiStep );
+    bool AdjustStaggerLevel( const STR_EMITTER *pEmitter, unsigned int uiStep );
 
     void SelectMainSeg(STR_EMITTER *pEmitter);
     bool DecisionEmitter( STR_EMITTER *pEmitter );
@@ -323,19 +322,19 @@ public:
     // 가상 함수 선언...
     virtual int FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex ) = 0;
     virtual bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) = 0;
-    virtual void DeleteAllSeg( STR_EMITTER *pEmitter ) = 0;
+    //virtual void DeleteAllSeg( STR_EMITTER *pEmitter ) = 0;
     virtual void ExtractRefStable() = 0;
     virtual unsigned int GetCoSeg() = 0;
     virtual bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) = 0;
     //virtual UINT ExtractFramePri( STR_PDWINDEX *pSrcPdwIndex, _TOA framePri ) = 0;
     virtual STR_PULSE_TRAIN_SEG *GetPulseSeg() = 0;
-    virtual void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof ) = 0;
-    virtual void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) = 0;
+    //virtual void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof ) = 0;
+    //virtual void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) = 0;
     virtual unsigned int ExtractStagger( _TOA framePri, STR_EMITTER *pEmitter ) = 0;
     virtual UINT MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) = 0;
     virtual _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) = 0;
     virtual int GetBand() = 0;
-    virtual void SaveEmitterPDWFile( STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile ) = 0;
+    //virtual void SaveEmitterPDWFile( STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile ) = 0;
     virtual CMakeAET *GetMakeAET() = 0;
     virtual bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge ) = 0;
 

@@ -44,7 +44,13 @@ enum ENUM_UnitID {
                                 A = NULL;
 #define _SAFE_DELETE(A)         if( A != NULL ) { delete A; A = NULL; }
 
-
+#ifdef __VECTORCAST__
+#define _SAFE_NEW(A, B)         try { \
+									A = new B;    \
+                                } \
+                                catch( bad_alloc ex ) { \
+                                }
+#else
 #define _SAFE_NEW(A, B)         try { \
 									A = new B;    \
                                 } \
@@ -52,7 +58,17 @@ enum ENUM_UnitID {
                                     TRACE( "new memory[##A]:%s" , ex.what() ); \
                                 }
 
+#endif
 
+#ifdef __VECTORCAST__
+#define _SAFE_MALLOC(A, B, C )  if( C != 0 ) { \
+									if( A == NULL ) { \
+										A = ( B * ) malloc( (size_t) C ); \
+									} \
+									else { \
+									} \
+								}
+#else
 #define _SAFE_MALLOC(A, B, C )  if( C != 0 ) { \
 									if( A == NULL ) { \
 										A = ( B * ) malloc( (size_t) C ); \
@@ -61,6 +77,8 @@ enum ENUM_UnitID {
 										TRACE( "Already malloc memory[%s]" , #A ); \
 									} \
 								}
+#endif
+
 
 #define _FORCED_MALLOC(A, B, C )	if( C != 0 ) { \
 										A = ( B * ) malloc( (size_t) C ); \

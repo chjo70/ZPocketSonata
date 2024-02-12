@@ -73,16 +73,27 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\chartingtocpict.ico"
+
 IDR_DeltaGraphTYPE      ICON                    "res\\DeltaGraphDoc.ico"
+
 IDI_FILE_VIEW           ICON                    "res\\file_view.ico"
+
 IDI_FILE_VIEW_HC        ICON                    "res\\file_view_hc.ico"
+
 IDI_CLASS_VIEW          ICON                    "res\\class_view.ico"
+
 IDI_CLASS_VIEW_HC       ICON                    "res\\class_view_hc.ico"
+
 IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
+
 IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
+
 IDI_PROPERTIES_WND      ICON                    "res\\properties_wnd.ico"
+
 IDI_PROPERTIES_WND_HC   ICON                    "res\\properties_wnd_hc.ico"
+
 IDI_INFO_ICON           ICON                    "res\\info.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -90,19 +101,33 @@ IDI_INFO_ICON           ICON                    "res\\info.ico"
 //
 
 IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+
 IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
+
 IDR_SORT                BITMAP                  "res\\sort.bmp"
+
 IDB_SORT_24             BITMAP                  "res\\sort_hc.bmp"
+
 IDB_FILE_VIEW           BITMAP                  "res\\fileview.bmp"
+
 IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
+
 IDB_CLASS_VIEW          BITMAP                  "res\\classview.bmp"
+
 IDB_CLASS_VIEW_24       BITMAP                  "res\\classview_hc.bmp"
+
 IDR_EXPLORER            BITMAP                  "res\\explorer.bmp"
+
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
+
 IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
+
 IDB_MENU_IMAGES_24      BITMAP                  "res\\menuimages_hc.bmp"
+
 IDR_PROPERTIES          BITMAP                  "res\\properties.bmp"
+
 IDB_PROPERTIES_HC       BITMAP                  "res\\properties_hc.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -367,9 +392,9 @@ FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
     LTEXT           "DeltaGraph, 전자전 연구소, 버전 1.5",IDC_STATIC,42,14,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2020",IDC_STATIC,42,46,114,8
+    LTEXT           "Copyright (C) 2020~2024",IDC_STATIC,42,46,114,8
     DEFPUSHBUTTON   "확인",IDOK,179,59,50,14,WS_GROUP
-    LTEXT           "1.1",IDC_STATIC_REV,42,26,168,8,SS_NOPREFIX
+    LTEXT           "1.1",IDC_STATIC_REV,42,26,171,8,SS_NOPREFIX
     LTEXT           "1.1",IDC_STATIC_REV_DATE,42,37,155,8,SS_NOPREFIX
 END
 
@@ -478,6 +503,17 @@ BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_ABOUTBOX AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 
 /////////////////////////////////////////////////////////////////////////////

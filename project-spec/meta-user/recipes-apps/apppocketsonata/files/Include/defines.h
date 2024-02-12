@@ -42,8 +42,12 @@ typedef unsigned char UCHAR;
 #define NETWORK_CLASSC  (const char *) ( "192.168.0" )
 
 
+
+#define _DEFAULT_BOARDID                    6
+
+
 #ifdef _SIM_SERVER_
-#define _DEFAULT_RECENT_SERVER               (const char *) ( "127.0.0.1" )
+#define _DEFAULT_RECENT_SERVER              (const char *) ( "127.0.0.1" )
 #define _DEFAULT_CCU_SERVER_IP_ADDRESS      (const char *) ( "127.0.0.1" )
 #define _DEFAULT_DEBUG_SERVER_IP_ADDRESS    (const char *) ( "127.0.0.1" )
 #define DEV_SERVER                          (const char *) ( "127.0.0.1" )
@@ -62,7 +66,8 @@ typedef unsigned char UCHAR;
 #define _DEFAULT_SBC_FROM_IP                (110)
 #define _DEFAULT_SBC_TO_IP                  (114)
 
-#define _DEFAULT_TFFS_BOOT                  (1)
+#define _DEFAULT_TFFS_BOOT                  (0)
+#define _DEFAULT_DEVELOP_BOOT               (1)
 
 #define _DEFAULT_PRESENT_TIME               (const char *) ( "2023_1_1_0_0_0" )
 

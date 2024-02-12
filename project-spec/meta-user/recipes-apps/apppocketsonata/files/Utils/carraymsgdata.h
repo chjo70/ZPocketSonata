@@ -24,8 +24,11 @@
 
 #include "clock.h"
 
+#include "../Include/system.h"
 
-#define SIZE_OF_MSGDATA_ARRAY           (5)            // 128 -> 64
+
+//#define SIZE_OF_MSGDATA_ARRAY           (5) // (CO_TRACK_CHANNEL+CO_DETECT_CHANNEL+CO_SCAN_CHANNEL)            // 128 -> 64
+#define SIZE_OF_MSGDATA_ARRAY           (CO_TRACK_CHANNEL+CO_DETECT_CHANNEL+CO_SCAN_CHANNEL)            // 128 -> 64
 
 #define ARARAY_MARK_UPPER              (0x4F)
 #define ARARAY_MARK_LOWER              (0xF4)
@@ -37,7 +40,6 @@ class CArrayMsgData
 {
 private:
     unsigned char m_ucPushIndex;
-    //unsigned char m_ucPopIndex;
 
     bool m_bArrayLanData;
 
@@ -62,7 +64,7 @@ public:
     void Clear();
 
     virtual void msSleep( unsigned int mssleep )=0;
-    virtual void ShowTaskMessae( int iLevel ) = 0;
+    virtual void ShowTaskMessae( int iLevel, bool bLog ) = 0;
     virtual const char *GetThreadName() = 0;
 
     virtual void SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName=NULL )=0;

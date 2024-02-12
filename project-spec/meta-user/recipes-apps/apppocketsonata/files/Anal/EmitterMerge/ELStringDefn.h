@@ -154,6 +154,7 @@ enum ENUM_AET_AOA {
 
     E_AET_DOA_GAUSSIAN,
 
+    E_AET_DOA_ROTATION,
 };
 
 #ifndef _ENUM_MOP_TYPE
@@ -162,6 +163,8 @@ enum ENUM_MOP_TYPE : unsigned char {
     E_MOP_UNKNOWN=0,
     E_MOP_FMOP,
     E_MOP_PMOP,
+
+    E_MAX_MOP,
 };
 
 #endif
@@ -342,6 +345,8 @@ enum class ENUM_AET_SCAN_STAT : unsigned char {
     E_AET_SELF_SCAN_FAIL,
     E_AET_USER_SCAN_SUCCESS,
     E_AET_USER_SCAN_FAIL,
+
+    E_AET_SCAN_ING,
 
 };
 #endif

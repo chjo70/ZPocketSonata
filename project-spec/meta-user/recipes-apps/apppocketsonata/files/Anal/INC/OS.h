@@ -65,7 +65,12 @@ typedef unsigned int SOCKET;
 #define WAIT_FOREVER		    0
 #define VX_FP_TASK			    0
 
+#if !defined(CLOCK_REALTIME) //modify for chekcing is not defined by shg1314 190225
 #define CLOCK_REALTIME	        0
+#endif
+
+
+#define CLOCK_MONOTONIC         0
 
 #define NO_WAIT					0
 

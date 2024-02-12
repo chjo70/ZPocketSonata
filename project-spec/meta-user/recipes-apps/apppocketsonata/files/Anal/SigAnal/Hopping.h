@@ -19,12 +19,9 @@
 #include <vector>
 #include <algorithm>
 
-// enum ENUM_HOPPINGDWELL {
-//     enFREQ_HOPPING=0,
-//     enPRI_DWELL
-// };
-
 class CNewSigAnal;
+class CKnownSigAnal;
+class CScanSigAnal;
 
 /**
 
@@ -36,7 +33,9 @@ class CNewSigAnal;
 class CHopping : public CLogName
 {
 protected:
-    CNewSigAnal *m_pNewSigAnal;
+    CNewSigAnal *m_pTheNewSigAnal;
+    CKnownSigAnal *m_pTheKnownSigAnal;
+    CScanSigAnal *m_pTheScanSigAnal;
 
     DEFINE_ANAL_PVAR_
 
@@ -109,7 +108,7 @@ private:
 
 
 public:
-    CHopping( void *pParent, unsigned int uiCoMaxPdw );
+    CHopping( void *pParent, ENUM_ANAL_TYPE enAnalType, unsigned int uiCoMaxPdw, const char *pThreadName );
     virtual ~CHopping(  );
 
     void MakeFREQ( STR_EMITTER *pEmitter );

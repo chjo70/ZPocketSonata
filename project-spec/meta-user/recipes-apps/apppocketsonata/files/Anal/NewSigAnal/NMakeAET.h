@@ -37,7 +37,7 @@ protected:
 	CNewSigAnal *m_pNewSigAnal;
 
 public:
-	void MarkAllAetToPdwIndex();
+    inline void MarkAllAetToPdwIndex() { }
 	void Init();
 	void MakeAET( bool bDBInsert );
     void PrintAllAET();
@@ -46,7 +46,7 @@ public:
 	int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount );
 	int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount);
 	void MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, PULSE_MARK enMarkType);
-	void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile=false );
+	//void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile=false );
 	unsigned int GetCoSeg();
 	unsigned int GetCoEmitter();
 	STR_PULSE_TRAIN_SEG *GetPulseSeg();

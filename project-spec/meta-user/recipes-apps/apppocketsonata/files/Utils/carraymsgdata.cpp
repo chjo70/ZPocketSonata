@@ -188,11 +188,11 @@ void CArrayMsgData::SetMark( int iIndex, bool bLog )
 {
     m_pszArray[iIndex][0] = ARARAY_MARK_UPPER;
     m_pszArray[iIndex][1] = ARARAY_MARK_LOWER;
-    m_pszArray[iIndex][2] = NULL;
+    m_pszArray[iIndex][2] = 0;
 
     if( bLog == true ) {
 #ifdef _WIN64
-        TRACE( "\nSetMark [%5s:%3d]", GetThreadName(), iIndex );
+        // TRACE( "SetMark [%5s:%3d]\n", GetThreadName(), iIndex );
 #endif
     }
 
@@ -340,10 +340,10 @@ void CArrayMsgData::PrintDebug( unsigned int ucPushIndex )
     int i;
 
     if( (int) ucPushIndex >= 0 ) {
-        TRACE( "\n ucPushIndex=%d\n", ucPushIndex );
+        TRACE( "ucPushIndex=%d\n", ucPushIndex );
     }
     else {
-        TRACE( "\n" );
+
     }
 
     for( i = 0; i < SIZE_OF_MSGDATA_ARRAY; ++i ) {
@@ -352,5 +352,6 @@ void CArrayMsgData::PrintDebug( unsigned int ucPushIndex )
 //             TRACE( "\n m_pszArray[%d][0]=%s", i, (char *) m_pszArray[i][0] );
 //         }
     }
+    TRACE( "\n" );
 
 }

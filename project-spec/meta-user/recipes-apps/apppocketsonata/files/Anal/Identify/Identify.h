@@ -161,7 +161,7 @@ struct STR_HOPPINGDWELL_INDEX {
 #ifdef _MSSQL_
 class CELSignalIdentifyAlg : CMSSQL
 #else
-class CELSignalIdentifyAlg : public CLogName, public CLock
+class CELSignalIdentifyAlg : public CLogName
 #endif
 {
  protected:
@@ -169,12 +169,14 @@ class CELSignalIdentifyAlg : public CLogName, public CLock
     char m_szSQLString[MAX_SQL_SIZE];
     wchar_t m_szSQLString16[MAX_SQL_SIZE];
 
-    Kompex::CSQLiteDatabase *m_pDatabase;
+    static Kompex::CSQLiteDatabase *m_pDatabase;
 
 #elif _MSSQL_
     char m_szSQLString[MAX_SQL_SIZE];
 
 #endif
+
+    static CLock m_cs;
 
     static bool m_bInitTable;											///< 식별 테이블 로딩하기 위한 플레그
 
@@ -253,6 +255,8 @@ private:
 
 
  public:
+     bool LoadRadarModeData( unsigned int *pnRadarMode );
+
     void IdentifyLOB( STR_IDENTIFY *pstIdentify, SRxLOBData *pLOBData );
     void IdentifyABT( STR_IDENTIFY *pstABTIdentify, SRxABTData *pABTData, STR_IDENTIFY *pstLOBIdentify );
 
@@ -342,8 +346,8 @@ private:
 
     char *GetFunctionCode( EnumFunctionCodes eFunctionCode );
 
-    SRadarMode *IGetRadarMode( unsigned int uiRadarModeIndex );
-    SThreat *IGetThreat( unsigned int uiIndex );
+    SRadarMode *IGetRadarMode( unsigned int uiRadarModeIndex, bool bMaster=true );
+    SThreat *IGetThreat( unsigned int uiIndex, bool bMaster=true );
 
     template <typename T>
     void Identify( T *pData, bool bIdentifyScan=true )
@@ -736,7 +740,7 @@ protected:
 
 	void InitRadarModeData();
 
-    bool LoadRadarModeData( unsigned int *pnRadarMode );
+    //bool LoadRadarModeData( unsigned int *pnRadarMode );
 #ifdef _SQLITE_
 	void GetRadarModeFromStatement(SRadarMode *pRadarMode, Kompex::SQLiteStatement *pStatment);
     void GetThreatFromStatement( SThreat *pThreat, Kompex::SQLiteStatement *pStatment );

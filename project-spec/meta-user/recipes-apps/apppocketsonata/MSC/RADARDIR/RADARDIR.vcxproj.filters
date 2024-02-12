@@ -204,6 +204,9 @@
     <ClCompile Include="..\..\files\Anal\ScanSigAnal\SAnalSCN.cpp">
       <Filter>소스 파일\Anal\ScanSigAnal</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clogname.cpp">
+      <Filter>소스 파일\Anal\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RADARDIR.h">

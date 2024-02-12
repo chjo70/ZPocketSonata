@@ -53,18 +53,20 @@ extern void StopSigGen( bool bEnable );
 
 #define _DEBUG_
 
+extern vector<CThread *> g_vecThread;
+
 /**
  * @brief CTaskMngr::CTaskMngr
  */
 #ifdef _MSSQL_
 CTaskMngr::CTaskMngr( int iThreadPriority, char *pClassName, bool bArrayLanData ) : CThread( iKeyId, pClassName, bArrayLanData ), CMSSQL( & m_theMyODBC )
 #else
-CTaskMngr::CTaskMngr( int iThreadPriority, const char *pClassName, bool bArrayLanData, const char *pFileName ) : CThread( iThreadPriority, pClassName, bArrayLanData )
+CTaskMngr::CTaskMngr( int iThreadPriority, const char *pClassName, bool bArrayLanData, const char *pFileName, time_t tiNow ) : CThread( iThreadPriority, pClassName, bArrayLanData )
 #endif
 {
     //LOGENTRY;
 
-    g_pTheSysConfig->SetBoardID( GetBoardID() );
+    //g_pTheSysConfig->SetBoardID( GetBoardID() );
 
     SetMode( enNOT_READY_MODE );
 
@@ -88,6 +90,10 @@ CTaskMngr::CTaskMngr( int iThreadPriority, const char *pClassName, bool bArrayLa
 
 #endif
 
+    // 분석 시간 설정 : 처음 한 번만 설정하게 합니다.
+    OPStartTime( tiNow );
+    // OPStartTime( 0 );
+
 }
 
 /**
@@ -102,6 +108,7 @@ CTaskMngr::CTaskMngr( int iThreadPriority, const char *pClassName, bool bArrayLa
  */
 CTaskMngr::~CTaskMngr(void)
 {
+    StopThread();
 
     //GP_SYSCFG->SetMode( enMode );
     //CreateAllAnalysisThread( false );
@@ -189,7 +196,7 @@ void CTaskMngr::Init()
 void CTaskMngr::InitVar()
 {
     // 보드 ID를 설정한다.
-    g_pTheSysConfig->SetBoardID( GetBoardID() );
+    //g_pTheSysConfig->SetBoardID( GetBoardID() );
 
     m_enMode = enREADY_MODE;
 
@@ -373,6 +380,37 @@ void CTaskMngr::AnalysisStart( bool bOut )
 {
     char buffer[200];
 
+    // 시간 정보로 설정한 후에 시작 명령을 처리한다.
+    if( m_pMsg->uiDataLength == 0 ) {
+        Log( enNormal, "설정 시간이 존재하지 않습니다 !" );
+    }
+    else {
+        CCommonUtils::getStringDesignatedDate( buffer, sizeof( buffer ), m_pMsg->x.tiNow );
+        Log( enNormal, "수신된 시간은 %s", buffer );
+
+#ifdef _MSC_VER
+
+#elif defined(__VXWORKS__)
+        struct timespec time_spec;
+
+        time_spec.tv_sec = m_pMsg->x.tiNow;
+        time_spec.tv_nsec = 0;
+        clock_settime( CLOCK_REALTIME, &time_spec );
+        if( g_bSNTP == false ) {
+            Log( enError, "SBC 시간을 부팅시에 설정하지 못했습니다 ! 네트워크 망을 확인하거나 SNTP 서비스가 서버에 실행되는지를 확인하세요." );
+            g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) "SBC 시간을 설정하지 못했습니다 !" );
+        }
+
+#elif defined(__linux__)
+
+        // 환경 변수로 타겟 보드일때만 아래 함수를 수행한다.
+        stime( & m_pMsg->x.tiNow );
+
+#else
+
+#endif
+    }
+
     TRACE( "\n" );
     sprintf( buffer, "[운용제어/시작 요청]-시작 " );
     CCommonUtils::WallMakePrint( buffer, '#' );
@@ -385,7 +423,6 @@ void CTaskMngr::AnalysisStart( bool bOut )
 
     SetMode( enOP_Mode );
 
-    g_pTheSysConfig->LoadINI();
     g_pTheSysConfig->DisplaySystemVar();
 
     // 현재 시간 기록하기
@@ -404,34 +441,6 @@ void CTaskMngr::AnalysisStart( bool bOut )
     // 분석 관련 쓰레드를 삭제한다.
     // CreateAllAnalysisThread();
 
-    // 시간 정보로 설정한 후에 시작 명령을 처리한다.
-#ifdef _MSC_VER
-
-#elif defined(__VXWORKS__)
-    struct timespec time_spec;
-
-    if( m_pMsg->x.tiNow != 0 ) {
-        time_spec.tv_sec = m_pMsg->x.tiNow;
-        time_spec.tv_nsec = 0;
-        clock_settime( CLOCK_REALTIME, &time_spec );
-    }
-    else {
-        if( g_bSNTP == false ) {
-            Log( enError, "SBC 시간을 부팅시에 설정하지 못했습니다 ! 네트워크 망을 확인하거나 SNTP 서비스가 서버에 실행되는지를 확인하세요." );
-            g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, (const char *) "SBC 시간을 설정하지 못했습니다 !" );
-        }
-    }
-
-#elif defined(__linux__)
-    // tiNow = (time_t) m_pMsg->x.tiNow;
-
-    // 환경 변수로 타겟 보드일때만 아래 함수를 수행한다.
-    stime( & m_pMsg->x.tiNow );
-
-#else
-
-#endif
-
     // 프로세스 상태를 전시한다.
     TaskSummary();
 
@@ -441,16 +450,11 @@ void CTaskMngr::AnalysisStart( bool bOut )
 
 #endif
 
-    // 분석 시작
-    time_t ti;
-
-    ti = time( NULL );
-
-    g_pTheEmitterMerge->QMsgSnd( enREQ_OP_START, & ti, sizeof( time_t ), GetThreadName() );
-    g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_START, & ti, sizeof( time_t ), GetThreadName() );
-    g_pTheTrackAnalysis->QMsgSnd( enREQ_OP_START, & ti, sizeof( time_t ), GetThreadName() );
-    g_pTheScanAnalysis->QMsgSnd( enREQ_OP_START, & ti, sizeof( time_t ), GetThreadName() );
+    g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_START, & m_tiOPStart, sizeof( time_t ), GetThreadName() );
+    g_pTheTrackAnalysis->QMsgSnd( enREQ_OP_START, & m_tiOPStart, sizeof( time_t ), GetThreadName() );
+    g_pTheScanAnalysis->QMsgSnd( enREQ_OP_START, & m_tiOPStart, sizeof( time_t ), GetThreadName() );
     g_pTheLog->QMsgSnd( enREQ_OP_START );
+    g_pTheEmitterMerge->QMsgSnd( enREQ_OP_START, & m_tiOPStart, sizeof( time_t ), GetThreadName() );
 
 #ifdef __VXWORKS__
     ChangeTaskPriority( iPriority );
@@ -560,21 +564,43 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
     Log( enDebug, "타스크 우선순위를 낮게 설정합니다." );
 
     // 모든 쓰레드에세 SHUTDOWN 메시지를 전송한다.
-    g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_SHUTDOWN );
-    g_pTheTrackAnalysis->QMsgSnd( enREQ_OP_SHUTDOWN );
-    g_pTheScanAnalysis->QMsgSnd( enREQ_OP_SHUTDOWN );
-    g_pTheEmitterMerge->QMsgSnd( enREQ_OP_SHUTDOWN );
-    g_pTheSignalCollect->QMsgSnd( enREQ_OP_SHUTDOWN );
+    if( g_pTheDetectAnalysis != NULL ) {
+        g_pTheDetectAnalysis->QMsgSnd( enREQ_OP_SHUTDOWN );
+    }
+    if( g_pTheTrackAnalysis != NULL ) {
+        g_pTheTrackAnalysis->QMsgSnd( enREQ_OP_SHUTDOWN );
+    }
+    if( g_pTheScanAnalysis != NULL ) {
+        g_pTheScanAnalysis->QMsgSnd( enREQ_OP_SHUTDOWN );
+    }
+    if( g_pTheEmitterMerge != NULL ) {
+        g_pTheEmitterMerge->QMsgSnd( enREQ_OP_SHUTDOWN );
+    }
+    if( g_pTheSignalCollect != NULL ) {
+        g_pTheSignalCollect->QMsgSnd( enREQ_OP_SHUTDOWN );
+    }
 
     SetSendDisable();
 
     // 모든 타스트의 메시지 비우기
-    WaitThread( g_pTheSignalCollect );
-    WaitThread( g_pTheDetectAnalysis );
-    WaitThread( g_pTheTrackAnalysis );
-    WaitThread( g_pTheScanAnalysis );
-    WaitThread( g_pTheEmitterMerge );
-    WaitThread( g_pTheLog );
+    if( g_pTheSignalCollect != NULL ) {
+        WaitThread( g_pTheSignalCollect );
+    }
+    if( g_pTheDetectAnalysis != NULL ) {
+        WaitThread( g_pTheDetectAnalysis );
+    }
+    if( g_pTheTrackAnalysis != NULL ) {
+        WaitThread( g_pTheTrackAnalysis );
+    }
+    if( g_pTheScanAnalysis != NULL ) {
+        WaitThread( g_pTheScanAnalysis );
+    }
+    if( g_pTheEmitterMerge != NULL ) {
+        WaitThread( g_pTheEmitterMerge );
+    }
+    if( g_pTheLog != NULL ) {
+        WaitThread( g_pTheLog );
+    }
 
     TRACE( "\n\n" );
 
@@ -582,13 +608,14 @@ void CTaskMngr::Shutdown( bool bAbnormalEvent, bool bOut )
 
     Log( enDebug, "타스크 우선순위를 높게 설정합니다." );
 
+    // 대기 추가 합니다.
     Sleep( REQ_OP_STOP_DELAY );
 
     SetSendEnable();
 
     if( bAbnormalEvent == false && bOut == true ) {
         unsigned int uiResult = TRUE;
-        //g_pTheCCUSocket->SendLan( enRES_OP_SHUTDOWN, &uiResult, sizeof( uiResult ) );
+
         SendLan( enRES_OP_SHUTDOWN, &uiResult, sizeof( uiResult ) );
     }
 
@@ -620,24 +647,28 @@ bool CTaskMngr::WaitThread( CThread *pThread )
     int iTry = 0;
     bool bRet=true;
 
-    while( pThread->QMsgRcvSize() != 0 && iTry++ < WAIT_THREAD_MAX_RESPOND ) {
-        Sleep( REQ_OP_STOP_DELAY );
+    if( pThread != NULL ) {
+        while( pThread->QMsgRcvSize() != 0 && iTry < WAIT_THREAD_MAX_RESPOND ) {
+            Sleep( REQ_OP_STOP_DELAY );
 #ifdef _MSC_VER
-        pThread->FlushEvent();
+            pThread->FlushEvent();
 
 #endif
-        Log( enNormal, "g_pTheSignalCollect->QMsgRcvSize() = %d", pThread->QMsgRcvSize() );
-    }
+            ++ iTry;
 
-    if( iTry >= WAIT_THREAD_MAX_RESPOND ) {
-        Log( enNormal, "[%s] 쓰레드가 죽었습니다 !", pThread->GetThreadName() );
+            // Log( enNormal, "g_pTheSignalCollect->QMsgRcvSize() = %d", pThread->QMsgRcvSize() );
+        }
+
+        if( iTry >= WAIT_THREAD_MAX_RESPOND ) {
+            Log( enNormal, "[%s] 쓰레드가 죽었습니다 !", pThread->GetThreadName() );
 
 #ifdef __VXWORKS__
-        pThread->StopThread();
-        pThread->Run();
+            pThread->StopThread();
+            pThread->Run();
 
 #endif
-        bRet = false;
+            bRet = false;
+        }
     }
 
     return bRet;
@@ -661,15 +692,16 @@ void CTaskMngr::TaskSummary()
     Log( enNormal, "%s", buffer );
 
     Log( enNormal, "타스크(쓰레드) 총 개수\t\t: %d [개]" , GetCoThread() );
-//     for( const auto &cThread : g_vecThread ) {
-//         //cThread->ShowTaskMessae();
-//     }
+    for( const auto &cThread : g_vecThread ) {
+        cThread->ShowTaskMessae( 0, true );
+        cThread->ShowQueueMessae( 0, false );
+    }
 
     Log( enNormal, "메시지 큐 총 개수\t\t: %d [개]", GetCoMsgQueue() );
 
 //     for( const auto &cThread : g_vecThread ) {
 //         //cThread->ShowQueueMessae();
-//     }
+// //     }
 
     //CCommonUtils::WallMakePrint( buffer, '*', MAX_MESSAGE_COLUMNS );
     Log( enNormal, "%s", buffer );
@@ -851,7 +883,6 @@ void CTaskMngr::ReqSystemVar()
         Log( enNormal, "신호분석 운용 변수 내용을 [%d]바이트 전송합니다.", szLength );
     }
     else {
-        //g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, (const char *) "INI 파일을 읽지 못했거나 드라이브가 잘못 됐습니다." );
         SendStringLan( enREQ_SYSERROR, ( const char * ) "INI 파일을 읽지 못했거나 드라이브가 잘못 됐습니다." );
 
         Log( enError, "INI 파일[%s]이 손상됐거나 존재하지 않습니다. 담당자에게 문의하세요 !" , szSrcFilename );

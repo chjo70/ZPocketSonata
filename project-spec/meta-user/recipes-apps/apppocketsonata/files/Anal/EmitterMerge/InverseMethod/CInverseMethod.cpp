@@ -110,7 +110,7 @@ CInverseMethod::~CInverseMethod( )
  * @date      2017-03-07, 오후 6:46
  * @warning
  */
-bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, double lat2, double lon2 )	//#FA_Q_4020_T1
+bool CInverseMethod::VincentyInverse( sEllipsoid *e, double lat1, double lon1, double lat2, double lon2 )
 {
     bool bRet=true;
 
@@ -325,7 +325,7 @@ double CInverseMethod::EllipsoidDistance(double lat1, double lon1, double lat2, 
  * @date      2018-05-21, 오후 2:03
  * @warning
  */
-double CInverseMethod::GCAzimuth(double lat1, double lon1, double lat2, double lon2, bool bInitialBearing)	//#FA_Q_4020_T1
+double CInverseMethod::GCAzimuth(double lat1, double lon1, double lat2, double lon2, bool bInitialBearing)
 {
 	double result = 0.0;
 

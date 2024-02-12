@@ -25,6 +25,7 @@ enum SCENARIO_COMMAND {
 
     enSCENARIO_COMMAND_RESTART,
     enSCENARIO_COMMAND_DELETE,
+    enSCENARIO_COMMAND_USER_SCAN,
 
 
 };
@@ -333,4 +334,6 @@ public:
     afx_msg void OnBnClickedButtonReqRestartScenario();
     afx_msg void OnBnClickedButtonReqDeleteScenario();
     afx_msg void OnBnClickedButtonCancelScenario();
+    afx_msg void OnBnClickedButtonReqScanScenario();
+    afx_msg void OnBnClickedButtonReqSbcReboot();
 };

@@ -46,6 +46,7 @@ extern "C" {
 #endif
 void _TRACE( char *format, ... );
 
+
 #ifdef __cplusplus
 }
 #endif
@@ -54,6 +55,7 @@ void _TRACE( char *format, ... );
 STATUS usrBootLineCrack (char * bootString, BOOT_PARAMS *pParams);
 
 extern BOOT_PARAMS g_stBootParams;
+extern int g_iBoardID;
 
 #elif defined(_MSC_VER)
 #define TRACE _TRACE
@@ -108,8 +110,6 @@ void Main()
 // }
 #endif
 
-
-
 /**
  * @brief		부투 페라미터 값을 출력 합니다.
  * @return		void
@@ -130,7 +130,7 @@ void LoadBootParameter()
     }
 
     /* interpret boot command */
-	STATUS stat = usrBootLineCrack( BOOT_LINE_ADRS, & g_stBootParams );
+	STATUS stat = usrBootLineCrack( (char *) BOOT_LINE_ADRS, & g_stBootParams );
 	if( stat != OK ) {
 		printf( "\n [W] 부트 페라미터값이 잘못 설정되었습니다 !" );
 	}
@@ -153,3 +153,65 @@ int ipftps_authenticate_user_callback()
     return 1;
 
 }
+
+/**
+ * @brief     he
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-27 10:30:26
+ * @warning
+ */
+void he()
+{
+
+    printf( "\n[]--- 터미널 명령어 {EW신호처리판#%d}--------------------------------------------------------[]\n", g_iBoardID );
+
+    puts( "\tsf     : 저정소 위치 전시" );
+    puts( "\tlogoff : 로그 출력을 기본 상태로 전환하여 전시" );
+    puts( "\tlogon  : 로그 출력을 상세하게 전시" );
+    puts( "\n" );
+    puts( "\tcpsq   : 위협 정보 SQLITE 파일을 공유 디렉토리(/d/rawdata)에 저장" );
+    puts( "\n" );
+    puts( "\tdsv    : INI 항목별 값을 전시" );
+    puts( "\trb     : CPU 온도, 타스크 상태, SQLite 저장 공간 등의 정보를 출력" );
+    puts( "\ta      : 지금 위협관리 중인 위협 정보를 전시" );
+    puts( "\n" );
+    puts( "\tde( # ): 방사체 위협 삭제" );
+    puts( "\n" );
+
+}
+
+/**
+ * @brief     ioRedirect
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-11 19:40:12
+ * @warning
+ */
+#ifdef __VXWORKS__
+void ioRedirect()
+{
+    int iShellTid = 0;
+    int iShellOpFd = 0;
+    int iGlobalStdFd = 0;
+
+    iShellTid = taskIdSelf();
+    iShellOpFd = ioTaskStdGet( iShellTid, 1 );
+    iGlobalStdFd = ioGlobalStdGet( 1 );
+
+    //( void ) logMsg( "\nLM:Initial task output.shellFd %d, GlobalFD %d.\n", iShellOpFd, iGlobalStdFd, 0, 0, 0, 0 );
+    printf( "\n초기 타스크 출력 파일 인자 : %d.", iShellOpFd );
+
+    ioGlobalStdSet( 1, iShellOpFd );
+    iGlobalStdFd = ioGlobalStdGet( 1 );
+
+    //logMsg( "\nLM:Initial task output.shellFd %d, GlobalFD change to %d.\n", iShellOpFd, iGlobalStdFd, 0, 0, 0, 0 );
+    printf( "\n전역 타스크 출력 파일 인자 : %d.", iGlobalStdFd );
+
+}
+
+#endif

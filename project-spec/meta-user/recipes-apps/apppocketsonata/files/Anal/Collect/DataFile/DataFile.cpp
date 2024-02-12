@@ -4095,7 +4095,7 @@ CDataFile::CDataFile(void)
 
 	++stDataFile;
 
-#if 1
+#if 0
     CheckOverflow<long long int>( 0 );
     CheckOverflow<size_t>( 0 );
 

@@ -419,18 +419,17 @@ enum ENUM_TRACK_PROCESS : unsigned int {
     @brief 빔의 스캔 상태 정보
 **/
 enum ENUM_SCAN_PROCESS {
-    enSCAN_NotProcessing=0,				// 스캔 초기 상태
+    enSCAN_NotProcessing=0,                // 스캔 초기 상태
 
-    enSCAN_Requesting,					// 스캔 수집 요구 상태, 시도를 참고하여 계속 여부를 결정
-    enSCAN_Collecting,					// 스캔 수집 진행 상태
-    enSCAN_Success,						// 스캔 분석 성공으로 종료 상태
-	enSCAN_Retrying,					// 스캔 실패로 재시도 할 경우
-	enSCAN_Stopping,					// 스캔 완전 실패로 스캔 분석 중지
-    enSCAN_Canceling,
+    enSCAN_Requesting,                     // 스캔 수집 요구 상태, 시도를 참고하여 계속 여부를 결정
+    enSCAN_Collecting,                     // 스캔 수집 진행 상태
+    enSCAN_Success,                        // 스캔 분석 성공으로 종료 상태
+	enSCAN_Retrying,                       // 스캔 실패로 재시도 할 경우
+	enSCAN_Stopping,                       // 스캔 완전 실패로 스캔 분석 중지
 
-    enSCAN_AlreadyDeleting,             // 이미 빔이 삭제 된 상태
-
-	enSCAN_Initializing,				// 초기화 요청
+                                           // enSCAN_Canceling,
+    // enSCAN_AlreadyDeleting,             // 이미 빔이 삭제 된 상태
+	//enSCAN_Initializing,                 // 초기화 요청
 
 	enSCAN_CANTProcessing,
 
@@ -492,7 +491,7 @@ struct SELABTDATA_EXT {
 //
 //     unsigned int uiSeqNum;
 
-#elif defined(_POCKETSONATA_) || defined(_SONATA_)
+#elif defined(_POCKETSONATA_) || defined(_SONATA_) || defined(_712_)
     bool bReqTrack;                     // 위협 관리에서 추적 수행 여부를 결정하는 플레그
 
     unsigned int uiGlobalCh;                  // 추적 채널 정보

@@ -1592,7 +1592,7 @@ namespace POCKETSONATA {
 											   { 15072000., 17072000. } };
 
 
-    const float _toaRes = (float) 6.48824007;
+    const float _toaRes = (float) 6.4;
     const float _fFreqRes = ( float ) 1000.;
     const float _fDOARes = (float) ( 0.1 );		// = 0.087890625
     //const float _fPARes = (float) ( ( float ) PDW_PA_RANGE / (float) ( 64 * 1024 - 1 ) );		// = ?

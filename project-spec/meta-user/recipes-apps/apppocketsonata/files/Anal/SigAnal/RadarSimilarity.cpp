@@ -34,6 +34,104 @@ CRadarSimilarity::CRadarSimilarity( SEnvironVariable *pSEnvironVariable, float f
     m_fFixedFreqMargin = fFixedFreqMargin;
     m_fStableMargin = fStableMargin;
 
+#if 0
+    float fLOBPRISeq[MAX_FREQ_PRI_STEP], fABTPRISeq[MAX_FREQ_PRI_STEP];
+
+    fLOBPRISeq[0] = (float) 1322.;
+    fLOBPRISeq[1] = ( float ) 1389.;
+
+    fABTPRISeq[0] = ( float ) 1192;
+    fABTPRISeq[1] = ( float ) 1389.;
+    fABTPRISeq[2] = ( float ) 1322;
+
+    TCompSwitch2Level<float>( fLOBPRISeq, fABTPRISeq, 2, 3, m_fStableMargin );
+
+#endif
+
+
+#ifdef __VECTORCAST__
+
+    SRxABTData stABTData;
+    SRxLOBData stLOBData;
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    stABTData.enMOPType = E_MAX_MOP;
+    stLOBData.enMOPType = E_MAX_MOP;
+    CompMOPTypeMargin( & stABTData, & stLOBData );
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    stABTData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED;
+    stLOBData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING;
+    CompFreqMargin( & stABTData, & stLOBData );
+
+    stABTData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED;
+    stLOBData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING;
+    stLOBData.uiRadarIndex = 0;
+    stLOBData.vFreqPositionCount = 1;
+    stLOBData.fFreqSeq[0] = 1;
+    stABTData.fFreqMean = 1;
+    CompFreqMargin( & stABTData, & stLOBData );
+
+    stABTData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_PATTERN;
+    stLOBData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_PATTERN;
+    stABTData.vFreqPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SLIDE_DEC;
+    stLOBData.vFreqPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SLIDE_INC;
+    CompFreqMargin( & stABTData, & stLOBData );
+
+    stABTData.vFreqPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SLIDE_DEC;
+    stLOBData.vFreqPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SLIDE_DEC;
+    stABTData.fFreqPatternPeriodMean = (float) 10.;
+    stLOBData.fFreqPatternPeriod = (float) 10.;
+    stABTData.fFreqPatternPeriodMin = ( float ) 1000.;
+    stABTData.fFreqPatternPeriodMax = ( float ) 2000.;
+    CompFreqMargin( & stABTData, & stLOBData );
+
+    stABTData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_PATTERN;
+    stLOBData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_AGILE;
+    CompFreqMargin( & stABTData, & stLOBData );
+
+    stABTData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING;
+    stLOBData.uiRadarIndex = 1;
+    CompFreqMargin( & stABTData, & stLOBData );
+
+    stABTData.vFreqType = ENUM_AET_FRQ_TYPE::E_AET_MAX_FRQ_TYPE;
+    CompFreqMargin( & stABTData, & stLOBData );
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    stABTData.vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN;
+    stLOBData.vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN;
+    stLOBData.vPRIPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN;
+    stABTData.vPRIPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN;
+    stLOBData.fPRIPatternPeriod = ( float ) 10.;
+    stABTData.fPRIPatternPeriodMin = ( float ) 1000.;
+    stABTData.fPRIPatternPeriodMax = ( float ) 1000.;
+    CompPRIMargin( & stABTData, & stLOBData );
+
+    stLOBData.vPRIPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SINE;
+    stABTData.vPRIPatternType = ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN;
+    CompPRIMargin( & stABTData, & stLOBData );
+
+    stABTData.vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN;
+    stLOBData.vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER;
+    CompPRIMargin( & stABTData, & stLOBData );
+
+    stABTData.vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH;
+    stLOBData.vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED;
+    CompPRIMargin( & stABTData, & stLOBData );
+
+    stABTData.vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER;
+    stLOBData.vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER;
+    stABTData.vPRIPositionCount = 1;
+    stLOBData.vPRIPositionCount = 1;
+    stABTData.fPRISeq[0] = (float) 1000.;
+    stLOBData.fPRISeq[0] = ( float ) 2000.;
+    CompPRIMargin( & stABTData, & stLOBData );
+
+    stABTData.vPRIType = ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE;
+    CompPRIMargin( & stABTData, & stLOBData );
+
+#endif
+
 }
 
 /**
@@ -134,26 +232,20 @@ bool CRadarSimilarity::CompFreqMargin( SRxABTData *pABTData, SRxLOBData *pLOBDat
 
     switch( pABTData->vFreqType ) {
         case ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED:
-            if( pLOBData->uiRadarIndex == 0 ) {
-                if( pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED ) {
-                    bRet = TCompMeanDiff<float>( pABTData->fFreqMean, pLOBData->fFreqMean, m_fFixedFreqMargin );
+            if( pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_FIXED ) {
+                bRet = TCompMeanDiff<float>( pABTData->fFreqMean, pLOBData->fFreqMean, m_fFixedFreqMargin );
 
-                }
-                else if( pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING ) {
-                    for( i = 0; i < pLOBData->vFreqPositionCount; ++i ) {
-
-                        bRet = TCompMeanDiff<float>( pLOBData->fFreqSeq[i], pABTData->fFreqMean, m_fFixedFreqMargin );
-                        if( bRet == true ) {
-                            break;
-                        }
+            }
+            else if( pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_HOPPING ) {
+                for( i = 0; i < pLOBData->vFreqPositionCount; ++i ) {
+                    bRet = TCompMeanDiff<float>( pLOBData->fFreqSeq[i], pABTData->fFreqMean, m_fFixedFreqMargin );
+                    if( bRet == true ) {
+                        break;
                     }
+                }
 
-                }
-                else {
-                }
             }
             else {
-                bRet = true;
             }
 
             break;
@@ -164,18 +256,25 @@ bool CRadarSimilarity::CompFreqMargin( SRxABTData *pABTData, SRxLOBData *pLOBDat
                 bRet = TIsOverlapSpace<float>( pLOBData->fFreqMin, pLOBData->fFreqMax, pABTData->fFreqMin, pABTData->fFreqMax, fOverlapValue );
             }
             else if( pLOBData->vFreqType == ENUM_AET_FRQ_TYPE::E_AET_FRQ_PATTERN ) {
-                if( pABTData->vFreqPatternType == pLOBData->vFreqPatternType || pLOBData->vFreqPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN ) {
+                //! #추후 : 사인형 또는 삼각파의 패턴 형태를 오분석 가능성이 높기 때문에, SINE 형 또는 SAW 인 경우는 동일형으로 봄
+                if( pABTData->vFreqPatternType == pLOBData->vFreqPatternType || pLOBData->vFreqPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN ||
+                    ( ( pABTData->vFreqPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SINE && pLOBData->vFreqPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SAW_TRI ) ||
+                      ( pABTData->vFreqPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SAW_TRI && pLOBData->vFreqPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SINE ) ) ) {
                     fOverlapValue = FDIV( m_pSEnvironVariable->fMarginFrqModPeriodErrorRatio * ( pABTData->fFreqPatternPeriodMean ), 100.0 );
                     if( TCompMarginDiff<float>( pLOBData->fFreqPatternPeriod, pABTData->fFreqPatternPeriodMin, pABTData->fFreqPatternPeriodMax, fOverlapValue ) == TRUE ) {
                         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdFrqRangeNestedRatio * ( pABTData->fFreqMax - pABTData->fFreqMin ), 100.0 );
                         bRet = TIsOverlapSpace<float>( pLOBData->fFreqMin, pLOBData->fFreqMax, pABTData->fFreqMin, pABTData->fFreqMax, fOverlapValue );
                     }
                     else {
+#ifdef _MSC_VER
                         TRACE( "\n 주파수 패턴 주기 비교 병합 실패 !" );
+#endif
                     }
                 }
                 else {
+#ifdef _MSC_VER
                     TRACE( "\n 주파수 패턴 형태 비교 실패 !" );
+#endif
                 }
 
             }
@@ -208,6 +307,19 @@ bool CRadarSimilarity::CompFreqMargin( SRxABTData *pABTData, SRxLOBData *pLOBDat
                     fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdFrqRangeNestedRatio * ( pABTData->fFreqMax - pABTData->fFreqMin ), 100.0 );
                     bRet = TIsOverlapSpace<float>( pLOBData->fFreqMin, pLOBData->fFreqMax, pABTData->fFreqMin, pABTData->fFreqMax, fOverlapValue );
 
+#ifdef __VXWORKS__
+                    float fLOBFRQSeq[MAX_FREQ_PRI_STEP], fABTFRQSeq[MAX_FREQ_PRI_STEP];
+                    memcpy( fLOBFRQSeq, pLOBData->fFreqSeq, sizeof( float ) * pLOBData->vFreqPositionCount );
+                    memcpy( fABTFRQSeq, pABTData->fFreqSeq, sizeof( float ) * pABTData->vFreqPositionCount );
+                    bRet = TCompSwitch2Level<float>( fLOBFRQSeq, fABTFRQSeq, pLOBData->vFreqPositionCount, pABTData->vFreqPositionCount, m_fStableMargin );
+
+#else
+                    // #추후 : 위쪽의 범위가 아니라, 레벨값으로 단을 확인해야 함.
+                    if( bRet == false ) {
+                        bRet = TCompSwitch2Level<float>( pLOBData->fFreqSeq, pABTData->fFreqSeq, pLOBData->vFreqPositionCount, pABTData->vFreqPositionCount, m_fStableMargin );
+                    }
+
+#endif
 
 
 //                     for( i = 0; i < pABTData->vFreqPositionCount; ++i ) {
@@ -264,40 +376,53 @@ bool CRadarSimilarity::CompPRIMargin( SRxABTData *pABTData, SRxLOBData *pLOBData
 
     switch( pABTData->vPRIType ) {
         case ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED:
-            bRet = TCompMeanDiff<float>( pABTData->fPRIMean, pLOBData->fPRIMean, m_fStableMargin );
+            if( pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED ) {
+                bRet = TCompMeanDiff<float>( pABTData->fPRIMean, pLOBData->fPRIMean, m_fStableMargin );
+            }
             break;
 
         case ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER:
-            fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pABTData->fPRIMax - pABTData->fPRIMin ), 100.0 );
-            bRet = TIsOverlapSpace<float>( pLOBData->fPRIMin, pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, fOverlapValue );
-            if( bRet == false ) {
+            if( pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER || pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER || \
+                pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN ) {
+                fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pABTData->fPRIMax - pABTData->fPRIMin ), 100.0 );
+                bRet = TIsOverlapSpace<float>( pLOBData->fPRIMin, pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, fOverlapValue );
+                if( bRet == false ) {
 #ifdef _MSC_VER
                 //bRet = TIsOverlapSpace<float>( pLOBData->fPRIMin, pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, fOverlapValue );
                 //WhereIs;
 #endif
-
+                }
             }
             break;
 
         case ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH:
-            if( pABTData->vPRIPositionCount > 1 && pLOBData->vPRIPositionCount > 1 ) {
-                if( pABTData->vPRIPositionCount != pLOBData->vPRIPositionCount ) {
-                    TRACE( "\n Dwell 차수가 다릅니다 [%d, %d] !!", pABTData->vPRIPositionCount, pLOBData->vPRIPositionCount );
-
-                }
+            if( pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_FIXED ) {
 #ifdef __VXWORKS__
                 float fLOBPRISeq[MAX_FREQ_PRI_STEP], fABTPRISeq[MAX_FREQ_PRI_STEP];
-                memcpy( fLOBPRISeq, pLOBData->fPRISeq, sizeof( float ) * pLOBData->vPRIPositionCount );
+                fLOBPRISeq[0] = pLOBData->fPRIMean;
                 memcpy( fABTPRISeq, pABTData->fPRISeq, sizeof( float ) * pABTData->vPRIPositionCount );
-                bRet = TCompSwitch2Level<float>( fLOBPRISeq, fABTPRISeq, pLOBData->vPRIPositionCount, pABTData->vPRIPositionCount, m_fStableMargin );
-#else
-                bRet = TCompSwitch2Level<float>( pLOBData->fPRISeq, pABTData->fPRISeq, pLOBData->vPRIPositionCount, pABTData->vPRIPositionCount, m_fStableMargin );
-#endif
+                bRet = TCompSwitch2Level<float>( fLOBPRISeq, fABTPRISeq, 1, pABTData->vPRIPositionCount, m_fStableMargin );
 
+#else
+                bRet = TCompSwitch2Level<float>( & pLOBData->fPRIMean, pABTData->fPRISeq, 1, pABTData->vPRIPositionCount, m_fStableMargin );
+
+#endif
             }
             else {
-                TRACE( "\n 에러.. Dwell/Stable 비교[%d/%d]", pABTData->vPRIPositionCount, pLOBData->vPRIPositionCount );
+                if( pLOBData->vPRIPositionCount > 1 ) {
+
+#ifdef __VXWORKS__
+                    float fLOBPRISeq[MAX_FREQ_PRI_STEP], fABTPRISeq[MAX_FREQ_PRI_STEP];
+                    memcpy( fLOBPRISeq, pLOBData->fPRISeq, sizeof( float ) * pLOBData->vPRIPositionCount );
+                    memcpy( fABTPRISeq, pABTData->fPRISeq, sizeof( float ) * pABTData->vPRIPositionCount );
+                    bRet = TCompSwitch2Level<float>( fLOBPRISeq, fABTPRISeq, pLOBData->vPRIPositionCount, pABTData->vPRIPositionCount, m_fStableMargin );
+#else
+                    bRet = TCompSwitch2Level<float>( pLOBData->fPRISeq, pABTData->fPRISeq, pLOBData->vPRIPositionCount, pABTData->vPRIPositionCount, m_fStableMargin );
+#endif
+                }
+
             }
+
             break;
 
         case ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER:
@@ -338,7 +463,9 @@ bool CRadarSimilarity::CompPRIMargin( SRxABTData *pABTData, SRxLOBData *pLOBData
                 bRet = TIsOverlapSpace<float>( pLOBData->fPRIMin, pLOBData->fPRIMax, pABTData->fPRIMin, pABTData->fPRIMax, fOverlapValue );
             }
             else if( pLOBData->vPRIType == ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN ) {
-                if( pABTData->vPRIPatternType == pLOBData->vPRIPatternType || pLOBData->vPRIPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN ) {
+                if( pABTData->vPRIPatternType == pLOBData->vPRIPatternType || pLOBData->vPRIPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_UNKNOWN || \
+                    ( ( pABTData->vPRIPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SINE && pLOBData->vPRIPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SAW_TRI ) || \
+                      ( pABTData->vPRIPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SAW_TRI && pLOBData->vPRIPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SINE ) ) ) {
                     fOverlapValue = FDIV( m_pSEnvironVariable->fMarginPriModPeriodErrorRatio * pABTData->fPRIPatternPeriodMean, 100.0 );
                     if( TCompMarginDiff<float>( pLOBData->fPRIPatternPeriod, pABTData->fPRIPatternPeriodMin, pABTData->fPRIPatternPeriodMax, fOverlapValue ) == TRUE ) {
                         fOverlapValue = FDIV( m_pSEnvironVariable->fMarginMinRqdPriRangeNestedRatio * ( pABTData->fPRIMax - pABTData->fPRIMin ), 100.0 );

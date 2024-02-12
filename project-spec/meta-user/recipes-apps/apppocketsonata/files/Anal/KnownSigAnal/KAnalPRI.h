@@ -42,7 +42,7 @@ public:
 
     int GetBand();
 
-    void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof );
+    //void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof );
 
     void Init();
     void Analysis();
@@ -50,7 +50,7 @@ public:
     unsigned int ExtractStagger( _TOA framePri, STR_EMITTER *pEmitter );
     bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 );
 
-    void DeleteAllSeg( STR_EMITTER *pEmitter );
+    //void DeleteAllSeg( STR_EMITTER *pEmitter );
 
     void ExtractRefStable();
 
@@ -64,13 +64,13 @@ public:
 
     unsigned int GetMaxPDW();
 
-    void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter );
+    //void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter );
 
     UINT MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
 
     _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount );
 
-    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
+    //void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
 
     void HoppingAnalysis();
 
@@ -80,7 +80,7 @@ public:
 
     CMakeAET* GetMakeAET();
 
-    static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
+    //static int incSegPriMeanCompare( const void *arg1, const void *arg2 );
 
     inline void *GetParentSigAnal() { return ( void * ) m_pKnownSigAnal; }
 

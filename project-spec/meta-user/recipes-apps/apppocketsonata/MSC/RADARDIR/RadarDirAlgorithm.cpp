@@ -15,7 +15,7 @@ enum ANALYSIS_MODE { NORMAL_MDOE = 0, SIMUL_MODE };
 
 
 // CLogName 에 있는 클래스의 전역 변수 선언 합니다.
-char CLogName::m_szName[enETC_ANAL+1][10];
+//char CLogName::m_szName[enETC_ANAL+1][10];
 
 namespace RadarDirAlgotirhm
 {
@@ -356,10 +356,10 @@ namespace RadarDirAlgotirhm
      * @date      2023-12-11 15:28:22
      * @warning
      */
-    STR_PDWINDEX *RadarDirAlgotirhm::GetLOB2PDWData( unsigned int uiLOBIndex, int iSigANal )
+    STR_PDWDATA *RadarDirAlgotirhm::GetLOB2PDWData( unsigned int uiLOBIndex, int iSigANal )
     {
         if( g_iCoreOfSigAnal != 0 && gpTheNewSigAnal != NULL && gpTheNewSigAnal[iSigANal] != NULL ) {
-            return gpTheNewSigAnal[iSigANal]->GetLOB2PDWData( uiLOBIndex );
+            return gpTheNewSigAnal[iSigANal]->GetLOB2PDWData( uiLOBIndex );;
         }
         else {
             return NULL;

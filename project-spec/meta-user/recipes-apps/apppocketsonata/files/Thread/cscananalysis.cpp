@@ -66,6 +66,7 @@ CScanAnalysis::CScanAnalysis( int iThreadPriority, const char *pThreadName, bool
  */
 CScanAnalysis::~CScanAnalysis(void)
 {
+    StopThread();
 
     _SAFE_DELETE(m_pTheScanSigAnal)
 
@@ -112,43 +113,45 @@ void CScanAnalysis::_routine()
 
 #endif
         else {
-            switch( m_pMsg->uiOpCode ) {
+            if( m_pMsg != NULL ) {
+                switch( m_pMsg->uiOpCode ) {
 #ifdef _MSC_VER
-                case enTHREAD_TIMER:
-                    break;
+                    case enTHREAD_TIMER:
+                        break;
 
 #endif
-                // 운용 제어 관련 메시지 처리
-                case enREQ_OP_START:
-                    // QMsgClear();
-                    InitScanAnalysis();
-                    break;
+                    // 운용 제어 관련 메시지 처리
+                    case enREQ_OP_START:
+                        // QMsgClear();
+                        InitScanAnalysis();
+                        break;
 
-                case enTHREAD_DISCONNECTED:
-                case enREQ_OP_SHUTDOWN:
-                    //QMsgClear();
-                    //InitScanAnalysis();
-                    break;
+                    case enTHREAD_DISCONNECTED:
+                    case enREQ_OP_SHUTDOWN:
+                        //QMsgClear();
+                        //InitScanAnalysis();
+                        break;
 
-                case enREQ_OP_RESTART:
-                    //QMsgClear();
-                    InitScanAnalysis();
-                    break;
+                    case enREQ_OP_RESTART:
+                        //QMsgClear();
+                        InitScanAnalysis();
+                        break;
 
-                // 신호 분석 곤련 메시지 처리
-                case enTHREAD_SCANANAL_START :
-                    InitOfMessageData();
-                    AnalysisStart();
-                    break;
+                    // 신호 분석 곤련 메시지 처리
+                    case enTHREAD_SCANANAL_START :
+                        InitOfMessageData();
+                        AnalysisStart();
+                        break;
 
-                case enTHREAD_REQ_SHUTDOWN :
-                    Log( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
-                    //bWhile = false;
-                    break;
+                    case enTHREAD_REQ_SHUTDOWN :
+                        Log( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
+                        //bWhile = false;
+                        break;
 
-                 default:
-                    Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
-                    break;
+                     default:
+                        Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                        break;
+                }
             }
 
         }
@@ -171,7 +174,7 @@ void CScanAnalysis::AnalysisStart()
 
     STR_SCANRESULT *pScanResult;
 
-    Log( enDebug, "스캔 : 위협[%d/%d] 에 대해서, 채널[%3d], 스캔분석 요청주기 [%d ms] 에서 PDW[%d 개] 를 분석합니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiCh, m_pRecvScanAnalInfo->uiReqScanPeriod, m_pScnPDWData->strPDW.GetTotalPDW() );
+    Log( enDebug, "스캔: 위협[%04d/%04d] 에 대해서, 채널[%2d], 스캔분석 요청주기 [%d ms] 에서 PDW[%d 개] 를 분석합니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID, m_pRecvScanAnalInfo->uiCh-(CO_DETECT_CHANNEL+CO_TRACK_CHANNEL), m_pRecvScanAnalInfo->uiReqScanPeriod, m_pScnPDWData->strPDW.GetTotalPDW() );
 
     // 1. 스캔 신호 분석을 호출한다.
     m_pTheScanSigAnal->Start( & m_pScnPDWData->strPDW, & m_pScnPDWData->strABTData, m_pRecvScanAnalInfo->uiScanStep, m_pRecvScanAnalInfo->uiReqScanPeriod, & m_pRecvScanAnalInfo->stScanResult );
@@ -233,23 +236,24 @@ void CScanAnalysis::MakeLOBData()
 //         strcpy( m_stLOBData.szModulationCode, m_pstABTData->szModulationCode );
 //
 //         strcpy( m_stLOBData.szNickName, m_pstABTData->szNickName );
-//
-//         // 신호 형태 저장
-//         m_stLOBData.vSignalType = m_pstABTData->vSignalType;
-//
-//         // 주파수 정보 저장
-//         m_stLOBData.vFreqType = m_pstABTData->vFreqType;
-//         m_stLOBData.vFreqPatternType = m_pstABTData->vFreqPatternType;
-//
-//         // PRI 정보 저장
-//         m_stLOBData.vPRIType = m_pstABTData->vPRIType;
-//         m_stLOBData.vPRIType = m_pstABTData->vPRIType;
-//
-//         // PA 정보 저장
-//         m_stLOBData.fPAMin = 0;
-//         m_stLOBData.fPAMax = 0;
-//         m_stLOBData.fPAMean = 0;
-//
+
+    // 신호 형태 저장
+    m_stLOBData.vSignalType = m_pstABTData->vSignalType;
+
+    // 주파수 정보 저장
+    m_stLOBData.vFreqType = m_pstABTData->vFreqType;
+    m_stLOBData.vFreqPatternType = m_pstABTData->vFreqPatternType;
+
+    // PRI 정보 저장
+    m_stLOBData.vPRIType = m_pstABTData->vPRIType;
+    m_stLOBData.vPRIType = m_pstABTData->vPRIType;
+
+    // PA 정보 저장
+    m_stLOBData.fPAMin = PACNV( m_pRecvScanAnalInfo->stScanResult.stPA.iMin );
+    m_stLOBData.fPAMax = PACNV( m_pRecvScanAnalInfo->stScanResult.stPA.iMax );
+    m_stLOBData.fPAMean = PACNV( m_pRecvScanAnalInfo->stScanResult.stPA.iMean );
+
+
 //         // 스캔 정보 저장
 //         m_stLOBData.vScanType = pScanResult->enScanType;
 //         m_stLOBData.fMeanScanPeriod = pScanResult->fScanPeriod;

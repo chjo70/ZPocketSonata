@@ -24,6 +24,8 @@
 
 #include "../SigAnal/RadarSimilarity.h"
 
+#define TRACK_SUCCESS_RATIO     (100)
+
 #ifdef __cplusplus
 
 struct STR_KWNINFO {
@@ -47,6 +49,8 @@ private :
 
     CRadarSimilarity *m_pTheRadarSimilarity;
 
+    SRxLOBData m_stKnownSuccessLOBData;
+
 protected :
     CKnownSigAnal *m_pKnownSigAnal;
 
@@ -61,6 +65,7 @@ private:
 public:
     void UpdatePRI( SRxLOBData *pUpdAetPri );
     void UpdateFreq( SRxLOBData *pUpdAetFrq );
+
 
     SRxLOBData *GetKnownLOBData(unsigned int uiIndex) {
         return m_KwnLOB[uiIndex].pstLOBData;
@@ -111,8 +116,7 @@ public:
         return m_iCoLOB;
     }
 
-
-    #define MAX_SUCCESS_RATIO       (300)
+    #define MAX_SUCCESS_RATIO       (400)
 
     /**
      * @brief     SetKnownSuccessRatio
@@ -251,7 +255,7 @@ public:
     int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount);
     int VerifyPW( PDWINDEX *pPdwIndex, unsigned int uiCount );
 
-    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
+    //void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     unsigned int GetCoSeg();
     unsigned int GetCoEmitter();
 
@@ -465,11 +469,12 @@ public:
 
     bool IsUpdateAet();
     void MakeUpAET();
-    int CheckUpdateLOB();
+    int DecisionToUpdateLOB();
     void CalcAllKnownSucessRatio();
     void SortAllKnownSucessRatio();
 
     float CalcSigTypeSuccessRatio( SRxLOBData *pLOBData );
+    float CalcMOPTypeSuccessRatio( SRxLOBData *pLOBData );
     float CalcFreqSuccessRatio(SRxLOBData *pLOBData);
     float CalcPRISuccessRatio(SRxLOBData *pLOBData);
 
@@ -478,13 +483,18 @@ public:
 
 
     CKMakeAET( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
-    virtual ~CKMakeAET();
+    ~CKMakeAET();
 
     int GetUpdateIndexAet() const { return m_UpdateSuccessAet; }
     bool IsTrackSuccess()
     {
         return m_UpdateSuccessAet >= 0;
     }
+
+#ifdef _DEBUG
+    bool IsValid();
+
+#endif
 
 };
 

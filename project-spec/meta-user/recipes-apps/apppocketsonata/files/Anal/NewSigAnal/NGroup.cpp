@@ -27,8 +27,8 @@
  * @brief     신호탐지분석의 그룹화 생성자 처리한다.
  * @param     void * pParent
  * @param     unsigned int uiCoMaxPdw
- * @return    
- * @exception 
+ * @return
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2006-01-20 19:01:00
@@ -40,14 +40,20 @@ CNGroup::CNGroup( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadNam
 
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
-    INIT_ANAL_VAR_(m_pNewSigAnal)
+    INIT_ANAL_VAR_( m_pNewSigAnal )
+
+#ifdef _MSC_VER
+    //! #동적 시험으로 함수를 타기위해서 그냥 호출
+    CNGroup::GetColPDW();
+
+#endif
 
 }
 
 /**
  * @brief     소멸자 처리를 수행한다.
- * @return    
- * @exception 
+ * @return
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2006-01-20 19:01:03
@@ -61,7 +67,7 @@ CNGroup::~CNGroup()
 /**
  * @brief     신호탐지분석의 펄스열 개수를 리턴한다.
  * @return    int
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-28 16:16:32
@@ -90,7 +96,7 @@ unsigned int CNGroup::GetCoPDW()
 /**
  * @brief     신호탐지분석의 그룹화를 수행한다.
  * @return    void
- * @exception 
+ * @exception
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   0.0.1
  * @date      2022-06-28 16:16:14

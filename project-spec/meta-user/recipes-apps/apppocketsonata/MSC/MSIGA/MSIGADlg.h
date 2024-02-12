@@ -17,12 +17,18 @@ private:
 
     char m_szIniFileName[200];
 
+    unsigned int m_uiTestNumber;
+    bool m_bAutoRun;
+    unsigned int m_uiAutoStep;
+
 private:
     void LoadINI( char *pszIniFileName );
     void SaveINI( char *pszIniFileName, int iComboRadarTest );
 
     void UpdateRadarPDW( int iRadarTest=0 );
     void LoadRadarPDW();
+
+    void AutoRunClose();
 
 public:
     void OnConnect( struct sockaddr_in *pAddr );
@@ -89,4 +95,6 @@ public:
     afx_msg void OnBnClickedOk();
     afx_msg void OnBnClickedStopSigGen();
     virtual BOOL PreTranslateMessage( MSG *pMsg );
+    afx_msg void OnBnClickedAutoRun();
+    afx_msg void OnTimer( UINT_PTR nIDEvent );
 };

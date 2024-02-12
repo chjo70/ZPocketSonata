@@ -82,6 +82,8 @@ private:
 
     bool m_bWriteDDRFile;
 
+    float m_fDOA;
+
 #endif
 
 
@@ -110,6 +112,11 @@ private:
 #endif
 
 public:
+#ifdef _HARMONIC_GENPDW_
+    bool m_bHarmonic;
+
+#endif
+
     CCollectBank *m_pTheLeftCollectBank;
     CCollectBank *m_pTheRigtCollectBank;
 
@@ -131,7 +138,7 @@ private:
 
     // 탐지 채널 관련 함수
     void StartDetectChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver );
-    void ReqDetectWindowCell( );
+    void ReqDetectWindowCell( bool bZeroCollect );
     void CloseDetectChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
 
     // 추적 채널 관련 함수
@@ -142,9 +149,9 @@ private:
 
     void UpdateTrackWindowCell( SRxABTData *pABTData );
 
-    void UpdateTrackChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
-    void UpdateScanChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
-    void CloseTrackChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver );
+    void UpdateTrackChannel( unsigned int uiGlobalCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
+    void UpdateScanChannel( unsigned int uiGlobalCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW );
+    void CloseTrackChannel( unsigned int uiGlobalCh, ENUM_PCI_DRIVER enPCIDriver );
 
     // 스캔 채널 관련 함수
     void ReqScanWindowCell();
@@ -162,6 +169,8 @@ private:
     bool CopyFromEmitterABTData( SRxABTData *pABTData );
     bool IsValidABT();
     ENUM_PCI_DRIVER WhichPCIDriver();
+
+    void CheckISRChannel();
 
     //inline SRxABTData *GetABTData( unsigned int uiIndex ) { return & m_ABTData[uiIndex]; }
     inline void ClearEndCollect() { m_bSendEnd = false; }
@@ -181,7 +190,7 @@ public:
     void MakeStaticPDWData( STR_STATIC_PDWDATA *pStaticPDWData, STR_UZPOCKETPDW *pPDWData, bool bAutoIncPDWID=false );
 
     void _routine();
-    const char *GetThreadName() { return m_szThreadName; }
+    //const char *GetThreadName(void);
     STR_MessageData *GetParentMessage() { return m_pMsg; }                          ///< 메시지 데이터를 리턴 합니다.
 
     CCollectBank *GetCollectBank( ENUM_PCI_DRIVER enPCIDriver );
@@ -209,6 +218,8 @@ public:
     inline void StopSigGen( bool bStopSigGen ) { m_bStopSigGen = bStopSigGen; }
 
 #endif
+
+    void PreFilter( float fDOAMin, float fDOAMax, float fFreqMin, float fFreqMax );
 
 };
 

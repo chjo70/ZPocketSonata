@@ -83,6 +83,7 @@ extern "C" {
 
 #ifdef __VXWORKS__
 BOOT_PARAMS g_stBootParams;
+int g_iBoardID;
 
 
 IMPORT time_t sysRtcTimeGet( void );
@@ -98,9 +99,7 @@ extern STATUS sysTffsFormat (void);
 #endif
 
 extern CFileTar *g_theFileTar;
-
 extern CManSbc *g_theManSbc;
-
 extern CSysConfig *g_pTheSysConfig;
 
 
@@ -191,6 +190,7 @@ CManSbc::CManSbc()
 
 #ifdef __VXWORKS__
     STATUS status;
+    struct timespec res;
 
 	// VMEBusSystemReset();
 
@@ -201,6 +201,15 @@ CManSbc::CManSbc()
     else {
         sysClkRateSet( TICK_COUNT );		// 1초당 100 tick 을 수행함.
     }
+
+    clock_getres( CLOCK_REALTIME, &res );
+    printf( "CLOCK_REALTIME: %ldns\n", res.tv_nsec );
+
+    if( res.tv_nsec != 26 ) {
+        printf( "\n 토네이도 컴포넌트에 High resolution clock 을 추가해야 합니다 !" );
+        // while( true );
+    }
+
 
     // SNTP 를 이용해서 현재 시간을 읽어온다.
     // SetTimeBySNMP();
@@ -403,7 +412,7 @@ UCHAR CManSbc::GetCommand()
 
 #endif
 
-    printf( "\nGetche key[%d;%1c]", key, key );
+    // printf( "\nGetche key[%d;%1c]", key, key );
 
     switch( tolower( key ) ) {
         case 'w':
@@ -445,7 +454,6 @@ UCHAR CManSbc::GetCommand()
                     \date 2008-07-03 10:42:35, 조철희
             */
             uiTFFSBoot = g_pTheSysConfig->GetTFFSBoot();
-
             g_pTheSysConfig->SetTFFSBoot( uiTFFSBoot );
 
             if( uiTFFSBoot == RUN_APP ) {
@@ -674,7 +682,7 @@ bool CManSbc::CreateAtaDisk( char *szDiskName )
 	\date     2008-04-18 10:41:18
 	\warning
 */
-bool CManSbc::CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks )
+bool CManSbc::CreateRamDisk( const char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks )
 {
 #ifdef __VXWORKS__
     char szRamDevs[100];
@@ -764,106 +772,68 @@ bool CManSbc::SetTimeBySNMP()
 	// InitSystemVariable();
 	putenv( (char *) "TIMEZONE=KST::-540.000000:000000" );
 
-    printf( "\n\n##### SNTP 프로토콜을 사용해서 타임 서버[%s]로 SBC 현재 시간을 설정합니다.\n" , g_pTheSysConfig->GetCCUServerOfNetwork() );
-
     // 이놈의 vxworks 7은 왜 2번을 수행해야 얻어 오는지....
-    if( true == CheckPing( g_pTheSysConfig->GetCCUServerOfNetwork() ) ) {
-        iTry = 0;
-        do {
-#ifdef _MSC_VER
-            sntpc_status = -1;
-#else
-            sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetCCUServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
-            //sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetDebugServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
-#endif
-            printf( "*" );
+    if( g_pTheSysConfig->GetDevelop() == 1 ) {
 
-            ++ iTry;
-
-        } while( iTry <= TRY_GETSNTP && sntpc_status != OK );
-    }
-
-    if( sntpc_status != OK ) {
         printf( "\n\n##### SNTP 프로토콜을 사용해서 타임 서버[%s]로 SBC 현재 시간을 설정합니다.\n", g_pTheSysConfig->GetDebugServerOfNetwork() );
-        iTry = 0;
-        do {
+        if( true == CheckPing( g_pTheSysConfig->GetDebugServerOfNetwork() ) ) {
+            iTry = 0;
+            do {
 #ifdef _MSC_VER
-            sntpc_status = -1;
+                sntpc_status = -1;
 #else
-            sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetDebugServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
+                sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetDebugServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
 #endif
-            printf( "*" );
+                printf( "*" );
 
-            ++ iTry;
+                ++ iTry;
 
-        } while( iTry <= TRY_GETSNTP && sntpc_status != OK );
+            } while( iTry <= TRY_GETSNTP && sntpc_status != OK );
+        }
     }
+    else {
+        printf( "\n\n##### SNTP 프로토콜을 사용해서 타임 서버[%s]로 SBC 현재 시간을 설정합니다.\n", g_pTheSysConfig->GetCCUServerOfNetwork() );
+        if( true == CheckPing( g_pTheSysConfig->GetCCUServerOfNetwork() ) ) {
+            iTry = 0;
+            do {
+#ifdef _MSC_VER
+                sntpc_status = -1;
+#else
+                sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetCCUServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
+#endif
+                printf( "*" );
 
-	if( sntpc_status != OK ) {
+                ++ iTry;
 
-        printf( "\n" );
-		printf( "\n [W] SNTPctimeGet failed...%s" , g_pTheSysConfig->GetRecentConnectionOfNetwork() );
-		printf( "\n Returned sntpc_status: %i errno: %s", sntpc_status, strerror(errno) );
-        printf( "\n" );
+            } while( iTry <= TRY_GETSNTP && sntpc_status != OK );
+        }
 
-        // 현재 시간을 최근 운용모드 시작한 시간으로 설정 합니다.
-        g_pTheSysConfig->GetPresentTime( & tspec );
+        if( sntpc_status != OK ) {
+            printf( "\n\n##### SNTP 프로토콜을 사용해서 타임 서버[%s]로 SBC 현재 시간을 설정합니다.\n", g_pTheSysConfig->GetDebugServerOfNetwork() );
+            iTry = 0;
+            do {
+#ifdef _MSC_VER
+                sntpc_status = -1;
+#else
+                sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetDebugServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
+#endif
+                printf( "*" );
 
-		/*
-        time_t result, recent_time=0;
+                ++ iTry;
 
-        struct dirent *pLogEntry;
-        DIR *pSystemLogDir;
+            } while( iTry <= TRY_GETSNTP && sntpc_status != OK );
+        }
 
-		if( ( pSystemLogDir = opendir( SYSTEM_LOG_DIRECTORY ) ) != NULL ) {
-			time_t entry_delete_time;
+	    if( sntpc_status != OK ) {
+            printf( "\n" );
+		    printf( "\n [W] SNTPctimeGet failed...%s" , g_pTheSysConfig->GetRecentConnectionOfNetwork() );
+		    printf( "\n Returned sntpc_status: %i errno: %s", sntpc_status, strerror(errno) );
+            printf( "\n" );
 
-			while( ( pLogEntry = readdir( pSystemLogDir ) ) != NULL ) {
-				if( OK == IsFile( pLogEntry->d_name ) ) {
-					entry_delete_time = GetLastAccessTime( pLogEntry->d_name );
+            // 현재 시간을 최근 운용모드 시작한 시간으로 설정 합니다.
+            g_pTheSysConfig->GetPresentTime( & tspec );
 
-					if( recent_time < entry_delete_time || recent_time == 0 ) {
-						recent_time = entry_delete_time;
-						// printf( "\n pLogEntry->d_name[%s]" , pLogEntry->d_name );
-					}
-				}
-
-			}
-		}
-		*/
-
-		//_date = GetDate( creationDate );
-		//_time = GetTime( creationDate+13 );
-		//SetRtcClock( _date, _time );
-		//result = GetRtcTime();
-
-		//if( recent_time != 0 && result <= recent_time ) {
-		//	Time2DateTime( & _date, & _time, recent_time );
-		//	SetRtcClock( _date, _time );
-
-		//	/* get current time from clock */
-		//	result = GetRtcTime();
-		//}
-
-		// 부팅 시간을 고려해서 1분 정도 시간 지연을 해서 설정하게 한다.
-		//result = sysRtcTimeGet();
-		//tspec.tv_sec = result + BOOTING_TIME;
-		//tspec.tv_nsec = 0;
-		//settime_status = clock_settime( CLOCK_REALTIME, & tspec );
-
-/*
-		time_t now;
-		struct tm *pLocalTime;
-		now = time(NULL);
-		pLocalTime = localtime( & now );
-		printf( "%02d/%02d/%02d %02d:%02d:%02d, ", pLocalTime->tm_year%100, pLocalTime->tm_mon+1, pLocalTime->tm_mday, pLocalTime->tm_hour, pLocalTime->tm_min, pLocalTime->tm_sec );
-
-		pLocalTime = gmtime( & now );
-		printf( "%02d/%02d/%02d %02d:%02d:%02d", pLocalTime->tm_year%100, pLocalTime->tm_mon+1, pLocalTime->tm_mday, pLocalTime->tm_hour, pLocalTime->tm_min, pLocalTime->tm_sec );
-*/
-
-		//Time2DateTime( & date, & time, tspec.tv_sec );
-		//SetRtcClock( date, time );
+        }
 	}
 
 #ifdef __VXWORKS__
@@ -1436,11 +1406,11 @@ void CManSbc::InitDataBase()
 void CManSbc::PCIConfigSetting()
 {
 
-#if defined(_PCI)
-
     TRACE( "\n\n" );
 
-    if( PCIeMemInit( ) == ERROR ) {
+#ifdef __VXWORKS__
+
+    if( PCIeMemInit() == ERROR ) {
         printf( "\n SBC 상에서 PCI 초기화를 수행하지 못했습니다. SBC 장착을 다시 해보거나 담당자에거 문의하세요..!" );
         while( true );
     }
@@ -1449,13 +1419,13 @@ void CManSbc::PCIConfigSetting()
 
         pPCIeMap = GetPCIeMap();
 
-//         printf( "\n 좌측 pPCIeMap->uiBaseAddress0[0x%x]" , pPCIeMap->memInfo[0].uiBaseAddress0 );
-//         printf( "\n 좌측 pPCIeMap->uiBaseAddress0[0x%x]" , pPCIeMap->memInfo[0].uiBaseAddress1 );
-//
-//         printf( "\n 우측 pPCIeMap->uiBaseAddress0[0x%x]" , pPCIeMap->memInfo[1].uiBaseAddress0 );
-//         printf( "\n 우측 pPCIeMap->uiBaseAddress0[0x%x]" , pPCIeMap->memInfo[1].uiBaseAddress1 );
+        //         printf( "\n 좌측 pPCIeMap->uiBaseAddress0[0x%x]" , pPCIeMap->memInfo[0].uiBaseAddress0 );
+        //         printf( "\n 좌측 pPCIeMap->uiBaseAddress0[0x%x]" , pPCIeMap->memInfo[0].uiBaseAddress1 );
+        //
+        //         printf( "\n 우측 pPCIeMap->uiBaseAddress0[0x%x]" , pPCIeMap->memInfo[1].uiBaseAddress0 );
+        //         printf( "\n 우측 pPCIeMap->uiBaseAddress0[0x%x]" , pPCIeMap->memInfo[1].uiBaseAddress1 );
 
-        if( pPCIeMap->memInfo[0].uiBaseAddress0 == (unsigned int) -1 ) {
+        if( pPCIeMap->memInfo[0].uiBaseAddress0 == ( unsigned int ) -1 ) {
             printf( "\n 좌측 PCI 가 초기화 되지 않았습니다. 전면판의 램프를 확인하세요." );
         }
         else {
@@ -1468,9 +1438,26 @@ void CManSbc::PCIConfigSetting()
         else {
             m_bPCIeInit[1] = true;
         }
+    }
 
+#endif
+
+    // 유효 보드 ID 일때는 보드 ID를 무시함.
+    if( g_pTheSysConfig->GetBoardID() >= enPRC1 && g_pTheSysConfig->GetBoardID() <= enPRC5 ) {
+        m_uiBoardID = g_pTheSysConfig->GetBoardID();
+    }
+    else {
+
+#if defined(_PCI)
+
+#ifdef __VXWORKS__
         // PCI 와 로직 간의 동기화 오류로 시간을 대기하고 호출하도록 합니다.
-        Sleep( 5 );
+        // ATA 드라이브, PS 로직 마운트 때문에 지연 추가
+        printf( "\n PS 로직 부팅으로 무려 20초씩이나 대기 합니다...\n" );
+        Sleep( 20 );
+        printf( "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n" );
+
+#endif
 
 	    // SBC 보드 ID 읽기
 	    unsigned int uiPSBoardID;
@@ -1492,31 +1479,31 @@ void CManSbc::PCIConfigSetting()
             // 2~3GHz(좌), 0.5~2 GHz(우)
             case 8:
             case 9:
-                m_uiBoardID = enPRC1;
+                m_uiBoardID = enPRC5;
                 break;
 
             // 3~4.5 GHz(좌), 4.5~6GHz(우)
 		    case 6 :
 		    case 7 :
-			    m_uiBoardID = enPRC2;
+			    m_uiBoardID = enPRC4;
 			    break;
 
             // 8~10GHz(좌), 6~8 GHz(우)
             case 0:
             case 1:
-                m_uiBoardID = enPRC3;
+                m_uiBoardID = enPRC1;
                 break;
 
             // 10~12 GHz(좌), 12~14GHz(우)
 		    case 2:
             case 3:
-                m_uiBoardID = enPRC4;
+                m_uiBoardID = enPRC2;       // 192.168.0.111
                 break;
 
             // 16~18GHz(좌), 14~16 GHz(우)
             case 4:
             case 5:
-                m_uiBoardID = enPRC5;
+                m_uiBoardID = enPRC3;
                 break;
 
 		    default:
@@ -1525,18 +1512,15 @@ void CManSbc::PCIConfigSetting()
 	    }
 
 	    printf( "\n SBC Board ID : %d, PS Board ID : %d", m_uiBoardID, uiPSBoardID );
+#endif
+	    // Print_PCIeLeftCtrlRead32( 0x208 );
+	    // Print_PCIeRightCtrlRead32( 0x208 );
     }
 
-	// Print_PCIeLeftCtrlRead32( 0x208 );
-	// Print_PCIeRightCtrlRead32( 0x208 );
-
-#else
-    m_uiBoardID = 1;
-
-#endif
+    //
+    g_iBoardID = m_uiBoardID;
 
 }
-
 
 /**
  * @brief		MountDrive
@@ -1548,21 +1532,26 @@ void CManSbc::PCIConfigSetting()
  */
 void CManSbc::MountDrive()
 {
-#ifdef __VXWORKS__
+#ifdef _MSC_VER
+
+#else
 	STATUS status;
 
 	//printf( "\nHOST[%s:%s]" , g_stBootParams.hostName, g_stBootParams.had );
 	nfsAuthUnixSet ( (char *) g_stBootParams.hostName, 0, 0, 0, (int *) 0 );
 
-#if 1
+    if( g_pTheSysConfig->GetDevelop() == 1 ) {
+        MountDrive( g_pTheSysConfig->GetDebugServerOfNetwork(), NFS_DRIVE );
+
+/*
     if( false == MountDrive( g_pTheSysConfig->GetCCUServerOfNetwork(), NFS_DRIVE ) ) {
         MountDrive( g_pTheSysConfig->GetDebugServerOfNetwork(), NFS_DRIVE );
     }
-
-#else
-    MountDrive( g_pTheSysConfig->GetDebugServerOfNetwork(), NFS_DRIVE );
-
-#endif
+    */
+    }
+    else {
+        MountDrive( g_pTheSysConfig->GetCCUServerOfNetwork(), NFS_DRIVE );
+    }
 
 #endif
 
@@ -1585,12 +1574,16 @@ bool CManSbc::MountDrive( char *pHostIPAddress, char *pRemoteFileSystem )
 
 #ifdef __VXWORKS__
     STATUS status;
+    char szHostName[100];
 
-    printf( "\nNFS 드라이브[%s:%s]를 연결하려 합니다 !", pHostIPAddress, pRemoteFileSystem );
+    sprintf( szHostName, "NFS_HOST%d", m_uiBoardID );
+    //strcpy( szHostName, "NFS_HOST" );
 
-    if( true == CheckPing( pHostIPAddress ) ) {
-        status = hostAdd( ( char * ) "NFS_HOST", pHostIPAddress );
-        status = nfsMount( "NFS_HOST", pRemoteFileSystem, NFS_DRIVE );
+    printf( "\n호스트 명[%s] NFS 드라이브[%s:%s]를 연결하려 합니다 !", szHostName, pHostIPAddress, pRemoteFileSystem );
+
+    if( true || true == CheckPing( pHostIPAddress ) ) {
+        status = hostAdd( szHostName, pHostIPAddress );
+        status = nfsMount( szHostName, pRemoteFileSystem, NFS_DRIVE );
 
         if( status == OK ) {
             printf( "\nNFS 드라이브[%s:%s]를 정상 연결했습니다 !", pHostIPAddress, pRemoteFileSystem );
@@ -1624,8 +1617,9 @@ bool CManSbc::MountDrive( char *pHostIPAddress, char *pRemoteFileSystem )
 bool CManSbc::CheckPing( char *pIPAddress )
 {
 #ifdef __VXWORKS__
-    STATUS status = ping( pIPAddress, 1, 0 );
-    return status == OK;
+    //STATUS status = ping( pIPAddress, 1, 0 );
+    //return status == OK;
+    return true;
 #else
     return true;
 
@@ -1680,7 +1674,7 @@ void CManSbc::KeyboardHooking()
     int stdinFd;
 
     stdinFd = ioTaskStdGet( 0, 0 );
-    printf( "\n\n Key board hooking[%d]..." , stdinFd );
+    // printf( "\n\n Key board hooking[%d]..." , stdinFd );
 
     status = ioctl( stdinFd, FIOPROTOHOOK, KeyboardHandler );
     if( status == ERROR ) {

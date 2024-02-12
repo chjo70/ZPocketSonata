@@ -56,7 +56,20 @@ CMultiServer::CMultiServer( int iKeyId, char *pClassName, int iPort, void *pPare
  */
 CMultiServer::~CMultiServer()
 {
+    SOCKET iSocket;
+
     //LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
+    for( const STR_CLIENT_SOCKET &stClientSocket : m_vClientSock ) {
+        CloseSocket( & stClientSocket );
+    }
+    iSocket = m_MasterSock;
+    m_MasterSock = 0;
+
+    closesocket( iSocket );
+    shutdown( iSocket, SD_BOTH );
+    
+
+    //CThread::StopThread();
 
     Free();
 }
@@ -426,77 +439,78 @@ void CMultiServer::_routine()
         }
 
         s = select( (int) ( iMaxSock + 1 ), &readfd, NULL, NULL, NULL );
-        if( ( s < 0 ) && ( errno != EINTR ) ) {
+        if( ( s < 0 ) && ( errno != EINTR ) || ( m_MasterSock == 0 ) ) {
             perror( "select error" );
         }
-
-        if( FD_ISSET( m_MasterSock, &readfd ) == 1 ) {
-            // 랜 소켓 인증
-            stConnectedClientSocket.iSocket = accept( m_MasterSock, ( sockaddr* ) &stConnectedClientSocket.socketAddress, ( socklen_t * ) &addlen );
-            if( stConnectedClientSocket.iSocket < 0 ) {
-                perror( "accept error" );
-                break;
-            }
-
-            Connect( & stConnectedClientSocket );
-        }
         else {
-            for( const STR_CLIENT_SOCKET &stClientSocket : m_vClientSock ) {
-                STR_LAN_HEADER *pstLanHeader;
-                STR_LAN_DATA *pUniLanData;
+            if( FD_ISSET( m_MasterSock, &readfd ) == 1 ) {
+                // 랜 소켓 인증
+                stConnectedClientSocket.iSocket = accept( m_MasterSock, ( sockaddr* ) &stConnectedClientSocket.socketAddress, ( socklen_t * ) &addlen );
+                if( stConnectedClientSocket.iSocket < 0 ) {
+                    perror( "accept error" );
+                    break;
+                }
 
-                STR_CLIENT_RECVSTAT *pRcvStat;
+                Connect( & stConnectedClientSocket );
+            }
+            else {
+                for( const STR_CLIENT_SOCKET &stClientSocket : m_vClientSock ) {
+                    STR_LAN_HEADER *pstLanHeader;
+                    STR_LAN_DATA *pUniLanData;
 
-                pRcvStat = &m_szRcvStat[stClientSocket.iIndex];
-                pstLanHeader = ( STR_LAN_HEADER * ) & pRcvStat->pszLanData[stClientSocket.iIndex];
-                pUniLanData = m_pstLanData[stClientSocket.iIndex];
+                    STR_CLIENT_RECVSTAT *pRcvStat;
 
-                if( FD_ISSET( stClientSocket.iSocket, &readfd ) == 1 ) {
-                    int iRead;
+                    pRcvStat = &m_szRcvStat[stClientSocket.iIndex];
+                    pstLanHeader = ( STR_LAN_HEADER * ) & pRcvStat->pszLanData[stClientSocket.iIndex];
+                    pUniLanData = m_pstLanData[stClientSocket.iIndex];
 
-                    iRead = recv( stClientSocket.iSocket, ( char * ) & pRcvStat->pszLanData[pRcvStat->iTotalRead], _MAX_LANDATA /*( int ) ( sizeof( struct STR_LAN_HEADER ) - pRcvStat->iTotalRead )*/, MSG_DONTWAIT );
-                    if( iRead <= 0 ) {
-                        //perror( "recv 에러" );
-                        CloseSocket( & stClientSocket );
-                        continue;
-                    }
-                    else {
-                        pRcvStat->iTotalRead += iRead;
+                    if( FD_ISSET( stClientSocket.iSocket, &readfd ) == 1 ) {
+                        int iRead;
 
-                        while( true ) {
+                        iRead = recv( stClientSocket.iSocket, ( char * ) & pRcvStat->pszLanData[pRcvStat->iTotalRead], _MAX_LANDATA /*( int ) ( sizeof( struct STR_LAN_HEADER ) - pRcvStat->iTotalRead )*/, MSG_DONTWAIT );
+                        if( iRead <= 0 ) {
+                            //perror( "recv 에러" );
+                            CloseSocket( & stClientSocket );
+                            continue;
+                        }
+                        else {
+                            pRcvStat->iTotalRead += iRead;
+
+                            while( true ) {
+    #ifdef _MSC_VER
+                                //TRACE( "\nIDX[%d]: DL[%d]", stClientSocket.iIndex, pRcvStat->iTotalRead );
+    #endif
+
+                                if( pRcvStat->bHeader == false && pRcvStat->iTotalRead >= sizeof( struct STR_LAN_HEADER ) ) {
+                                    pRcvStat->bHeader = true;
+
+                                    // 헤더 복사
+                                    memcpy( & pUniLanData->stLanHeader, &pRcvStat->pszLanData[0], sizeof( struct STR_LAN_HEADER ) );
+
+                                    CCommonUtils::AllSwapData16( & pUniLanData->stLanHeader.usOpCode, ( unsigned int ) sizeof( unsigned short ) );
+                                    CCommonUtils::AllSwapData32( & pUniLanData->stLanHeader.uiLength, ( unsigned int ) sizeof( unsigned int ) );
+
+                                    pRcvStat->iTotalRead -= sizeof( struct STR_LAN_HEADER );
+                                    memcpy( pRcvStat->pszLanData, & pRcvStat->pszLanData[sizeof( struct STR_LAN_HEADER )], pRcvStat->iTotalRead );
+                                }
+
+                                else if( pRcvStat->iTotalRead >= (int) pUniLanData->stLanHeader.uiLength ) {
+                                    // 데이터 복사
+                                    memcpy( & pUniLanData->stLanData, pRcvStat->pszLanData, pUniLanData->stLanHeader.uiLength );
+
+                                    // 명령 처리
+                                    ProcessLANMessage( stClientSocket.iIndex );
+                                    pRcvStat->iTotalRead -= ( (int) pUniLanData->stLanHeader.uiLength );
+                                    memcpy( pRcvStat->pszLanData, & pRcvStat->pszLanData[pUniLanData->stLanHeader.uiLength], pRcvStat->iTotalRead );
+
+                                    pRcvStat->bHeader = false;
+                                }
+                                else {
 #ifdef _MSC_VER
-                            //TRACE( "\nIDX[%d]: DL[%d]", stClientSocket.iIndex, pRcvStat->iTotalRead );
+                                    //TRACE( "\n break while..." );
 #endif
-
-                            if( pRcvStat->bHeader == false && pRcvStat->iTotalRead >= sizeof( struct STR_LAN_HEADER ) ) {
-                                pRcvStat->bHeader = true;
-
-                                // 헤더 복사
-                                memcpy( & pUniLanData->stLanHeader, &pRcvStat->pszLanData[0], sizeof( struct STR_LAN_HEADER ) );
-
-                                CCommonUtils::AllSwapData16( & pUniLanData->stLanHeader.usOpCode, ( unsigned int ) sizeof( unsigned short ) );
-                                CCommonUtils::AllSwapData32( & pUniLanData->stLanHeader.uiLength, ( unsigned int ) sizeof( unsigned int ) );
-
-                                pRcvStat->iTotalRead -= sizeof( struct STR_LAN_HEADER );
-                                memcpy( pRcvStat->pszLanData, & pRcvStat->pszLanData[sizeof( struct STR_LAN_HEADER )], pRcvStat->iTotalRead );
-                            }
-
-                            else if( pRcvStat->iTotalRead >= (int) pUniLanData->stLanHeader.uiLength ) {
-                                // 데이터 복사
-                                memcpy( & pUniLanData->stLanData, pRcvStat->pszLanData, pUniLanData->stLanHeader.uiLength );
-
-                                // 명령 처리
-                                ProcessLANMessage( stClientSocket.iIndex );
-                                pRcvStat->iTotalRead -= ( (int) pUniLanData->stLanHeader.uiLength );
-                                memcpy( pRcvStat->pszLanData, & pRcvStat->pszLanData[pUniLanData->stLanHeader.uiLength], pRcvStat->iTotalRead );
-
-                                pRcvStat->bHeader = false;
-                            }
-                            else {
-#ifdef _MSC_VER
-                                //TRACE( "\n break while..." );
-#endif
-                                break;
+                                    break;
+                                }
                             }
                         }
                     }

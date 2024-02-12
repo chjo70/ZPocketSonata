@@ -190,7 +190,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 //////////////////////////////////////////////////////////////////////
 //
 // 펄스열 추출 PRI 범위 테이블
-#define	MAX_PRI_RANGE				(17)
+//! #추후 자동으로 설정
+#define	MAX_PRI_RANGE				(14)        // 최대 PRI 까지 설정해야함.
 
 // 신호 펄스열 최대 개수
 // Jitter, Stagger 기준 펄스열의 최소 펄스수 (Min. Jitter Stagger Pulse Count)
@@ -199,7 +200,8 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 // 펄스열 최대 개수 및 가상 에미터 최대 개수
 //#define	MAX_PT      				(UINT)( 50 + 17 + 50 )  // 최대 펄스열 수, 17은 stagger 펄스열을 추출하기 위한 버퍼
 #define	MAX_SEG      				(UINT)( NEW_COLLECT_PDW )  // 최대 펄스열 수, 17은 stagger 펄스열을 추출하기 위한 버퍼
-#define	MAX_LOB     				(100)		// 최대 AET 수, 04-04-12 -> 50
+//#define	MAX_LOB     				(100)		// 최대 AET 수, 04-04-12 -> 50
+#define MAX_LOB                     ( ( _MAX_LANDATA / sizeof( SRxLOBData ) ) - 1 )     // 97개
 
 #define PRI_MAX                     (20000)             // [us]
 
@@ -265,14 +267,20 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 #define	FREQ_WIDE_VALUE_MHZ             (2000)
 
 #define	FREQ_NARR_MHZ                   IFRQMhz(0,20)            // 20 MHz
-#define	FREQ_WIDE_MHZ                   IFRQMhz(0, 500 )        // BIN 폭을 500 MHz 로 설정
+
+
+//! #추후: 동일 방위의 위협 레이더 주파수 경계를 결정
+//!
+#define	FREQ_WIDE_MHZ                   IFRQMhz(0, 100 )         // BIN 폭을 500 MHz 로 설정, 500 -> 100
 
 #define	MAX_FREQ_DEVIATION		        IFRQMhz(0, 1000)         // 1000 MHz, [MHz], 이웃한 PDW의 최대 주파수 편차, WSA-423의 레이더 신호를 참조해서 정함.
 
 
 // 아래는 PDW의 해당 항목의 비트 수를 고려해서 값을 설정해야 한다.
 // 이 값으로 그룹화 최대 BIN 수를 결정합니다.
-#define MAX_FREQ_BIT                    (0x10000000)            // 주파수 최대 값
+#define MAX_FREQ_BIT                    (0x10000000)            // 주파수 최대 비트
+#define MAX_FREQ_VALUE                  (18000000)              // 주파수 최대 값
+
 #define MAX_AOA_BIT       			    (3600) // (0x1000)                // 방위 최대 값
 #define	MAX_PW_BIT					    (0x1000000)             // 펄스폭 최대 값
 #define	MAX_PA_BIT					    (0x10000)               // 신호세기 최대 값
@@ -329,11 +337,7 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #define   _spAOAmax       0x3FF   // 359.6484375 Degree
 #define		_spAmpmax				0xFF
-//#define   _spAOAres       0.351562  // Degree */
-//#define   _spAOAres       (0.01)		//0.351562  // Degree */
-//#define   _spAMPres       0.3125    // dB */
-//#define   _spTOAres       0.000000050 // SEC(50 ns) */
-//#define   _spPWres        50.         // pw res.
+
 
 #define TOTAL_FRQAOAPWBIN					(1024)											// 전체 히스토그램 BIN수
 // DTOA 히스트그램 최대 개수
@@ -364,17 +368,21 @@ static const char on_off[2][4] = { "OFF" , "ON" } ;
 
 #endif
 
-
-
-
-
 #define FREQ_RANGE_MARGIN		0				// 1000 MHz, 주파수 그룹 범위 margin, 이전값 0
 #define	FREQ_WIDE_SHIFT_CNT	(2*_sp.np.Freq_Shift_Cnt)
 #define	FREQ_NARR_SHIFT_CNT	(_sp.np.Freq_Shift_Cnt)
 
-#define MAX_AGRT						( 30+2 )// 최대 방위 그룹 개수. 최소 개수는 3 이상이다.
-#define MAX_FGRT      			( 30 )	// 최대 주파수 그룹 범위 개수(겹침고려 2배)
-#define MAX_PGRT      			( 40 )	// 최대 펄스폭 그룹 범위 개수(겹침고려 2배)
+#ifdef _VECTORCAST_
+#define MAX_AGRT                ( 2 )  // 최대 방위 그룹 개수. 최소 개수는 3 이상이다.
+#define MAX_FGRT                ( 2 )  // 최대 방위 그룹 개수. 최소 개수는 3 이상이다.
+#define MAX_PGRT                ( 2 )  // 최대 방위 그룹 개수. 최소 개수는 3 이상이다.
+
+#else
+#define MAX_AGRT                ( 60 )  // 최대 방위 그룹 개수. 최소 개수는 3 이상이다.
+#define MAX_FGRT                ( 30 )  // 최대 방위 그룹 개수. 최소 개수는 3 이상이다.
+#define MAX_PGRT                ( 10 )  // 최대 방위 그룹 개수. 최소 개수는 3 이상이다.
+
+#endif
 
 
 #define MAX_MISSING_PULSE_FOR_PULSEEXTRACT		(20)

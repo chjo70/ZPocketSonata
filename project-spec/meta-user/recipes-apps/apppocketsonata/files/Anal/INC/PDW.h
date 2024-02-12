@@ -24,6 +24,7 @@
 
 #define LENGTH_OF_TASK_ID			(19+1)		//과제ID 문자열 길이 (TBD)
 
+
 enum ENUM_ANAL_TYPE : unsigned int {
     enCLEAR_ANAL = 0x00,
 
@@ -35,7 +36,7 @@ enum ENUM_ANAL_TYPE : unsigned int {
     enTRKSCN_ANAL = 0x06,
     enDETTRKSCN_ANAL = 0x07,
 
-    enCOL = 0x8,
+    enCOL = 0x8,                    // 수집 타스크
 
     enCOL_DET_ANAL = 0x9,
     enCOL_TRK_ANAL = 0x0A,
@@ -653,6 +654,8 @@ struct TNEW_SPDW {
 // 아래는 MIDAS 변환을 하기 위해서 각 장치별로 변환 구조체 필요....
 #ifndef _STR_STAT_BITMAP
 #define _STR_STAT_BITMAP
+
+#ifdef _MSC_VER
 struct STR_STAT_BITMAP {
     unsigned int CwPulse : 1;
     unsigned int Pmop : 1;
@@ -662,8 +665,30 @@ struct STR_STAT_BITMAP {
     unsigned int FmopDir : 2;
     unsigned int Edge : 1;
 
+    unsigned int _dummy : 8;
+
     unsigned int FMOPBW : 16;
+
+
 };
+#else
+struct STR_STAT_BITMAP {
+    unsigned int FMOPBW : 16;
+
+    unsigned int _dummy : 8;
+
+    unsigned int Edge : 1;
+    unsigned int FmopDir : 2;
+    unsigned int FalsePdw : 1;
+    unsigned int DI : 1;
+    unsigned int Fmop : 1;
+    unsigned int Pmop : 1;
+    unsigned int CwPulse : 1;
+
+};
+
+#endif
+
 #endif
 
 #ifndef _UNI_PDW_ETC
@@ -696,11 +721,10 @@ union UNI_PDW_ETC {
     struct {
         int iChannel;
 
-        union UNI_STAT {
+        union {
+            unsigned int uiValue;
             STR_STAT_BITMAP stStrBitMap;
-
-        } x;
-
+        } x ;
 
     } ps;
 
@@ -3213,6 +3237,7 @@ typedef struct stSTR_STATIC_PDWDATA {
         pstPDWData->uiPA = o_pstPDW->uiPA;
         pstPDWData->uiPW = o_pstPDW->uiPW;
         pstPDWData->uiIndex = o_pstPDW->uiIndex;
+        pstPDWData->iStat = o_pstPDW->iStat;
 
     }
 
@@ -3255,12 +3280,12 @@ typedef struct stSTR_UZPOCKETPDW {
             o_pstPDW->iStat = STAT_NORMAL;
             if( pstHwPdwDataRf->Pmop == 1 ) {
                 o_pstPDW->iStat = STAT_PMOP;
-                //o_pstPDW->x.ps.iPMOP = 1;
+                //o_pstPDW->x.ps.stStrBitMap.Pmop = 1;
             }
             if( pstHwPdwDataRf->Fmop == 1 ) {
+            	//o_pstPDW->x.ps.x.stStrBitMap.Fmop = 1;
                 if( pstHwPdwDataRf->FmopDir == 1 ) {
                     o_pstPDW->iStat = STAT_CHIRPUP;
-                    //o_pstPDW->x.ps.iFMOP = 1;
                 }
                 else if( pstHwPdwDataRf->FmopDir == 2 ) {
                     o_pstPDW->iStat = STAT_CHIRPDN;
@@ -3273,6 +3298,7 @@ typedef struct stSTR_UZPOCKETPDW {
                 else {
                     o_pstPDW->iStat = STAT_CHIRPTRI;
                 }
+                //o_pstPDW->x.ps.x.stStrBitMap.iFMOP = pstHwPdwDataRf->FmopDir;
             }
         }
         else {

@@ -15,7 +15,6 @@
 
 class CKnownSigAnal;
 
-//##ModelId=452B0C5201C9
 class CKPulExt : public CPulExt
 {
 private:
@@ -24,11 +23,9 @@ private:
     SRxABTData *m_pTrkAet;
 
 protected:
-    //##ModelId=452B0C5201D5
     CKnownSigAnal *m_pKnownSigAnal;
 
 public:
-    //##ModelId=452B0C5201DD
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return CPulExt::GetPulseSeg(); }
 
     unsigned int GetCoPdw();

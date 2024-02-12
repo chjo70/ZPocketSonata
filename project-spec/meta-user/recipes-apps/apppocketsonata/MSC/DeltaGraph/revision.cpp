@@ -18,6 +18,6 @@ const TCHAR *GetRevision()
 
 const TCHAR *GetBuildDate()
 {
-	static TCHAR st_szDate[100] = { _T("2022/02/23 13:59:13") };
+	static TCHAR st_szDate[100] = { _T("2024/01/27 11:25:20") };
 	return st_szDate;
 }

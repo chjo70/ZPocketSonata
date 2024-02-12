@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<!-- VectorCAST Report header -->
+<html lang="en">
+  <head>
+    <title>Metrics Report</title>
+    <meta charset="utf-8"/>
+    <style>
+    /*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */
+html{line-height:1.15;-webkit-text-size-adjust:100%}
+body{margin:0}
+h1{font-size:2em;margin:.67em 0}
+hr{box-sizing:content-box;height:0;overflow:visible}
+pre{font-family:monospace,monospace;font-size:1em}
+a{background-color:transparent}
+abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}
+b,strong{font-weight:bolder}
+code,kbd,samp{font-family:monospace,monospace;font-size:1em}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sub{bottom:-.25em}
+sup{top:-.5em}
+img{border-style:none}
+button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}
+button,input{overflow:visible}
+button,select{text-transform:none}
+[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}
+[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}
+[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}
+fieldset{padding:.35em .75em .625em}
+legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}
+progress{vertical-align:baseline}
+textarea{overflow:auto}
+[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}
+[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}
+[type=search]{-webkit-appearance:textfield;outline-offset:-2px}
+[type=search]::-webkit-search-decoration{-webkit-appearance:none}
+::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}
+details{display:block}
+summary{display:list-item}
+template{display:none}
+[hidden]{display:none}
+ html {box-sizing:border-box;position:relative;height:100%;width:100%;}
+*, *:before, *:after {box-sizing:inherit;}
+body {position:relative;height:100%;width:100%;font-size:10pt;font-family:helvetica, Arial, sans-serif;color:#3a3e3f;}
+.alternate-font {font-family:Arial Unicode MS, Arial, sans-serif;}
+#page {position:relative;width:100%;height:100%;overflow:hidden;}
+#title-bar {position:absolute;top:0px;left:0em;right:0px;height:1.8em;background-color:#B1B6BA;white-space:nowrap;box-shadow:1px 1px 5px black;z-index:100;}
+#report-title {font-size:3em;text-align:center;font-weight:bold;background-color:white;padding:0.5em;margin-bottom:0.75em;border:1px solid #e5e5e5;}
+.contents-block {position:absolute;top:1.8em;left:0em;width:22em;bottom:0em;overflow:auto;background-color:#DADEE1;border-right:1px solid silver;padding-left:0.75em;padding-right:0.5em;}
+.testcase .report-block, .testcase .report-block-coverage {padding-bottom:2em;border-bottom:3px double #e5e5e5;}
+.testcase .report-block:last-child, .testcase .report-block-coverage:last-child {border-bottom:0px solid white;}
+.report-body {position:absolute;top:1.8em;left:22em;right:0em;bottom:0em;padding-left:2em;padding-right:2em;overflow:auto;padding-bottom:1.5em;background-color:#DADEE1;}
+.report-body.no-toc {left:0em;}
+.report-body > .report-block, .report-body > .report-block-coverage, .report-body > .report-block-scroll, .report-body > .testcase {border:1px solid #e5e5e5;margin-bottom:2em;padding-bottom:1em;padding-right:2em;background-color:white;padding-left:2em;padding-top:0.1em;margin-top:1em;overflow-x:auto;}
+.report-body > .report-block-scroll {overflow-x:visible;background-color:inherit;}
+.title-bar-heading {display:none;position:absolute;text-align:center;width:100%;color:white;font-size:3em;bottom:0px;margin-bottom:0.3em;}
+.title-bar-logo {display:inline-block;height:100%;}
+.title-bar-logo img {width:120px;margin-left:0.5em;margin-top:-16px;}
+.contents-block ul {padding-left:1.5em;list-style-type:none;line-height:1.5;}
+li.collapsible-toc > input ~ ul {display:none;}
+li.collapsible-toc > input:checked ~ ul {display:block;}
+li.collapsible-toc > input {display:none;}
+li.collapsible-toc > label {cursor:pointer;}
+li.collapsible-toc > label.collapse {display:none;}
+li.collapsible-toc > label.expand {display:inline;}
+li.collapsible-toc > input:checked ~ label.expand {display:none;}
+li.collapsible-toc > input:checked ~ label.collapse {display:inline;}
+.contents-block ul.toc-level1 {padding-left:1em;}
+.contents-block ul.toc-level1 > li {margin-top:0.75em;}
+.contents-block li {white-space:nowrap;text-overflow:ellipsis;overflow:hidden;}
+.tc-passed:before, .tc-failed:before, .tc-none:before{display:inline-block;margin-right:0.25em;width:0.5em;text-align:center;}
+.tc-passed:before {content:"✓";color:darkgreen;}
+.tc-failed:before {content:"✗";color:#b70032;}
+.tc-none:before {content:"•";}
+.tc-item {margin-top:0.75em;margin-left:-1em;}
+table {margin-top:0.5em;margin-bottom:1em;border-collapse:collapse;min-width:40em;}
+.expansion_row_icon_minus, .expansion_file_icon_minus, .expansion_all_icon_minus{display:none !important;}
+.sfp-table{margin:0;border-bottom:1px solid gray;min-width:50em;}
+.sfp-table th{padding:0 !important;border-bottom:solid 1px grey;font-size:15px;padding-left:2px !important;padding-right:2px !important;}
+.sfp-table td{padding:0;border-right:solid 1px grey;border-bottom:0;}
+.sfp-table td:last-child {border-right:0;padding-left:5px !important;}
+.sfp-table tr:hover, .highlight:hover{background-color:#F3F4F5;}
+table.table-hover tbody tr:hover {background-color:#DADEE1;}
+th, td {text-align:left;padding:0.25em;padding-right:1em;border-bottom:1px solid #e5e5e5;}
+table thead th {border-bottom:2px solid silver;border-top:0;border-left:0;border-right:0;}
+.top-align {vertical-align:top;}
+.pull-right {display:none;}
+h1, h2 {border-bottom:3px solid silver;}
+h1, h2, h3, h4 {margin-top:1em;margin-bottom:0.25em;}
+h1 {font-size:3.5em;}
+h2 {font-size:2.5em;}
+h3 {font-size:2em;}
+h4 {font-size:1.25em;border-bottom:0;margin-bottom:0;}
+h5 {font-size:1em;font-weight:bold;margin-top:0.5em;margin-bottom:0.25em;}
+pre {padding:1em;padding-left:1.5em;border:1px solid #e5e5e5;background-color:#DADEE1;min-width:40em;width:auto;clear:both;display:inline-block;margin-top:0.25em;}
+.sfp-pre{padding:0;background-color:transparent;border:0;margin:0;}
+ul.unstyled {list-style-type:none;margin-top:0.25em;padding-left:0px;}
+ul {line-height:1.3;}
+p {margin-top:0.5em;margin-bottom:1em;max-width:50em;}
+pre p {max-width:inherit;}
+a, a:visited {color:inherit;text-decoration:none;}
+a:hover {text-decoration:underline;text-decoration-color:#b70032;-webkit-text-decoration-color:#b70032;-moz-text-decoration-color:#b70032;cursor:pointer;}
+pre.aggregate-coverage {padding-left:0px;padding-right:0px;margin-top:1em;}
+pre.aggregate-coverage span {width:100%;display:inline-block;padding-left:1em;padding-right:1em;line-height:1.3;}
+.sfp-span{width:auto ! important;padding-left:0 ! important;padding-right:0 ! important;}
+.sfp-span-color{width:100% !important;padding-left:1px !important;padding-right:1px !important;}
+.sfp_number{text-align:right;width:1px;white-space:nowrap;padding-right:2px !important;}
+.sfp_coverage{text-align:center;width:1px;}
+.sfp_color{padding-left:0 !important;padding-right:0 !important;width:1px;}
+.up_arrow{position:absolute;left:65px;}
+.collapse_icon{float:right;height:24px;width:24px;display:inline-block;color:black;font-size:24px;line-height:24px;text-align:center;border-radius:50%;cursor:pointer;}
+.underline{color:#a0a0a0;}
+.temp_description{font-style:italic;}
+.ips{display:none;}
+.bg-success, .success, span.full-cvg {background-color:#c8f0c8;}
+.sfp-full{background-color:#28a745;}
+.sfp-part{background-color:#ffc107;}
+.sfp-none{background-color:#dc3545;}
+span.ann-cvg, span.annpart-cvg {background-color:#cacaff;}
+.bg-danger, .danger, span.no-cvg {background-color:#facaca;}
+.bg-warning, .warning, span.part-cvg {background-color:#f5f5c8;}
+.fit-content {width:max-content;}
+.rel-pos {position:relative;}
+.report-block > .bs-callout.test-timeline, .mcdc-condition {padding-left:0px;}
+.report-block.single-test {padding-left:2em;padding-right:2em;width:100%;height:100%;overflow:auto;}
+.test-action-header + h4.event{margin-top:0.5em;}
+.event.bs-callout > .bs-callout, .mcdc-condition {margin-bottom:2em;border-left:2px solid silver;}
+.event.bs-callout {margin-top:1.5em;}
+.bs-callout, .mcdc-condition {padding-left:1.5em;}
+.bs-callout.bs-callout-success {border-left:2px solid green;margin-left:0px;}
+.bs-callout.bs-callout-success .bs-callout.bs-callout-success {border-left:none;margin-left:0px;}
+.bs-callout.bs-callout-danger {border-left:2px solid #b70032;margin-left:0px;}
+.bs-callout.bs-callout-warning {border-left:2px solid wheat;padding-left:1.5em;margin-left:0px;}
+.event.bs-callout .bs-callout.bs-callout-warning {border-left:2px solid wheat;padding-left:1.5em;margin-left:0px;}
+.bs-callout.bs-callout-danger .bs-callout.bs-callout-danger {margin-left:1.5em;border-left:2px solid #b70032;padding-left:1.5em;}
+.bs-callout-info {margin-top:1em;}
+.text-muted {font-size:0.9em;}
+.test-action-header {border-top:3px solid silver;border-bottom:1px solid #e5e5e5;min-width:42em;white-space:nowrap;margin-bottom:0.5em;padding-top:0.25em;padding-bottom:0.25em;margin-top:2em;background-color:#DADEE1;margin-left:-1.5em;padding-left:1.5em;}
+.test-action-header h4 {margin-top:0px;}
+.test-action-header:first-child{margin-top:0px;}
+.test-timeline > .event.bs-callout:first-child{margin-top:1em;}
+.event > .bs-callout {margin-left:2px !important;}
+.testcase-notes {white-space:pre;word-wrap:none;}
+.mcdc-condition {margin-bottom:3em;}
+.mcdc-table {margin-top:0px;}
+.mcdc-rows-table {margin-top:2em;min-width:auto;}
+.mcdc-rows-table td{border:1px solid #e5e5e5;}
+.mcdc-condition.full-cvg {border-left-color:green;border-left-width:2px;}
+.mcdc-condition.part-cvg {border-left-color:wheat;border-left-width:2px;}
+.mcdc-condition.no-cvg {border-left-color:#b70032;border-left-width:2px;}
+.i0 {padding-left:0.25em;min-width:11em }
+.i1 {padding-left:1.25em;min-width:11em }
+.i2 {padding-left:2.25em;}
+.i3 {padding-left:3.25em;}
+.i4 {padding-left:4.25em;}
+.i5 {padding-left:5.25em;}
+.i6 {padding-left:6.25em;}
+.i7 {padding-left:7.25em;}
+.i8 {padding-left:8.25em;}
+.i9 {padding-left:9.25em;}
+.i10 {padding-left:10.25em;}
+.i11 {padding-left:11.25em;}
+.i12 {padding-left:12.25em;}
+.i13 {padding-left:13.25em;}
+.i14 {padding-left:14.25em;}
+.i15 {padding-left:15.25em;}
+.i16 {padding-left:16.25em;}
+.i17 {padding-left:17.25em;}
+.i18 {padding-left:18.25em;}
+.i19 {padding-left:19.25em;}
+.i20 {padding-left:20.25em;}
+.right {float:right;}
+.req-notes-list {white-space:pre;}
+.uncovered_func_calls-list {white-space:pre;}
+.bold-text {font-weight:bold;}
+.static-cell {}
+.static-cell-right {text-align:right;}
+.static-doc {width:100%;}
+.static-title-bar {height:1.9em;width:100%;font-size:1.7em;border-bottom:1px solid #e5e5e5;margin:0;padding-top:8px;font-weight:bold;}
+.static-id {float:left;width:100px;}
+.static-title {float:left;}
+.static-doctext {width:auto;background-color:#efefef;border:1px solid #e5e5e5;min-width:40em;}
+.static-doctext pre {padding:0;margin:0.2em 0 0.2em 1em;border:none;}
+.static-doctext p {padding:0;margin:0.2em 0 0.2em 1em;}
+.static-doctext h2 {font-size:1.5em;}
+.static-doctext h3 {font-size:1.3em;}
+.missing_control_flow {max-width:40em;}
+.preformatted {font-family:monospace;white-space:pre;}
+.probe_point_notes {font-family:monospace;width:15%;}
+.col_unit {word-break:break-all;width:30%;}
+.col_subprogram {word-break:break-all;width:30%;}
+.col_complexity {white-space:nowrap;}
+.col_metric {white-space:nowrap;}
+.col_nowrap {white-space:nowrap;}
+.col_wrap {word-break:break-all;}
+.subtitle {font-size:1.3em;}
+@media print{html, body {height:auto;overflow:auto;color:black;}
+.contents-block {display:none;}
+#title-bar {position:initial;height:20pt;}
+#main-scroller {background-color:white;margin:0;padding:0;position:initial;left:auto;top:auto;}
+pre {background-color:white;font-size:10pt;border:none;border-left:1px solid #e5e5e5;font-size:9pt;}
+.report-body > .testcase, .report-body > .report-block, .report-body > .report-block-coverage {border:none;padding-bottom:0in;}
+.report-body > .testcase {page-break-before:always }
+#report-title {border:none;font-size:3em;text-align:left;font-weight:bold;padding-bottom:0px;border-bottom:3px solid silver;}
+h1, h2, h3, h4 {padding-top:0;margin-top:0.2in;}
+html, body, .report-body {background-color:white;font-size:1vw;}
+}
+
+    </style>
+  </head>
+  <body>
+    <div id='page'><!-- ReportTitle -->
+<div id="title-bar">
+  <div class="title-bar-logo">
+    <img alt="Vector" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IldPUlQtX3gyRl9CSUxETUFSS0Vfc1JHQiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayINCgkgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI0MTUuMTc5cHgiIGhlaWdodD0iMTk3LjU3MnB4IiB2aWV3Qm94PSIwIDAgNDE1LjE3OSAxOTcuNTcyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA0MTUuMTc5IDE5Ny41NzIiDQoJIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHBvbHlnb24gaWQ9IkJpbGRtYXJrZV8xODNfeDJGXzBfeDJGXzUwIiBmaWxsPSIjQjcwMDMyIiBwb2ludHM9IjI5Mi4yODgsMTE1LjI1IDI5Mi4yODgsMTMxLjcxNSAzNDkuMzIyLDk4Ljc4NiAyOTIuMjg4LDY1Ljg1NyANCgkyOTIuMjg4LDgyLjMyMSAzMjAuODA1LDk4Ljc4NiAiLz4NCjxwb2x5Z29uIHBvaW50cz0iOTAuNTU0LDg0LjUyOSA5OC43ODcsODQuNTI5IDgyLjMyMiwxMTMuMDQ3IDY1Ljg1Nyw4NC41MjkgNzQuMDg5LDg0LjUyOSA4Mi4zMjIsOTguNzg4ICIvPg0KPHBhdGggZD0iTTIxNy43NTQsODMuODE5Yy04LjI2OSwwLTE0Ljk3Miw2LjcwMy0xNC45NzIsMTQuOTcyYzAsOC4yNjksNi43MDMsMTQuOTcxLDE0Ljk3MiwxNC45NzENCgljOC4yNjksMCwxNC45NzItNi43MDMsMTQuOTcyLTE0Ljk3MUMyMzIuNzI2LDkwLjUyMiwyMjYuMDIzLDgzLjgxOSwyMTcuNzU0LDgzLjgxOXogTTIxNy43NTUsMTA2LjY2OA0KCWMtNC4zNTEsMC03Ljg3OC0zLjUyNy03Ljg3OC03Ljg3OGMwLTQuMzUxLDMuNTI3LTcuODc3LDcuODc4LTcuODc3YzQuMzUxLDAsNy44NzgsMy41MjcsNy44NzgsNy44NzcNCglDMjI1LjYzMywxMDMuMTQyLDIyMi4xMDUsMTA2LjY2OCwyMTcuNzU1LDEwNi42Njh6Ii8+DQo8cGF0aCBkPSJNMTU1LjEyMSwxMDYuNjY4Yy00LjM1MSwwLTcuODc4LTMuNTI3LTcuODc4LTcuODc4YzAtNC4zNTEsMy41MjctNy44NzcsNy44NzgtNy44NzdjMi4xNzQsMCw0LjE0MywwLjg4MSw1LjU2OCwyLjMwNQ0KCWw1LjAxNi01LjAxNmMtMi43MDktMi43MDgtNi40NTEtNC4zODMtMTAuNTg0LTQuMzgzYy04LjI2OSwwLTE0Ljk3Miw2LjcwMy0xNC45NzIsMTQuOTcyYzAsOC4yNjksNi43MDMsMTQuOTcxLDE0Ljk3MiwxNC45NzENCgljNC4xMzYsMCw3Ljg3OS0xLjY3NiwxMC41ODktNC4zODdsLTUuMDE2LTUuMDE2QzE1OS4yNjgsMTA1Ljc4NiwxNTcuMjk3LDEwNi42NjgsMTU1LjEyMSwxMDYuNjY4eiIvPg0KPHBvbHlnb24gcG9pbnRzPSIxNzEuNDQ2LDkwLjk0NiAxODEuMDcxLDkwLjk0NiAxODEuMDcxLDExMy4wNDcgMTg4LjIwMSwxMTMuMDQ3IDE4OC4yMDEsOTAuOTQ2IDE5Ny44MjUsOTAuOTQ2IDE5Ny44MjUsODQuNTI5IA0KCTE3MS40NDYsODQuNTI5ICIvPg0KPHBvbHlnb24gcG9pbnRzPSIxMDguMDY5LDExMy4wNDcgMTMwLjE3LDExMy4wNDcgMTMwLjE3LDEwNi42MyAxMTUuMTk4LDEwNi42MyAxMTUuMTk4LDEwMS42NCAxMjYuODkxLDEwMS42NCAxMjYuODkxLDk1LjM2NiANCgkxMTUuMTk4LDk1LjM2NiAxMTUuMTk4LDkwLjk0NiAxMzAuMTcsOTAuOTQ2IDEzMC4xNyw4NC41MjkgMTA4LjA2OSw4NC41MjkgIi8+DQo8cGF0aCBkPSJNMjcwLjE4Nyw5NC4wNDdjMC01LjI1LTQuMjU1LTkuNTE4LTkuNTA1LTkuNTE4aC0xNy41ODd2MjguNTE4aDcuMTI5di05LjQ4Mmg2LjI0NGw1LjQ4Nyw5LjQ4Mmg4LjIzMWwtNS44OTktMTAuMjMxDQoJQzI2Ny43NDgsMTAxLjM5NSwyNzAuMTg3LDk4LjAyLDI3MC4xODcsOTQuMDQ3eiBNMjYwLjAyMyw5Ny4yMmgtOS43OTh2LTYuMzQ2aDkuNzk2YzEuNjg5LDAuMDc0LDMuMDM3LDEuNDY2LDMuMDM3LDMuMTczDQoJQzI2My4wNTgsOTUuNzUzLDI2MS43MTEsOTcuMTQ1LDI2MC4wMjMsOTcuMjJ6Ii8+DQo8L3N2Zz4NCg=="/>
+  </div>
+</div><!-- TableOfContents -->
+<div class='contents-block'>
+  <a id="TableOfContents"></a>
+  <h3 class="toc-title-small">Contents</h3>
+  <ul class="toc-level1">
+        <li class=""><a href="#ConfigurationData">Configuration Data</a></li>
+        <li class=""><a href="#Metrics">Metrics</a></li>
+  </ul>
+</div>
+  <div class="report-body" id="main-scroller">
+    <div id="report-title">Metrics Report</div>
+<!-- ConfigData -->
+      <div class='report-block'>
+        <h2><a id="ConfigurationData"></a>Configuration Data</h2>
+        <table class='table table-small'>
+          <tr><th>Environment Name</th><td>Pocketsonata</td></tr>
+          <tr><th>Date of Report Creation</th><td>11 JAN 2024</td></tr>
+          <tr><th>Time of Report Creation</th><td>8:54:49 PM</td></tr>
+        </table>
+      </div>
+<!-- Metrics -->
+      <div class='report-block'>
+        <div class="row">
+          <div class="col-md-10">
+            <h2><a id="Metrics"></a>Metrics</h2>
+          </div>
+          <div class="return-to-top col-md-2"><span class="pull-right"><a href="#TableOfContents">Top</a></span></div>
+        </div>
+        <table class='table table-small table-hover table-bordered'>
+          <thead class="thead-default">
+            <tr>
+              <th class="col_unit">Unit</th><th class="col_subprogram">Subprogram</th><th class="col_complexity">Complexity</th><th class="col_metric">Statements</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col_unit">AnalPRI.cpp</td><td class="col_subprogram">toaCompare</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 10 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">floatIncCompare</td><td class="col_complexity">3</td><td class="success col_metric">10 / 10 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>10 / 10 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 10 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">pdwindexCompare</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 10 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">stStaggerSegCompare</td><td class="col_complexity">3</td><td class="warning col_metric">9 / 10 (90%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>9 / 10 (90%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 10 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CAnalPRI</td><td class="col_complexity">43</td><td class="warning col_metric">52 / 104 (50%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>52 / 104 (50%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 104 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::~CAnalPRI</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 22 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::Init</td><td class="col_complexity">3</td><td class="success col_metric">11 / 11 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>11 / 11 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 11 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::Analysis</td><td class="col_complexity">1</td><td class="success col_metric">1 / 1 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>1 / 1 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 1 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CountOfEmitter</td><td class="col_complexity">3</td><td class="success col_metric">8 / 8 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>8 / 8 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 8 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::PrintAllEmitter</td><td class="col_complexity">23</td><td class="warning col_metric">61 / 65 (93%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>61 / 65 (93%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 65 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::GroupingStable</td><td class="col_complexity">13</td><td class="warning col_metric">43 / 47 (91%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>43 / 47 (91%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 47 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::GroupingDwell</td><td class="col_complexity">13</td><td class="danger col_metric">0 / 47 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::GroupingStagger</td><td class="col_complexity">17</td><td class="danger col_metric">0 / 59 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::GroupingJitterWithJitter</td><td class="col_complexity">11</td><td class="warning col_metric">34 / 45 (75%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>34 / 45 (75%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 45 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::GroupingJitterWithStable</td><td class="col_complexity">10</td><td class="warning col_metric">5 / 38 (13%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>5 / 38 (13%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 38 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::GroupingJitter</td><td class="col_complexity">4</td><td class="warning col_metric">9 / 10 (90%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>9 / 10 (90%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 10 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::GroupingUnknown</td><td class="col_complexity">1</td><td class="danger col_metric">0 / 1 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::MakeDtoaHistogram</td><td class="col_complexity">7</td><td class="warning col_metric">28 / 30 (93%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>28 / 30 (93%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 30 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::FindDwellLevel(STR_EMITTER*)bool</td><td class="col_complexity">4</td><td class="danger col_metric">0 / 17 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::FindDwellLevel()bool</td><td class="col_complexity">4</td><td class="danger col_metric">0 / 13 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::FindDTOA</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 10 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::FindBin</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 11 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::ExtractDwellPT</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 10 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::DwellAnalysis(STR_EMITTER*)bool</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 19 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::MakeDwellLevel</td><td class="col_complexity">5</td><td class="danger col_metric">0 / 19 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::SortEmitter</td><td class="col_complexity">4</td><td class="danger col_metric">0 / 13 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::GetMinPulseTrainMean</td><td class="col_complexity">3</td><td class="success col_metric">10 / 10 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>10 / 10 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 10 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::DwellAnalysis()</td><td class="col_complexity">4</td><td class="danger col_metric">0 / 10 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::StaggerAnalysis()</td><td class="col_complexity">7</td><td class="warning col_metric">12 / 16 (75%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>12 / 16 (75%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 16 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::PatternAnalysis(bool,bool)</td><td class="col_complexity">12</td><td class="warning col_metric">46 / 48 (95%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>46 / 48 (95%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 48 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CalcSamplingTime</td><td class="col_complexity">2</td><td class="warning col_metric">9 / 10 (90%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>9 / 10 (90%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 10 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::PatternAnalysis(STR_EMITTER*)float</td><td class="col_complexity">3</td><td class="warning col_metric">11 / 12 (91%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>11 / 12 (91%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 12 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::HighIllustrationTest</td><td class="col_complexity">4</td><td class="success col_metric">8 / 8 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>8 / 8 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 8 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckSawPattern</td><td class="col_complexity">11</td><td class="warning col_metric">36 / 37 (97%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>36 / 37 (97%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 37 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CalTwoPrime</td><td class="col_complexity">6</td><td class="success col_metric">42 / 42 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>42 / 42 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 42 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::KurtosisSkewness</td><td class="col_complexity">4</td><td class="warning col_metric">28 / 30 (93%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>28 / 30 (93%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 30 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::FindPeriod</td><td class="col_complexity">13</td><td class="warning col_metric">35 / 42 (83%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>35 / 42 (83%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 42 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::AutoCorerelation</td><td class="col_complexity">7</td><td class="warning col_metric">20 / 22 (90%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>20 / 22 (90%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 22 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::Normalize</td><td class="col_complexity">3</td><td class="success col_metric">9 / 9 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>9 / 9 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 9 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::ReplaceOffSampling</td><td class="col_complexity">10</td><td class="warning col_metric">22 / 24 (91%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>22 / 24 (91%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 24 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::Interpolation</td><td class="col_complexity">1</td><td class="danger col_metric">0 / 1 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::SamplingProcess</td><td class="col_complexity">8</td><td class="warning col_metric">41 / 45 (91%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>41 / 45 (91%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 45 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::AnalSignalType</td><td class="col_complexity">13</td><td class="warning col_metric">9 / 13 (69%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>9 / 13 (69%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 13 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::AnalFreqType</td><td class="col_complexity">4</td><td class="success col_metric">18 / 18 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>18 / 18 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 18 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::MergePDWIndexInSeg</td><td class="col_complexity">6</td><td class="success col_metric">23 / 23 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>23 / 23 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 23 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckHarmonic(STR_MINMAX_TOA*,STR_MINMAX_TOA*)UINT</td><td class="col_complexity">5</td><td class="danger col_metric">0 / 13 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckHarmonic(_TOA,_TOA,_TOA)UINT</td><td class="col_complexity">5</td><td class="warning col_metric">15 / 17 (88%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>15 / 17 (88%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 17 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckHarmonic(STR_PULSE_TRAIN_SEG*,STR_PULSE_TRAIN_SEG*)UINT</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 23 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::DecisionEmitter</td><td class="col_complexity">16</td><td class="warning col_metric">20 / 36 (55%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>20 / 36 (55%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 36 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckFreqHopping</td><td class="col_complexity">4</td><td class="danger col_metric">0 / 17 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::AnalLobe</td><td class="col_complexity">12</td><td class="danger col_metric">0 / 56 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::DifferencePAdBm</td><td class="col_complexity">1</td><td class="danger col_metric">0 / 4 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::SelectMainSeg</td><td class="col_complexity">9</td><td class="warning col_metric">22 / 27 (81%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>22 / 27 (81%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 27 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::StaggerLevelAnalysis</td><td class="col_complexity">11</td><td class="danger col_metric">0 / 40 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::MakeStaggerPRI</td><td class="col_complexity">4</td><td class="danger col_metric">0 / 9 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::MakeStaggerLevel</td><td class="col_complexity">5</td><td class="danger col_metric">0 / 15 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::VerifyStaggerLevel</td><td class="col_complexity">7</td><td class="danger col_metric">0 / 22 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CompareAllStaggerLevel</td><td class="col_complexity">5</td><td class="danger col_metric">0 / 16 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::NormalizeTOA</td><td class="col_complexity">2</td><td class="success col_metric">10 / 10 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>10 / 10 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 10 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::AnalyzeACF</td><td class="col_complexity">6</td><td class="success col_metric">30 / 30 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>30 / 30 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 30 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::StaggerAnalysis(STR_EMITTER*)bool</td><td class="col_complexity">2</td><td class="success col_metric">11 / 11 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>11 / 11 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 11 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::SortSegOfFramePRI</td><td class="col_complexity">6</td><td class="success col_metric">23 / 23 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>23 / 23 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 23 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::AdjustStaggerLevel</td><td class="col_complexity">7</td><td class="warning col_metric">16 / 17 (94%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>16 / 17 (94%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 17 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckStaggerPRI</td><td class="col_complexity">10</td><td class="success col_metric">22 / 22 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>22 / 22 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 22 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::FindFramePRI</td><td class="col_complexity">3</td><td class="success col_metric">14 / 14 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>14 / 14 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 14 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckHarmonicStaggerLevel</td><td class="col_complexity">13</td><td class="danger col_metric">0 / 33 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::FindPeak</td><td class="col_complexity">13</td><td class="warning col_metric">36 / 39 (92%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>36 / 39 (92%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 39 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckStaggerLevel</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 12 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::MergeGrouping</td><td class="col_complexity">10</td><td class="warning col_metric">11 / 23 (47%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>11 / 23 (47%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 23 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfPulseTrain</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 14 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfStablePulseTrain</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 11 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfStaggerPulseTrain</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 9 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfJitterPulseTrain</td><td class="col_complexity">7</td><td class="danger col_metric">0 / 12 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfDwellPulseTrain</td><td class="col_complexity">8</td><td class="danger col_metric">0 / 17 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfPatternPulseTrain</td><td class="col_complexity">7</td><td class="danger col_metric">0 / 12 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfPRIType</td><td class="col_complexity">7</td><td class="danger col_metric">0 / 14 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfPatternPRIType</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 11 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfDwellPRIType</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 12 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfJitterPRIType</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 12 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfStaggerPRIType</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 10 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeOfStablePRIType</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 13 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CompFreq(STR_PULSE_TRAIN_SEG*,STR_PULSE_TRAIN_SEG*)bool</td><td class="col_complexity">3</td><td class="warning col_metric">5 / 6 (83%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>5 / 6 (83%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 6 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CompAOA</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 6 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CompFreq(STR_EMITTER*,STR_EMITTER*)bool</td><td class="col_complexity">15</td><td class="danger col_metric">0 / 38 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CalcEmitterPW</td><td class="col_complexity">5</td><td class="success col_metric">17 / 17 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>17 / 17 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 17 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CalcEmitterMOP</td><td class="col_complexity">5</td><td class="success col_metric">18 / 18 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>18 / 18 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 18 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CalcEmitterFrq</td><td class="col_complexity">4</td><td class="success col_metric">17 / 17 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>17 / 17 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 17 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CalcEmitterPRI</td><td class="col_complexity">4</td><td class="success col_metric">15 / 15 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>15 / 15 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 15 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::MergeEmitter</td><td class="col_complexity">10</td><td class="danger col_metric">0 / 24 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::SwapEmitter</td><td class="col_complexity">2</td><td class="danger col_metric">0 / 5 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckMergeEmitter</td><td class="col_complexity">1</td><td class="danger col_metric">0 / 6 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckStablePRIMergeEmitter</td><td class="col_complexity">5</td><td class="danger col_metric">0 / 9 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckStaggerPRIMergeEmitter</td><td class="col_complexity">5</td><td class="danger col_metric">0 / 8 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckJitterPRIMergeEmitter</td><td class="col_complexity">4</td><td class="danger col_metric">0 / 9 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::WhichMerge</td><td class="col_complexity">3</td><td class="danger col_metric">0 / 8 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::FindRefFramePri</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 16 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckIncludePulseTrain</td><td class="col_complexity">7</td><td class="danger col_metric">0 / 26 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::SelectMainEmitter</td><td class="col_complexity">5</td><td class="danger col_metric">0 / 9 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::BinSearchInPdwIndex</td><td class="col_complexity">6</td><td class="danger col_metric">0 / 19 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CalPRIRange</td><td class="col_complexity">4</td><td class="warning col_metric">11 / 14 (78%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>11 / 14 (78%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 14 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CalDtoaMeanMinMax</td><td class="col_complexity">5</td><td class="success col_metric">28 / 28 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>28 / 28 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 28 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::GetDTOARange</td><td class="col_complexity">7</td><td class="warning col_metric">21 / 23 (91%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>21 / 23 (91%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 23 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::OverlappedSeg</td><td class="col_complexity">6</td><td class="warning col_metric">6 / 21 (28%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>6 / 21 (28%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 21 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::IMeanInArray</td><td class="col_complexity">2</td><td class="success col_metric">6 / 6 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>6 / 6 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 6 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::MergePdwIndexInEmitter</td><td class="col_complexity">5</td><td class="danger col_metric">0 / 22 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CalcDiffAOA</td><td class="col_complexity">2</td><td class="success col_metric">5 / 5 (100%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>5 / 5 (100%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 5 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::CheckOverlapSeg</td><td class="col_complexity">4</td><td class="danger col_metric">0 / 8 (0%)</td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::HoppingAnalysis</td><td class="col_complexity">5</td><td class="warning col_metric">9 / 11 (81%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>9 / 11 (81%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 11 (0%)</em></td>
+            </tr>
+            <tr>
+              <td class="col_unit">&nbsp;</td><td class="col_subprogram">CAnalPRI::DwellNSwitchAnalysis</td><td class="col_complexity">5</td><td class="warning col_metric">9 / 11 (81%)</td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>9 / 11 (81%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 11 (0%)</em></td>
+            </tr>
+            <tr>
+              <th class="col_unit">TOTALS</th><th class="col_subprogram">109</th><th class="col_complexity">694</th><th class="warning col_metric">1047 / 2141 (48%)</th>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>1047 / 2141 (48%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 2141 (0%)</em></td>
+            </tr>
+            <tr>
+              <th class="col_unit">GRAND TOTALS</th><th class="col_subprogram">109</th><th class="col_complexity">694</th><th class="warning col_metric">1047 / 2141 (48%)</th>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Analysis</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>1047 / 2141 (48%)</em></td>
+            </tr>
+            <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>Execution</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>&nbsp;</em></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<em>0 / 2141 (0%)</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+<!-- VectorCAST Report footer -->
+    </div></div>
+  </body>
+</html>

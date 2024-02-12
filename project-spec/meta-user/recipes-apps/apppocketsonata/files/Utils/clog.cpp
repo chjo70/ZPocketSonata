@@ -122,6 +122,10 @@ CLog::CLog( int iThreadPriority, const char *pClassName, bool bArrayLanData )
  */
 CLog::~CLog()
 {
+#ifdef _LOG_
+    StopThread();
+#endif
+
     printf( "CLOG 소멸 !!\n" );
 }
 
@@ -348,7 +352,9 @@ void CLog::Start()
     //PrintDebug();
 #ifdef _LOG_
     CThread::Clear();
+
 #else
+
 
 #endif
 
@@ -389,7 +395,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #ifdef __VXWORKS__
 
 #else
-            sprintf( szLog, "\n" );
+            // sprintf( szLog, "\n" );
 #endif
 
 
@@ -506,7 +512,7 @@ void CLog::LogMsg( int nType, const char *pszFunction, const char *pszFile, cons
 #endif
             }
             else {
-                TRACE( "%s", szLog);
+                TRACE( "%s\n", szLog);
             }
 #endif
 
@@ -606,9 +612,24 @@ void CLog::UnLock()
  */
 bool IsLogAnalType( LogType enLogType )
 {
+    bool bRet = true;
 
-    return true;
+    if( enLogType == enError || enLogType == enNormal || g_enLogAnalType == enALL ) {
+    }
+    else {
+        if( g_enLogAnalType == enCLEAR_ANAL ) {
+#ifdef __VXWORKS__
+            printf( ".\n" );
+#else
 
+#endif
+            bRet = false;
+        }
+        else {
+        }
+    }
+
+    return bRet;
 }
 
 #endif

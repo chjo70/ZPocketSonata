@@ -15,10 +15,13 @@
 
 Queue<unsigned int> CELThreat::m_QueIndex;
 Queue<unsigned int> CELThreat::m_QueAETID;
+Queue<unsigned int> CELThreat::m_QueABTID;
+
+//CELThreat *m_pTheThreatRoot;							///< 위협 노드 중에서 ROOT 노드
 
 int CELThreat::m_CoInstance=0;
-int CELThreat::m_iTotalOfABT = 0;
-int CELThreat::m_iTotalOfAET = 0;
+//int CELThreat::m_iTotalOfABT = 0;
+//int CELThreat::m_iTotalOfAET = 0;
 
 unsigned int CELThreat::m_uiBoardID = 0;
 
@@ -49,22 +52,27 @@ CELThreat::CELThreat( unsigned int uiBoardID )
     m_Idx.uiLOBID = 0;
 
 	if( m_CoInstance == 0 ) {
+        m_pRootThreat = this;
+
 		m_QueIndex.Init( TOTAL_ITEMS_OF_THREAT_NODE );
 		for( ui=0 ; ui < TOTAL_ITEMS_OF_THREAT_NODE ; ++ui ) {
 
             //ui = (unsigned int) ( g_enBoardId << 28 ) | i;
 			m_QueIndex.Push( ui );
 		}
-        //m_QueIndex.Print();
+        // /m_QueIndex.Print();
 
-        if( uiBoardID <= 1 ) {
+        if( uiBoardID <= (unsigned int) 1 ) {
             m_QueAETID.Init( AETID_OFFSET - 1 );
         }
         else {
             m_QueAETID.Init( AETID_OFFSET );
         }
 
+        m_QueABTID.Init( MAX_ABTID );
+
         ClearAETID();
+        ClearABTID();
 
 	}
 
@@ -117,14 +125,102 @@ CELThreat::CELThreat( UINT nAET, UINT nABT, UINT nLOB )
 
     if( m_uiIndex != INVALID_INDEX ) {
         if( m_Idx.uiABTID == INVALID_INDEX ) {
-            ++m_iTotalOfAET;
+            //++m_iTotalOfAET;
         }
         else {
-            ++m_iTotalOfABT;
+            //++m_iTotalOfABT;
+            //TRACE( "\n m_iTotalOfABT[%d", m_iTotalOfABT );
         }
     }
 
     ++ m_CoInstance;
+}
+
+/**
+ * @brief     CELThreat
+ * @param     UINT & puiAET
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-02-01 11:26:08
+ * @warning
+ */
+CELThreat::CELThreat( unsigned int *puiAET )
+{
+    m_pLeftChild = NULL;
+    m_pRightChild = NULL;
+
+    m_Idx.uiAETID = INVALID_INDEX;
+    m_Idx.uiABTID = INVALID_INDEX;
+    m_Idx.uiLOBID = INVALID_INDEX;
+
+    m_uiIndex = INVALID_INDEX;
+
+    if( false == m_QueIndex.Pop( & m_uiIndex ) ) {
+    }
+    else {
+        //TRACE( "\n 생성 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
+        //TRACE( "\nm_QueIndex.Pop[%d]", m_uiIndex );
+        //m_QueIndex.Print();
+
+        if( m_uiIndex != INVALID_INDEX ) {
+            m_Idx.uiAETID = NextAETID();
+
+        }
+        else {
+        }
+
+    }
+
+    ++ m_CoInstance;
+
+    *puiAET = m_Idx.uiAETID;
+
+}
+
+/**
+ * @brief     CELThreat
+ * @param     unsigned int uiAET
+ * @param     unsigned int * puiABT
+ * @return
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-02-01 11:46:41
+ * @warning
+ */
+CELThreat::CELThreat( unsigned int uiAET, unsigned int *puiABT )
+{
+    m_pLeftChild = NULL;
+    m_pRightChild = NULL;
+
+    m_Idx.uiAETID = uiAET;
+    m_Idx.uiABTID = INVALID_INDEX;
+    m_Idx.uiLOBID = INVALID_INDEX;
+
+    m_uiIndex = INVALID_INDEX;
+
+    if( false == m_QueIndex.Pop( & m_uiIndex ) ) {
+    }
+    else {
+        //TRACE( "\n 생성 : I%d, A%d, B%d" , m_nIndex, m_Idx.nAET, m_Idx.nABT );
+        //TRACE( "\nm_QueIndex.Pop[%d]", m_uiIndex );
+        //m_QueIndex.Print();
+
+        if( m_uiIndex != INVALID_INDEX ) {
+            m_Idx.uiABTID = NextABTID();
+
+        }
+        else {
+        }
+
+    }
+
+    ++ m_CoInstance;
+
+    *puiABT = m_Idx.uiABTID;
+
 }
 
 /**
@@ -154,8 +250,6 @@ CELThreat::~CELThreat(void)
 
 }
 
-
-
 /**
  * @brief     특정 에미터의 노드를 삭제한다.
  * @param     int nAET
@@ -175,7 +269,7 @@ bool CELThreat::RemoveAET( unsigned int uiAETID, CELThreat *pPrevThreat )
 
 	// 1. AET 찾기
 	pThreat = m_pLeftChild;
-	while( pThreat != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
+	while( pThreat != NULL ) {
 		if( pThreat->m_Idx.uiAETID == uiAETID ) {
 			// 1. 자식 객체들 모두 삭제
 			if( pThreat->m_pLeftChild != NULL ) {
@@ -197,8 +291,6 @@ bool CELThreat::RemoveAET( unsigned int uiAETID, CELThreat *pPrevThreat )
 
             m_QueAETID.Push( uiAETID );
             //m_QueAETID.Print();
-
-            --m_iTotalOfAET;
 
 			break;
 		}
@@ -227,7 +319,7 @@ bool CELThreat::RemoveAET( unsigned int uiAETID, CELThreat *pPrevThreat )
  * @date      2016-03-24, 오후 3:35
  * @warning
  */
-bool CELThreat::RemoveABT( unsigned int uiAETID, unsigned int uiABTID )	//#FA_Q_4020_T1 (Msg(6:4020) Multiple exit points found.)
+bool CELThreat::RemoveABT( unsigned int uiAETID, unsigned int uiABTID )
 {
 	int i=0;
     bool bRet=false;
@@ -239,7 +331,7 @@ bool CELThreat::RemoveABT( unsigned int uiAETID, unsigned int uiABTID )	//#FA_Q_
 		if( pThreat->m_Idx.uiAETID == uiAETID ) {
 			pPrevThreat = pThreat;
 			pThreat = pThreat->m_pLeftChild;
-			while( pThreat != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
+			while( pThreat != NULL ) {
 				if( ( uiABTID > 0 ) && ( pThreat->m_Idx.uiABTID == uiABTID ) ) {
 					// 1. 링크 연결
 					if( i == 0 ) {
@@ -255,7 +347,10 @@ bool CELThreat::RemoveABT( unsigned int uiAETID, unsigned int uiABTID )	//#FA_Q_
 
 					bRet = true;
 
-                    --m_iTotalOfABT;
+//                     --m_iTotalOfABT;
+//                     if( m_iTotalOfABT < 0 ) {
+//                         TRACE( "\n m_iTotalOfABT[%d", m_iTotalOfABT );
+//                     }
 				}
                 else {
 				    pPrevThreat = pThreat;
@@ -295,11 +390,15 @@ bool CELThreat::RemoveABT( unsigned int uiAETID, unsigned int uiABTID )	//#FA_Q_
                         m_QueAETID.Push( uiAETID );
                         //m_QueAETID.Print();
 
-                        --m_iTotalOfAET;
+//                         --m_iTotalOfAET;
+//                         if( m_iTotalOfAET < 0 ) {
+//                             TRACE( "\n m_iTotalOfAET[%d", m_iTotalOfAET );
+//                         }
+
                     }
                 }
 
-                break;
+                // break;
             }
 
             break;
@@ -376,8 +475,9 @@ void CELThreat::RemoveAll()
 		m_pRightChild = NULL;
 	}
 
-    m_iTotalOfAET = 0;
-    m_iTotalOfABT = 0;
+    //! #추후 : m_iTotalOfAET  이 값이 - 값이 나오는 경우가 있음.
+    //m_iTotalOfAET = 0;
+    //m_iTotalOfABT = 0;
 
 	// 루트는 삭제 하지 않기 하기 위함.
 	if( /*m_uiIndex != INVALID_INDEX &&*/ m_pRootThreat != this ) {
@@ -415,7 +515,7 @@ CELThreat *CELThreat::GetLastThreat( CELThreat *pThreat )
 
 	// 빔 노드일때 오른쪽 노드로 객체를 이동한다.
 	if( pLastThreat != NULL ) {
-		while( pLastThreat->m_pRightChild != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
+		while( pLastThreat->m_pRightChild != NULL ) {
 			pLastThreat = pLastThreat->m_pRightChild;
 
 		}
@@ -435,71 +535,56 @@ CELThreat *CELThreat::GetLastThreat( CELThreat *pThreat )
  * @date      2016-04-08, 오후 3:35
  * @warning
  */
-void CELThreat::Link( CELThreat *pDeleteABT, CELThreat *pDeleteAET )
+void CELThreat::Link( CELThreat *pAddeThreatABT )
 {
-	CELThreat *pLinkThreat, *pBeforeDeleteABT;
+	CELThreat *pLinkThreat;
 
 	// 루트 인 경우에는 LEFT 포인터를 변경
 	if( IsRoot() == true ) {
-		TRACE( "\n[경고] 링크 노드[%d,%d]를 잘못 호출했습니다 !!!" , m_Idx.uiAETID, m_Idx.uiABTID );
+		TRACE( "\n[경고] Link 함수[%d,%d]를 잘못 호출했습니다 !!!" , m_Idx.uiAETID, m_Idx.uiABTID );
 	}
 	else if( IsAET() == true ) {
-		if( pDeleteAET == NULL ) {
-			this->m_pLeftChild = pDeleteABT;
-			pDeleteABT->m_Idx.uiAETID = m_Idx.uiAETID;
-		}
-		else {
-			//
-			pLinkThreat = GetLastThreat( this );
-			if( pLinkThreat != NULL ) {
-				// 1. 현재 빔 노드 마지막에 링크할 노드를 연결한다.
-				pLinkThreat->m_pRightChild = pDeleteABT;
+		pLinkThreat = GetLastThreat( this );
+        pLinkThreat->m_pRightChild = pAddeThreatABT;
 
-				// 2. 삭제할 빔의 이전 빔 노드를 찾는다.
-				pBeforeDeleteABT = pDeleteAET->m_pLeftChild;
-				if( pBeforeDeleteABT != NULL ) {
+        pAddeThreatABT->m_Idx.uiAETID = this->m_Idx.uiAETID;
 
-					if( pBeforeDeleteABT != pDeleteABT ) {
-						while( pBeforeDeleteABT->m_pRightChild != NULL && pBeforeDeleteABT->m_pRightChild != pDeleteABT ) {
-							pBeforeDeleteABT = pBeforeDeleteABT->m_pRightChild;
-						}
-						// 이전 빔이 있으면 삭제할 빔을 생략하고 링크를 연결한다.
-						if( pBeforeDeleteABT->m_pRightChild == pDeleteABT ) {
-							pBeforeDeleteABT->m_pRightChild = pDeleteABT->m_pRightChild;
-						}
-						// 이전 빔이 없으면 연결할 빔 객체를 끊는다.
-						else {
-							pDeleteAET->m_pLeftChild = NULL;
-						}
-					}
-					else {
-						pDeleteAET->m_pLeftChild = pDeleteAET->m_pLeftChild->m_pRightChild;
-					}
-				}
-				else {
-					TRACE( "\n[경고] 삭제할 노드의 빔객체가 잘못됐습니다 !!!" );
-				}
-
-				// 삭제할 빔 노드의 다음번재 노드는 NULL 로 마킹한다.
-				pDeleteABT->m_pRightChild = NULL;
-
-				// 방사체 번호 변경
-				pDeleteABT->m_Idx.uiAETID = m_Idx.uiAETID;
-			}
-			else {
-				TRACE( "\n [경고] 위협 관리 노드가 잘못 됐습니다 !!!" );
-			}
-// 			if( pDeleteAET != NULL ) {
-// 				pDeleteAET->m_pLeftChild = NULL;
-// 			}
-
-		}
 	}
 	else if( IsABT() == true ) {
-		TRACE( "\n[경고] 링크 노드[%d,%d]를 잘못 호출했습니다 !!!" , m_Idx.uiAETID, m_Idx.uiABTID );
+		TRACE( "\n[경고] Link 함수를 [%04d/%04d]를 잘못 호출했습니다 !!!" , m_Idx.uiAETID, m_Idx.uiABTID );
 	}
     else {
     }
+
+}
+
+/**
+ * @brief     Move
+ * @param     CELThreat * pMovingThreatAET
+ * @param     CELThreat * pMovingThreatABT
+ * @param     CELThreat * pMergedThreatAET
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-02-01 14:54:54
+ * @warning
+ */
+void CELThreat::Move( CELThreat *pMovingThreatAET, CELThreat *pMovingThreatABT, CELThreat *pMergedThreatAET )
+{
+
+    // 1. 노드 연결
+    pMovingThreatAET->UnLink( pMovingThreatABT );
+
+    // 1.1 방사체에 하위 빔이 없으면 노드를 삭제해야 함.
+    if( pMovingThreatAET->m_pLeftChild == NULL ) {
+        m_pRootThreat->RemoveThreat( pMovingThreatAET->m_Idx.uiAETID );
+    }
+
+    //CELThreat::PrintAllThreat();
+
+    pMergedThreatAET->Link( pMovingThreatABT );
+    //CELThreat::PrintAllThreat();
 
 }
 
@@ -519,7 +604,7 @@ void CELThreat::UnLink( CELThreat *pUnLinkABT )
 
 	// 루트 인 경우에는 LEFT 포인터를 변경
 	if( IsRoot() == true ) {
-		TRACE( "\n[경고] 링크 노드[%d,%d]를 잘못 호출했습니다 !!!" , m_Idx.uiAETID, m_Idx.uiABTID );
+		TRACE( "\n[경고] UnLink 함수[%d,%d]를 잘못 호출했습니다 !!!" , m_Idx.uiAETID, m_Idx.uiABTID );
 	}
 	else if( IsAET() == true ) {
 		pBeforeDeleteABT = this->m_pLeftChild;
@@ -556,7 +641,7 @@ void CELThreat::UnLink( CELThreat *pUnLinkABT )
 		}
 	}
 	else if( IsABT() == true ) {
-		TRACE( "\n [경고] 빔을 제거할 수 없습니다 !!!!, 잘못 호출했습니다." );
+        TRACE( "\n[경고] UnLink 함수[%d,%d]를 잘못 호출했습니다 !!!", m_Idx.uiAETID, m_Idx.uiABTID );
 	}
     else {
 

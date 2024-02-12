@@ -149,7 +149,7 @@ protected:
     void SaveGroupPDWFile( STR_PDWINDEX *pPDWIndex, STR_STATIC_PDWDATA *pPDWData, int iPLOBID, bool bSaveFile );
     void SATATIC_PDWDATA_TO_PDWDATA(STR_STATIC_PDWDATA *pPDWData );
     void SaveRemainedPdwFile();
-    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile);
+    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, _PDW *pstPDW, int iPLOBID, bool bSaveFile, unsigned int uiAETID=0, unsigned int uiABTID=0 );
     void SaveEmitterPDWFile( STR_EMITTER *pEmitter, STR_STATIC_PDWDATA *pPDWData, int iPLOBID, bool bSaveFile );
     bool InsertToDB_LOB( SRxLOBData *pLOBData );
 
@@ -164,7 +164,7 @@ public:
     unsigned int GetStep() { return m_uiStep; }
 
     bool IsSaveFile() const { return m_bSaveFile; }
-    void SetSaveFile(bool val) {
+    inline void SetSaveFile(bool val) {
 		m_bSaveFile = val;
 	}
     void Init();
@@ -175,7 +175,7 @@ public:
 
     bool DeleteDB_RAW( const char *pTable, unsigned int uiCoRecord=0 );
     bool InsertToDB_RAW(STR_PDWDATA *pPDWData, int iPLOBID);
-    void InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, int iScanStep, bool bInsertDB=true );
+    void InsertRAWData(STR_PDWDATA *pPDWData, int iPLOBID, int iScanStep, bool bInsertDB=true, unsigned int uiAETID=0, unsigned int uiABTID=0 );
     bool InsertToDB_LOB( SRxLOBData *pLOBData, int iCoLOBData, bool bDBInsert );
 #ifdef _SQLITE_
     void SQLiteException( Kompex::SQLiteException *psException );
@@ -476,7 +476,17 @@ public:
     }
 #endif
 
-
+    /**
+     * @brief     MakeDirectory
+     * @param     time_t ti
+     * @param     ENUM_COLLECTBANK enCollectBank
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-01-27 14:05:04
+     * @warning
+     */
     void MakeDirectory( time_t ti, ENUM_COLLECTBANK enCollectBank )
     {
         UNION_HEADER stUnionHeader;

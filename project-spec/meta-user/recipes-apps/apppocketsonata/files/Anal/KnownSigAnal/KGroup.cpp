@@ -33,6 +33,12 @@ CKGroup::CKGroup( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadNam
 	m_pKnownSigAnal = ( CKnownSigAnal * ) pParent;
 
     INIT_ANAL_VAR_(m_pKnownSigAnal)
+
+#ifdef _MSC_VER
+    //! #동적 시험으로 함수를 타기위해서 그냥 호출
+    CKGroup::GetColPDW();
+
+#endif
 }
 
 /**

@@ -40,6 +40,7 @@ int ANSIToUTF8( char *pszUTF8, size_t szLength, char *pszAnsiCode );
 
 UINT CheckHarmonicTOA(_TOA priMean1, _TOA priMean2, _TOA tThreshold);
 UINT ExpectedMissingPulses( int ext_type, _TOA priMean1, STR_MINMAX_TOA *pstPRI, _TOA tThreshold );
+UINT ExpectedMissingPulses( int ext_type, _TOA priMean1, STR_LOWHIGH_TOA *pstPRI, _TOA tThreshold );
 //UINT CheckMissingPulse( _TOA priMean1, STR_MINMAX_TOA *pPRI, _TOA tThreshold );
 
 
@@ -141,7 +142,7 @@ bool TCompEncodeDOADiff( T x, T y, T thresh_value )
 
     tdiff = abs( x - y );
 
-    if( tdiff <= thresh_value || ( PDW_DOA_MAX - tdiff ) <= thresh_value ) {
+    if( tdiff <= thresh_value || ( MAX_AOA_BIT-tdiff ) <= thresh_value ) {
         bRet = true;
     }
     else {
@@ -176,7 +177,7 @@ bool TCompEncodeDOAMarginDiff( T tx, T ty1, T ty2 )
         }
     }
     else {
-        if( ( ( tx >= ty1 && tx <= ( PDW_DOA_MAX - 1 ) ) || ( tx >= 0 && tx <= ty2 ) ) ) {
+        if( ( ( tx >= ty1 && tx <= MAX_AOA_BIT ) || ( tx >= 0 && tx <= ty2 ) ) ) {
             bRet = true;
         }
 
@@ -478,7 +479,9 @@ bool TCompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, 
             pSeries = pSeries1;
             for( i=0 ; i < coSeries1 ; ++i, ++pSeries ) {
                 bRet = false;
+                iIndex = iIndex % coSeries2;
                 for( ; iIndex < coSeries2 ; ++iIndex  ) {
+                    iIndex = iIndex % coSeries2;
                     if( TCompMeanDiff<T>( pSeries2[iIndex], *pSeries, margin ) == true ) {
                         ++ iIndex;
                         bRet = true;
@@ -497,7 +500,9 @@ bool TCompSwitch2Level( T *pSeries1, T *pSeries2, int coSeries1, int coSeries2, 
             pSeries = pSeries2;
             for( i = 0; i < coSeries2 ; ++i, ++pSeries ) {
                 bRet = false;
+                iIndex = iIndex % coSeries1;
                 for( ; iIndex < coSeries1 ; ++iIndex ) {
+                    iIndex = iIndex % coSeries1;
                     if( TCompMeanDiff<T>( pSeries1[iIndex], *pSeries, margin ) == true ) {
                         ++ iIndex;
                         bRet = true;
@@ -728,7 +733,7 @@ float TCalcJitterPercent( T tRange, T tMean )
     }
     else {
         TRACE( "PRI 평균이 0 으로 잘못 계산되었습니다." );
-        WhereIs;
+        // WhereIs;
     }
 
     return fRet;
@@ -959,10 +964,15 @@ int TSortLevel( int iSwtLev, T *pSwtLev, bool bDataUpdate=true )
 template <typename T>
 T TModular( T a, T b )
 {
-    T ret=0;
+    T ret = 0;
 
     if( b != 0 ) {
-        ret = a % b;
+        if( a > 0 ) {
+            ret = a % b;
+        }
+        else {
+            ret = ( b + a ) % b;
+        }
     }
     else {
 

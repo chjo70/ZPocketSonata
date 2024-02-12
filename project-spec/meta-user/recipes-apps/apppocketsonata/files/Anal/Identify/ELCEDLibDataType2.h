@@ -43,9 +43,9 @@ enum EnumNullValueType
 #ifdef __VXWORKS__
 
 #else
-template <typename T> void DeletePointers(std::list<T*> &i_listContainer)	//#FA_Q_2502_T5
+template <typename T> void DeletePointers(std::list<T*> &i_listContainer)
 {
-	for ( auto iter = i_listContainer.begin() ; iter != i_listContainer.end(); iter++) //#FA_C_PotentialUnboundedLoop_T3
+	for ( auto iter = i_listContainer.begin() ; iter != i_listContainer.end(); iter++)
 	{
 		delete (*iter);
 		// *iter = nullptr;
@@ -57,9 +57,9 @@ template <typename T> void DeletePointers(std::list<T*> &i_listContainer)	//#FA_
 //////////////////////////////////////////////////////////////////////////
 // 벡터 메모리 삭제
 //start_static_0918
-template <typename T> void DeletePointers(std::vector<T*> &i_vecContainer)	//#FA_Q_2502_T5
+template <typename T> void DeletePointers(std::vector<T*> &i_vecContainer)
 {
-	for (auto iter = i_vecContainer.begin(); iter != i_vecContainer.end(); iter++ ) //#FA_C_PotentialUnboundedLoop_T3
+	for (auto iter = i_vecContainer.begin(); iter != i_vecContainer.end(); iter++ )
 	{
 		delete (*iter);
 		// *iter = nullptr;
@@ -70,7 +70,7 @@ template <typename T> void DeletePointers(std::vector<T*> &i_vecContainer)	//#FA
 
 // template <typename T> void DeletePointers2(std::vector<T*> &i_vecContainer)
 // {
-//     for( auto it=i_vecContainer.begin() ; it != i_vecContainer.end() ; ) { //#FA_C_PotentialUnboundedLoop_T3
+//     for( auto it=i_vecContainer.begin() ; it != i_vecContainer.end() ; ) {
 // 		it = i_vecContainer.erase( it );
 // 	}
 // 	i_vecContainer.clear();
@@ -78,9 +78,9 @@ template <typename T> void DeletePointers(std::vector<T*> &i_vecContainer)	//#FA
 
 //////////////////////////////////////////////////////////////////////////
 //start_static_0918
-template <typename T1, typename T2> void DeletePointers(std::map<T1, T2*> &i_mapContainer)	//#FA_Q_2502_T5
+template <typename T1, typename T2> void DeletePointers(std::map<T1, T2*> &i_mapContainer)
 {
-	for (auto iter = i_mapContainer.begin(); iter != i_mapContainer.end(); ) //#FA_C_PotentialUnboundedLoop_T3
+	for (auto iter = i_mapContainer.begin(); iter != i_mapContainer.end(); )
 	{
 		i_mapContainer.erase( iter++ );
 	}
@@ -90,7 +90,7 @@ template <typename T1, typename T2> void DeletePointers(std::map<T1, T2*> &i_map
 
 template <typename T> void DeleteRangePointers( std::list<T> *pListContainer, typename list<T>::iterator itStart, typename list<T>::iterator itEnd )
 {
-	for (auto iter = itStart; iter != itEnd; iter++) //#FA_C_PotentialUnboundedLoop_T3
+	for (auto iter = itStart; iter != itEnd; iter++)
 	{
 		delete (*iter);
 	}
@@ -521,7 +521,7 @@ enum EnumPRI_LegacyTypeCode
 
 namespace CEDSignalType
 {
-	enum EnumSignalType	//#FA_Q_2502_T2
+	enum EnumSignalType
 	{
 
 #ifdef _XBAND_
@@ -654,8 +654,7 @@ namespace ScanType
 {
 
 #if defined(_POCKETSONATA_) || defined(_712_)
-	//start_static_0919
-    enum EnumScanType	//#FA_Q_2502_T2
+    enum EnumScanType
     {
         enumUndefinedScanType = INT_MAX,                        //아무것도 표시되지 않음
 
@@ -682,7 +681,7 @@ namespace ScanType
     };
 
 #else
-    enum EnumScanType	//#FA_Q_2502_T2
+    enum EnumScanType
     {
         enumUndefinedScanType = INT_MAX,                        //아무것도 표시되지 않음
 

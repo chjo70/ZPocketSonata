@@ -903,7 +903,7 @@ using namespace std;
 // 	string			strPDWSetID;
 // 	string			strTaskID;
 // 	string			strSearchBandID;
-// 	string			strLinkNum; //#FA_Q_2502_T1
+// 	string			strLinkNum;
 // 	string			strAETNo;
 // 	string			strABTNo;
 // 	string			strLOBNo;

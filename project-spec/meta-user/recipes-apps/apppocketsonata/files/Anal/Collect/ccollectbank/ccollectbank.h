@@ -42,8 +42,9 @@ private:
 
     unsigned int m_uiTotalChannels;
 
-
     ENUM_PCI_DRIVER m_enPCIDriver;
+
+    unsigned int m_uiCoISRError;
 
     STR_WINDOWCELL **m_pstrWindowCell;
 
@@ -124,10 +125,13 @@ public:
 
     void GetPDWData( STR_UZPOCKETPDW *pPDWData, unsigned int uiCh, unsigned int uiTotalPDW );
 
+    void CheckISRChannel();
+
 
 	// 인라인 함수 모음
     inline void SetCollectMode( unsigned int uiCh, ENUM_COLLECT_MODE enMode ) { GetWindowCell( uiCh )->enCollectMode = enMode; }
     inline unsigned int GetTotalPDW( unsigned int uiCh ) { return GetWindowCell( uiCh )->uiColPDW; }
+    inline bool IsUse( unsigned int uiCh ) { return GetWindowCell( uiCh )->bUse; }
     inline void SetTotalPDW( unsigned int uiCh, unsigned int uiTotalPDW ) { GetWindowCell( uiCh )->uiColPDW = uiTotalPDW; }
     inline STR_UZPOCKETPDW *GetPDWData( unsigned int uiCh ) { return &GetWindowCell( uiCh )->strPDW; }
     inline bool IsSave( unsigned int uiCh ) { return GetWindowCell(uiCh)->enCollectMode == enCollecting; }
@@ -192,6 +196,8 @@ public:
 
     }
 
+    // virtual const char *GetThreadName( void ) = 0;
+
 
 #ifdef _SIM_PDW_
     // 모의 관련 함수
@@ -205,6 +211,8 @@ public:
 
 
 #endif
+
+    void PreFilterSetting( STR_WINDOWCELL *pWindowCell, STR_COLLECT_PCIADDRESS *pstrCollectPCIAddress, STR_COLLECT_PCIADDRESS *i_pPreFilterPCIAddress );
 
 };
 

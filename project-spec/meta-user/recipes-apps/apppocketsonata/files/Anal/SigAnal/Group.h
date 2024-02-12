@@ -63,7 +63,7 @@ protected:
 	STR_PDWINDEX m_GrStat[ MAX_STAT ];				// STAT 그룹화의 펄스열 인덱스
 	STR_FRQAOAPWHISTOGRAM m_AoaHist;						// 방위 히스토그램
 	STR_FRQAOAPWHISTOGRAM m_FrqHist;						// 주파수 히스토그램
-	STR_FRQAOAPWHISTOGRAM	m_PwHist;						// 주파수 히스토그램
+	STR_FRQAOAPWHISTOGRAM m_PwHist;						// 주파수 히스토그램
 	STR_AOA_GROUPS m_AoaGroups;								// 방위 범위 테이블 그룹
 	STR_FRQ_GROUPS m_FrqGroups;								// 주파수 범위 테이블 그룹
 	STR_PW_GROUPS m_PwGroups;
@@ -75,7 +75,6 @@ protected:
 public:
     CGroup( unsigned int uiCoMaxPdw = NEW_COLLECT_PDW, const char *pThreadName=NULL );
     virtual ~CGroup();
-
 
 	inline int GetBand() { return m_nBand; }
 	inline UINT GetCoGroups() { return m_PwGroups.uiCount; }
@@ -111,7 +110,7 @@ public:
 
 	void MakeFreqAoaPwGroup( STR_PDWINDEX *pStatGrPdwIndex );
 	void MakeBandGroup();
-	bool LastOneAoaGroup( int noGroup );
+	//bool LastOneAoaGroup( int noGroup );
 	void SaveFrqAoaPeak();
 	void FilterParam(STR_AOA_GROUP *pAoaGroup, UINT *pParam1, UINT *pParam2, STR_FRQ_GROUP *pFrqGroup, STR_PW_GROUP *pPwGroup, STR_PDWINDEX *pFrqAoaPwIndex );
 	bool MakeGrIndex();

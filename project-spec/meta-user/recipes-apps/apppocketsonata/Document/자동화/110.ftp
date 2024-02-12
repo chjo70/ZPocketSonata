@@ -1,0 +1,15 @@
+
+open 192.168.0.110
+
+hash
+bin
+cd "BIN"
+lcd "d:\tftpboot"
+! send "uVxWorks"
+send "VSIGA.out"
+
+!reboot
+
+disconnect
+
+quit

@@ -336,11 +336,11 @@ void CKPulExt::PulseExtract(vector<SRadarMode *> *pVecMatchRadarMode)
         //-
         if (MustDo2ndPulseExtract() == TRUE) {
             //Printf( "\n 2-Pass" );
-            ClearAllMark();
-            MarkStablePulseTrain();
-
-            ResetJitterSeg();
-            ExtractJitter(_JITTER_RANDOM);
+//             ClearAllMark();
+//             MarkStablePulseTrain();
+// 
+//             ResetJitterSeg();
+//             ExtractJitter(_JITTER_RANDOM);
         }
     }
 
@@ -502,3 +502,4 @@ UINT CKPulExt::CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold )
 {
     return m_pKnownSigAnal->CheckHarmonic( priMean1, priMean2, uiThreshold );
 }
+

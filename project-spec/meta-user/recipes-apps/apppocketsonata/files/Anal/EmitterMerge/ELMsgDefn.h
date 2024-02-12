@@ -621,16 +621,3 @@ struct STR_TRKSCNPDWDATA {
 
 #pragma pack( pop )
 
-#ifndef SRxScanData_STRUCT
-#define SRxScanData_STRUCT
-struct STR_SCANRESULT {
-    EN_SCANRESULT enResult;
-    unsigned int uiScanPeriod;          //! 스캔 주기
-    ENUM_AET_SCAN_TYPE enScanType;      //! 스캔 형태
-
-    float fCoScanCollectingPDW;
-    float fScanDurationms;      // [ms]
-    unsigned int uiMedianPA;
-
-};
-#endif

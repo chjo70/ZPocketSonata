@@ -210,16 +210,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/files/SQLite/KompexSQLiteStreamRedirection.h</locationURI>
 		</link>
 		<link>
-			<name>files/SQLite/pocketsonata.sqbpro</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/SQLite/pocketsonata.sqbpro</locationURI>
-		</link>
-		<link>
-			<name>files/SQLite/pocketsonata.sqlite3</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/files/SQLite/pocketsonata.sqlite3</locationURI>
-		</link>
-		<link>
 			<name>files/SQLite/sqlite3.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/files/SQLite/sqlite3.c</locationURI>

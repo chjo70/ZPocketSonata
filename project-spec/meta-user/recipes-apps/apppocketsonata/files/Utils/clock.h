@@ -29,6 +29,7 @@ class CLock
 private:
 
 #if _MSC_VER
+    //CRITICAL_SECTION m_cs;
     CCriticalSection m_cs;
     bool m_bLock;
 
@@ -55,6 +56,11 @@ public:
     CLock() {
 #ifdef _MSC_VER
         m_bLock = false;
+
+        // InitializeCriticalSection( & m_cs );
+//         if( !InitializeCriticalSectionAndSpinCount( & m_cs, 0x00000400 ) ) {
+//
+//         }
 
 #elif defined(__VXWORKS__)
         if( sem_init( & m_mutex, 1, 1 ) < 0 ) {
@@ -83,7 +89,7 @@ public:
      */
     virtual ~CLock() {
 #ifdef _MSC_VER
-
+        // DeleteCriticalSection( & m_cs );
 #else
         sem_destroy( & m_mutex );
 
@@ -103,8 +109,10 @@ public:
     void Lock()
     {
 #ifdef _MSC_VER
+        //EnterCriticalSection( & m_cs );
         m_cs.Lock();
         m_bLock = true;
+        //TRACE( "Lock()\n" );
 #else
         sem_wait( & m_mutex );
 #endif
@@ -123,8 +131,10 @@ public:
     void UnLock()
     {
 #ifdef _MSC_VER
+        //LeaveCriticalSection( & m_cs );
         m_cs.Unlock();
         m_bLock = false;
+        //TRACE( "UnLock()\n" );
 #else
         sem_post( & m_mutex );
 #endif

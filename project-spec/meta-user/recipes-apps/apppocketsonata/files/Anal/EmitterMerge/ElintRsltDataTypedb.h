@@ -15,7 +15,7 @@ using namespace std;
 #define E_ACQ_SIG_TOT_COL					8
 #define E_TACREP_TOT_COL					10
 #define E_TACELINT_TOT_COL					11
-#define E_UNIFORM_C_TOT_COL					10 
+#define E_UNIFORM_C_TOT_COL					10
 
 #define	E_IDNTFY_RESULT_TOT_COL				13
 #define	E_REPORT_TOT_COL				16
@@ -26,17 +26,17 @@ using namespace std;
 
 #define	MAX_CANDIDATE_EOB							(5)
 
-typedef struct stStoreDataAnRec  
-{		
-	string			strWorkID;	
-	unsigned int	uiDtctSigID;		
+typedef struct stStoreDataAnRec
+{
+	string			strWorkID;
+	unsigned int	uiDtctSigID;
 	string			strUpperWorkID;
 	string			strStartTime;
 	string			strNeedsTime;
 	string			strAnFactor;
 	string			strAnFactorVal;
 	string			strAnRsltFName;
-}SELDBStoreDataAnRec; 
+}SELDBStoreDataAnRec;
 
 
 typedef struct stTACREP
@@ -103,12 +103,12 @@ typedef struct stUniformC
 // 	E_REPORT_EU,
 // 	E_DTAIL_REPORT,
 // };
-// 
+//
 // typedef struct stGRReportELBasicInfo  //ELINT 보고서 정보
 // {
 // 	//string			strTableID;			//DB삭제 Key정보
 // 	//string			strReportID;		//보고서ID
-// 	//string			strReportType;		//보고서형태	
+// 	//string			strReportType;		//보고서형태
 // 	//string			strSerialNo;		//시리얼넘버
 // 	//string			strWriteData;		//작성날짜
 // 	//unsigned int	uiAetID;
@@ -116,7 +116,7 @@ typedef struct stUniformC
 // 	//string			strTaskID;
 // 	////string			strELNOT;			//ELNOT
 // 	//string			strReportStat;		//보고서상태
-// 	//string			strTransTime;		//전송시간		
+// 	//string			strTransTime;		//전송시간
 // 	////unsigned char  szReportContent[MAX_EL_REPORT_DATA_SIZE];
 // 	////string			strReportContent;	//보고서내용
 // 	//string			strReportMemo;
@@ -124,7 +124,7 @@ typedef struct stUniformC
 // 	//string			strDTCTId;
 // 	//unsigned int	uiNumOfRPT;
 // 	//unsigned int	uiBuffSize;
-// 
+//
 // 	/////////////////////////////////////////////////////////////
 // 	string			strMissionName;
 // 	string			strTaskName;
@@ -136,7 +136,7 @@ typedef struct stUniformC
 // 	unsigned char  szReportContent[MAX_EL_REPORT_DATA_SIZE];
 // 	string			strTableId; //For Delete/HIDE
 // 	unsigned int	uiBuffSize;
-// 	string			strReportType;		//보고서형태  	//#FA_Q_2502_T1
+// 	string			strReportType;		//보고서형태
 // 	unsigned int	uiLobID;
 // 	unsigned int	uiAetID;
 // 	unsigned int    uiAbtID;
@@ -148,27 +148,27 @@ typedef struct stUniformC
 // 	string			strReportID;		//보고서ID
 // 	string			strOperId;
 // 	string			strLinkNo; //링크정보
-// 
+//
 // 	stGRReportELBasicInfo::stGRReportELBasicInfo()
-// 	{		
-// 		//strTableID = "";		
-// 		//strReportID = "";	
-// 		//strReportType = "";	
-// 		//strSerialNo = "";	
-// 		//strWriteData = "";	
+// 	{
+// 		//strTableID = "";
+// 		//strReportID = "";
+// 		//strReportType = "";
+// 		//strSerialNo = "";
+// 		//strWriteData = "";
 // 		//uiAetID = 0;
 // 		//uiLobID = 0;
-// 		//strTaskID = "";	
-// 		//strELNOT = "";		
-// 		//strReportStat = "";	
-// 		//strTransTime = "";	
+// 		//strTaskID = "";
+// 		//strELNOT = "";
+// 		//strReportStat = "";
+// 		//strTransTime = "";
 // 		////strReportContent = "";
 // 		//strReportMemo = "";
-// 		//strOperId = "";		
+// 		//strOperId = "";
 // 		//strDTCTId = "";
 // 		//uiNumOfRPT = 0;
 // 		//uiBuffSize = 0;
-// 
+//
 // 		strMissionName = "";
 // 		strTaskName = "";
 // 		strELNOT = "";
@@ -177,22 +177,22 @@ typedef struct stUniformC
 // 		fLat = 0.0;
 // 		fLong = 0.0;
 // 		uiBuffSize = 0;
-// 		strReportType = "";	
+// 		strReportType = "";
 // 		uiLobID = 0;
 // 		uiAetID = 0;
 // 		uiAbtID = 0;
-// 		strTransTime = "";	
+// 		strTransTime = "";
 // 		strTaskID = "";
 // 		strMissionID = "";
-// 		strSerialNo = "";	
+// 		strSerialNo = "";
 // 		strReportStat = "";
-// 		strReportID = "";	
+// 		strReportID = "";
 // 		strOperId = "";
 // 		strLinkNo = "";
 // 		memset(szReportContent, 0, MAX_EL_REPORT_DATA_SIZE);
 // 	};
 // }SGRReportELBasicInfo;
-// 
+//
 // typedef struct stELReport
 // {
 // 	string			strTableID;
@@ -209,7 +209,7 @@ typedef struct stUniformC
 // 	string			strTransmitTime;
 // 	string			strReportContent; // 4000 바이트 한계 용량 때문에 사용하지 않음. szReportContent 사용. 2015.3.25. 이정남.
 // 	string			strReportMemo;
-// 	string			strOperId;	
+// 	string			strOperId;
 // 	string			strDtctId;
 // 	unsigned int	nNumOfRptObj;
 // 	unsigned char  szReportContent[MAX_EL_REPORT_DATA_SIZE];
@@ -221,7 +221,7 @@ typedef struct stUniformC
 // 	float				fLong;
 // 	string strMissionName;
 // 	string strTaskName;
-// 
+//
 // 	stELReport::stELReport()
 // 		:uiReportType(0)
 // 		,uiAetID(0)
@@ -238,7 +238,7 @@ typedef struct stUniformC
 // 		,strTransmitTime("")
 // 		,strReportContent("")
 // 		,strReportMemo("")
-// 		,strOperId("")	
+// 		,strOperId("")
 // 		,strDtctId("")
 // 		,nBufferSize(0)
 // 		,strUpdateTime("")
@@ -252,7 +252,7 @@ typedef struct stUniformC
 // 		memset(szReportContent, 0, MAX_EL_REPORT_DATA_SIZE);
 // 	};
 // }SELDBReport;
-// 
+//
 // typedef struct stELReportAddressee
 // {
 // 	string			strAddresseeID;
@@ -262,7 +262,7 @@ typedef struct stUniformC
 // 		:strAddresseeID("")
 // 		,strReportID("")
 // 		,strAdrresseeName("")
-// 	{		
+// 	{
 // 	};
 // }SELDBReportAddressee;
 
@@ -351,7 +351,7 @@ struct SELEXTDB {
 // 	unsigned int uiAETID;
 // 	unsigned int uiABTID;
 // 	unsigned int uiLOBID;
-// 	int		iSignalType;	
+// 	int		iSignalType;
 // 	int	  iPulsePerGrp;
 // 	int		iRecentHour;
 // 	int		iRecentMin;
@@ -361,11 +361,11 @@ struct SELEXTDB {
 // 	int		iMeanDOA;							// [0.1도]
 // 	int		iMaxDOA;
 // 	int		iMinDOA;
-// 	int		iDoaDeviation; 
+// 	int		iDoaDeviation;
 // 	int		iDIRatio;							// [0.1%]
 // 	int		iFreqType;
-// 	int		iFreqPatternType;			
-// 	int		iIsFreqPeriod;				
+// 	int		iFreqPatternType;
+// 	int		iIsFreqPeriod;
 // 	int		iFreqChangePeriod;	  // [us]
 // 	int		iFreqPositionCount;
 // 	int		iFreqElementCount;
@@ -376,7 +376,7 @@ struct SELEXTDB {
 // 	int		iFreqSeq[MAX_FREQ_PRI_STEP];	// 주파수 단값
 // 	int		iPRIType;
 // 	int		iPRIPatternType;
-// 	int		iIsPRIPeriod;									
+// 	int		iIsPRIPeriod;
 // 	int		iPRIChangePeriod;							// [us]
 // 	int		iPRIPositionCount;
 // 	int		iPRIElementCount;
@@ -389,7 +389,7 @@ struct SELEXTDB {
 // 	int		iMeanPW;											// 1ns
 // 	int		iMaxPW;
 // 	int		iMinPW;
-// 	int		iPWDeviation; 
+// 	int		iPWDeviation;
 // 	int		iMeanPA;											// 기존대로
 // 	int		iMaxPA;
 // 	int		iMinPA;
@@ -410,15 +410,15 @@ struct SELEXTDB {
 // 	int		iIsStoreIQ;
 // 	int		iNumOfPDW;
 // 	int		iNumOfIQ;
-// 	int		iPolarization;								// 극성. 
+// 	int		iPolarization;								// 극성.
 // 	int		iRatioOfPOL;									// 극성 신뢰도.
 // 	int		iIsFISINTTask;
 // 	int		iRollAngle;										// 기존대로
 // 	int		iPitchAngle;
 // 	int		iHeadingAngle;
-// 	int		iAltitude;	
+// 	int		iAltitude;
 // 	double	dAircraftLatitude;
-// 	double	dAircraftLongitude;	
+// 	double	dAircraftLongitude;
 // } SLOBData ;
 
 struct STR_FREQ_PRI_PW_PA_INFO {
@@ -512,13 +512,13 @@ struct STR_FREQ_PRI_DINFO {
 // 	int iPulsePerGrp;
 // 	int iPRIPGSeq[MAX_PRI_PER_GROUP];
 // 	int iPAPGSeq[MAX_PADIFF_PER_GROUP];
-// 
+//
 // 	STR_PULSE_GROUP_DINFO::STR_PULSE_GROUP_DINFO() : iPulsePerGrp(0)
 // 	{
 // 		memset( iPRIPGSeq, 0, sizeof(iPRIPGSeq) );
 // 		memset( iPAPGSeq, 0, sizeof(iPAPGSeq) );
 // 	}
-// 
+//
 // } ;
 
 struct STR_SCAN_INFO {
@@ -557,40 +557,40 @@ struct STR_INTRA_INFO {
 // 	// 기초 정보
 // 	unsigned int uiAETID;
 // 	unsigned int uiABTID;
-// 
+//
 // 	STR_SIGTYPE_INFO sigInfo;
-// 
+//
 // 	unsigned int uiCoLOB;
-// 
+//
 // 	time_t tiFirstSeenTime;
 // 	time_t tiLastSeenTime;
-// 
+//
 // 	int iValidity;
-// 
+//
 // 	//STR_DOA_INFO doaInfo;
-// 
+//
 // 	STR_FREQ_PRI_DINFO freqDInfo;
 // 	STR_FREQ_PRI_PW_PA_INFO freqInfo;
 // 	STR_FREQ_PRI_DINFO priDInfo;
 // 	STR_FREQ_PRI_PW_PA_INFO priInfo;
-// 
+//
 // 	//STR_PULSE_GROUP_DINFO pulseDInfo;
-// 
+//
 // 	STR_FREQ_PRI_PW_PA_INFO pwInfo;
 // 	//STR_SCAN_INFO scanInfo;
 // 	STR_FREQ_PRI_PW_PA_INFO paInfo;
-// 
+//
 // 	//STR_INTRA_INFO intraInfo;
-// 
+//
 // 	// CED/EOB 식별 정보
 // 	STR_CEDEOBID_INFO idInfo;
-// 
+//
 // 	// 위치 산출 정보
 // 	STR_POSITION_ESTIMATION peInfo;
-// 
+//
 // 	// 알람 정보
 // 	time_t finalAlarmTime;
-// 
+//
 // } ;
 
 // /**
@@ -602,95 +602,95 @@ struct STR_INTRA_INFO {
 // 	// 누적된 전체 PDW 개수
 // 	//int nCoTotalPdw;
 // 	//int nCoTotalIQ;
-// 
+//
 // 	// 인트라 변조 유무
 // 	//bool bIntraMop;
-// 
+//
 // 	// 위치 산출 정보-Covariace 값
 // 	double dPECoVar[4];
-// 
+//
 // 	float fLastAOA;
 // 	double dRadarCollectionLatitude;
 // 	double dRadarCollectionLongitude;
-// 
+//
 // 	// 수동 편집 여부
 // 	//bool bIsManualEdited;
-// 
+//
 // 	// 방사체의 활동 상태를 저장
 // 	enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
-// 
+//
 // 	// 빔 유효성 갯수
 // 	int nCoBeamValidity;
-// 
+//
 // 	// 수동 편집 여부 플레그
 // 	//UELMANUALVAL xManualEdited;
-// 
+//
 // 	// FISINT용 과제
 // 	bool bIsFISINTTask;
-// 
+//
 // 	// 수동/자동 위치 결과 정보 여부
 // 	//bool bManualPosEstPreferred;
 // 	unsigned int uiSeqNum;
-// 
+//
 // 	//SLOBOtherInfo stLOBOtherInfo;
-// 
+//
 // 	int iLOBPoolIndex;
-// 
+//
 // 	STR_ID_TYPE stIDType;
-// 
+//
 // 	//time_t tiLOBfirstReportedTime;
 // 	//time_t tiLOBfinalReportedTime;
-// 
+//
 // 	int nCoIdEOB;
 // 	//STR_EOB_RESULT stEOBResult[MAX_CANDIDATE_EOB];
-// 
+//
 // 	// 빔 병합 정보
 // 	bool bCompFreq;
 // 	bool bCompPRI;
-// 
+//
 // 	// 신규 CED 및 EOB로 식별한 정보
 // 	STR_CEDEOBID_INFO idInfo;
-// 
+//
 // 	ENUM_PE_STAT enValid;
 // 	bool bApplayOfLOBClustering;// TRUE: 적용, FALSE: 미적용
-// 
+//
 // } SELABTDATA_EXT;
-// 
+//
 // typedef struct {
 // 	// 누적된 전체 PDW 개수
 // 	int nCoTotalPdw;
 // 	//int nCoTotalIQ;
-// 
+//
 // 	// 인트라 변조 유무
 // 	// bool bIntraMop;
-// 	
+//
 // 	// 방사체 간의 식별을 위한 정보
 // 	//char szEOBELNOT[_MAX_ELNOT_STRING_SIZE_];					// EOB 상의 ELNOT
-// 
+//
 // 	// 방사체의 활동 상태를 저장
 // 	enum E_BEAM_EMITTER_STAT enBeamEmitterStat;
-// 
+//
 // 	// 수동 편집 여부 플레그
 // 	bool bIsManualEdited;
-// 
+//
 // 	bool bIsFISINTTask;
-// 
+//
 // 	// 수동 편집 정보
 // 	//UELMANUALVAL xMannualEdited;
-// 
+//
 // 	int iPinNumber;
 // 	//char szELNOT[_MAX_ELNOT_STRING_SIZE_];
-// 
+//
 // 	//int iTaskType;		// 과제 형태
-// 
+//
 // 	// 여러개의 미식별 빔 중에서 대표 ABT 번호
 // 	unsigned int nUnIDABTID;
-// 
+//
 // 	// 수동/자동 위치 결과 정보 여부
 // 	bool bManualPosEstPreferred;
 // 	unsigned int uiSeqNum;
-// 
-// 
+//
+//
 // } SELAETDATA_EXT;
 
 struct SELLOB {
@@ -739,61 +739,68 @@ struct SELMERGE_CANDIDATE {
 
 } ;
 
+struct SELMERGE_BEAM {
+    CELThreat *pThreatAET;
+    CELThreat *pThreatABT;
+};
+
+typedef SELMERGE_BEAM SELSEPERATE_BEAM;
+
 // typedef struct {
 // 	UINT uiSeqNum[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	UINT iRecentHour[MAX_SIZE_OF_ARRAY_INSERT];
 // 	UINT iRecentMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	UINT iRecentSec[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	char szAcquireTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
 // 	UINT iLinkNum[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	char szMissionID[MAX_SIZE_OF_ARRAY_INSERT][DEF_MISSION_ID_LENGTH];
 // 	char szMissionName[MAX_SIZE_OF_ARRAY_INSERT][DEF_MISSION_NAME_LENGTH];
-// 
+//
 // 	char szTaskID[MAX_SIZE_OF_ARRAY_INSERT][LENGTH_OF_TASK_ID+2];
 // 	char szTaskName[MAX_SIZE_OF_ARRAY_INSERT][SIZE_OF_TASK_NAME+2];
-// 
+//
 // 	UINT iTaskType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	UINT iSearchBandID[MAX_SIZE_OF_ARRAY_INSERT];
 // 	UINT iRxPath[MAX_SIZE_OF_ARRAY_INSERT];
 // 	UINT iDetAntDirection[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	UINT uiLOBID[MAX_SIZE_OF_ARRAY_INSERT];
 // 	UINT uiABTID[MAX_SIZE_OF_ARRAY_INSERT];
 // 	UINT uiAETID[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	char szPrimaryELNOT[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_ELNOT];
 // 	char szPrimaryModeCode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_MODECODE];
-// 
+//
 // 	char szSecondaryELNOT[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_ELNOT];
 // 	char szSecondaryModeCode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_MODECODE];
-// 
+//
 // 	char szThirdELNOT[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_ELNOT];
 // 	char szThirdModeCode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_MODECODE];
-// 
+//
 // 	char szModulationCode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_MODULATIONCODE];
 // 	char szNickName[MAX_SIZE_OF_ARRAY_INSERT][_MAX_NICKNAME_STRING_SIZE_];
 // 	char szFunctioncode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_FUNCTIONCODE];
-// 
+//
 // 	int iSignalType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPolarization[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iRatioOfPOL[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iIsFISINTTask[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iPulsePerGrp[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iNumOfPDW[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iBL[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iFov[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iMeanDOA[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMinDOA[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMaxDOA[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iDOADiff[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iDOADeviation[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iDIRatio[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iFreqType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iFreqPatternType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iIsFreqPeriod[MAX_SIZE_OF_ARRAY_INSERT];
@@ -804,7 +811,7 @@ struct SELMERGE_CANDIDATE {
 // 	int iMaxFreq[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMinFreq[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iFreqDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iPRIType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPRIPatternType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iIsPRIPeriod[MAX_SIZE_OF_ARRAY_INSERT];
@@ -816,59 +823,59 @@ struct SELMERGE_CANDIDATE {
 // 	int iMinPRI[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPRIDeviation[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPRIJitterRatio[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iMeanPW[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMinPW[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMaxPW[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPWDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iMeanPA[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMinPA[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMaxPA[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPADeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iScanType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iDetailScanType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iScanPeriod[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iMOPType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iDetailMOPType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMOPMeanFreq[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMOPMinFreq[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMOPMaxFreq[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iMOPFreqDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iLatitude[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iLongitude[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPitchAngle[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iRollAngle[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iHeadingAngle[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iAltitude[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iFOM[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iIsStorePDW[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iIsStoreIQ[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int isFiltered[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int bIsManualEdited[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iBeamValidity[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iDummy[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	char szFinalRpt[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
 // 	char szFirstRpt[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
-// 
+//
 // 	UINT uiALOBID[MAX_SIZE_OF_ARRAY_INSERT];
 // 	UINT uiAABTID[MAX_SIZE_OF_ARRAY_INSERT];
 // 	UINT uiAAETID[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	UINT iStat[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iDummy2[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	char szRcvTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
-// 
+//
 // 	//
 // 	bool bLink2;
-// 
+//
 // } SELArrLOB;
 
 // typedef struct {
@@ -888,16 +895,16 @@ struct SELMERGE_CANDIDATE {
 // 	char szPlaceNameKor[MAX_SIZE_OF_ARRAY_INSERT][_MAX_SIZE_OF_THREATNAME_];
 // 	int iRadarModePriority[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iRadarPriority[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iSignalType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPolarization[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iTaskType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iPulsePerGrp[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int nCoLOB[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	char szFirstSeenTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
 // 	char szLastSeenTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
-// 
+//
 // 	int bValidity[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int freqDInfoType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int freqDInfoPatternType[MAX_SIZE_OF_ARRAY_INSERT];
@@ -911,7 +918,7 @@ struct SELMERGE_CANDIDATE {
 // 	int freqInfoMax[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int freqInfoMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int freqInfoDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int priDInfoType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int priDInfoPatternType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int priDInfoIsPeriod[MAX_SIZE_OF_ARRAY_INSERT];
@@ -925,25 +932,25 @@ struct SELMERGE_CANDIDATE {
 // 	int priInfoMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int priInfoDeviation[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int priInfoPRIJitterRatio[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int pwInfoMean[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int pwInfoMax[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int pwInfoMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int pwInfoDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int paInfoMean[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int paInfoMax[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int paInfoMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int paInfoDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int scanInfoType[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int scanInfoPeriodMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int scanInfoPeriodMax[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iIntraMop[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int intraInfoMaxFreq[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int intraInfoMinFreq[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int peInfoenValid[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoenLatitude[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoenLongitude[MAX_SIZE_OF_ARRAY_INSERT];
@@ -952,38 +959,38 @@ struct SELMERGE_CANDIDATE {
 // 	int peInfoenMajorAxis[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoenMinorAxis[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoenTheta[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	char szFirstReportedTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
 // 	char szFinalReportedTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
 // 	char szFinalAlarmTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
-// 
+//
 // 	int iIsManualEdited[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iLinkNum[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iManualPosEstPreferred[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoManualLatitude[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoManualLongitude[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iThreatDistance[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	enum E_BEAM_EMITTER_STAT enBeamEmitterStat[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // } SELArrABT;
 
 // typedef struct {
 // 	UINT uiSeqNum[MAX_SIZE_OF_ARRAY_INSERT*4];
-// 
+//
 // 	char szMissionID[MAX_SIZE_OF_ARRAY_INSERT*4][DEF_MISSION_ID_LENGTH];
 // 	char szTaskID[MAX_SIZE_OF_ARRAY_INSERT*4][LENGTH_OF_TASK_ID+2];
-// 
+//
 // 	UINT uiLOBID[MAX_SIZE_OF_ARRAY_INSERT*4];
 // 	UINT uiABTID[MAX_SIZE_OF_ARRAY_INSERT*4];
 // 	UINT uiAETID[MAX_SIZE_OF_ARRAY_INSERT*4];
-// 
+//
 // 	UINT iLinkNum[MAX_SIZE_OF_ARRAY_INSERT*4];
-// 
+//
 // 	UINT iDataType[MAX_SIZE_OF_ARRAY_INSERT*4];
-// 
+//
 // 	UINT iPositionCount[MAX_SIZE_OF_ARRAY_INSERT*4];
-// 
+//
 // 	int iSeq01[MAX_SIZE_OF_ARRAY_INSERT*4];
 // 	int iSeq02[MAX_SIZE_OF_ARRAY_INSERT*4];
 // 	int iSeq03[MAX_SIZE_OF_ARRAY_INSERT*4];
@@ -1048,10 +1055,10 @@ struct SELMERGE_CANDIDATE {
 // 	int iSeq62[MAX_SIZE_OF_ARRAY_INSERT*4];
 // 	int iSeq63[MAX_SIZE_OF_ARRAY_INSERT*4];
 // 	int iSeq64[MAX_SIZE_OF_ARRAY_INSERT*4];
-// 
+//
 // 	//
 // 	bool bLink2[MAX_SIZE_OF_ARRAY_INSERT*4];
-// 
+//
 // } SELArrLOBABT_Position;
 
 // typedef struct {
@@ -1060,13 +1067,13 @@ struct SELMERGE_CANDIDATE {
 // 	char acMissionName[MAX_SIZE_OF_ARRAY_INSERT][DEF_MISSION_NAME_LENGTH];
 // 	UINT uiAETID[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iTaskType[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int iRadarModeIndex[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iThreatIndex[MAX_SIZE_OF_ARRAY_INSERT];
 // 	char szIdInfo[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_IDINFO];
 // 	char szPrimaryELNOT[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_ELNOT];
 // 	char szPrimaryModeCode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_MODECODE];
-// 
+//
 // 	char szNickName[MAX_SIZE_OF_ARRAY_INSERT][_MAX_NICKNAME_STRING_SIZE_];
 // 	char szFunctioncode[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_FUNCTIONCODE];
 // 	int iRadarPriority[MAX_SIZE_OF_ARRAY_INSERT];
@@ -1077,35 +1084,35 @@ struct SELMERGE_CANDIDATE {
 // 	int iThreatPriority[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iThreatDistance[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iEquipNumber[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int nCoLOB[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int nCoABT[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	char szFirstSeenTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
 // 	char szLastSeenTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
-// 
+//
 // 	int bValidity[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int freqInfoMean[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int freqInfoMax[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int freqInfoMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int freqInfoDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int priInfoMean[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int priInfoMax[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int priInfoMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int priInfoDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int pwInfoMean[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int pwInfoMax[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int pwInfoMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int pwInfoDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int paInfoMean[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int paInfoMax[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int paInfoMin[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int paInfoDeviation[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	int peInfoenValid[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoenLatitude[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoenLongitude[MAX_SIZE_OF_ARRAY_INSERT];
@@ -1114,25 +1121,25 @@ struct SELMERGE_CANDIDATE {
 // 	int peInfoenMajorAxis[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoenMinorAxis[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoenTheta[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	char szFirstReportedTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
 // 	char szFinalReportedTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
 // 	char szFinalAlarmTime[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DATETIME];
-// 
+//
 // 	int iIsManualEdited[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iLinkNum[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int iManualPosEstPreferred[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoManualLatitude[MAX_SIZE_OF_ARRAY_INSERT];
 // 	int peInfoManualLongitude[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // 	enum E_BEAM_EMITTER_STAT enBeamEmitterStat[MAX_SIZE_OF_ARRAY_INSERT];
-// 
+//
 // } SELArrAET;
-// 
+//
 // typedef struct {
 // 	char szTable[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_TABLE_NAME];
 // 	char szCondition[MAX_SIZE_OF_ARRAY_INSERT][MAX_SIZE_OF_DELETE_CONDITION];
-// 
+//
 // } SELArrDelAETABT;
 
 #endif

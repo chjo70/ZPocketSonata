@@ -49,8 +49,11 @@ class CMain : public CLogName {
 private:
     void *m_pParent;
 
+    time_t m_tiNow;
+
 public:
     CMain();
+    CMain( const char *pThreadName );
     virtual ~CMain();
 
     void Run( int iArgc, char *iArgv[], void *pParent=NULL );

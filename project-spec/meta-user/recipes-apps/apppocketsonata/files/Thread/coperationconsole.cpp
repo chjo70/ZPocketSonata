@@ -4,6 +4,23 @@
 
 #elif defined(__linux__)
 #include <sys/socket.h>
+
+#elif defined(__VXWORKS__)
+#include <pingLib.h>
+#include <taskLib.h>
+#include <ioLib.h>
+#include <private/iosLibP.h>
+#include <envLib.h>
+#include <sysLib.h>
+#include <symbol.h>
+#include <symLib.h>
+#include <sysSymTbl.h>
+#include <loadLib.h>
+#include <usrLib.h>
+#include <tftpLib.h>
+#include <ifLib.h>
+#include <rebootLib.h>
+
 #endif
 
 #include <sys/types.h>
@@ -77,7 +94,7 @@ COperationConsole::~COperationConsole(void)
 //     if(m_pInstance)
 //     {
 //         //LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
-// 
+//
 //         delete m_pInstance;
 //         m_pInstance = NULL;
 //     }
@@ -109,10 +126,9 @@ void COperationConsole::_routine()
     //LOGENTRY;
     m_pMsg = GetRecvDataMessage();
 
-    while( true ) {
+    while( m_bThreadLoop ) {
         if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv");
-            //break;
         }
         else {
             if( IsValidLanData( m_pMsg ) == true ) {
@@ -127,6 +143,10 @@ void COperationConsole::_routine()
 
                     case enREQ_OP_RESTART :
                         g_pTheTaskMngr->QMsgSnd( m_pMsg, GetThreadName() );
+                        break;
+
+                    case enREQ_OP_REBOOT :
+                        Reboot();
                         break;
 
                     case enREQ_IBIT :
@@ -210,7 +230,7 @@ void COperationConsole::_routine()
                 }
             }
             else {
-                Log( enError, "메시지 흐름 또는 운용 모드[%d]에 잘못된 명령[0x%X]을 수신했습니다 !", g_pTheTaskMngr->GetMode(), m_pMsg->uiOpCode );
+                Log( enError, "메시지 흐름 또는 운용 모드[%d]에 잘못된 명령[0x%X] 또는 데이터가 잘못 수신했습니다 !", g_pTheTaskMngr->GetMode(), m_pMsg->uiOpCode );
             }
         }
     }
@@ -333,6 +353,12 @@ bool COperationConsole::IsValidLanData( STR_MessageData *pMsg )
             bRet = false;
         }
         else {
+            if( CheckAETID( pMsg->x.stReqScan.uiAET ) == true ) {
+
+            }
+            else {
+                bRet = false;
+            }
 
         }
         break;
@@ -352,6 +378,9 @@ bool COperationConsole::IsValidLanData( STR_MessageData *pMsg )
     case enTHREAD_DISCONNECTED :
         break;
 
+    case enREQ_OP_REBOOT :
+        break;
+
     default:
         break;
 
@@ -359,4 +388,93 @@ bool COperationConsole::IsValidLanData( STR_MessageData *pMsg )
 #endif
 
     return bRet;
+}
+
+
+/**
+ * @brief     CheckAETID
+ * @param     unsigned int uiAET
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-03 13:05:15
+ * @warning
+ */
+bool COperationConsole::CheckAETID( unsigned int uiAET )
+{
+    bool bRet = false;
+
+#ifdef _MSC_VER
+    CCommonUtils::AllSwapData32( & uiAET, sizeof( struct SELREQSCAN ) );
+
+#endif
+
+    if( g_enBoardId == (int) enPRC1 ) {
+        if( uiAET >= 1 && uiAET < AETID_OFFSET ) {
+            bRet = true;
+        }
+        else {
+        }
+
+    }
+    else {
+        if( uiAET >= (unsigned int) ( 1 + ( AETID_OFFSET * ( (int) g_enBoardId - 1 ) ) ) && uiAET < ( unsigned int ) ( AETID_OFFSET * g_enBoardId ) ) {
+            bRet = true;
+        }
+        else {
+        }
+
+    }
+
+    if( bRet == false ) {
+        printf( "\n uiAET[%d] g_enBoardId[%d]", uiAET, g_enBoardId );
+    }
+
+    return bRet;
+
+}
+
+/**
+ * @brief     Reboot
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-25 11:04:37
+ * @warning
+ */
+void COperationConsole::Reboot()
+{
+    int i;
+
+
+#ifdef __VXWORKS__
+    g_pTheSignalCollect->SetTaskSuspend();
+    g_pTheDetectAnalysis->SetTaskSuspend();
+    g_pTheTrackAnalysis->SetTaskSuspend();
+    g_pTheScanAnalysis->SetTaskSuspend();
+    g_pTheEmitterMerge->SetTaskSuspend();
+    g_pTheUrBit->SetTaskSuspend();
+
+#endif
+
+    for( i = 0 ; i < 30 ; ++i ) {
+        printf( "\n" );
+    }
+    Log( enNormal, "================== 몇 초 후에 SBC 재시작을 수행합니다 ======================" );
+    for( i = 0 ; i < 30 ; ++i ) {
+        printf( "\n" );
+    }
+
+    Sleep( 1 );
+
+    g_pTheCCUSocket->CloseSocket( true );
+    //g_pTheCCUSocket->SetTaskSuspend();
+    //_SAFE_DELETE( g_pTheCCUSocket )
+
+#ifdef __VXWORKS__
+    reboot( BOOT_CLEAR );
+#endif
+
 }

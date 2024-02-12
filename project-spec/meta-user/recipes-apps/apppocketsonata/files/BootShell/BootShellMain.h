@@ -17,7 +17,7 @@
 
 // MBIT 프로그램, 사용자 프로그램, 부트 쉘 프로그램의 메인 타스크의 Priority
 enum ENUM_TASK_PRIORITY {
-    tUDP_SERVER=90, tCLIENT_SOCKET, tPRI_BOOTSHEL, tPRI_App, tPRI_HTTPDAEMON = 150,
+    tUDP_SERVER=90, tCLIENT_SOCKET, tPRI_BOOTSHEL, tPRI_App=160, tPRI_HTTPDAEMON = 150,
 };
 
 #define CTRL_X						(24)

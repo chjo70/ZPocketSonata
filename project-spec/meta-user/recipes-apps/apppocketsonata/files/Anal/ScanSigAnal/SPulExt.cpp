@@ -19,7 +19,7 @@
  * @brief     CSPulExt
  * @param     void * pParent
  * @param     unsigned int uiCoMaxPdw
- * @return    
+ * @return
  * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
  * @author    조철희 (churlhee.jo@lignex1.com)
  * @version   1.0.0
@@ -155,37 +155,37 @@ void CSPulExt::DiscardStablePT()
 //! \date     2006-08-24 15:49:05
 //! \warning
 //
-void CSPulExt::SaveScanPulse()
-{
-	//int i;
-
-	//UINT count;
-	//UINT *pScanTOA, *pScanPA;
-
-	//STR_SCANPT *pScanPT;
-	//STR_PDWPARAM *pPdwParam;
-	//UINT *pParamIndex;
-
-	CPulExt::SavePdwParamIndex();
-
-//	pPdwParam = GetPdwParam();
-//	pParamIndex = pPdwParam->pParam;
-
-//	pScanPT = & stScanPt; // & stScanPt[m_noCh];
-//	pScanPA = & pScanPT->pa[0];
-//	pScanTOA = & pScanPT->toa[0];
-//	count = 0;
-//	for( i=0 ; i < m_nMaxPdw ; ++i ) {
-//		if( pParamIndex[i] == 1 ) {
-//			*pScanTOA++ = TOA[i];
-//			*pScanPA++ = PA[i];
-//			++ count;
-//		}
-//	}
-
-	//pScanPT->co = count;
-
-}
+// void CSPulExt::SaveScanPulse()
+// {
+// 	//int i;
+//
+// 	//UINT count;
+// 	//UINT *pScanTOA, *pScanPA;
+//
+// 	//STR_SCANPT *pScanPT;
+// 	//STR_PDWPARAM *pPdwParam;
+// 	//UINT *pParamIndex;
+//
+// 	CPulExt::SavePdwParamIndex();
+//
+// //	pPdwParam = GetPdwParam();
+// //	pParamIndex = pPdwParam->pParam;
+//
+// //	pScanPT = & stScanPt; // & stScanPt[m_noCh];
+// //	pScanPA = & pScanPT->pa[0];
+// //	pScanTOA = & pScanPT->toa[0];
+// //	count = 0;
+// //	for( i=0 ; i < m_nMaxPdw ; ++i ) {
+// //		if( pParamIndex[i] == 1 ) {
+// //			*pScanTOA++ = TOA[i];
+// //			*pScanPA++ = PA[i];
+// //			++ count;
+// //		}
+// //	}
+//
+// 	//pScanPT->co = count;
+//
+// }
 
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CSPulExt::SaveScanPulse

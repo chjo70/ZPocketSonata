@@ -121,7 +121,7 @@ CRADARDIRAPPDoc* CRADARDIRAPPView::GetDocument() const // 디버그되지 않은 버전은
 
 #define _TEXT_WIDTH								(10)
 #define	_COLUMNS_OF_LIST_					(11)
-static char szList[_COLUMNS_OF_LIST_][40] = { "순서", "방위[도]         ", "신/형", "주/형", "주파수[MHz]                 ", "PRI형태[ms]", "PRI[us]                     ", "신호세기[dBm]       ", "펄스폭[ns]             ", "식별   ", "개수    " } ;
+static char szList[_COLUMNS_OF_LIST_][40] = { "순서", "방위[도]         ", "신호형태 ", "주파수 형태  ", "주파수[MHz]                 ", "PRI형태[ms]", "PRI[us]                     ", "신호세기[dBm]       ", "펄스폭[ns]             ", "식별   ", "개수    " } ;
 void CRADARDIRAPPView::InitView()
 {
  	int i;
@@ -155,6 +155,8 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
 	int i, j;
 	char buffer[100];
 
+    char szMOPType[3][10] = { "Unknown", "FMOP", "PMOP" } ;
+
     if(nCoLOB != _spZero ) {
         for (i = 0; i < nCoLOB; ++i) {
             sprintf_s(buffer, sizeof(buffer), "%d", m_uiTotalLOB);
@@ -164,7 +166,7 @@ void CRADARDIRAPPView::UpdateLOBData( int nCoLOB, SRxLOBData *pLOB )
             sprintf_s(buffer, sizeof(buffer), " %4.1f(%4.1f,%4.1f-%4.1f)", pLOB->fDOAMean, pLOB->fDOAMode, pLOB->fDOAMin, pLOB->fDOAMax);
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
-            sprintf_s( buffer, sizeof( buffer ), "%s", g_szAetSignalType[pLOB->vSignalType] );
+            sprintf_s( buffer, sizeof( buffer ), "%s[%s]", g_szAetSignalType[pLOB->vSignalType], szMOPType[pLOB->enMOPType] );
             m_CListLOB.SetItemText(m_CoListItems, j++, buffer);
 
             if( pLOB->vFreqPositionCount != 0 ) {

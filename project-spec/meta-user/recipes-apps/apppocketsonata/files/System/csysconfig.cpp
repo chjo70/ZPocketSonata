@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #ifdef __linux__
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -26,7 +29,7 @@
 
 #include "../gen-versioninfo.h"
 
-CSharedMemroy* CSysConfig::m_pSharedMemory = NULL;
+CSharedMemroy *CSysConfig::m_pSharedMemory = NULL;
 
 unsigned int _spAnalMinPulseCount;
 
@@ -43,11 +46,14 @@ extern "C"
 {
 #endif
 
-extern void ProgramRevision( void );
+    extern void ProgramRevision( void );
+
+
 
 #ifdef __cplusplus
 }
 #endif
+
 
 /**
  * @brief     CSysConfig
@@ -59,11 +65,13 @@ extern void ProgramRevision( void );
  * @date      2022-04-21, 14:47
  * @warning
  */
-CSysConfig::CSysConfig(void)
+CSysConfig::CSysConfig( void )
 {
 
     // 공유 메모리 설정
-    m_pSharedMemory = new CSharedMemroy( _SHM_MEMORY_KEY, sizeof(STR_SYSCONFIG) );
+    if( m_pSharedMemory == NULL ) {
+        m_pSharedMemory = new CSharedMemroy( _SHM_MEMORY_KEY, sizeof( STR_SYSCONFIG ) );
+    }
 
     InitVar();
 
@@ -81,12 +89,110 @@ CSysConfig::CSysConfig(void)
  * @date      2023-08-03 11:06:58
  * @warning
  */
-CSysConfig::~CSysConfig(void)
+CSysConfig::~CSysConfig( void )
 {
 
     // m_pSharedMemory->closeSharedMemory();
-    delete m_pSharedMemory;
+    _SAFE_DELETE( m_pSharedMemory )
 
+}
+
+#ifdef __VXWORKS__
+BOOL vx_access( const char *pFilename );
+
+BOOL vx_access( const char *pFilename )
+{
+    FILE *file;
+    BOOL bRet = FALSE;
+
+    file = fopen( pFilename, "r" );
+
+    if( file != NULL ) {
+        fclose( file );
+        // printf( "\n match !!" );
+        bRet = TRUE;
+    }
+
+    return bRet;
+
+}
+#endif
+
+/**
+ * @brief     CheckDirectory
+ * @param     const char * pFilename
+ * @return    BOOL
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-14 10:50:39
+ * @warning
+ */
+BOOL CheckDirectory( const char *pFilename )
+{
+    struct stat st;
+    BOOL bRet=FALSE;
+
+    if( stat( pFilename, & st ) == 0 ) {
+        if( ( st.st_mode & S_IFMT ) == S_IFDIR ) {
+            bRet = TRUE;
+            printf( "\n Directory match !!" );
+        }
+        else {
+            printf( "\n Directory not match !!" );
+        }
+    }
+
+    return bRet;
+
+}
+
+/**
+ * @brief     CheckBoardID
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-12 20:42:19
+ * @warning
+ */
+ENUM_BoardID CSysConfig::CheckBoardID()
+{
+    ENUM_BoardID enBoardId;
+
+#ifdef __VXWORKS__
+    int i;
+    char szIniFileName[200];
+
+    for( i = ( int ) enPRC1; i <= ( int ) enPRC5; ++i ) {
+        //         sprintf( szIniFileName, "%s/%s_%d", INI_BOARDID_FOLDER, INI_BOARDID_DIRECTORY, i );
+        //         printf( "\n directory[%s]  !", szIniFileName );
+        //         if( TRUE == CheckDirectory( szIniFileName ) ) {
+        //             break;
+        //         }
+
+        sprintf( szIniFileName, "%s/%s_%d", INI_FOLDER, INI_FILENAME_BOARDID, i );
+#ifdef __VXWORKS__
+        if( vx_access( szIniFileName ) == TRUE ) {
+#else
+        if( _access( szIniFileName, 0 ) != -1 ) {
+#endif
+            // printf( "\n %s file is exist !", szIniFileName );
+            break;
+        }
+        else {
+        }
+
+    }
+
+    enBoardId = ( ENUM_BoardID ) i;
+
+#else
+    enBoardId = enPRC1;
+
+#endif
+
+    return enBoardId;
 
 }
 
@@ -111,8 +217,17 @@ void CSysConfig::LoadINI()
 
     float fValueArray[enMAXPRC - 1];
 
+    // 보드 ID 얻기
+#ifdef _MSC_VER
+    SetBoardID( g_enBoardId );
+
+#else
+    SetBoardID( CheckBoardID() );
+
+#endif
+
     // INI 파일 로딩하기
-    strcpy( m_szIniFileName, INI_FOLDER /* getenv("HOME") */ );
+    strcpy( m_szIniFileName, INI_FOLDER );
     strcat( m_szIniFileName, "/" );
     strcat( m_szIniFileName, INI_FILENAME );
 
@@ -122,7 +237,7 @@ void CSysConfig::LoadINI()
     ///////////////////////////////////////////////////////////////////////////////////
     // 네트워크 환경 설정
     GetPrivateProfileString( "NETWORK", "RECENT_SERVER", _DEFAULT_RECENT_SERVER, szBuffer, 100, m_szIniFileName );
-    SetPrimeServerOfNetwork( szBuffer );
+    SetRecentConnectionOfNetwork( szBuffer );
 
     //GetPrivateProfileString( "NETWORK", "SECOND_SERVER", _DEFAULT_PRIME_SERVER, szBuffer, 100, m_szIniFileName );
     //SetSecondServerOfNetwork( szBuffer );
@@ -143,6 +258,11 @@ void CSysConfig::LoadINI()
     // 부팅 옵션
     iValue = ( int ) GetPrivateProfileInt( "BOOT", "TFFS_BOOT", _DEFAULT_TFFS_BOOT, m_szIniFileName );
     SetTFFSBoot( iValue );
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // 개발용
+    iValue = ( int ) GetPrivateProfileInt( "BOOT", "DEVELOP", _DEFAULT_DEVELOP_BOOT, m_szIniFileName );
+    SetDevelop( iValue );
 
     ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
@@ -180,10 +300,10 @@ void CSysConfig::LoadINI()
 
     // 원추형 주기 정의
     uiValue = GetPrivateProfileInt( "SCAN", "CONICAL_MIN_PERIOD_MS", _DEFAULT_CONICAL_MIN_PERIOD_MS, m_szIniFileName );
-    SetConcalMinPeriod( uiValue );
+    SetConicalMinPeriod( uiValue );
 
     uiValue = GetPrivateProfileInt( "SCAN", "CONICAL_MAX_PERIOD_MS", _DEFAULT_CONICAL_MAX_PERIOD_MS, m_szIniFileName );
-    SetConcalMaxPeriod( uiValue );
+    SetConicalMaxPeriod( uiValue );
 
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -293,7 +413,7 @@ void CSysConfig::LoadINI()
     ///////////////////////////////////////////////////////////////////////////////
     // 네트워크 환경 설정
     strValue = m_theMinIni.gets( "NETWORK", "RECENT_SERVER", _DEFAULT_RECENT_SERVER );
-    SetPrimeServerOfNetwork( strValue.c_str() );
+    SetRecentConnectionOfNetwork( strValue.c_str() );
 
     strValue = m_theMinIni.gets( "NETWORK", "CCU_SERVER_IP_ADDRESS", _DEFAULT_CCU_SERVER_IP_ADDRESS );
     SetCCUServerOfNetwork( strValue.c_str() );
@@ -311,6 +431,11 @@ void CSysConfig::LoadINI()
     // 부팅 옵션
     iValue = m_theMinIni.geti( "BOOT", "TFFS_BOOT", _DEFAULT_TFFS_BOOT );
     SetTFFSBoot( iValue );
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // 개발용
+    iValue = m_theMinIni.geti( "BOOT", "DEVELOP", _DEFAULT_DEVELOP_BOOT );
+    SetDevelop( iValue );
 
     ///////////////////////////////////////////////////////////////////////////////
     // 최소 펄스 개수
@@ -383,9 +508,9 @@ void CSysConfig::LoadINI()
 
     // 스캔 정의
     uiValue = m_theMinIni.geti( "SCAN", "CONICAL_MIN_PERIOD_MS", _DEFAULT_CONICAL_MIN_PERIOD_MS );
-    SetConcalMinPeriod( uiValue );
+    SetConicalMinPeriod( uiValue );
     uiValue = m_theMinIni.geti( "SCAN", "CONICAL_MAX_PERIOD_MS", _DEFAULT_CONICAL_MAX_PERIOD_MS );
-    SetConcalMaxPeriod( uiValue );
+    SetConicalMaxPeriod( uiValue );
 
     ///////////////////////////////////////////////////////////////////////////////////
     // 필터 범위 정의
@@ -598,6 +723,7 @@ void CSysConfig::SetWindowCell( unsigned int uiGlobalCh, STR_WINDOWCELL *pWindow
 void CSysConfig::DisplaySystemVar()
 {
     char szTFFSBoot[2][30] = { "StandAlone(ROM 부팅)", "디버깅(TFTP 부팅)" };
+    char szDevelop[2][30] = { "체계 시험용", "개발용" };
 
     TRACE( "\n" );
     TRACE( "\n################################ 시스템 환경 설정 값 ################################" );
@@ -613,7 +739,7 @@ void CSysConfig::DisplaySystemVar()
     TRACE( "\n" );
     //Log( enNormal, "\t.장비 모드           : %d" , m_strConfig.enMode );
     TRACE( "\n\t.부팅 옵션                                : %s(%d)" , szTFFSBoot[m_strConfig.iTFFSBoot], m_strConfig.iTFFSBoot );
-    //TRACE( "\n\t.라이브러리 버젼                        : %d" , m_strConfig.uiIPLVersion );
+    TRACE( "\n\t.개발용                                   : %s(%d)" , szDevelop[m_strConfig.iDevelop], m_strConfig.iDevelop );
     TRACE( "\n\t.CPU 온도 경고 임계값(이상시 자동 부팅)   : %d [도]", m_strConfig.uiCPUTempWarning );
 
     TRACE( "\n" );
@@ -689,8 +815,9 @@ void CSysConfig::WritePresentTime( char *pPresentTime )
 
 #endif
 
-}
+    printf( "현재 시간[%s]을 기록합니다.\n", pPresentTime );
 
+}
 
 /**
  * @brief     GetPresentTime
@@ -719,7 +846,7 @@ void CSysConfig::GetPresentTime( struct timespec *pTime )
 
     strBuffer = m_theMinIni.gets( "NETWORK", "PRESENT_TIME", _DEFAULT_PRESENT_TIME );
 
-    //printf( "\nstrBuffer=%s", strBuffer.c_str() );
+    printf( "\n기록된 시간을 불러 옵니다[%s]", strBuffer.c_str() );
     sscanf( strBuffer.c_str(), "%d_%d_%d_%d_%d_%d", & stTM.tm_year, & stTM.tm_mon, & stTM.tm_mday, & stTM.tm_hour, & stTM.tm_min, & stTM.tm_sec );
 
 //     struct tm *timeinfo;

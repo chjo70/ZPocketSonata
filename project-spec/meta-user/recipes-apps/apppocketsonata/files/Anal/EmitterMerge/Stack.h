@@ -214,6 +214,7 @@ public:
 	void Print();
 	void Init(unsigned int nElemt);
 	int Count();
+    int RCount();
 	bool Push( T );
 	T *PushAt();
 	T *GetPointerByIndex( UINT i );
@@ -223,7 +224,7 @@ public:
 
 	void Copy( Queue *pSrc );
 
-	Queue(int nElems=10);
+	Queue(int nElems=0);
 	~Queue();
 	Queue &operator=( const Queue & );
 };
@@ -238,7 +239,7 @@ Queue<T>::Queue(int nElems)
 			\author 議곗쿋�씗 (churlhee.jo@lignex1.com)
 			\date 	2015-10-6 16:00:58
 	*/
-	if( nElems < MAX_OF_QUEUE_SIZE ) {
+	if( nElems != 0 && nElems < MAX_OF_QUEUE_SIZE ) {
 		nelems = nElems;
 		v = new T[(UINT)nelems];
 // 		if( v == 0 ) { //DTEC_NullPointCheck
@@ -279,6 +280,15 @@ void Queue<T>::Init(unsigned int nElemt)
 	}
 }
 
+/**
+ * @brief     Reset
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-23 10:56:40
+ * @warning
+ */
 template <class T>
 void Queue<T>::Reset()
 {
@@ -292,6 +302,15 @@ void Queue<T>::Reset()
 
 }
 
+/**
+ * @brief     Count
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-23 10:56:37
+ * @warning
+ */
 template <class T>
 int Queue<T>::Count()
 {
@@ -305,6 +324,38 @@ int Queue<T>::Count()
 	return icount;
 }
 
+/**
+ * @brief     RCount
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-02-02 10:39:41
+ * @warning
+ */
+template <class T>
+int Queue<T>::RCount()
+{
+    int icount;
+
+    icount = tail - head;
+    if( icount < 0 ) {
+        icount = icount + nelems;
+    }
+
+    return nelems - ( icount + 1 );
+}
+
+/**
+ * @brief     Push
+ * @param     T element
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-23 10:56:34
+ * @warning
+ */
 template <class T>
 bool Queue<T>::Push( T element )
 {
@@ -319,6 +370,15 @@ bool Queue<T>::Push( T element )
 
 }
 
+/**
+ * @brief     PushAt
+ * @return    T *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-23 10:56:30
+ * @warning
+ */
 template <class T>
 T *Queue<T>::PushAt()
 {
@@ -333,6 +393,16 @@ T *Queue<T>::PushAt()
 
 }
 
+/**
+ * @brief     GetPointerByIndex
+ * @param     UINT i
+ * @return    T *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-23 10:56:26
+ * @warning
+ */
 template <class T>
 T *Queue<T>::GetPointerByIndex( UINT i )
 {
@@ -349,6 +419,16 @@ T *Queue<T>::GetPointerByIndex( UINT i )
 	return pRet;
 }
 
+/**
+ * @brief     Pop
+ * @param     T * element
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-23 10:56:25
+ * @warning
+ */
 template <class T>
 bool Queue<T>::Pop( T *element )
 {
@@ -373,6 +453,15 @@ bool Queue<T>::Pop( T *element )
 	return bRet;
 }
 
+/**
+ * @brief     Pop
+ * @return    T*
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-23 10:56:22
+ * @warning
+ */
 template <class T>
 T* Queue<T>::Pop()
 {
@@ -391,12 +480,21 @@ T* Queue<T>::Pop()
 	}
 }
 
+/**
+ * @brief     Print
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-23 10:56:16
+ * @warning
+ */
 template <class T>
 void Queue<T>::Print()
 {
 	int i;
 
-	TRACE( "\n Queue[%d, H%d/T%d]:" , nelems, head, tail );
+	TRACE( "Queue[%d, H%d/T%d]:" , nelems, head, tail );
 
     if( head < tail ) {
 	    for( i=head ; i < tail ; ++i ) {
@@ -415,9 +513,21 @@ void Queue<T>::Print()
         }
     }
 
+    TRACE( "\n" );
+
 }
 
 
+/**
+ * @brief     Copy
+ * @param     Queue * pQue
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-23 10:56:12
+ * @warning
+ */
 template <class T>
 void Queue<T>::Copy( Queue *pQue )
 {

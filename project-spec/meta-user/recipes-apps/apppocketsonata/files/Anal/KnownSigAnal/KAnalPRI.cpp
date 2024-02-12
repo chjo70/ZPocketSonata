@@ -27,30 +27,30 @@ STR_PULSE_TRAIN_SEG *CKAnalPRI::m_pSeg=NULL;
  * @date      2022-08-25 19:35:13
  * @warning
  */
-int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
-{
-    int iRet;
-    const UINT *p1, *p2;
-    STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
-
-    p1 = (const UINT *) arg1;
-    p2 = (const UINT *) arg2;
-
-    pSeg1 = & m_pSeg[ *p1 ];
-    pSeg2 = & m_pSeg[ *p2 ];
-
-    if( pSeg1->stPRI.tMean > pSeg2->stPRI.tMean ) {
-        iRet = 1;
-    }
-    else if( pSeg1->stPRI.tMean < pSeg2->stPRI.tMean ) {
-        iRet = (-1);
-    }
-    else {
-        iRet = 0;
-    }
-
-    return iRet;
-}
+// int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
+// {
+//     int iRet;
+//     const UINT *p1, *p2;
+//     STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
+//
+//     p1 = (const UINT *) arg1;
+//     p2 = (const UINT *) arg2;
+//
+//     pSeg1 = & m_pSeg[ *p1 ];
+//     pSeg2 = & m_pSeg[ *p2 ];
+//
+//     if( pSeg1->stPRI.tMean > pSeg2->stPRI.tMean ) {
+//         iRet = 1;
+//     }
+//     else if( pSeg1->stPRI.tMean < pSeg2->stPRI.tMean ) {
+//         iRet = (-1);
+//     }
+//     else {
+//         iRet = 0;
+//     }
+//
+//     return iRet;
+// }
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -64,7 +64,7 @@ int CKAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2005-07-28 14:09:52
 //
-CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CAnalPRI( pParent, uiCoMaxPdw, pThreadName )
+CKAnalPRI::CKAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CAnalPRI( pParent, enTRK_ANAL, uiCoMaxPdw, pThreadName )
 {
     SetAnalType( enTRK_ANAL );
 
@@ -127,40 +127,49 @@ void CKAnalPRI::Init()
 //! \version  1.37
 //! \date     2006-08-24 16:36:32
 //! \warning
-//
 void CKAnalPRI::Analysis()
 {
-	// 펄스열 초기화
-	Init();
+    // 초기화
+    Init();
 
-	// Wide 펄스열들을 참조해서 Narrow 그룹화된 펄스열 제거 여부를 판단한다.
-	// DeleteNarrowSeg();
+    // 고정펄스열들에 대하여 스태거 그룹핑 수행하여 스태거 신호인지 분석한다.
+    //GroupingStagger();
+    //StaggerAnalysis();
+    //PrintAllEmitter( 0, "[1/8] 그룹핑 Stable PRI 기반 스태거 분석", _UNKNOWN_FREQ, _STAGGER );
 
-	// 펄스열 그룹핑
-	// 아래 함수 순서는 각 처리에 따라 호출되기 때문에
-	// 변경할 때 주의해서 변경해야 한다.
-	GroupingStagger();
-	GroupingStable();
-	GroupingJitter();
-	GroupingUnknown();
+    // 고정펄스열 그룹핑은 스태거 그룹핑 후 검증하여 해제된 펄스열들에 대해 한다.
+    GroupingStable();
+    PrintAllEmitter( 0, "[2/8] 스테이블 PRI 분석", _UNKNOWN_FREQ, _STABLE );
 
-	// 정밀 PRI 분석
-	// 하모닉 Stable로 펄스열이 구성이 되면 Dwell을 의심해 본다.
-	//-- 조철희 2005-12-22 16:09:50 --//
-	// Dwell 분석시에 Dwell 펄스열 추출을 위해
-	// DwellAnalysis();
-	StaggerAnalysis();
-	PatternAnalysis();
+    GroupingJitter();
+    PrintAllEmitter( 0, "[3/8] 지터 PRI 분석", _UNKNOWN_FREQ, _JITTER_RANDOM );
 
-	// 에미터 그룹핑
-	// PRI 타입이 다르더라도 PRI 평균이 같은 에미터 단위는 하나로 형성한다.
-	MergeGrouping( );
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 기존 에미터 분석한 결과에서 세부 분석을 수행 합니다.
+    // 지터 그룹핑된 이후 스태거 분석을 한번 더 수행한다.(Jitter 펄스열들에 대해 Auto-Correlation Function으로 스태거 분석 수행)
+    MergeGrouping();
+    StaggerAnalysis();
+    PrintAllEmitter( 0, "[4/8] 스태거 PRI 분석", _UNKNOWN_FREQ, _JITTER_STAGGER );
 
-	CAnalPRI::Analysis();
+    // PRI 고정으로 분석된 에미터들에 대해 D&S 분석을 수행한다.
+    DwellNSwitchAnalysis();
+    PrintAllEmitter( 0, "[5/8] 드웰 PRI 분석", _UNKNOWN_FREQ, _DWELL );
 
-	// 상속클래스의 PRI 분석
-	// 처음부터 하모닉 체크를 한다.
-	// GroupingKnownPri();
+    // Agile 형태 에미터를 대상으로 Hopping 여부를 분석한다.
+    HoppingAnalysis();
+    PrintAllEmitter( 0, "[6/8] 호핑 PRI 분석", _HOPPING, _UNKNOWN_PRI );
+
+    // 주파수/PRI 패턴 분석을 수행한다.
+    PatternAnalysis();
+    PrintAllEmitter( 0, "[7-1/8] 주파수 패턴 분석", _PATTERN_AGILE, _UNKNOWN_PRI );
+    PrintAllEmitter( 0, "[7-2/8] PRI 패턴 분석", _UNKNOWN_FREQ, _JITTER_PATTERN );
+
+    // 에미터 그룹핑
+    // PRI 타입이 다르더라도 PRI 평균이 같은 에미터 단위는 하나로 형성한다.
+    MergeGrouping();
+    PrintAllEmitter( 0, "[8/8] 유사 PRI 병합" );
+
+    CAnalPRI::Analysis();
 
 }
 
@@ -299,10 +308,10 @@ bool CKAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SE
  * @date      2006-01-23 10:14:21
  * @warning
  */
-void CKAnalPRI::DeleteAllSeg( STR_EMITTER *pEmitter )
-{
-	m_pKnownSigAnal->DeleteAllSeg( pEmitter );
-}
+// void CKAnalPRI::DeleteAllSeg( STR_EMITTER *pEmitter )
+// {
+// 	m_pKnownSigAnal->DeleteAllSeg( pEmitter );
+// }
 
 /**
  * @brief     기준 펄스열을 추출한다.
@@ -417,10 +426,10 @@ unsigned int CKAnalPRI::GetMaxPDW()
  * @date      2006-01-23 10:14:07
  * @warning
  */
-void CKAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
-{
-	m_pKnownSigAnal->MakePRIInfoFromSeg( pPri, pEmitter );
-}
+// void CKAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
+// {
+// 	m_pKnownSigAnal->MakePRIInfoFromSeg( pPri, pEmitter );
+// }
 
 /**
  * @brief     주파수 메디안 값을 계산한다.
@@ -483,11 +492,11 @@ int CKAnalPRI::FindPeakInHist(unsigned int uiCount, PDWINDEX *pPdwIndex )
  * @date      2022-08-26 14:22:44
  * @warning
  */
-void CKAnalPRI::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
-{
-    m_pKnownSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
-
-}
+// void CKAnalPRI::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+// {
+//     m_pKnownSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
+// 
+// }
 
 /**
  * @brief     추적 수집한 PDW 데이터의 대역을 리턴한다.
@@ -515,11 +524,11 @@ int CKAnalPRI::GetBand()
  * @date      2022-08-26 14:23:39
  * @warning
  */
-void CKAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof )
-{
-    qsort( pIdx, uiCount, uiSizeof, incSegPriMeanCompare );
-    return;
-}
+// void CKAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof )
+// {
+//     qsort( pIdx, uiCount, uiSizeof, incSegPriMeanCompare );
+//     return;
+// }
 
 /**
  * @brief     LOB 데이터 포인터를 리턴한다.

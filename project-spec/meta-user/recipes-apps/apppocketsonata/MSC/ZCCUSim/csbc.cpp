@@ -71,6 +71,8 @@ CSBC::CSBC( int iKeyId, char *pClassName, bool bArrayLanData, void *pParent ) : 
  */
 CSBC::~CSBC(void)
 {
+    //CThread::StopThread();
+
 }
 
 
@@ -104,7 +106,7 @@ void CSBC::_routine()
 
     pClientSocket = ( STR_CLIENT_SOCKET *) & m_pMsg->x.szData[0];
 
-    while( true ) {
+    while( m_bThreadLoop ) {
         if( QMsgRcv() == -1 ) {
             perror( "QMsgRcv");
         }
@@ -602,7 +604,9 @@ void CSBC::ResultOfSysError()
 
     pDlg = ( CZCCUSimDlg * ) m_pParent;
 
-    pDlg->ResultOfSysError( ( UNI_LAN_DATA * ) GetRecvData() );
+    UNI_LAN_DATA *pUNIData = ( UNI_LAN_DATA * ) GeLanData();
+
+    pDlg->ResultOfSysError( GeLanData() );
 
 }
 

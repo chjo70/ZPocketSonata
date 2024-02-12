@@ -45,8 +45,8 @@
 //#define ANZ_LOST_TIME               (0x0118)    // 신호분석 제원에 대한 Lost 판단 설정시간
 //#define ANZ_DEL_TIME                (0x011C)    // 신호분석 제원에 대한 Delete 판단 설정시간
 #define PARAM_ANZ_COUNT             (0x0120)    // 신호분석 요청에 따른 PDW 저장 설정개수
-#define PARAM_ANZ_TIME_LOW          (0x0124)    // 신호분석 요청에 따른 PDW 저장 설정시간(하위)
-#define PARAM_ANZ_TIME_HIGH         (0x0128)    // 신호분석 요청에 따른 PDW 저장 설정시간(상위)
+#define PARAM_ANZ_TIME_LOW          (0x0124)    // 신호분석 요청에 따른 PDW 저장 설정시간(하위), 18 bit
+//#define PARAM_ANZ_TIME_HIGH         (0x0128)    // 신호분석 요청에 따른 PDW 저장 설정시간(상위)
 #define PARAM_ANZ_M_OFFSET          (0x012C)    // PDW Filter 인덱스(채널)별 메모리 시작 주소
 #define PARAM_ANZ_M_SIZE            (0x0130)    // PDW Filter 인덱스(채널)별 메모리 용량
 
@@ -100,7 +100,12 @@
 
 #define CLOCK_RATE                  (0x0404)    // 클럭 레이트 설정값
 
+
+///////////////////////////////////////////////////////////////////////////////////
+
 #define LOGIC_TOTAL_CHANNEL         (64)
+
+#define PARAM_ANZ_TIME_MAXBIT       (0x3FFFF)
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -155,7 +160,7 @@
 
 
 
-#define CLOCK_SEED              (15)
+#define CLOCK_SEED              (1024*60)
 #define CLOCK_RES               ( FDIV( 125, CLOCK_SEED ) * ( float ) 1000000. )
 
 //#define ANZ_TIME_MS(A)      (unsigned long long int) ( (unsigned long long int) 250000 * (A) + 0.5 ) // ( (1000000./ 6.4)*(A) + 0.5)
@@ -179,11 +184,11 @@
 class CPCIDriver : public CLogName
 {
 private:
+    ENUM_PCI_DRIVER m_enPCIDriver;
+
     bool m_bBIT;
 
     bool m_bIsr;
-
-    ENUM_PCI_DRIVER m_enPCIDriver;
 
     std::string m_strHeader;
 
@@ -206,10 +211,10 @@ public:
     void PCIInterruptDisable() const;
 
 public:
-	void PCICtrlWrite32( unsigned int uiOffset, unsigned int uiValue, bool bLog = true ) const;
+	void PCICtrlWrite32( unsigned int uiOffset, unsigned int uiValue, bool bLog = true, bool bLogMsg = false ) const;
 
 public:
-	UINT PCICtrlRead32( unsigned int uiOffset, bool bLog = true ) const;
+	UINT PCICtrlRead32( unsigned int uiOffset, bool bLog = true, bool bLogMsg = false ) const;
 
 	const char* GetRegisterName( unsigned int uiOffset ) const;
 

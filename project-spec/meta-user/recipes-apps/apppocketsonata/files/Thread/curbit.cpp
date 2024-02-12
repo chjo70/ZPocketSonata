@@ -15,6 +15,7 @@
 #include "ccgi.h"
 
 #ifdef __VXWORKS__
+#include <sntpcLib.h>
 #include <hwif/vxBus.h>
 #include <hwif/vxbus/vxbLib.h>
 
@@ -62,10 +63,15 @@ CUrBit::CUrBit( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThre
 
     m_uiCoURBITTimer = 0;
 
+#ifdef _MSC_VER
+    m_strSQLiteFileName = string_format( "%s/%s_%d.sqlite3", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILENAME, g_enBoardId );
+#else
     m_strSQLiteFileName = string_format( "%s/%s", EMITTER_SQLITE_FOLDER, EMITTER_SQLITE_FILEEXTNAME );
 
+#endif
+
     m_strSQLiteFolder = string_format( "%s", SD_CARD );
-    printf( "\n m_strSQLiteFolder=[%s]", m_strSQLiteFolder.c_str() );
+    //printf( "\n m_strSQLiteFolder=[%s]", m_strSQLiteFolder.c_str() );
 
     // DMA 설정
     InitHW();
@@ -91,6 +97,7 @@ CUrBit::CUrBit( int iKeyId, const char *pClassName, bool bArrayLanData ) : CThre
  */
 CUrBit::~CUrBit( void )
 {
+    StopThread();
 }
 
 /**
@@ -203,22 +210,20 @@ void CUrBit::RunTimer()
         m_enLogType = enNull;
     }
 
-    Log( m_enLogType, "주기적으로 자체점검을 수행합니다. !!" );
-
-#ifdef __VXWORKS__
-    logMsg( "주기적으로 자체점검을 수행합니다. !!\n", 0, 0, 0, 0, 0, 0 );
-
-#endif
+    Log( m_enLogType, "EW신호처리판#%d에서 주기적으로 자체점검을 수행합니다. !!", (int) g_enBoardId );
 
     ++ m_uiCoURBITTimer;
     if( m_uiCoURBITTimer >= SNTP_TIMER / URBIT_TIMER ) {
         m_uiCoURBITTimer = 0;
 
-#ifdef __VXWORKS__
-            WhereIs;
-            m_stBIT.bSNMP = g_theManSbc->SetTimeBySNMP();
+        // 시간을 동기화 합니다.
+        SyncSNMP();
 
-#endif
+// #ifdef __VXWORKS__
+//         WhereIs;
+//         m_stBIT.bSNMP = g_theManSbc->SetTimeBySNMP();
+//
+// #endif
 
     }
 
@@ -231,8 +236,77 @@ void CUrBit::RunTimer()
     // 데이터베이스를 관리 합니다.
     CheckDatabase();
 
+    // 외부 인터페이스를 체크 합니다.
+    CheckLinkStatus();
+
+    // 저장 데이터를 서버에 백업 합니다.
+    BackupStorage();
+
     // 로그 형식 복귀
     m_enLogType = enNormal;
+
+}
+
+/**
+ * @brief     SyncSNMP
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-25 12:25:14
+ * @warning
+ */
+void CUrBit::SyncSNMP()
+{
+#ifdef _MSC_VER
+
+#else
+    STATUS sntpc_status = -1;
+    struct timespec tspec;
+
+    // 이놈의 vxworks 7은 왜 2번을 수행해야 얻어 오는지....
+    if( g_pTheSysConfig->GetDevelop() == 1 ) {
+        Log( m_enLogType, "n##### SNTP 프로토콜을 사용해서 타임 서버[%s]로 SBC 현재 시간을 설정하려 합니다...", g_pTheSysConfig->GetDebugServerOfNetwork() );
+
+        sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetDebugServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
+    }
+    else {
+        Log( m_enLogType, "##### SNTP 프로토콜을 사용해서 타임 서버[%s]로 SBC 현재 시간을 설정하려 합니다...", g_pTheSysConfig->GetCCUServerOfNetwork() );
+
+        sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetCCUServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
+
+//         if( sntpc_status != OK ) {
+//             Log( m_enLogType, "##### SNTP 프로토콜을 사용해서 타임 서버[%s]로 SBC 현재 시간을 설정하려 합니다...", g_pTheSysConfig->GetDebugServerOfNetwork() );
+//
+//             sntpc_status = sntpcTimeGet( g_pTheSysConfig->GetDebugServerOfNetwork(), 3 * OS_ONE_SEC, & tspec );
+//         }
+    }
+
+
+    if( sntpc_status == OK ) {
+        STATUS settime_status;
+
+        settime_status = clock_settime( CLOCK_REALTIME, & tspec );
+        if( settime_status != OK ) {
+            Log( enError, "Returned settime_status: %i errno: %s", settime_status, strerror( errno ) );
+        }
+        else {
+            struct tm *pstTime;
+            char buffer[100];
+
+            time_t ti = time( NULL );
+
+            pstTime = localtime( & ti );
+            strftime( buffer, 100, "%Y-%m-%d %H:%M:%S", pstTime );
+
+            Log( m_enLogType, "시간 동기화[%s]에 성공 했습니다 !" , buffer );
+        }
+    }
+    else {
+        Log( enError, "시간 동기화에 실패 했습니다 !" );
+    }
+
+#endif
 
 }
 
@@ -249,23 +323,35 @@ void CUrBit::CheckDatabase()
 {
     unsigned long long int ullFileSize, ullFreeSpace;
 
-    ullFileSize = CCommonUtils::GetRawFileSize( (char *) m_strSQLiteFileName.c_str() );
-    ullFreeSpace = CCommonUtils::DiskFreeSpace( ( char * ) m_strSQLiteFolder.c_str() );
+    ullFileSize = CCommonUtils::GetRawFileSize( m_strSQLiteFileName.c_str() );
+    ullFreeSpace = CCommonUtils::DiskFreeSpace( m_strSQLiteFolder.c_str() );
 
-    printf( "ullFreeSpace=[%llu], ullFileSize[%llu]\n", ullFreeSpace, ullFileSize );
+    Log( enNormal, "램 드라이브 저장 공간{%llu[KB]}, SQLite 파일 크기{%llu[KB]}", ullFreeSpace/1024, ullFileSize/1024 );
 
     if( ullFreeSpace < MINIMUM_FREESPACE_OF_RAMDRIVE ) {
-        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
-        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
-        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
-        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
-        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
-        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
-        TRACE( "###################################Call the CleanDatabase..\n\n\n\n" );
-        g_pTheEmitterMerge->QMsgSnd( enTHREAD_REQ_CLEANUP );
+        // g_pTheEmitterMerge->QMsgSnd( enTHREAD_REQ_CLEANUP );
 
     }
 
+}
+
+/**
+ * @brief     CheckLinkStatus
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-18 11:25:42
+ * @warning
+ */
+void CUrBit::CheckLinkStatus()
+{
+    if( g_pTheCCUSocket->IsConnected() == true ) {
+        Log( enNormal, "랜 연결 상태 : [%s]와 정상 연결됐습니다.", g_pTheCCUSocket->GetConnectedAddress() );
+    }
+    else {
+        Log( enNormal, "랜 연결 상태 : 연결된 상태가 아닙니다." );
+    }
 }
 
 /**
@@ -290,14 +376,10 @@ void CUrBit::CheckTasks()
 
         // printf( "\n [%s] task status[%d] ", cThread->GetThreadName(), taskDesc.td_status );
         if( taskDesc.td_status == 16 ) {
-			char buffer[200];
-
             m_stBIT.bTask = false;
             Log( enError, "타스크[%s]에서 이상 운용됩니다. 관리자에게 문의하세요 !", cThread->GetThreadName() );
 
-            sprintf( buffer, "EW신호처리판 [#%d]에서 타스크[%s]에서 이상 동작합니다. 확인하세요 !", (int) g_enBoardId, cThread->GetThreadName() );
-            //g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
-            SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
+            SendStringLan( enREQ_SYSERROR, ( const char * ) "EW신호처리판 [#%d]에서 타스크[%s]에서 이상 동작합니다. 확인하세요 !", ( int ) g_enBoardId, cThread->GetThreadName() );
 
             break;
         }
@@ -307,7 +389,7 @@ void CUrBit::CheckTasks()
 
 #ifdef __VXWORKS__
     if( m_stBIT.bTask == true ) {
-        Log( m_enLogType, "[%d] 개의 타스크가 정상 운용 중입니다." , g_vecThread.size() );
+        Log( enNormal, "[%d] 개의 타스크가 정상 운용 중입니다." , g_vecThread.size() );
     }
     else {
 
@@ -336,18 +418,14 @@ void CUrBit::CheckSBCTemp()
     GetTemperature( & uiBoardTemp, & uiCPUTemp );
 
     if( uiBoardTemp > g_pTheSysConfig->GetCPUTempWarning() ) {
-        char buffer[200];
+        SendStringLan( enREQ_SYSERROR, ( const char * ) "EW신호처리판 [#%d]에서 보드 온도[%d]도, CPU 온도[%d]도 를 초과했습니다 ! 장치 전원을 차단하세요 !", ( int ) g_enBoardId, uiBoardTemp, uiCPUTemp );
 
-        sprintf( buffer, "EW신호처리판 [#%d]에서 보드 온도[%d]도, CPU 온도[%d]도 를 초과했습니다 ! 장치 전원을 차단하세요 !" , (int) g_enBoardId, uiBoardTemp, uiCPUTemp );
-       // g_pTheCCUSocket->SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
-        SendStringLan( enREQ_SYSERROR, ( const char * ) buffer );
-
-        Log( enError, "%s", buffer );
+        Log( enError, "%s", "EW신호처리판 [#%d]에서 보드 온도[%d]도, CPU 온도[%d]도 를 초과했습니다 ! 장치 전원을 차단하세요 !", ( int ) g_enBoardId, uiBoardTemp, uiCPUTemp );
 
         m_stBIT.bTemp = false;
     }
     else {
-        Log( m_enLogType, "보드 온도 [%d]도, CPU 온도 [%d]도 로 정상 운용 입니다.", uiBoardTemp, uiCPUTemp );
+        Log( enNormal, "보드 온도 [%d]도, CPU 온도 [%d]도 로 정상 운용 입니다.", uiBoardTemp, uiCPUTemp );
     }
 
 #else
@@ -539,6 +617,47 @@ void CUrBit::RunUBit( bool bCGIRunning )
 //         CCommonUtils::SendLan( enRES_UBIT, & m_stESCbit, sizeof(m_stESCbit) );
 // #endif
 //     }
+}
+
+/**
+ * @brief     BackupStorage
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-27 14:25:04
+ * @warning
+ */
+void CUrBit::BackupStorage()
+{
+    int iCopy;
+    string strSrcFileName, strDestFilename;
+    char buffer[100];
+
+    if( g_pTheTaskMngr != NULL ) {
+        time_t ti = g_pTheTaskMngr->OPStartTime();
+
+        if( ti != 0 ) {
+            // 목적지 디렉토리 생성
+            CCommonUtils::getFileNamingDesignatedTime( buffer, sizeof( buffer ), ti );
+
+            strSrcFileName = string_format( "%s%s/%s/%s", RAMDRV, RAMDRV_NO, SQLITE_DIRECTORY, EMITTER_SQLITE_FILEEXTNAME );
+            strDestFilename = string_format( "%s/BRD_%d/%s/#%d_%s_%s", SHARED_DATA_DIRECTORY, g_enBoardId, SQLITE_DIRECTORY, ( int ) g_enBoardId, buffer, EMITTER_SQLITE_FILEEXTNAME );
+
+            printf( "\n %s...%s", strSrcFileName.c_str(), strDestFilename.c_str() );
+            iCopy = CCommonUtils::CopySrcToDstFile( strSrcFileName.c_str(), strDestFilename.c_str(), 1, 0077 );
+            if( iCopy <= 0 ) {
+                Log( enError, "소스[%s]에서 타겟[%s]으로 복사하지 못했습니다 ! 담당자에게 문의하세요 !" , strSrcFileName.c_str(), strDestFilename.c_str() );
+            }
+            else {
+                Log( enNormal, "소스[%s]에서 타겟[%s]으로 정상적으로 복사했습니다.", strSrcFileName.c_str(), strDestFilename.c_str() );
+            }
+        }
+        else {
+            // printf( "\n 시간 정보가 ZERO 입니다. 시간 설정이 되지 않았습니다. !", buffer );
+        }
+    }
+
 }
 
 #ifdef __ZYNQ_BOARD__

@@ -50,8 +50,8 @@ enum ENUM_BOOTSHELL_COMMAND {
 // 장치 관련 드라이브 정의
 
 #define	EIDDISK										"EIDDISK:"
-#define	RAMDRV										(char *) "/RAMDRV"
-#define	RAMDRV_NO									(char *) ":0"
+#define	RAMDRV										(const char *) "/RAMDRV"
+#define	RAMDRV_NO									(const char *) ":0"
 #define	TFFSDRV										(char *) "/tffs1"
 
 #if defined(__LP64__)

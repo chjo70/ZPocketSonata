@@ -33,8 +33,6 @@
 class CScanSigAnal : public CSigAnal
 {
 private:
-    ENUM_ANAL_TYPE m_enAnalType;
-
     SRxABTData *m_pABTData;
 
 public:
@@ -68,7 +66,7 @@ public:
         CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
     }
 
-    void SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID );
+    //void SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID );
     void InitVar();
     void SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, bool bOnlyThreat=FALSE );
 
@@ -103,7 +101,7 @@ public:
 
     inline int GetCoGroup() { return 0; }
 
-    inline ENUM_ANAL_TYPE GetAnalType() { return m_enAnalType; }
+    // inline ENUM_ANAL_TYPE GetAnalType() { return m_enAnalType; }
 
 #if defined(_ELINT_) || defined(_XBAND_)
 	inline EN_RADARCOLLECTORID GetCollectorID() { return CSigAnal::GetCollectorID(); }
@@ -122,7 +120,7 @@ public:
 
     void MakeStaticPDWData( STR_STATIC_PDWDATA *pStaticPDWData, STR_PDWDATA *pstPDWData );
 
-    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
+    //void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile );
     void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType);
     void ClearColBuffer();
     UINT AnalStart( int noEMT, int noCh );

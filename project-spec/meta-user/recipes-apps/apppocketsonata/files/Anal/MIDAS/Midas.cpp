@@ -68,7 +68,7 @@ ENUM_ENDIAN_MODE g_enEndian;
  * @date      2017-02-07, 오후 2:59
  * @warning
  */
-CMIDASBlueFileFormat::CMIDASBlueFileFormat(void)
+CMIDASBlueFileFormat::CMIDASBlueFileFormat( void )
 {
     m_pExtendOfHeader = NULL;
 

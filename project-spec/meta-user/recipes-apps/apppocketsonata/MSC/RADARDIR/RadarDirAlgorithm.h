@@ -121,13 +121,33 @@ extern __declspec(dllimport) ENUM_UnitType g_enUnitType;
 
 #ifndef _STR_STAT_BITMAP
 #define _STR_STAT_BITMAP
+
+#ifdef _MSC_VER
 struct STR_STAT_BITMAP {
     unsigned int CwPulse : 1;
     unsigned int Pmop : 1;
     unsigned int Fmop : 1;
+    unsigned int DI : 1;
     unsigned int FalsePdw : 1;
     unsigned int FmopDir : 2;
+    unsigned int Edge : 1;
+
+    unsigned int FMOPBW : 16;
 };
+#else
+struct STR_STAT_BITMAP {
+    unsigned int FMOPBW : 16;
+
+    unsigned int Edge : 1;
+    unsigned int FmopDir : 2;
+    unsigned int FalsePdw : 1;
+    unsigned int DI : 1;
+    unsigned int Fmop : 1;
+    unsigned int Pmop : 1;
+    unsigned int CwPulse : 1;
+
+};
+#endif
 #endif
 
 #ifndef _UNI_PDW_ETC
@@ -969,6 +989,8 @@ enum class ENUM_AET_SCAN_STAT : unsigned char {
     E_AET_USER_SCAN_SUCCESS,
     E_AET_USER_SCAN_FAIL,
 
+    E_AET_SCAN_ING,
+
 };
 #endif
 
@@ -1248,7 +1270,7 @@ namespace RadarDirAlgotirhm
 
         static MATHFUNCSDLL_API int GetCoLOB( int iSigAnal=0 );
         static MATHFUNCSDLL_API SRxLOBData *GetLOBData( int iSigANal=0 );
-        static MATHFUNCSDLL_API STR_PDWINDEX *GetLOB2PDWData( unsigned int uiLOBIndex, int iSigANal = 0 );
+        static MATHFUNCSDLL_API STR_PDWDATA *GetLOB2PDWData( unsigned int uiLOBIndex, int iSigANal = 0 );
 
         static MATHFUNCSDLL_API unsigned int GetOpInitID( int iSigAnal = 0 );
 

@@ -105,6 +105,9 @@ enum enTHREAD_REQ_MESSAGE : unsigned int {
     //
     enTHREAD_REQ_SIM_PDWDATA = enREQ_SIM_PDWDATA,
 
+    // 타스크 상태 및 정보 전시
+    enMONITOR,
+
     enTHREAD_EXIT,
 
 

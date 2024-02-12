@@ -37,14 +37,14 @@
 class CMakeAET : public CLogName
 {
 private:
-    std::vector<SRxLOBData > m_vecLOBData;
     std::vector<STR_PDWINDEX > m_vecLOB2PDWData;
+    std::vector<SRxLOBData > m_vecLOBData;
 
 public:
     int m_iCoEmitter;
 
     int m_iCoLOB;
-    int m_iAnaledCoLOB;
+    int m_iCoAnalLOB;
 
 protected:
     DEFINE_ANAL_PVAR_
@@ -95,12 +95,13 @@ public:
 
 
     void MakePRIInfoFromEmitter( STR_PRI *pPRI, STR_EMITTER *pEmitter );
-    void MakePRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
+    //void MakePRIInfoFromSeg(STR_PRI *pPRI, STR_EMITTER *pEmitter);
 
     void MakeFrqInfoFromSeg( STR_FRQ *pFrq, STR_EMITTER *pEmitter );
     unsigned int MakeDIInfoFromSeg( STR_EMITTER *pEmitter);
-    void MakeLOBDataFromEmitter(int iLOBData, STR_EMITTER *pEmitter, int idxEmitter );
-    void PrintAllAET();
+    bool MakeLOBDataFromEmitter( SRxLOBData *pstLOBData, int iLOBData, STR_EMITTER *pEmitter, int idxEmitter );
+    bool CheckValidLOBData( SRxLOBData *pstLOBData );
+    void PrintAllAET( bool bAll=false );
 	void MakeFreqLOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
 	void MakePRILOBDataFromEmitter(SRxLOBData *pLOBData, STR_EMITTER *pEmitter);
     void MakeMOPInfoFromSeg( SRxLOBData *pLOBData, STR_EMITTER *pEmitter );
@@ -109,6 +110,8 @@ public:
 
     void Init(void);
 
+    void MakeKnownSuccessLOBData( SRxLOBData *pLOBData );
+
     inline SRxLOBData *GetLOBData( unsigned int uiLOBIndex = 0 ) {
         SRxLOBData *pLOBData = NULL;
         if( uiLOBIndex < m_vecLOBData.size() ) {
@@ -116,7 +119,7 @@ public:
         }
         return pLOBData;
     }
-    inline STR_PDWINDEX *GetLOB2PDWData( unsigned int uiLOBIndex ) {
+    inline STR_PDWINDEX *GetLOB2PDWIndex( unsigned int uiLOBIndex ) {
         STR_PDWINDEX *pPDWIndex=NULL;
         if( uiLOBIndex < m_vecLOB2PDWData.size() ) {
             pPDWIndex = & m_vecLOB2PDWData.at( uiLOBIndex );
@@ -133,7 +136,7 @@ public:
     virtual int CalcPAMean(PDWINDEX *pPdwIndex, unsigned int uiCount) = 0;
     virtual int VerifyPW(PDWINDEX *pPdwIndex, unsigned int uiCount) = 0;
     //virtual void MarkToPdwIndex(PDWINDEX *pPdwIndex, unsigned int uiCount, USHORT usMarkType) = 0;
-    virtual void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int index, bool bSaveFile) = 0;
+    //virtual void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int index, bool bSaveFile) = 0;
     virtual unsigned int GetCoSeg() = 0;
     virtual unsigned int GetCoEmitter() = 0;
     virtual STR_PULSE_TRAIN_SEG *GetPulseSeg() = 0;

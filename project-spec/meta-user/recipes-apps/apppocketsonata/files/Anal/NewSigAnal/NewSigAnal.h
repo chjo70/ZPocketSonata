@@ -30,20 +30,19 @@
 class CNewSigAnal : public CSigAnal
 {
 private:
-
-
     unsigned int m_uiPDWID;
 
-    int m_CoGroup;
-    UINT m_uiMaxPDW;
-    UINT m_uiColPDW;
+    int m_CoGroup;                          //< 그룹화 총 개수
+    UINT m_uiMaxPDW;                        //< 수집 분석할 최대 PDW 개수
+    UINT m_uiColPDW;                        //< 수집한  분석할 최대 PDW 개수
     UINT m_uiCoPDW;
     STR_PDWINDEX *m_pGrPdwIndex;
-    STR_PDWDATA *m_pPDWData;            // 수집한 데이터 포인터
+    STR_PDWDATA m_theLOB2PDWData;           //< 해당 LOB의 PDW 데이터
+    STR_PDWDATA *m_pPDWData;                //< 수집한 데이터 포인터
 
     STR_PULSE_TRAIN_SEG *m_pSeg;
 
-    CELSignalIdentifyAlg *m_pIdentifyAlg;		///< CED/EOb 신호 식별 객체
+    CELSignalIdentifyAlg *m_pIdentifyAlg;		//< CED/EOb 신호 식별 객체
 
     vector<SRadarMode *> m_VecMatchRadarMode;
 
@@ -71,9 +70,13 @@ public:
     CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL, const char *pThreadName=NULL );
     virtual ~CNewSigAnal();
 
-    //void InitVar(enum ANALYSIS_MODE analMode);
+#ifdef _USRDLL
     bool LoadCEDLibrary();
     bool LoadEOBLibrary();
+
+#endif
+
+    STR_PDWDATA *GetLOB2PDWData( unsigned int uiLOBIndex );
 
     inline void DeleteAllFiles() {
         CSigAnal::DeleteAllFiles();
@@ -143,16 +146,14 @@ public:
      * @date      2022-05-10, 11:53
      * @warning
      */
-    inline void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
-        return CSigAnal::SaveEmitterPDWFile( pEmitter, m_pPDWData->pstPDW, iPLOBID, bSaveFile);
-    }
+//     inline void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
+//         return CSigAnal::SaveEmitterPDWFile( pEmitter, m_pPDWData->pstPDW, iPLOBID, bSaveFile);
+//     }
 
     inline void DISP_FineLOB( SRxLOBData *pNewAet ) { CSigAnal::DISP_FineLOB( pNewAet ); }
 
     inline SRxLOBData *GetLOBData(unsigned int index=0 ) { return m_theMakeAET->GetLOBData(index); }
-    inline STR_PDWINDEX *GetLOB2PDWData( unsigned int uiLOBIndex ) { return m_theMakeAET->GetLOB2PDWData( uiLOBIndex ); }
-
-    //inline int GetMakeAet() { return m_theMakeAET->GetMakeAet(); }
+    //inline STR_PDWINDEX *GetLOB2PDWData( unsigned int uiLOBIndex ) { return m_theMakeAET->GetLOB2PDWData( uiLOBIndex ); }
 
     inline STR_EMITTER *GetEmitter() { return m_theAnalPRI->GetEmitter(); }
     inline unsigned int GetColPdw() { return m_uiCoPDW; }
@@ -175,7 +176,6 @@ public:
     inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, PULSE_MARK enMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex, uiCount, enMarkType ); }
     inline STR_PULSE_TRAIN_SEG *GetPulseSeg() { return m_thePulExt->GetPulseSeg(); }
     inline bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
-    inline void DeleteAllSeg( STR_EMITTER *pEmitter ) { m_thePulExt->DeleteAllSeg( pEmitter ); }
     inline void PrintAllSeg() { m_thePulExt->PrintAllSeg(); }
     inline _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->VerifyPRI( pPdwIndex, uiCount ); }
     inline bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSeg, STR_PRI_RANGE_TABLE *pExtRange ) { return m_thePulExt->ExtractDwellRefPT( pDwlSeg, pExtRange ); }
@@ -200,7 +200,7 @@ public:
     inline int GetCoLOB() { return m_theMakeAET->GetCoLOB(); }
     inline int GetCoAnalPdw() { return m_theMakeAET->GetCoAnalPdw(); }
     inline void SetCoAnalPdw( UINT coExtPdw ) { m_theMakeAET->SetCoAnalPdw( coExtPdw ); }
-    inline void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoFromSeg( pPri, pEmitter ); }
+    //inline void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoFromSeg( pPri, pEmitter ); }
     inline void SetCoAet( UINT coAet ) { m_theMakeAET->SetCoLOB( coAet ); }
     inline CNMakeAET *GetMakeAET() { return m_theMakeAET; }
 

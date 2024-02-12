@@ -20,11 +20,13 @@
 #include "../Utils/clog.h"
 
 typedef enum {
-    ABNORMAL_TRACK_CLOSE=0,
-    NORMAL_TRACK_CLOSE_DELETE,
-    NORMAL_TRACK_CLOSE
+    enABNORMAL_TRACK_CLOSE=0,
+    enNORMAL_TRACK_CLOSE_DELETE,
+    enNORMAL_TRACK_CLOSE
 
 } ENUM_TRACK_CLOSE;
+
+
 
 /**
 *
@@ -71,13 +73,16 @@ public:
 
 private:
     void InitEmitterMerge();
-    void MergeEmitter();
+    void CloseEmitterMerge();
+    void MergeEmitter( ENUM_ANAL_TYPE enAnalType );
     //void MergeTrackEmitter();
     void TrackEmitter();
-    void DeleteThreat();
+    void DeleteThreat( int iMaxDelete=1 );
     void RemoveThreat();
 
     void InitOfMessageData();
+
+    void DisplayMonitor();
 
 #if CO_SCAN_CHANNEL > 0
     void UpdateScanResult();
@@ -91,7 +96,7 @@ private:
 #endif
 
     // 수집 쓰레드에 추적/스캔 요청을 전송한다.
-    void RequestTrackCollect( SRxLOBData *pLOBData, ENUM_COLLECTBANK enCollectBank, SRxABTData *pABTData=NULL, SELABTDATA_EXT *pABTExtData=NULL );
+    void RequestTrackCollect( SRxLOBData *pLOBData, ENUM_COLLECTBANK enCollectBank, bool bCreateTrack, SRxABTData *pABTData=NULL, SELABTDATA_EXT *pABTExtData=NULL );
     void RequestTrackClose( ENUM_TRACK_CLOSE enTrackClose, STR_TRKANAL_INFO *pstTRKAnalInfo=NULL, SELABTDATA_EXT *pABTExtData=NULL );
     void RequestAbnormalTrackClose();
     void RequestNormalTrackClose();
@@ -102,16 +107,19 @@ private:
     void ReloadLibrary();
 
     void SendNewUpd( unsigned int uiOpCode );
-    void SendDelete( unsigned int uiAETID );
-    void SendLanByTime( unsigned int uiOpcode, SAETData *pData, SELABTDATA_EXT *pABTExtData );
-    void SendLanByTime( unsigned int uiOpcode, SELLOST *pData, SELABTDATA_EXT *pABTExtData );
-    void SendLanByTime( unsigned int uiOpcode, STR_TRKANAL_INFO *pRecvTrackAnalInfo, unsigned int uiDataSize, SELABTDATA_EXT *pABTExtData );
+    void SendDelete( unsigned int uiAETID, unsigned int uiABTID );
+    void SendAETData( unsigned int uiOpcode, SAETData *pData, SELABTDATA_EXT *pABTExtData );
+    //void SendLostOrDelete( unsigned int uiOpcode, SELLOST *pData, SELABTDATA_EXT *pABTExtData );
+    void SendLostOrDelete( unsigned int uiOpcode, STR_TRKANAL_INFO *pRecvTrackAnalInfo, SELABTDATA_EXT *pABTExtData );
     void SwapAETData( SAETData *pstAET );
 
     void CleanupDatabase();
     void BackupDatabase();
 
     void MakeLOBData( SRxLOBData *pLOBData );
+
+    // 빔 병합/분리 관련 함수
+    void ManageMergeOrSeperateBeam( ENUM_ANAL_TYPE enAnalType, SRxABTData *pABTData );
 
 public:
     CEmitterMerge( int iThreadPriority, const char *pThreadName, bool bArrayLanData );
@@ -172,12 +180,18 @@ public:
             }
         }
         else {
-            if( m_pRecvTrackAnalInfo->uiAETID != 0 ) {
-                pABTData = m_pTheEmitterMergeMngr->FindABTData( m_pRecvTrackAnalInfo->uiAETID, m_pRecvTrackAnalInfo->uiABTID );
+            if( pLOBData != NULL ) {
+                pABTData = m_pTheEmitterMergeMngr->FindABTData( pLOBData->uiAETID, pLOBData->uiABTID );
             }
             else {
                 pABTData = m_pTheEmitterMergeMngr->GetABTData();
             }
+//             if( m_pRecvTrackAnalInfo->uiAETID != 0 ) {
+//                 pABTData = m_pTheEmitterMergeMngr->FindABTData( m_pRecvTrackAnalInfo->uiAETID, m_pRecvTrackAnalInfo->uiABTID );
+//             }
+//             else {
+//                 pABTData = m_pTheEmitterMergeMngr->GetABTData();
+//             }
         }
 
         return pABTData;
@@ -206,12 +220,18 @@ public:
             }
         }
         else {
-            if( m_pRecvTrackAnalInfo->uiAETID != 0 ) {
-                pABTExtData = m_pTheEmitterMergeMngr->FindABTExtData( m_pRecvTrackAnalInfo->uiAETID, m_pRecvTrackAnalInfo->uiABTID );
+            if( pLOBData != NULL ) {
+                pABTExtData = m_pTheEmitterMergeMngr->FindABTExtData( pLOBData->uiAETID, pLOBData->uiABTID );
             }
             else {
                 pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData();
             }
+//             if( m_pRecvTrackAnalInfo->uiAETID != 0 ) {
+//                 pABTExtData = m_pTheEmitterMergeMngr->FindABTExtData( m_pRecvTrackAnalInfo->uiAETID, m_pRecvTrackAnalInfo->uiABTID );
+//             }
+//             else {
+//                 pABTExtData = m_pTheEmitterMergeMngr->GetABTExtData();
+//             }
         }
 
         return pABTExtData;
@@ -219,6 +239,5 @@ public:
 
 
 };
-
 
 

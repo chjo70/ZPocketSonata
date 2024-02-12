@@ -23,7 +23,6 @@
 #include "cscananalysis.h"
 #include "cusercollect.h"
 
-//#include "../Utils/csingleserver.h"
 #include "../Utils/ccommonutils.h"
 
 #include "../System/csysconfig.h"
@@ -48,9 +47,13 @@ CSignalCollect::CSignalCollect( int iThreadPriority, const char *pClassName, boo
 #endif
 {
 
+    // 장비가 ON 일때부터 0 으로 설정함.
     m_uiPDWID = 0;
 
 #ifdef _SIM_PDW_
+#ifdef _HARMONIC_GENPDW_
+    m_bHarmonic = false;
+#endif
     m_bStopSigGen = true;
 #endif
 
@@ -106,6 +109,8 @@ CSignalCollect::CSignalCollect( int iThreadPriority, const char *pClassName, boo
  */
 CSignalCollect::~CSignalCollect(void)
 {
+    StopThread();
+
     Free();
 
 }
@@ -121,9 +126,20 @@ CSignalCollect::~CSignalCollect(void)
 void CSignalCollect::Alloc()
 {
 
-    m_pTheRigtCollectBank = NULL;
-    m_pTheLeftCollectBank = new CCollectBank( CO_DETECT_CHANNEL, CO_PREFILTER_CHANNEL, CO_TRACK_CHANNEL, CO_SCAN_CHANNEL, enLEFT_PCI_DRIVER, CThread::GetThreadName() );
-    //m_pTheRigtCollectBank = new CCollectBank( CO_DETECT_CHANNEL, CO_TRACK_CHANNEL, CO_SCAN_CHANNEL, enRIGHT_PCI_DRIVER, CThread::GetThreadName() );
+    switch( g_enBoardId ) {
+        case enPRC1:
+        case enPRC3:
+        case enPRC5:
+            m_pTheLeftCollectBank = new CCollectBank( CO_DETECT_CHANNEL, CO_PREFILTER_CHANNEL, CO_TRACK_CHANNEL, CO_SCAN_CHANNEL, enLEFT_PCI_DRIVER, CThread::GetThreadName() );
+            m_pTheRigtCollectBank = NULL;
+            break;
+
+        default:
+            m_pTheLeftCollectBank = NULL;
+            m_pTheRigtCollectBank = new CCollectBank( CO_DETECT_CHANNEL, CO_PREFILTER_CHANNEL, CO_TRACK_CHANNEL, CO_SCAN_CHANNEL, enRIGHT_PCI_DRIVER, CThread::GetThreadName() );
+            break;
+
+    }
 
 #ifdef _SIM_PDW_
     m_pstrPDWWithFileHeader = ( char * ) malloc( sizeof( SIGAPDW ) * NUM_OF_SIM_PDW + sizeof( UNION_HEADER ) );
@@ -214,20 +230,17 @@ void CSignalCollect::_routine()
                 ///////////////////////////////////////////////////////////////////////////////////
                 // 운용 제어 관련 메시지 처리
                 case enREQ_OP_START:
-                    // QMsgClear();
                     InitSignalCollect( true );
                     StartCollecting();
                     break;
 
                 case enTHREAD_DISCONNECTED:
                 case enREQ_OP_SHUTDOWN:
-                    //QMsgClear();
                     InitSignalCollect();
                     CloseCollectingInterrupt();
                     break;
 
 				case enREQ_OP_RESTART:
-					//QMsgClear();
                     InitSignalCollect();
                     StartCollecting();
                     break;
@@ -235,13 +248,12 @@ void CSignalCollect::_routine()
                 ///////////////////////////////////////////////////////////////////////////////////
                 // 신호(탐지/추적/스캔) 수집 완료 처리
                 case enTHREAD_REQ_COMPLETECOL :
-                    //InitOfMessageData();
                     CompleteCollecting();
                     break;
 
                 // 탐지 신호 수집 시작
                 case enTHREAD_REQ_SET_DETECTWINDOWCELL:
-                    ReqDetectWindowCell();
+                    ReqDetectWindowCell( false );
                     break;
 
                 ///////////////////////////////////////////////////////////////////////////////////
@@ -261,6 +273,7 @@ void CSignalCollect::_routine()
                 case enTHREAD_REQ_CLOSE_TRACKWINDOWCELL :
                     ReqCloseTrackWindowCell();
                     break;
+
 
 #ifdef _SIM_PDW_
                 case enTHREAD_TIMER :
@@ -296,7 +309,7 @@ void CSignalCollect::_routine()
 #endif
 
 			default:
-				Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+				Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", CThread::GetThreadName(), m_pMsg->uiOpCode );
 				break;
             }
 
@@ -359,11 +372,10 @@ void CSignalCollect::InitOfMessageData()
  */
 void CSignalCollect::CompleteCollecting()
 {
-    unsigned int uiGlobalCh=0, uiTotalPDW;
+    unsigned int uiCh, uiGlobalCh=0, uiTotalPDW;
     unsigned int uiReqStatusBit;
 
-    //printf( "\nm_pRecvCollectInfo->uiReqStatus[%p]", & m_pRecvCollectInfo->uiReqStatus[1] );
-    printf( "uiReqStatusBit={%d/%d/%d}\n", m_pRecvCollectInfo->uiReqStatus[0], m_pRecvCollectInfo->uiReqStatus[1], m_pRecvCollectInfo->uiReqStatus[2] );
+    printf( "{0x%x/0x%x/0x%x}\n", m_pRecvCollectInfo->uiReqStatus[0], m_pRecvCollectInfo->uiReqStatus[1], m_pRecvCollectInfo->uiReqStatus[2] );
 
     // 탐지 필터 수집 확인
     uiReqStatusBit = m_pRecvCollectInfo->uiReqStatus[enDetectCollectBank - 1];
@@ -373,7 +385,8 @@ void CSignalCollect::CompleteCollecting()
             //Log( enDebug, "uiReqStatusBit[0x%x], uiCh[%d], uiTotalPDW[%d]", uiReqStatusBit, uiCh, uiTotalPDW );
 
             if( uiGlobalCh < CO_DETECT_CHANNEL ) {
-                Log( enNormal, "[%s]의 탐지 [%s] 채널[%3d]에서, PDW[%d] 신호 수집 완료", GetThreadName(), g_strPCIDrverDirection[(unsigned int)m_pRecvCollectInfo->enPCIDriver].c_str(), uiGlobalCh, uiTotalPDW );
+                Log( enDebug, "[%s]의 탐지 [%s] 채널[%2d/%2d]에서, PDW[%d] 신호 수집 완료", GetThreadName(), g_strPCIDrverDirection[(unsigned int)m_pRecvCollectInfo->enPCIDriver].c_str(), uiGlobalCh, uiGlobalCh, uiTotalPDW );
+                ElseLog( enDebug, "[%d:%d]\n", uiTotalPDW, uiGlobalCh );
                 CloseDetectChannel( uiGlobalCh, m_pRecvCollectInfo->enPCIDriver, uiTotalPDW );
 
             }
@@ -386,12 +399,15 @@ void CSignalCollect::CompleteCollecting()
     uiGlobalCh = CO_DETECT_CHANNEL;
     uiReqStatusBit = m_pRecvCollectInfo->uiReqStatus[enTrackCollectBank - 1];
     while( uiReqStatusBit ) {
+
         if( ( unsigned int ) ( uiReqStatusBit & ( unsigned int ) 1 ) ) {
             uiTotalPDW = m_pRecvCollectInfo->uiCh2TotalPDW[uiGlobalCh];
             //Log( enDebug, "uiReqStatusBit[0x%x], uiCh[%d], uiTotalPDW[%d]", uiReqStatusBit, uiCh, uiTotalPDW );
 
             if( uiGlobalCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL ) {
-                Log( enNormal, "[%s]의 추적 [%s] 채널[%3d]에서, PDW[%d] 신호 수집 완료", GetThreadName(), g_strPCIDrverDirection[( unsigned int ) m_pRecvCollectInfo->enPCIDriver].c_str(), uiGlobalCh, uiTotalPDW );
+                uiCh = uiGlobalCh - ( CO_DETECT_CHANNEL );
+                Log( enDebug, "[%s]의 추적 [%s] 채널[%2d/%2d]에서, PDW[%d] 신호 수집 완료", GetThreadName(), g_strPCIDrverDirection[( unsigned int ) m_pRecvCollectInfo->enPCIDriver].c_str(), uiCh, uiGlobalCh, uiTotalPDW );
+
                 UpdateTrackChannel( uiGlobalCh, m_pRecvCollectInfo->enPCIDriver, uiTotalPDW );
 
             }
@@ -409,7 +425,9 @@ void CSignalCollect::CompleteCollecting()
             //Log( enDebug, "uiReqStatusBit[0x%x], uiCh[%d], uiTotalPDW[%d]", uiReqStatusBit, uiCh, uiTotalPDW );
 
             if( uiGlobalCh < CO_DETECT_CHANNEL+CO_TRACK_CHANNEL+CO_SCAN_CHANNEL ) {
-                Log( enNormal, "[%s]의 스캔 [%s] 채널[%3d]에서, PDW[%d] 신호 수집 완료", GetThreadName(), g_strPCIDrverDirection[( unsigned int ) m_pRecvCollectInfo->enPCIDriver].c_str(), uiGlobalCh, uiTotalPDW );
+                uiCh = uiGlobalCh - ( CO_DETECT_CHANNEL + CO_TRACK_CHANNEL );
+                Log( enDebug, "[%s]의 스캔 [%s] 채널[%2d/%2d]에서, PDW[%d] 신호 수집 완료", GetThreadName(), g_strPCIDrverDirection[( unsigned int ) m_pRecvCollectInfo->enPCIDriver].c_str(), uiCh, uiGlobalCh, uiTotalPDW );
+
                 CloseScanChannel( uiGlobalCh, m_pRecvCollectInfo->enPCIDriver, uiTotalPDW );
 
             }
@@ -418,17 +436,20 @@ void CSignalCollect::CompleteCollecting()
         ++ uiGlobalCh;
     }
 
+    // 수집 채널 중에서 ISR 이 발생하지 않은 채널에 대해서 에러 정보 출력
+    CheckISRChannel();
+
 //
 // #if CO_TRACK_CHANNEL > 0
 //             else if( uiCh < CO_TRACK_CHANNEL ) {
-//                 Log( enNormal, "[%s]에서 위협[%d/%d] 추적 채널[%3d]에서 PDW[%d] 신호 수집 완료 합니다.", GetThreadName(), m_pRecvCollectInfo->uiAETID, m_pRecvCollectInfo->uiABTID, uiCh, uiTotalPDW );
+//                 Log( enNormal, "[%s]에서 위협[%d/%d] 추적 채널[%2d]에서 PDW[%d] 신호 수집 완료 합니다.", GetThreadName(), m_pRecvCollectInfo->uiAETID, m_pRecvCollectInfo->uiABTID, uiCh, uiTotalPDW );
 //                 UpdateTrackChannel( uiCh, m_pRecvCollectInfo->enPCIDriver, uiTotalPDW );
 //             }
 // #endif
 //
 // #if CO_SCAN_CHANNEL > 0
 //             else {
-//                 Log( enNormal, "[%s]의 스캔 채널[%3d]에서, PDW[%d] 신호 수집 완료", GetThreadName(), uiCh, uiTotalPDW );
+//                 Log( enNormal, "[%s]의 스캔 채널[%2d]에서, PDW[%d] 신호 수집 완료", GetThreadName(), uiCh, uiTotalPDW );
 //                 CloseScanChannel( uiCh, m_pRecvCollectInfo->enPCIDriver, uiTotalPDW );
 //             }
 // #endif
@@ -467,13 +488,14 @@ void CSignalCollect::CloseDetectChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPC
             unsigned int uiABTIndex = pTheCollectBank->GetChannel2ABTIndex( uiCh );
             ENUM_COLLECTBANK enCollectBank = pTheCollectBank->GetEnumCollectBank( uiCh );
 
-            m_pstrCollectInfo->Set( uiCh, 0, 0, uiColPDW, 0, 0, enPCIDriver, enCollectBank, uiABTIndex );
+            m_pstrCollectInfo->Set( uiCh, 0, uiColPDW, 0, 0, enPCIDriver, enCollectBank, uiABTIndex );
 
             pstPDW = pTheCollectBank->GetPDWData( uiCh );
 
+            // 로직에서 PDW 데이터를 복사 오기
             pTheCollectBank->GetPDWData( pstPDW, uiCh, uiColPDW );
 
-            // 로직에서 PDW 데이터를 복사 오기
+            // PDW  데이터 전시하기
             CCommonUtils::PrintAllPDWs( pstPDW );
 
             MakeStaticPDWData( & m_stPDWData, pstPDW, true );
@@ -490,7 +512,7 @@ void CSignalCollect::CloseDetectChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPC
             uniMsgData.strCollectInfo.enPCIDriver = enPCIDriver;
             BackupRecvUNIDataMessage( & uniMsgData );
 
-            ReqDetectWindowCell();
+            ReqDetectWindowCell( false );
 
             RestoreRecvUNIDataMessage();
 
@@ -501,7 +523,6 @@ void CSignalCollect::CloseDetectChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPC
     }
 
 }
-
 
 /**
  * @brief     CloseScanChannel
@@ -515,7 +536,7 @@ void CSignalCollect::CloseDetectChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPC
  * @date      2023-10-19 15:59:11
  * @warning
  */
-void CSignalCollect::CloseScanChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW )
+void CSignalCollect::CloseScanChannel( unsigned int uiGlobalCh, ENUM_PCI_DRIVER enPCIDriver, unsigned int uiTotalPDW )
 {
     unsigned int uiABTIndex;
     unsigned int uiScanDurationms;
@@ -533,19 +554,26 @@ void CSignalCollect::CloseScanChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCID
     //unsigned int uiTotalPDW;
     unsigned int /* uiIndex, */ uiArrayLength, uiGetMinAnalPulse = 0;
 
+    memset( & stScanResult, 0, sizeof( stScanResult ) );
+
     if( pTheCollectBank != NULL ) {
         // 필터판을 닫는다.
-        pTheCollectBank->CloseCollectBank( uiCh, uiTotalPDW );
+        pTheCollectBank->CloseCollectBank( uiGlobalCh, uiTotalPDW );
 
         // 설정 정보
-        pstABTData = pTheCollectBank->GetChannel2ABTData( uiCh );
-        uiABTIndex = pTheCollectBank->GetChannel2ABTIndex( uiCh );
-        enCollectBank = pTheCollectBank->GetEnumCollectBank( uiCh );
+        pstABTData = pTheCollectBank->GetChannel2ABTData( uiGlobalCh );
+        uiABTIndex = pTheCollectBank->GetChannel2ABTIndex( uiGlobalCh );
+        enCollectBank = pTheCollectBank->GetEnumCollectBank( uiGlobalCh );
 
-        pWindowCell = pTheCollectBank->GetWindowCell( uiCh );
+        pWindowCell = pTheCollectBank->GetWindowCell( uiGlobalCh );
 
-        pstPDW = pTheCollectBank->GetPDWData( uiCh );
+        pstPDW = pTheCollectBank->GetPDWData( uiGlobalCh );
         uiScanDurationms = pstPDW->GetColDuration();
+
+#ifdef __VXWORKS__
+        printf( "{S%d[%04d/%04d]}", uiGlobalCh - ( CO_DETECT_CHANNEL + CO_TRACK_CHANNEL ), pstABTData->uiAETID, pstABTData->uiABTID );
+
+#endif
 
         //uiTotalPDW = pTheCollectBank->GetTotalPDW( uiCh );
         uiGetMinAnalPulse = g_pTheSysConfig->GetMinAnalPulse();
@@ -553,12 +581,12 @@ void CSignalCollect::CloseScanChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCID
         if( uiTotalPDW >= uiGetMinAnalPulse ) {
             memcpy( & m_theTrkScnPDW.strABTData, pstABTData, sizeof( struct SRxABTData) );
 
-            pTheCollectBank->GetPDWData( pstPDW, uiCh, uiTotalPDW );
+            pTheCollectBank->GetPDWData( pstPDW, uiGlobalCh, uiTotalPDW );
 
             MakeStaticPDWData( & m_theTrkScnPDW.strPDW, pstPDW, true );
 
             SaveScanResult( & stScanResult, pWindowCell, uiTotalPDW, uiScanDurationms );
-            m_pstrScanAnalInfo->Set( uiCh, enCollectBank, pstABTData->uiAETID, pstABTData->uiABTID, uiABTIndex, pWindowCell->uiReqScanPeriod, pWindowCell->uiScanStep, & stScanResult );
+            m_pstrScanAnalInfo->Set( uiGlobalCh, enCollectBank, pstABTData->uiAETID, pstABTData->uiABTID, uiABTIndex, pWindowCell->uiReqScanPeriod, pWindowCell->uiScanStep, & stScanResult );
 
             uiArrayLength = sizeof( struct SRxABTData ) + ( sizeof( _PDW ) * uiTotalPDW ) + sizeof( UNION_HEADER );
             g_pTheScanAnalysis->QMsgSnd( enTHREAD_SCANANAL_START, & m_theTrkScnPDW, uiArrayLength, GetUniMessageData(), sizeof( union UNI_MSG_DATA ), GetThreadName() );
@@ -566,11 +594,22 @@ void CSignalCollect::CloseScanChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCID
         }
         // 개수가 부족할 때 수집 실패 처리를 해야 한다.
         else {
-            Log( enDebug, "위협[%d/%d] 스캔 채널[%3d]에 대해서 수집 개수[%d]가 부족합니다.", pstABTData->uiAETID, pstABTData->uiABTID, uiCh, uiTotalPDW );
+            Log( enDebug, "위협[%04d/%04d] 스캔 채널[%2d/%2d]에 대해서 수집 개수[%d]가 부족합니다.", pstABTData->uiAETID, pstABTData->uiABTID, uiGlobalCh -(CO_DETECT_CHANNEL+CO_TRACK_CHANNEL), uiGlobalCh, uiTotalPDW );
+
+#if 0
+            TRACE( "===============================================================\n" );
+            pTheCollectBank->GetPDWData( pstPDW, uiCh, 10 );
+
+            MakeStaticPDWData( & m_theTrkScnPDW.strPDW, pstPDW, true );
+            CCommonUtils::Disp_FinePDW( & m_theTrkScnPDW.strPDW );
+
+            TRACE( "===============================================================\n" );
+
+#endif
 
             SaveScanResult( & stScanResult, pWindowCell, uiTotalPDW, uiScanDurationms );
 
-            m_pstrScanAnalInfo->Set( uiCh, enCollectBank, pstABTData->uiAETID, pstABTData->uiABTID, uiABTIndex, 0, pWindowCell->uiScanStep, & stScanResult );
+            m_pstrScanAnalInfo->Set( uiGlobalCh, enCollectBank, pstABTData->uiAETID, pstABTData->uiABTID, uiABTIndex, 0, pWindowCell->uiScanStep, & stScanResult );
             g_pTheEmitterMerge->QMsgSnd( enTHREAD_SCANANAL_FAIL, GetUniMessageData(), sizeof( union UNI_MSG_DATA ), GetThreadName() );
         }
 
@@ -615,6 +654,13 @@ void CSignalCollect::UpdateTrackChannel( unsigned int uiGlobalCh, ENUM_PCI_DRIVE
         pstABTData = pTheCollectBank->GetChannel2ABTData( uiGlobalCh );
         enRobustAnal = pTheCollectBank->GetChannel2RobustMode( uiGlobalCh );
 
+#ifdef __VXWORKS__
+        if( ! IsLogAnalType( enNormal ) ) {
+            printf( "{T%d[%04d/%04d:%d]}\n", uiGlobalCh-CO_DETECT_CHANNEL, pstABTData->uiAETID, pstABTData->uiABTID, uiTotalPDW );
+        }
+
+#endif
+
         uiGetMinAnalPulse = g_pTheSysConfig->GetMinAnalPulse();
         if( uiTotalPDW >= uiGetMinAnalPulse ) {
             pstPDW = pTheCollectBank->GetPDWData( uiGlobalCh );
@@ -627,13 +673,17 @@ void CSignalCollect::UpdateTrackChannel( unsigned int uiGlobalCh, ENUM_PCI_DRIVE
 
             m_pstrTrackAnalInfo->Set( uiGlobalCh, enPCIDriver, 0, enTrackCollectBank, pstABTData->uiAETID, pstABTData->uiABTID, enRobustAnal );
 
+#ifdef _MSC_VER
+            Log( enDebug, "추적: 위협[%04d/%04d] 채널[%2d/%2d]에 대해서 수집 개수[%d]로 추적 분석 요청 합니다.", pstABTData->uiAETID, pstABTData->uiABTID, uiGlobalCh - CO_DETECT_CHANNEL, uiGlobalCh, uiTotalPDW );
+#endif
+
             uiArrayLength = sizeof( struct SRxABTData ) + ( sizeof( _PDW ) * uiTotalPDW ) + sizeof( UNION_HEADER );
             g_pTheTrackAnalysis->QMsgSnd( enTHREAD_KNOWNANAL_START, & m_theTrkScnPDW, uiArrayLength, m_pstrTrackAnalInfo, sizeof( STR_TRKANAL_INFO ), GetThreadName() );
 
         }
         // 개수가 부족할 때 수집 실패 처리를 해야 한다.
         else {
-            Log( enDebug, "추적 : 위협[%d/%d] 채널[%3d]에 대해서 수집 개수[%d]가 부족합니다.", pstABTData->uiAETID, pstABTData->uiABTID, uiGlobalCh, uiTotalPDW );
+            Log( enDebug, "추적: 위협[%04d/%04d] 채널[%2d/%2d]에 대해서 수집 개수[%d]가 부족합니다.", pstABTData->uiAETID, pstABTData->uiABTID, uiGlobalCh-CO_DETECT_CHANNEL, uiGlobalCh, uiTotalPDW );
 
             m_pstrTrackAnalInfo->Set( uiGlobalCh, enPCIDriver, 0, enTrackCollectBank, pstABTData->uiAETID, pstABTData->uiABTID, enRobustAnal );
             g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_FAIL, m_pstrTrackAnalInfo, sizeof( STR_TRKANAL_INFO ), GetThreadName() );
@@ -657,14 +707,14 @@ void CSignalCollect::UpdateTrackChannel( unsigned int uiGlobalCh, ENUM_PCI_DRIVE
  * @date      2023-10-19 15:59:37
  * @warning
  */
-void CSignalCollect::CloseTrackChannel( unsigned int uiCh, ENUM_PCI_DRIVER enPCIDriver )
+void CSignalCollect::CloseTrackChannel( unsigned int uiGlobalCh, ENUM_PCI_DRIVER enPCIDriver )
 {
     CCollectBank *pTheCollectBank = GetCollectBank( enPCIDriver );
 
     // 채널을 닫는다. 추적 채널인 경우에는 항상 활성화 한다.
     if( pTheCollectBank != NULL ) {
-        Log( enNormal, "추적 채널[%3d]을 닫습니다.", uiCh );
-        pTheCollectBank->CloseCollectBank( uiCh );
+        Log( enDebug, "위협[%04d/%04d] 추적 채널[%2d/%2d]을 닫습니다.", m_pRecvTrackAnalInfo->uiAETID, m_pRecvTrackAnalInfo->uiABTID, uiGlobalCh - CO_DETECT_CHANNEL, uiGlobalCh );
+        pTheCollectBank->CloseCollectBank( uiGlobalCh );
     }
 
 }
@@ -725,37 +775,6 @@ void CSignalCollect::RequestScanAnal()
 }
 
 /**
- * @brief		채널에서 수집 완료 됨을 처리합니다.
- * @return		void
- * @author		조철희 (churlhee.jo@lignex1.com)
- * @version		0.0.1
- * @date		2023/02/22 16:34:18
- * @warning
- */
-// void CSignalCollect::GetPDWDataFromDetectChannel()
-// {
-//     unsigned int ui, uiTotalPDW;
-//     //CCollectBank* pCollectBank;
-//
-//     unsigned int uiCh;
-//
-//     uiCh = (unsigned int) m_pMsg->x.strCollectInfo.uiReqStatus[0];
-//     uiTotalPDW = m_pMsg->x.strCollectInfo.uiTotalPDW;
-//     printf( "\n iCh[%d], TotalPDW[%d]", uiCh, uiTotalPDW );
-//
-//     for( ui = 0; ui < uiTotalPDW; ++ui ) {
-// //         pCollectBank = m_pTheDetectCollectBank[uj];
-// //         if( pCollectBank->IsFiltered( pstPDW ) == true ) {
-// //             pCollectBank->PushPDWData( pstPDW, &pPDWData->x );
-// //             uiDetectCh = uj;
-// //         }
-//      }
-//
-//     //SetupDetectCollectBank( 0 );
-//
-// }
-
-/**
  * @brief CSignalCollect::SendEndCollect
  */
 void CSignalCollect::SendEndCollect()
@@ -781,7 +800,6 @@ void CSignalCollect::SendEndCollect()
  */
 void CSignalCollect::InitSignalCollect( bool bWrite )
 {
-    m_uiPDWID = 0;
 
     // 탐지/추적/스캔 윈도우 셀을 닫는다.
     CloseCollectBank();
@@ -789,6 +807,8 @@ void CSignalCollect::InitSignalCollect( bool bWrite )
     m_theQueueScanAnal.Reset();
 
 #ifdef _SIM_PDW_
+
+    m_fDOA = (float) m_stRadarPDW.fDOA;
 
     m_bWriteDDRFile = bWrite;
 
@@ -946,7 +966,7 @@ void CSignalCollect::ReqScanWindowCell()
 
         CCollectBank *pTheCollectBank = GetCollectBank( enPCIDriver );
 
-        pRadarMode = m_pIdentifyAlg->IGetRadarMode( m_stABTData.uiRadarModeIndex );
+        pRadarMode = m_pIdentifyAlg->IGetRadarMode( m_stABTData.uiRadarModeIndex, false );
 
         iCh = pTheCollectBank->StartScanChennel( &m_stABTData, pRadarMode, m_pRecvScanAnalInfo->uiReqScanPeriod, m_pRecvScanAnalInfo->uiScanStep, & m_pRecvScanAnalInfo->stScanResult );
         if( iCh >= 0 ) {
@@ -965,7 +985,7 @@ void CSignalCollect::ReqScanWindowCell()
         // 해당 위협이 소실되거나 스캔 실패를 요청합니다.
         g_pTheEmitterMerge->QMsgSnd( enTHREAD_SCANANAL_ERROR, GetUniMessageData(), sizeof( union UNI_MSG_DATA ), GetThreadName() );
 
-        Log( enError, "이미 소실된 방사체/빔[%d/%d] 데이터 입니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID );
+        Log( enNormal, "이미 삭제된 위협[%04d/%04d] 입니다.", m_pRecvScanAnalInfo->uiAETID, m_pRecvScanAnalInfo->uiABTID );
 
     }
 
@@ -987,17 +1007,32 @@ ENUM_PCI_DRIVER CSignalCollect::WhichPCIDriver()
 {
     ENUM_PCI_DRIVER enPCIDriver;
 
-    //!     주파수 정보를 보고 결정해야 합니다.
-    //date 	2023-03-31 10:34:16
+#if 1
+    switch( g_enBoardId ) {
+        case enPRC1:
+        case enPRC3:
+        case enPRC5:
+            enPCIDriver = enLEFT_PCI_DRIVER;
+            break;
+
+        default:
+            enPCIDriver = enRIGHT_PCI_DRIVER;
+            break;
+
+    }
+#else
 
 #ifdef _COL_VER2_
     enPCIDriver = enLEFT_PCI_DRIVER;
 
 #else
+
+    //!     주파수 정보를 보고 결정해야 합니다.
+    //date 	2023-03-31 10:34:16
     //printf( "\n m_stABTData.fFreqMean=%.1f", m_stABTData.fFreqMean );
     //WhereIs;
     switch( g_enBoardId ) {
-        case enPRC1 :
+        case enPRC1:
             if( m_stABTData.fFreqMean < 2000. ) {
                 enPCIDriver = enRIGHT_PCI_DRIVER;
             }
@@ -1005,7 +1040,7 @@ ENUM_PCI_DRIVER CSignalCollect::WhichPCIDriver()
                 enPCIDriver = enLEFT_PCI_DRIVER;
             }
             break;
-        case enPRC2 :
+        case enPRC2:
             if( m_stABTData.fFreqMean < 4500. ) {
                 enPCIDriver = enLEFT_PCI_DRIVER;
             }
@@ -1046,6 +1081,7 @@ ENUM_PCI_DRIVER CSignalCollect::WhichPCIDriver()
 
     }
 
+#endif
 #endif
 
     return enPCIDriver;
@@ -1132,15 +1168,17 @@ void CSignalCollect::CloseCollectBank()
  * @date      2023-03-13 15:01:30
  * @warning
  */
-void CSignalCollect::ReqDetectWindowCell()
+void CSignalCollect::ReqDetectWindowCell( bool bZeroCollect )
 {
     ENUM_PCI_DRIVER enPCIDriver = m_pRecvCollectInfo->enPCIDriver;
     unsigned int uiCh = 0; // m_pRecvCollectInfo->uiReqStatus[0];
 
-#ifdef __VXWORKS__
-    Log( enNormal, "[%s]의 탐지 [%s] 채널[%3d]에 신호 수집 재설정 합니다.", GetThreadName(), g_strPCIDrverDirection[enPCIDriver].c_str(), uiCh );
-
-#endif
+    if( bZeroCollect == true ) {
+        Log( enDebug, "수집 개수 부족으로 [%s]의 탐지 [%s] 채널[%2d]에 신호 수집 재설정 합니다.", GetThreadName(), g_strPCIDrverDirection[(int)enPCIDriver].c_str(), uiCh );
+    }
+    else {
+        //Log( enDebug, "탐지 분석 또는 병합으로 부터 [%s]의 탐지 [%s] 채널[%2d]에 신호 수집 재설정 합니다.", GetThreadName(), g_strPCIDrverDirection[( int ) enPCIDriver].c_str(), uiCh );
+    }
 
     StartDetectChannel( uiCh, enPCIDriver );
 
@@ -1173,7 +1211,7 @@ void CSignalCollect::ReqSetTrackWindowCell()
             memcpy( m_uniLanData.szFile, GetRecvData(), m_pMsg->uiArrayLength );
             pABTData = ( SRxABTData * ) m_uniLanData.szFile;
 
-            SRadarMode *pRadarMode = m_pIdentifyAlg->IGetRadarMode( pABTData->uiRadarModeIndex );
+            SRadarMode *pRadarMode = m_pIdentifyAlg->IGetRadarMode( pABTData->uiRadarModeIndex, false );
             pTheCollectBank->StartTrackChannel( m_pRecvTrackAnalInfo->uiGlobalCh, pABTData, pRadarMode, & m_pRecvTrackAnalInfo->stTrackWinCellInfo );
 
             pTheCollectBank->SaveCollectCahnnelInfo( m_pRecvTrackAnalInfo->uiGlobalCh, pABTData, (unsigned int) -1, ( unsigned int ) -1, m_pRecvTrackAnalInfo->enRobustAnal );
@@ -1199,11 +1237,18 @@ void CSignalCollect::ReqCloseTrackWindowCell()
 {
     // 빔 정보를 기반으로 추적 및 스캔 채널을 업데이트 한다.
     if( m_pRecvTrackAnalInfo->uiGlobalCh == _spZero ) {
-        Log( enError, "추적 채널[%3d]이 잘못 할당이 되었습니다. 담당자에게 문의하세요 !", m_pRecvTrackAnalInfo->uiGlobalCh );
+        Log( enError, "추적 채널[%2d/%2d]이 잘못 할당이 되었습니다. 담당자에게 문의하세요 !", m_pRecvTrackAnalInfo->uiGlobalCh-CO_DETECT_CHANNEL, m_pRecvTrackAnalInfo->uiGlobalCh );
     }
     // 추적 채널 업데이트한다.
     else {
-        CloseTrackChannel( m_pRecvTrackAnalInfo->uiGlobalCh, m_pRecvTrackAnalInfo->enPCIDriver );
+        CCollectBank *pTheCollectBank = GetCollectBank( m_pRecvTrackAnalInfo->enPCIDriver );
+
+        if( true == pTheCollectBank->IsUse( ( unsigned int ) m_pRecvTrackAnalInfo->uiGlobalCh ) ) {
+            CloseTrackChannel( m_pRecvTrackAnalInfo->uiGlobalCh, m_pRecvTrackAnalInfo->enPCIDriver );
+        }
+        else {
+            Log( enError, "설정하지 않은 추적 채널을 처리하려 해서 무시합니다." );
+        }
 
         //pTheCollectBank->SaveCollectCahnnelInfo( m_pRecvTrackAnalInfo->uiCh, pABTData );
 
@@ -1232,29 +1277,6 @@ CCollectBank *CSignalCollect::GetCollectBank( ENUM_PCI_DRIVER enPCIDriver )
     }
 
     return pCollectBank;
-}
-
-
-
-/**
- * @brief CSignalCollect::CloseScanWindowCell
- */
-void CSignalCollect::CloseScanWindowCell()
-{
-
-    // 랜 데이터를 갖고온다.
-//     PopLanData( m_uniLanData.szFile, m_pMsg->iArrayIndex, m_pMsg->uiArrayLength );
-//
-//     Log( enDebug, "D[%d] 대역, [%d] 채널 에서 분석된 빔 번호[%d]의 윈도우 셀을 닫습니다." , m_pMsg->x.strAnalInfo.enBoardID, m_pMsg->x.strAnalInfo.iCh, m_pMsg->x.strAnalInfo.uiABTID );
-//
-//     m_theTrackChannel.Push( m_pMsg->x.strAnalInfo.iCh );
-//
-//     //GetCollectBank( m_pMsg->x.strAnalInfo.iCh )->CloseTrackWindowCell();
-//     CCollectBank *pCCollectBank=GetCollectBank( m_pMsg->x.strAnalInfo.iCh );
-//     if( pCCollectBank != NULL ) {
-//         pCCollectBank->CloseTrackWindowCell();
-//     }
-
 }
 
 /**
@@ -1419,7 +1441,20 @@ void CSignalCollect::MakeSIMPDWData()
     }
 #endif
 
+    m_fDOA += ( float ) 0.01;
     int iRandomIndex = ( int ) CCommonUtils::Random( ( float ) 0., ( float ) 100. );
+
+
+    if( m_uiIndex % 2 ) {
+        m_stRadarPDW.fFreq = 9300;
+        //m_stRadarPDW.fPRI = 1200;
+    }
+    else {
+        m_stRadarPDW.fFreq = 9000;
+        //m_stRadarPDW.fPRI = 1000;
+    }
+
+
     for( i = 0; i < uiCoPDW; ) {
         float fDOAMean = m_stRadarPDW.fDOA;
 
@@ -1445,12 +1480,12 @@ void CSignalCollect::MakeSIMPDWData()
             fRandomDOA = ( float ) ( CCommonUtils::Random( -m_stRadarPDW.fDOARange, m_stRadarPDW.fDOARange ) + fRandomDOA );
         }
         else {
-            fRandomDOA = ( float ) ( CCommonUtils::Random( -m_stRadarPDW.fDOARange, m_stRadarPDW.fDOARange ) + 50. );
+            fRandomDOA = ( float ) ( CCommonUtils::Random( -m_stRadarPDW.fDOARange, m_stRadarPDW.fDOARange ) + m_fDOA );
         }
 
         uiRandomDOA = ( unsigned int ) ( int ) CPOCKETSONATAPDW::EncodeDOA( fRandomDOA );
 
-        uiRandomDOA = uiRandomDOA % PDW_DOA_MAX;
+        uiRandomDOA = uiRandomDOA % ( PDW_DOA_MAX + 1 );
 
 #if 0
         uiRandomDOA = ( unsigned int ) ( int ) CPOCKETSONATAPDW::EncodeDOA( 50 );
@@ -1631,7 +1666,7 @@ void CSignalCollect::MakeSIMPDWData()
 #endif
 
     if( m_bStopSigGen == true ) {
-        // m_pUniHeader->SetTotalPDW( 0 );
+        m_pUniHeader->SetTotalPDW( 0 );
     }
 
     ++m_uiCoSim;
@@ -1737,10 +1772,15 @@ void CSignalCollect::MakeSIMSignalType( STR_SIM_SIGNAL_TYPE *pstSignalType )
             break;
 
         default:
-            pstSignalType->uiCWPulse = 0;
-            pstSignalType->uiFMOPDir = 3;
-            pstSignalType->uiPMOP = 0;
-            pstSignalType->uiFMOP = 0;
+            pstSignalType->uiCWPulse = (unsigned int) CCommonUtils::Random( 0, 1 );
+            pstSignalType->uiFMOPDir = ( unsigned int ) CCommonUtils::Random( 0, 3 );
+            pstSignalType->uiPMOP = ( unsigned int ) CCommonUtils::Random( 0, 1 );
+            if( pstSignalType->uiPMOP == 0 ) {
+                pstSignalType->uiFMOP = ( unsigned int ) CCommonUtils::Random( 0, 1 );
+            }
+            else {
+                pstSignalType->uiFMOP = 0;
+            }
             break;
     }
 
@@ -2108,6 +2148,15 @@ _TOA CSignalCollect::MakeSIMPRI( int iRandomIndex )
                 // Stable PRI 일때
                 if( m_stRadarPDW.fPRI > 10 ) {
                     tTOA = CPOCKETSONATAPDW::EncodeTOAus( m_stRadarPDW.fPRI + CCommonUtils::Random( ( float ) -1., ( float ) 1. ) );
+
+#ifdef _SIM_PDW_
+#ifdef _HARMONIC_GENPDW_
+                     if( m_bHarmonic == true ) {
+                         tTOA = CPOCKETSONATAPDW::EncodeTOAus( ( m_stRadarPDW.fPRI * (float) 2. ) + CCommonUtils::Random( ( float ) -1., ( float ) 1. ) );
+                     }
+#endif
+#endif
+
                 }
                 else {
                     tTOA = CPOCKETSONATAPDW::EncodeTOAus( m_stRadarPDW.fPRI );
@@ -2253,6 +2302,7 @@ void CSignalCollect::SimLogicFilter( STR_PDWDATA *pPDWData, ENUM_PCI_DRIVER enPC
 
     if( pTheCollectBank != NULL ) {
         pTheCollectBank->SimFilter( pPDWData, true );
+
     }
 
     return;
@@ -2352,8 +2402,11 @@ void CSignalCollect::CheckScanCollectBank( ENUM_PCI_DRIVER enPCIDriver )
         unsigned int uiTotalPDW;
 
         CCollectBank *pTheCollectBank = GetCollectBank( enPCIDriver );
-        uiTotalPDW = pTheCollectBank->GetTotalPDW( ( unsigned int ) iCh );
-        CloseScanChannel( (unsigned int) iCh, enPCIDriver, uiTotalPDW );
+
+        //if( pTheCollectBank != NULL ) {
+            uiTotalPDW = pTheCollectBank->GetTotalPDW( ( unsigned int ) iCh );
+            CloseScanChannel( (unsigned int) iCh, enPCIDriver, uiTotalPDW );
+        //}
     }
 }
 
@@ -2370,12 +2423,25 @@ void CSignalCollect::CheckScanCollectBank( ENUM_PCI_DRIVER enPCIDriver )
 void CSignalCollect::CheckTrackCollectBank( ENUM_PCI_DRIVER enPCIDriver )
 {
     int iCh = CheckCollectBank( enTrackCollectBank, enPCIDriver );
+
     if( iCh >= 0 ) {
         unsigned int uiTotalPDW;
 
         CCollectBank *pTheCollectBank = GetCollectBank( enPCIDriver );
-        uiTotalPDW = pTheCollectBank->GetTotalPDW( ( unsigned int ) iCh );
-        UpdateTrackChannel( ( unsigned int ) iCh, enPCIDriver, uiTotalPDW );
+
+#ifdef _MSC_VER
+        //STR_WINDOWCELL *pstWindowCell = pTheCollectBank->GetWindowCell( ( unsigned int ) iCh );
+        //TRACE( "[%04d/%04d] isUse[%d], uiCh[%d]\n", pstWindowCell->uiAETID, pstWindowCell->uiABTID, pTheCollectBank->IsUse( ( unsigned int ) iCh ), iCh );
+#endif
+        //if( pTheCollectBank != NULL ) {
+            if( true == pTheCollectBank->IsUse( ( unsigned int ) iCh ) ) {
+                uiTotalPDW = pTheCollectBank->GetTotalPDW( ( unsigned int ) iCh );
+                UpdateTrackChannel( ( unsigned int ) iCh, enPCIDriver, uiTotalPDW );
+            }
+            else {
+                Log( enError, "채널을 닫아서 수집 완료 처리를 무시 합니다 !" );
+            }
+        //}
     }
 }
 
@@ -2404,6 +2470,8 @@ void CSignalCollect::CheckAllCollectBank()
 
 #ifdef _DEBUG
     // m_pTheRigtCollectBank->m_pThePCI->ISRRoutine();
+    CheckISRChannel();
+
 #endif
 
 }
@@ -2432,3 +2500,79 @@ int CSignalCollect::CheckCollectBank( ENUM_COLLECTBANK enCollectBank, ENUM_PCI_D
 
 
 #endif
+
+/**
+ * @brief     CheckISRChannel
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-26 14:43:52
+ * @warning
+ */
+void CSignalCollect::CheckISRChannel()
+{
+    CCollectBank *pTheCollectBank;
+
+    pTheCollectBank = GetCollectBank( enLEFT_PCI_DRIVER );
+    if( pTheCollectBank != NULL ) {
+        pTheCollectBank->CheckISRChannel();
+    }
+
+    pTheCollectBank = GetCollectBank( enRIGHT_PCI_DRIVER );
+    if( pTheCollectBank != NULL ) {
+        pTheCollectBank->CheckISRChannel();
+    }
+
+}
+
+/**
+ * @brief     PreFilter
+ * @param     float fDOAMin
+ * @param     float fDOAMax
+ * @param     float fFreqMin
+ * @param     float fFreqMax
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-02-06 14:36:34
+ * @warning
+ */
+void CSignalCollect::PreFilter( float fDOAMin, float fDOAMax, float fFreqMin, float fFreqMax )
+{
+    STR_WINDOWCELL stWindowCell;
+    STR_COLLECT_PCIADDRESS strCollectPCIAddress;
+    STR_COLLECT_PCIADDRESS stPreFilterPCIAddress;
+
+    strCollectPCIAddress.enCollectBank = enTrackCollectBank;
+
+    stWindowCell.uiGlobalCh = 1;
+    stWindowCell.strAOA.iLow = ( int ) IAOACNVLOW( fDOAMin );
+    stWindowCell.strAOA.iHigh = ( int ) IAOACNVLOW( fDOAMax );
+
+    stWindowCell.strFreq.iLow = IFRQCNVLOW( fFreqMin );
+    stWindowCell.strFreq.iHigh = IFRQCNVLOW( fFreqMax );
+
+    stWindowCell.strPW.iLow = 0;
+    stWindowCell.strPW.iHigh = MAX_PW_BIT - 1;
+
+    stWindowCell.strPA.iLow = 0;
+    stWindowCell.strPA.iHigh = MAX_PA_BIT - 1;
+
+    stWindowCell.uiAdapt = FILT_ADAPT_AOA | FILT_ADAPT_FRQ;
+
+    stWindowCell.uiMOPType = 0;
+    stWindowCell.uiMOPDir = 0;
+
+    stWindowCell.uiSignalType = FILTER_SIGNALTYPE_NORMAL;
+
+    if( m_pTheLeftCollectBank != NULL ) {
+        m_pTheLeftCollectBank->PreFilterSetting( & stWindowCell, & strCollectPCIAddress, & stPreFilterPCIAddress );
+    }
+
+    if( m_pTheRigtCollectBank != NULL ) {
+        m_pTheRigtCollectBank->PreFilterSetting( & stWindowCell, & strCollectPCIAddress, & stPreFilterPCIAddress );
+    }
+
+}

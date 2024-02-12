@@ -75,7 +75,7 @@ static const char* strCEDScanType [] =
 };	*/
 #define NUM_OF_CED_SCAN_TYPE 3
 //start_static_0919
-enum EnumCEDScanType	//스캔형태	//#FA_Q_2502_T2
+enum EnumCEDScanType	//스캔형태
 {
 	E_EL_SC_NO_SELECT = -2, //해당사항없음
 	E_EL_SC_ADD_INIT =-1,    //추가시 초기값 추가 

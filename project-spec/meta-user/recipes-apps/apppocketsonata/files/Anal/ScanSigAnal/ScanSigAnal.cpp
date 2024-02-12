@@ -219,12 +219,13 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pABTData, 
     // STATIC_PDWDATA 구조체를 PDWDATA 구조체로 변환
     SATATIC_PDWDATA_TO_PDWDATA( pstPDWData );
 
-    InsertRAWData( & m_stSavePDWData, _spZero, (int) uiScanStep, true );
+    InsertRAWData( & m_stSavePDWData, _spZero, (int) uiScanStep, true, pABTData->uiAETID, pABTData->uiABTID );
 
     // CCommonUtils::Disp_FinePDW( & m_stSavePDWData );
 
     // 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
     uiTotalPDW = pstPDWData->GetTotalPDW();
+    //printf( "\n uiTotalPDW[%d]", uiTotalPDW );
     m_theGroup->MakePDWArray( m_pstPDWData->stPDW, uiTotalPDW);
 
     /*! \bug  그룹화는 생략하고 수집 펄스열을 하나의 그룹화 내에 올려 놓는다.
@@ -232,7 +233,7 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pABTData, 
     */
     m_theGroup->MakeOneGroup();
 
-    SaveGroupPDWFile( m_pGrPdwIndex, pstPDWData, -1, true );
+    // SaveGroupPDWFile( m_pGrPdwIndex, pstPDWData, -1, true );
 
     // 펄스열 추출
     m_thePulExt->KnownPulseExtract();
@@ -241,13 +242,7 @@ void CScanSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pABTData, 
     m_theAnalScan->KnownAnalysis();
 
 	// 스캔 분석 수행한다.
-    //m_strScnResult.uiABTID = m_pScnAet->uiABTID;
-    //m_strScnResult.uiAETID = m_pScnAet->uiAETID;
 	m_theAnalScan->AnalScan( pstScanResult );
-    //GetScanRes( & m_strScnResult.enScanType, & m_strScnResult.fScanPeriod );
-
-	// 스캔 분석 결과를 저장한다.
-    //SaveScanInfo( nResult, m_pScnAet );
 
 #if 0
     pstScanResult->enResult = _spAnalFail;
@@ -528,10 +523,10 @@ STR_SCANPT *CScanSigAnal::GetScanPulseTrain( int noCh )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-27 14:37:39
 //
-void CScanSigAnal::SaveEmitterPDWFile( STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
-{
-    CSigAnal::SaveEmitterPDWFile( pEmitter, & m_pstPDWData->stPDW[0], iPLOBID, bSaveFile );
-}
+// void CScanSigAnal::SaveEmitterPDWFile( STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+// {
+//     CSigAnal::SaveEmitterPDWFile( pEmitter, & m_pstPDWData->stPDW[0], iPLOBID, bSaveFile );
+// }
 
 /**
  * @brief     SaveDebug
@@ -627,53 +622,53 @@ void CScanSigAnal::SaveScanInfo( UINT nResult, STR_UPDAET *pUpdAet, bool bOnlySc
 		\date     2008-11-03 22:49:58
 		\warning
 */
-void CScanSigAnal::SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID )
-{
-#ifdef _DEBUG_MAKEPDW
-	int i;
-	int total_count;
-	FILE *pdwfile;
-	TNEW_PDW *pPDW;
-	PDWINDEX *pPdwIndex;
-	PDWINDEX *pEmitterPdwIndex;
-
-	char filename[100];
-
-	CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
-	CA50SigAnalView *pView = ( CA50SigAnalView * ) pFrame->GetActiveView();
-
-	CString strFilename=pView->GetFileTitle();
-
-	LPTSTR p = strFilename.GetBuffer( 100 );
-
-	pPdwIndex = & m_pGrPdwIndex->pIndex[0];
-	int nStep = theSigAnal->m_theNewSigAnal->GetCoStep();
-	sprintf( filename, "c:\\temp\\%03d_%03d_%s.scn_emt.pdw", nStep, index, p );
-	pdwfile = fopen( filename, "wb" );
-
-	total_count = pPdw->uiCount;
-
-	pEmitterPdwIndex = pPdw->pIndex;
-	for( i=0 ; i < total_count ; ++i ) {
-		pPDW = & m_pPdwBank->pPdw[ *pEmitterPdwIndex++ ];
-#ifdef _A50_RWR
-		TNEW_PDW pdw;
-
-		pdw.word[0] = ntohl( pPDW->word[0] );
-		pdw.word[1] = ntohl( pPDW->word[1] );
-		pdw.word[2] = ntohl( pPDW->word[2] );
-		pdw.word[3] = ntohl( pPDW->word[3] );
-
-		fwrite( & pdw, sizeof( struct TNEW_PDW ), 1, pdwfile );
-#else
-		fwrite( pPDW, sizeof( struct TNEW_PDW ), 1, pdwfile );
-#endif
-	}
-
-	fclose( pdwfile );
-
-	strFilename.ReleaseBuffer();
-
-#endif
-
-}
+// void CScanSigAnal::SaveEmitterPDWFile( STR_PDWINDEX *pPdw, int iPLOBID )
+// {
+// #ifdef _DEBUG_MAKEPDW
+// 	int i;
+// 	int total_count;
+// 	FILE *pdwfile;
+// 	TNEW_PDW *pPDW;
+// 	PDWINDEX *pPdwIndex;
+// 	PDWINDEX *pEmitterPdwIndex;
+//
+// 	char filename[100];
+//
+// 	CMainFrame *pFrame = (CMainFrame*)AfxGetApp()->m_pMainWnd;
+// 	CA50SigAnalView *pView = ( CA50SigAnalView * ) pFrame->GetActiveView();
+//
+// 	CString strFilename=pView->GetFileTitle();
+//
+// 	LPTSTR p = strFilename.GetBuffer( 100 );
+//
+// 	pPdwIndex = & m_pGrPdwIndex->pIndex[0];
+// 	int nStep = theSigAnal->m_theNewSigAnal->GetCoStep();
+// 	sprintf( filename, "c:\\temp\\%03d_%03d_%s.scn_emt.pdw", nStep, index, p );
+// 	pdwfile = fopen( filename, "wb" );
+//
+// 	total_count = pPdw->uiCount;
+//
+// 	pEmitterPdwIndex = pPdw->pIndex;
+// 	for( i=0 ; i < total_count ; ++i ) {
+// 		pPDW = & m_pPdwBank->pPdw[ *pEmitterPdwIndex++ ];
+// #ifdef _A50_RWR
+// 		TNEW_PDW pdw;
+//
+// 		pdw.word[0] = ntohl( pPDW->word[0] );
+// 		pdw.word[1] = ntohl( pPDW->word[1] );
+// 		pdw.word[2] = ntohl( pPDW->word[2] );
+// 		pdw.word[3] = ntohl( pPDW->word[3] );
+//
+// 		fwrite( & pdw, sizeof( struct TNEW_PDW ), 1, pdwfile );
+// #else
+// 		fwrite( pPDW, sizeof( struct TNEW_PDW ), 1, pdwfile );
+// #endif
+// 	}
+//
+// 	fclose( pdwfile );
+//
+// 	strFilename.ReleaseBuffer();
+//
+// #endif
+//
+// }

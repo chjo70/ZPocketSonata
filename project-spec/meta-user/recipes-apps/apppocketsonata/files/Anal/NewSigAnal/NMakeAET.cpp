@@ -46,7 +46,21 @@ CNMakeAET::CNMakeAET( void *pParent, UINT uicoMaxPdw, const char *pThreadName ) 
 
     m_pNewSigAnal = ( CNewSigAnal * ) pParent;
 
-    INIT_ANAL_VAR_(m_pNewSigAnal)
+    INIT_ANAL_VAR_( m_pNewSigAnal )
+
+#ifdef __VECTORCAST__
+    //! #동적 시험으로 함수를 타기위해서 그냥 호출
+    struct timeval stTime;
+
+    CNMakeAET::GetCoSeg();
+    CNMakeAET::IsStorePDW();
+    CNMakeAET::GetOpInitID();
+    CNMakeAET::GetCollectTime( & stTime );
+
+    CNMakeAET::GetCoSeg();
+    CNMakeAET::MarkToPDWIndex( NULL, 0, enUnMark );
+
+#endif
 
 }
 
@@ -102,7 +116,7 @@ void CNMakeAET::MakeAET( bool bDBInsert )
     CMakeAET::PrintAllAET();
 
     // 분석 완료한 개수를 재 저장합니다.
-    m_iAnaledCoLOB = m_iCoLOB;
+    m_iCoAnalLOB = m_iCoLOB;
 
 }
 
@@ -191,11 +205,11 @@ void CNMakeAET::MarkToPDWIndex( PDWINDEX *pPDWIndex, unsigned int uiCount, PULSE
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
-void CNMakeAET::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
-{
-    m_pNewSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
-
-}
+// void CNMakeAET::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+// {
+//     m_pNewSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
+// 
+// }
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -286,17 +300,17 @@ STR_PDWPARAM* CNMakeAET::GetPdwParam()
         \date     2008-01-22 13:13:34
         \warning
 */
-void CNMakeAET::MarkAllAetToPdwIndex()
-{
-//     int i;
-//     //STR_PDWINDEX *pPdwIndex;
+// void CNMakeAET::MarkAllAetToPdwIndex()
+// {
+// //     int i;
+// //     //STR_PDWINDEX *pPdwIndex;
+// //
+// //     for( i=0 ; i < m_iCoLOB ; ++i ) {
+// //         //pPdwIndex = & m_pEmitter[ m_Aet[i].ext.idxEmitter ].pdw;
+// //         //MarkToPdwIndex( pPdwIndex->pIndex, pPdwIndex->count, EXTRACT_MARK );
+// //     }
 //
-//     for( i=0 ; i < m_iCoLOB ; ++i ) {
-//         //pPdwIndex = & m_pEmitter[ m_Aet[i].ext.idxEmitter ].pdw;
-//         //MarkToPdwIndex( pPdwIndex->pIndex, pPdwIndex->count, EXTRACT_MARK );
-//     }
-
-}
+// }
 
 /**
  * @brief     LOB 데이터를 출력한다.

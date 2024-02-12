@@ -34,7 +34,11 @@ public:
     void Run();																            ///< CThread 클래스의 Run() 함수를 호출하여 쓰레드를 생성하게 합니다.
     void ReleaseInstance();																///< 싱글톤을 메모리 해지하기 위한 함수 입니다.
 
+    void Reboot();
+
     bool IsValidLanData( STR_MessageData *pMsg );										///< 운용 모드와 랜 메시지의 OPCODE에 따라 수행 여부를 리턴합니다.
+
+    bool CheckAETID( unsigned int uiAET );
 
     virtual void _routine();															///< 쓰레드에서 서버 또는 클라이언트를 실행하게 한다.
     //virtual const char *GetThreadName() { return m_szThreadName; }							///< 쓰레드명을 리턴합니다.

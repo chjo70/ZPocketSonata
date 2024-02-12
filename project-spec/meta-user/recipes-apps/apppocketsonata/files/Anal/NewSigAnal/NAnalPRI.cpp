@@ -33,30 +33,30 @@ STR_PULSE_TRAIN_SEG *CNAnalPRI::m_pSeg=NULL;
  * @param arg2
  * @return
  */
-int CNAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
-{
-    int iRet;
-    const UINT *p1, *p2;
-    STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
-
-    p1 = (const UINT *) arg1;
-    p2 = (const UINT *) arg2;
-
-    pSeg1 = & m_pSeg[ *p1 ];
-    pSeg2 = & m_pSeg[ *p2 ];
-
-    if( pSeg1->stPRI.tMean > pSeg2->stPRI.tMean ) {
-        iRet = 1;
-    }
-    else if( pSeg1->stPRI.tMean < pSeg2->stPRI.tMean ) {
-        iRet = (-1);
-    }
-    else {
-        iRet = 0;
-    }
-
-    return iRet;
-}
+// int CNAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
+// {
+//     int iRet;
+//     const UINT *p1, *p2;
+//     STR_PULSE_TRAIN_SEG *pSeg1, *pSeg2;
+// 
+//     p1 = (const UINT *) arg1;
+//     p2 = (const UINT *) arg2;
+// 
+//     pSeg1 = & m_pSeg[ *p1 ];
+//     pSeg2 = & m_pSeg[ *p2 ];
+// 
+//     if( pSeg1->stPRI.tMean > pSeg2->stPRI.tMean ) {
+//         iRet = 1;
+//     }
+//     else if( pSeg1->stPRI.tMean < pSeg2->stPRI.tMean ) {
+//         iRet = (-1);
+//     }
+//     else {
+//         iRet = 0;
+//     }
+// 
+//     return iRet;
+// }
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -67,7 +67,7 @@ int CNAnalPRI::incSegPriMeanCompare( const void *arg1, const void *arg2 )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:10:00
 //
-CNAnalPRI::CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CAnalPRI( pParent, uiCoMaxPdw, pThreadName )
+CNAnalPRI::CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName ) : CAnalPRI( pParent, enDET_ANAL, uiCoMaxPdw, pThreadName )
 {
     SetAnalType( enDET_ANAL );
 
@@ -76,6 +76,20 @@ CNAnalPRI::CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThrea
     INIT_ANAL_VAR_(m_pNewSigAnal)
 
     m_pSeg = CNAnalPRI::GetPulseSeg();
+
+    //! #동적 시험으로 함수를 타기위해서 그냥 호출
+#ifdef __VECTORCAST__
+    CNAnalPRI::GetMaxPdw();
+    CNAnalPRI::GetBand();
+    CNAnalPRI::GetMakeAET();
+
+    CNAnalPRI::PrintAllSeg();
+    CNAnalPRI::GetParentSigAnal();
+
+    CNAnalPRI::VerifyPRI( NULL, 1 );
+    CNAnalPRI::FindPeakInHist( 0, NULL );
+
+#endif
 
 }
 
@@ -90,6 +104,11 @@ CNAnalPRI::CNAnalPRI( void *pParent, unsigned int uiCoMaxPdw, const char *pThrea
  */
 CNAnalPRI::~CNAnalPRI()
 {
+#ifdef __VECTORCAST__
+    // CNAnalPRI::SaveEmitterPDWFile( NULL, 0, false );
+    // ExtractDwellRefPT( NULL, NULL );
+
+#endif
 
 }
 
@@ -210,10 +229,10 @@ bool CNAnalPRI::CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SE
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:10:12
 //
-void CNAnalPRI::DeleteAllSeg( STR_EMITTER *pEmitter )
-{
-    m_pNewSigAnal->DeleteAllSeg( pEmitter );
-}
+// void CNAnalPRI::DeleteAllSeg( STR_EMITTER *pEmitter )
+// {
+//     m_pNewSigAnal->DeleteAllSeg( pEmitter );
+// }
 
 /**
  * @brief     추출한 모든 펄스열 정보를 출력한다.
@@ -326,10 +345,10 @@ unsigned int CNAnalPRI::GetMaxPdw()
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:10:37
 //
-void CNAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
-{
-    m_pNewSigAnal->MakePRIInfoFromSeg( pPri, pEmitter );
-}
+// void CNAnalPRI::MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter )
+// {
+//     m_pNewSigAnal->MakePRIInfoFromSeg( pPri, pEmitter );
+// }
 
 /**
  * @brief     주파수 메디안을 계산한다.
@@ -402,11 +421,11 @@ int CNAnalPRI::FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex )
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-01-23 10:17:37
 //
-void CNAnalPRI::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
-{
-    m_pNewSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
-
-}
+// void CNAnalPRI::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+// {
+//     m_pNewSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
+// 
+// }
 
 /**
  * @brief CNAnalPRI::QSort
@@ -414,11 +433,11 @@ void CNAnalPRI::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSav
  * @param uiCount
  * @param uiSizeof
  */
-void CNAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof )
-{
-    qsort( pIdx, uiCount, uiSizeof, incSegPriMeanCompare );
-    return;
-}
+// void CNAnalPRI::QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof )
+// {
+//     qsort( pIdx, uiCount, uiSizeof, incSegPriMeanCompare );
+//     return;
+// }
 
 /**
  * @brief		가상 에미터 포인터를 리턴한다.
@@ -478,19 +497,3 @@ void CNAnalPRI::SaveDebug( const char *pSourcefile, int iLines )
 
 }
 
-#ifdef _LOG_ANALTYPE_
-/**
- * @brief     GetLogAnalType
- * @return    bool
- * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
- * @author    조철희 (churlhee.jo@lignex1.com)
- * @version   1.0.0
- * @date      2023-09-21 12:01:36
- * @warning
- */
-// bool CNAnalPRI::IsLogAnalType()
-// {
-//     return m_pNewSigAnal->GetAnalType();
-// }
-
-#endif

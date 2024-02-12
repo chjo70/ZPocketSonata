@@ -167,7 +167,7 @@ REM :END
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;_WIN64;_DEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_LOG_;_LOG_ANALTYPE_;_ANAL_LOG_;SQLITE_THREADSAFE=2;SQLITE_ENABLE_COLUMN_METADATA;SQLITE_ENABLE_IOTRACE;SQLITE_SYSTEM_MALLOC;_UTM_POSITION_;_SERIAL_DETECT_FLOW_;_SIM_PDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_7121_;_SONATA1_;_XBAND1_;_KFX1_;_7011_;_COL_VER2_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;_WIN64;_DEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_LOG_;_LOG_ANALTYPE_;_ANAL_LOG_;SQLITE_THREADSAFE=2;SQLITE_ENABLE_COLUMN_METADATA;SQLITE_ENABLE_IOTRACE;SQLITE_SYSTEM_MALLOC;_UTM_POSITION_;_SERIAL_DETECT_FLOW_;_SIM_PDW_;_SIM_SERVER_;_SQLITE_;_MSSQL1_;_POCKETSONATA_;_7121_;_SONATA1_;_XBAND1_;_KFX1_;_7011_;_COL_VER2_;_HARMONIC_GENPDW1_;__VECTORCAST1__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -204,7 +204,10 @@ cd
 
 copy ..\..\files\sysconfig.ini d:\rawdata\.
 
+copy ..\..\files\sysconfig.ini d:\rawdata_sim\.
+
 copy ..\..\files\sysconfig.ini d:\tftpboot\INI\.
+
 
 dir
 
@@ -704,7 +707,9 @@ REM :END
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="..\..\files\Utils\clogname.cpp" />
+    <ClCompile Include="..\..\files\Utils\clogname.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="..\..\files\Utils\csingleclient.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>

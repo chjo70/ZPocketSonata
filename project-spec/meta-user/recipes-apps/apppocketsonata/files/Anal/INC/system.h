@@ -40,7 +40,7 @@
 #elif defined(_701_)
 #define SHARED_DATA_DIRECTORY       (const char *) "D:/PDW_RAW"
 #else
-#define SHARED_DATA_DIRECTORY       (const char *) "d:/rawdata"
+#define SHARED_DATA_DIRECTORY       (const char *) "d:/rawdata_sim"
 #endif
 
 
@@ -73,7 +73,7 @@
 #endif
 
 #else
-#define CEDEOB_SQLITE_FOLDER        (const char *) "d:/rawdata"  // "\\\\192.168.0.168/ea_sjp_test/sqlite3"
+#define CEDEOB_SQLITE_FOLDER        (const char *) "d:/rawdata_sim"  // "\\\\192.168.0.168/ea_sjp_test/sqlite3"
 
 #endif
 #define SQLITE_DIRECTORY			(const char *) "LIB"
@@ -92,7 +92,7 @@
 #elif defined(__VXWORKS__)
 #define EMITTER_SQLITE_FOLDER       (const char *) "/RAMDRV:0/LIB"
 #else
-#define EMITTER_SQLITE_FOLDER       (const char *) "d:/rawdata"
+#define EMITTER_SQLITE_FOLDER       (const char *) "d:/rawdata_sim"
 #endif
 #define EMITTER_SQLITE_FILEEXTNAME  (const char *) "emitter.sqlite3"
 
@@ -104,21 +104,33 @@
 // INI 폴더 위치
 #ifdef __ZYNQ_BOARD__
 #define INI_FOLDER                  (const char *) "/home/root"
+#define INI_BOARDID_FOLDER          (const char *) "/home/root"
 #elif defined(__VXWORKS__)
 
 #ifdef _WRS_CONFIG_LP64
 #define INI_FOLDER                  (const char *) "/ata0/INI"
+#define INI_BOARDID_FOLDER          (const char *) "/ata0"
 #else
 #define INI_FOLDER                  (const char *) "/ata0:0/INI"
+#define INI_BOARDID_FOLDER          (const char *) "/ata0:0"
 #endif
-
 
 #elif defined(__linux__)
 #define INI_FOLDER                  (const char *) "/home/chjo70"
+#define INI_BOARDID_FOLDER          (const char *) "/home/chjo70"
+
 #else
-#define INI_FOLDER                  (const char *) "d:/rawdata"
+#define INI_FOLDER                  (const char *) "d:/rawdata_sim"
+#define INI_BOARDID_FOLDER          (const char *) "d:/rawdata_sim"
+
 #endif
+
+
 #define INI_FILENAME                (const char *) "sysconfig.ini"
+
+#define INI_FILENAME_BOARDID        (const char *) "boardid"
+#define INI_BOARDID_DIRECTORY       (const char *) "_EW #"     // ATA 드라이브에 폴더명 접두사 정의, 한글 때문에 단순화 함.
+
 #define INI_DIRECTORY               (const char *) "INI"
 
 // qDecoder 폴더 위치

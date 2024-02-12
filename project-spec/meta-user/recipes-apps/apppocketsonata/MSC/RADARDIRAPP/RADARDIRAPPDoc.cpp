@@ -187,7 +187,7 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 
 	SRxLOBData *pLOBData;
 	STR_PDWDATA *pstPDWData;
-    STR_PDWINDEX *pstPDWIndex;
+    STR_PDWDATA *pstLOB2PDWData;
 
 	CRADARDIRAPPView *pView;
 	CMainFrame *pMainFrame;
@@ -204,7 +204,7 @@ bool CRADARDIRAPPDoc::OpenFile( CString &strPathname, CString &strFilename )
 		pLOBData = RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOBData();
 
         for( i=0 ; i < nCoLOB ;++i ) {
-            pstPDWIndex = RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOB2PDWData( i );
+            pstLOB2PDWData = RadarDirAlgotirhm::RadarDirAlgotirhm::GetLOB2PDWData( i );
         }
 
 		pMainFrame = (CMainFrame *)AfxGetApp()->m_pMainWnd;

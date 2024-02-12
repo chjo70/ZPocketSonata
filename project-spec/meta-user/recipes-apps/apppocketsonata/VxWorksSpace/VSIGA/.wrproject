@@ -211,7 +211,7 @@
             <stringAttribute key="BLD::Info|cleanRule" value="clean"/>
             <stringAttribute key="BLD::Info|folderCleanRule" value="clean"/>
             <stringAttribute key="BLD::Info|rebuildRule" value="clean all"/>
-            <stringAttribute key="BLD::Info|BuildRule|deploy_output|value" value="dir"/>
+            <stringAttribute key="BLD::Info|BuildRule|deploy_output|value" value=""/>
             <booleanAttribute key="BLD::Info|BuildRule|deploy_output|isCommand" value="false"/>
             <intAttribute key="BLD::Info|BuildRule|deploy_output|refreshType" value="4"/>
             <stringAttribute key="BLD::Info|Tool|POST|sigs" value=""/>
@@ -226,7 +226,7 @@
             <stringAttribute key="BLD::Info|Tool|POST|flags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
             <stringAttribute key="BLD::Info|Tool|POST|nonDbgFlags|VSourceBuild_PPCE6500gnu_SMP" value=""/>
             <stringAttribute key="BLD::Info|GlobalMacro|POST_BUILD_RULE" value="dir"/>
-            <stringAttribute key="BLD::Info|BuildRule|POST_BUILD_RULE|value" value="dir"/>
+            <stringAttribute key="BLD::Info|BuildRule|POST_BUILD_RULE|value" value=""/>
             <booleanAttribute key="BLD::Info|BuildRule|POST_BUILD_RULE|isCommand" value="false"/>
             <intAttribute key="BLD::Info|BuildRule|POST_BUILD_RULE|refreshType" value="1"/>
             <stringAttribute key="BLD::Info|BuildRule|POST|value" value="post_build.bat"/>
@@ -362,10 +362,13 @@
             <listAttribute key="BLD::Info|Libs|VSourceBuild_T2MS32_PPCE6500gnu_SMP"/>
             <listAttribute key="BLD::Info|Definess|VSourceBuild_T2MS32_PPCE6500gnu_SMP">
                 <stringAttribute value="-DCPU=_VX_$(CPU)"/>
+                <stringAttribute value="-D_SERIAL_DETECT_FLOW_"/>
+                <stringAttribute value="-D__TEST__"/>
                 <stringAttribute value="-D_COL_VER2_"/>
                 <stringAttribute value="-DSQLITE_ENABLE_COLUMN_METADATA"/>
                 <stringAttribute value="-DSQLITE_ENABLE_IOTRACE"/>
                 <stringAttribute value="-DSQLITE_SYSTEM_MALLOC"/>
+                <stringAttribute value="-DSQLITE_THREADSAFE=2"/>
                 <stringAttribute value="-D_LOG_ANALTYPE_"/>
                 <stringAttribute value="-D_SERIAL_DETECT_FLOW_"/>
                 <stringAttribute value="-D_UTM_POSITION_"/>
@@ -378,7 +381,6 @@
                 <stringAttribute value="-D_VSB_CONFIG_FILE=\&quot;$(VSB_DIR)/h/config/vsbConfig.h\&quot;"/>
                 <stringAttribute value="-D_LOG_"/>
                 <stringAttribute value="-D_SIM_PDW1_"/>
-                <stringAttribute value="-DSQLITE_THREADSAFE=1"/>
                 <stringAttribute value="-D_TRACK_ENABLED1_"/>
                 <stringAttribute value="-D_SCAN_ENABLED_"/>
                 <stringAttribute value="-D__VXWORKS__"/>
@@ -403,6 +405,11 @@
         <buildtarget buildtool="Partial Image Linker" name="VSIGA_partialImage" passed="true" targetname="VSIGA_partialImage">
             <contents>
                 <folder name="/VSIGA" recursive="true">
+                    <attributes>
+                        <mapAttribute>
+                            <stringAttribute key="BLD::Info|GlobalMacro|POST_BUILD_RULE" value=""/>
+                        </mapAttribute>
+                    </attributes>
                     <contents>
                         <file name="/VSIGA/cmain.cpp">
                             <attributes>

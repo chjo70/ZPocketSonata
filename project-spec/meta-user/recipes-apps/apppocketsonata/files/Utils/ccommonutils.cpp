@@ -42,6 +42,7 @@ std::default_random_engine g_generator;
 
 
 #include <stat.h>
+#include <nfs/nfsCommon.h>
 
 #else
 #include <unistd.h>
@@ -234,7 +235,7 @@ int gettimeofday(struct timeval * tp, struct timezone * tzp)
  * @date      2022-02-09, 17:34
  * @warning
  */
-int clock_gettime(int X, struct timeval *tv)
+int clock_gettime_win(int X, struct timeval *tv)
 {
     gettimeofday( tv, NULL );
 
@@ -401,6 +402,51 @@ void CCommonUtils::getStringDesignatedDate( char *pString, size_t szString, time
 	}
 #endif
 
+}
+
+/**
+ * @brief     getStringDesignatedSimpleDate
+ * @param     char * pString
+ * @param     size_t szString
+ * @param     time_t tiTime
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-24 16:57:42
+ * @warning
+ */
+void CCommonUtils::getStringDesignatedSimpleDate( char *pString, size_t szString, time_t tiTime )
+{
+
+#ifdef _MSC_VER
+    strcpy_s( pString, szString, "1970-01-01 00:00:00" );
+#else
+    strcpy( pString, "1970-01-01 00:00:00" );
+#endif
+
+#ifdef _MSC_VER
+    struct tm stTime;
+
+    localtime_s( & stTime, & tiTime );
+    strftime( pString, szString, "%m-%d %H:%M:%S", & stTime );
+
+#else
+    struct tm *pstTime;
+
+    pstTime = localtime( & tiTime );
+
+    if( pstTime != NULL ) {
+        strftime( pString, szString, "%m-%d %H:%M:%S", pstTime );
+    }
+    else {
+#ifdef _MSC_VER
+        *pString = NULL;
+#else
+        *pString = ( char ) '\0';
+#endif
+    }
+#endif
 
 }
 
@@ -464,7 +510,6 @@ void CCommonUtils::getStringDesignatedTime(char *pString, size_t szString, time_
 void CCommonUtils::getFileNamingDesignatedTime(char *pString, size_t szString, time_t tiTime)
 {
 
-
 #ifdef _MSC_VER
     strcpy_s(pString, szString, "1970-01-01 00:00:00");
 #else
@@ -512,7 +557,13 @@ void CCommonUtils::getFileNamingDesignatedTime(char *pString, size_t szString, t
 void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, unsigned int tColTimeMs )
 {
     if (tColTime == 0) {
-        clock_gettime(CLOCK_REALTIME, pTimeSpec);
+#ifdef __VXWORKS__	
+    clock_gettime( CLOCK_REALTIME, pTimeSpec );
+    
+#else    
+    clock_gettime_win( CLOCK_REALTIME, pTimeSpec );
+    
+#endif    		
     }
     else {
         pTimeSpec->tv_sec = (long) tColTime;
@@ -540,7 +591,13 @@ void CCommonUtils::GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, u
  */
 void CCommonUtils::GetCollectTime( struct timespec *pTimeSpec )
 {
+#ifdef __VXWORKS__	
     clock_gettime( CLOCK_REALTIME, pTimeSpec );
+    
+#else    
+    clock_gettime_win( CLOCK_REALTIME, pTimeSpec );
+    
+#endif
 
     return;
 
@@ -561,7 +618,14 @@ DWORD CCommonUtils::GetDiffTime( struct timespec *pTimeSpec )
     struct timespec tsNow, tsDiff;
     DWORD ret = 0;
 
+#ifdef __VXWORKS__	
     clock_gettime( CLOCK_REALTIME, & tsNow );
+    
+#else    
+    clock_gettime_win( CLOCK_REALTIME, & tsNow );
+    
+#endif
+
 
 #ifdef _MSC_VER
     tsDiff.tv_sec = tsNow.tv_sec - pTimeSpec->tv_sec;
@@ -570,13 +634,13 @@ DWORD CCommonUtils::GetDiffTime( struct timespec *pTimeSpec )
     }
     else {
         tsDiff.tv_sec = tsDiff.tv_sec - 1;
-        tsDiff.tv_usec = 1000000000 + tsNow.tv_usec - pTimeSpec->tv_usec;
+        tsDiff.tv_usec = 1000000 + tsNow.tv_usec - pTimeSpec->tv_usec;
     }
 
-    //printf( "\n tsDiff.tv_sec[%u]", tsDiff.tv_sec );
-    //printf( "\n tsDiff.tv_nsec[%u]", tsDiff.tv_usec );
+    //TRACE( "\n tsDiff.tv_sec[%u]", tsDiff.tv_sec );
+    //TRACE( "\n tsDiff.tv_nsec[%u]", tsDiff.tv_usec );
 
-    ret = ( DWORD ) ( ( 1000000000 ) * tsDiff.tv_sec + tsDiff.tv_usec );
+    ret = ( DWORD ) ( ( 1000000 ) * tsDiff.tv_sec + tsDiff.tv_usec );
 
 #else
     tsDiff.tv_sec = tsNow.tv_sec - pTimeSpec->tv_sec;
@@ -721,6 +785,8 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
 {
     struct timespec tsNow;
 
+    //memset( & tsNow, 0, sizeof( tsNow ) );
+
     if( stop != NULL ) {
         tsNow.tv_sec = stop->tv_sec;
 #ifdef _MSC_VER
@@ -730,33 +796,40 @@ void CCommonUtils::DiffTimespec(struct timespec *result, struct timespec *start,
 #endif
     }
     else {
+#ifdef __VXWORKS__   		
         clock_gettime( CLOCK_REALTIME, & tsNow );
-    }
-
-#ifdef _MSC_VER
-    if ( tsNow.tv_usec < start->tv_usec) {
-        result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
-        result->tv_usec = tsNow.tv_usec - start->tv_usec + 1000000;
-    } else {
-        result->tv_sec = tsNow.tv_sec - start->tv_sec;
-        result->tv_usec = tsNow.tv_usec - start->tv_usec;
-    }
 #else
-    if ( tsNow.tv_nsec < start->tv_nsec ) {
-        result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
-        result->tv_nsec = tsNow.tv_nsec - start->tv_nsec + 1000000000;
-    } else {
-        result->tv_sec = tsNow.tv_sec - start->tv_sec;
-        result->tv_nsec = tsNow.tv_nsec - start->tv_nsec;
+        clock_gettime_win( CLOCK_REALTIME, & tsNow );
+#endif
     }
 
+    if( start != NULL ) {
+#ifdef _MSC_VER
+        if ( tsNow.tv_usec < start->tv_usec) {
+            result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
+            result->tv_usec = tsNow.tv_usec - start->tv_usec + 1000000;
+        } else {
+            result->tv_sec = tsNow.tv_sec - start->tv_sec;
+            result->tv_usec = tsNow.tv_usec - start->tv_usec;
+        }
+#else
+        //printf( "\n tsNow.tv_sec[%ld], tsNow.tv_nsec[%ld]", start->tv_sec, start->tv_nsec );
+        //printf( "\n tsNow.tv_sec[%ld], tsNow.tv_nsec[%ld]", tsNow.tv_sec, tsNow.tv_nsec );
+        if ( tsNow.tv_nsec < start->tv_nsec ) {
+            result->tv_sec = tsNow.tv_sec - start->tv_sec - 1;
+            result->tv_nsec = tsNow.tv_nsec - start->tv_nsec + 1000000000;
+        } else {
+            result->tv_sec = tsNow.tv_sec - start->tv_sec;
+            result->tv_nsec = tsNow.tv_nsec - start->tv_nsec;
+        }
 #endif
+    }
 
     if( pStrMessage != NULL ) {
 #ifdef _MSC_VER
-        printf( "\n %s[%d.%d ms]", pStrMessage, result->tv_sec, result->tv_usec / 1000 );
+        printf( "\n %s[%d.%03d s]", pStrMessage, result->tv_sec, result->tv_usec / 1000 );
 #else
-        printf( "\n %s[%d.%d ms]", pStrMessage, result->tv_sec, result->tv_nsec / 1000000 );
+        printf( "\n %s[%d.%03d s]", pStrMessage, result->tv_sec, result->tv_nsec / 1000000 );
 #endif
     }
 
@@ -808,12 +881,12 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
     unsigned int i;
 
     printf( "\n" );
-    for( i=0 ; i < pPDWData->GetTotalPDW() ; ++i ) {
-        printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n" , i+1, \
+    for( i=0 ; i < 10 && i < pPDWData->GetTotalPDW() ; ++i ) {
+        TRACE( "[%4d]\t%012llX(%8.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] [%d:%d]\n" , i+1, \
                 pPDW->tTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->tTOA-ullfirstTOA ), \
                 CPOCKETSONATAPDW::DecodeDOA( (int) pPDW->uiAOA), \
                 CPOCKETSONATAPDW::DecodeFREQMHz( pPDW->uiFreq), pPDW->uiFreq,
-                CPOCKETSONATAPDW::DecodePW( (int) pPDW->uiPW), pPDW->uiPW );
+                CPOCKETSONATAPDW::DecodePW( (int) pPDW->uiPW), pPDW->uiPW, pPDW->x.ps.x.stStrBitMap.Fmop, pPDW->x.ps.x.stStrBitMap.Pmop );
         ++ pPDW;
     }
 #elif defined(_ELINT_) || defined(_XBAND_)
@@ -848,6 +921,72 @@ void CCommonUtils::Disp_FinePDW( STR_PDWDATA *pPDWData )
 
 }
 
+/**
+ * @brief     Disp_FinePDW
+ * @param     STR_STATIC_PDWDATA * pPDWData
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-13 13:51:26
+ * @warning
+ */
+void CCommonUtils::Disp_FinePDW( STR_STATIC_PDWDATA *pPDWData )
+{
+
+#ifdef __ZYNQ_BOARD__
+    return;
+
+#else
+    _PDW *pPDW;
+    _TOA ullfirstTOA;
+
+    pPDW = & pPDWData->stPDW[0];
+    ullfirstTOA = pPDW->tTOA;
+
+#if defined(_POCKETSONATA_) || defined(_712_)
+    unsigned int i;
+
+    printf( "\n" );
+    for( i = 0 ; i < pPDWData->GetTotalPDW() ; ++i ) {
+        printf( "[%4d]\t%012llX(%8.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n", i + 1, \
+                pPDW->tTOA, CPOCKETSONATAPDW::DecodeTOAus( pPDW->tTOA - ullfirstTOA ), \
+                CPOCKETSONATAPDW::DecodeDOA( ( int ) pPDW->uiAOA ), \
+                CPOCKETSONATAPDW::DecodeFREQMHz( pPDW->uiFreq ), pPDW->uiFreq,
+                CPOCKETSONATAPDW::DecodePW( ( int ) pPDW->uiPW ), pPDW->uiPW );
+        ++ pPDW;
+    }
+#elif defined(_ELINT_) || defined(_XBAND_)
+    unsigned int i;
+
+    for( i = 0 ; i < pPDWData->GetTotalPDW() ; ++i ) {
+        printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n", i + 1, \
+                pPDW->ullTOA, CEPDW::DecodeTOAus( pPDW->ullTOA - ullfirstTOA, pPDWData->x.el.enBandWidth ), \
+                CEPDW::DecodeDOA( ( int ) pPDW->uiAOA ), \
+                CEPDW::DecodeFREQMHz( ( int ) pPDW->uiFreq ), pPDW->uiFreq,
+                CEPDW::DecodePW( ( int ) pPDW->uiPW, pPDWData->x.el.enBandWidth ), pPDW->uiPW );
+        ++ pPDW;
+    }
+
+#elif defined(_701_)
+    unsigned int i;
+
+    for( i = 0; i < pPDWData->GetTotalPDW(); ++i ) {
+        printf( "[%4d]\t%012llX(%.1f[us]) %5.1f %.3fMHz[0x%X] %.3fns[0x%X] \n", i + 1, \
+                pPDW->ullTOA, C7PDW::DecodeTOAus( pPDW->ullTOA - ullfirstTOA, pPDWData->x.e7.enBandWidth ), \
+                C7PDW::DecodeDOA( ( int ) pPDW->uiAOA ), \
+                C7PDW::DecodeFREQMHz( ( int ) pPDW->uiFreq ), pPDW->uiFreq,
+                C7PDW::DecodePW( ( int ) pPDW->uiPW, pPDWData->x.e7.enBandWidth ), pPDW->uiPW );
+        ++pPDW;
+    }
+
+#endif
+
+    return;
+
+#endif
+
+}
 
 
 #endif	// _GRAPH_
@@ -1559,6 +1698,8 @@ unsigned int CCommonUtils::GetNoChannel( unsigned int & uiValue )
     return uiCount;
 }
 
+#if defined(__VXWORKS__) || defined(_WIN64)
+
 /**
  * @brief		DisplayMsg
  * @param		STR_LAN_HEADER * pHeader
@@ -1670,12 +1811,20 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
             *pszString = "에러";
             break;
 
+        case enRES_SCAN_DATA:
+            *pszString = "스캔 분석";
+            break;
+
         case enRES_USER_DELETE_THREAT_DATA:
             *pszString = "사용자 요구 삭제 요청";
             break;
 
         case enDEL_THREAT_DATA :
             *pszString = "위협 삭제";
+            break;
+
+        case enDEL_BEAM_DATA:
+            *pszString = "위협/빔 삭제";
             break;
 
         default:
@@ -1694,6 +1843,8 @@ void CCommonUtils::MakeStringMessage( std::string *pszString, unsigned int uiOpC
     //LOGMSG3( enDebug, "$랜 송신: Op[%s:0x%04X], Len[%d]", szOpcode, pHeader->uiOpCode, pHeader->uiLength );
 
 }
+
+#endif
 
 /**
  * @brief     PrintAllPDW
@@ -1914,7 +2065,7 @@ void CCommonUtils::WallMakePrint( char delimeter, int iColumns, char *fmt, ... )
  * @date      2023-12-30 15:03:52
  * @warning
  */
-unsigned long long int CCommonUtils::GetRawFileSize( char *pPathFileName )
+unsigned long long int CCommonUtils::GetRawFileSize( const char *pPathFileName )
 {
     unsigned long long int ullRet64 = 0;
 
@@ -1952,14 +2103,14 @@ unsigned long long int CCommonUtils::GetRawFileSize( char *pPathFileName )
  * @date      2023-12-30 15:22:42
  * @warning
  */
-unsigned long long int CCommonUtils::DiskFreeSpace( char *szDiskName )
+unsigned long long int CCommonUtils::DiskFreeSpace( const char *szDiskName )
 {
-    unsigned long long int ullDiskFreeSpace = -1;
+    unsigned long long int ullDiskFreeSpace = ( unsigned long long int ) -1;
 
 #ifdef __VXWORKS__
     struct statfs SStatFs;
 
-    if( statfs( szDiskName, & SStatFs ) == OK ) {
+    if( statfs( (char * )szDiskName, & SStatFs ) == OK ) {
     		ullDiskFreeSpace = ( unsigned long long int ) ( ( float ) SStatFs.f_bsize * ( float ) SStatFs.f_bavail );
     }
     else {
@@ -1972,4 +2123,95 @@ unsigned long long int CCommonUtils::DiskFreeSpace( char *szDiskName )
 #endif
 
     return ullDiskFreeSpace;
+}
+
+/**
+ * @brief     CreateDir
+ * @param     char * pPath
+ * @return    bool
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-30 17:12:58
+ * @warning
+ */
+bool CCommonUtils::CreateDir( const char *pPath )
+{
+    bool bRet = true;
+    char dirName[256];
+    const TCHAR *p = pPath;
+    char *q = dirName;
+
+    while( *p ) {
+        if( ( '\\' == *p ) || ( '/' == *p ) ) {
+            if( p != pPath && ':' != *( p - 1 ) ) {
+
+#ifdef _MSC_VER
+                CreateDirectory( dirName, NULL );
+
+#elif defined(__linux__)
+                mkdir( dirName, 0766 );
+#else
+
+#ifdef __LP64__
+                mkdir( dirName, 666 );
+#else
+                mkdir( dirName );
+#endif
+
+
+#endif
+            }
+        }
+
+#ifdef __linux1__
+        mkdir( dirName, 0766 );
+#endif
+
+        *q++ = *p++;
+        *q = '\0';
+    }
+
+
+#ifdef _MSC_VER
+    if( ! PathFileExists( dirName ) ) {
+        bool bCreate;
+        bCreate = CreateDirectory( dirName, NULL );
+        if( bCreate != true ) {
+            perror( "디렉토리 생성" );
+            bRet = false;
+        }
+    }
+    else {
+
+    }
+
+#elif defined(__linux__)
+    int iRet = mkdir( dirName, 0766 );
+
+    if( iRet == 0 || ( iRet == -1 && errno == EEXIST ) ) {
+    }
+    else {
+        perror( "디렉토리 생성" );
+        bRet = false;
+    }
+#else
+
+#ifdef __LP64__
+    int iRet = mkdir( dirName, 666 );
+#else
+    int iRet = mkdir( dirName );
+#endif
+
+    //printf( "\n iRet=%d" , iRet );
+    if( iRet == 0 || ( iRet == -1 && ( errno == EEXIST || errno == S_nfsLib_NFSERR_EXIST ) ) ) {
+    }
+    else {
+        perror( "디렉토리 생성" );
+        bRet = false;
+    }
+
+#endif
+
+    return bRet;
 }

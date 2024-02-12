@@ -61,7 +61,7 @@ bool CThread::m_bSendEnable = false;
  * @date      2023-04-30 15:16:25
  * @warning
  */
-CThread::CThread() : CArrayMsgData( false )
+CThread::CThread() : CArrayMsgData( false ), CLogName()
 {
 #ifdef _MSC_VER
     m_hEvent = NULL;
@@ -85,7 +85,7 @@ CThread::CThread() : CArrayMsgData( false )
  * @date      2023-08-29 10:38:21
  * @warning
  */
-CThread::CThread( int iThreadPriority, const char *pThreadName, bool bArrayLanData, bool bCreateOnlyThread ) : CArrayMsgData( bArrayLanData )
+CThread::CThread( int iThreadPriority, const char *pThreadName, bool bArrayLanData, bool bCreateOnlyThread ) : CArrayMsgData( bArrayLanData ), CLogName( pThreadName )
 {
 
     m_bLog = false;
@@ -213,14 +213,7 @@ CThread::~CThread()
 
     //delete m_pTheMessageQueue;
 
-    if(m_hEvent != 0 ) {
-        CloseHandle(m_hEvent);
-        -- m_iCoMsgQueue;
-    }
 
-    if(m_hSleepEvent != 0 ) {
-        CloseHandle(m_hSleepEvent);
-    }
 
 #elif defined(__VXWORKS__)
 
@@ -236,12 +229,20 @@ CThread::~CThread()
     if ( m_MainThread.m_hThread ) {
         CThread::StopThread();
 
+        if( m_hEvent != 0 ) {
+            CloseHandle( m_hEvent );
+            -- m_iCoMsgQueue;
+        }
+
+        if( m_hSleepEvent != 0 ) {
+            CloseHandle( m_hSleepEvent );
+        }
 
         //Log( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
     }
 
 #elif defined(__VXWORKS__)
-    Log( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
+    printf( "[%s]를 종료 처리합니다." , m_szThreadName );
 
 #else
     if( m_MainThread != 0 ) {
@@ -249,14 +250,14 @@ CThread::~CThread()
 
         pthread_cancel( m_MainThread );
         //Pend();
-        Log( enDebug, "[%s]를 종료 처리합니다." , m_szThreadName );
+        printf( "[%s]를 종료 처리합니다." , m_szThreadName );
 
         //Stop();
     }
 #endif
 
 #ifdef _LOG_
-    if( g_pTheLog != NULL ) {
+    if( g_pTheLog != NULL && this != g_pTheLog ) {
         g_pTheLog->UnLock();
     }
 
@@ -378,7 +379,7 @@ void CThread::Run( void *(*pFunc)(void*) )
         m_bTaskRunStat = true;
     }
 
-    Log( enDebug, "[%s] 타스크/쓰레드 (우선 순위[%d]) 생성 ...", m_szThreadName, m_iPriority );
+    Log( enDebug, "타스크/쓰레드 (우선 순위[%3d]) 생성 ...", m_iPriority );
     // printErrno( errnoGet() );
 	//LOG_LINEFEED;
 
@@ -467,6 +468,8 @@ int CThread::Pend()
  */
 void CThread::StopThread()
 {
+    m_bThreadLoop = false;
+
 #ifdef _MSC_VER
     if ( m_MainThread.m_hThread ) {
         GetExitCodeThread(m_MainThread.m_hThread, & m_MainThread.m_dwExitCode );
@@ -476,7 +479,7 @@ void CThread::StopThread()
 
             // 로그 관련 CriticalSection 락을 푼다.
             TRACE( "CThread::Stop" );
-            m_bThreadLoop = false;
+            SetEvent( m_hEvent );
 
 #ifdef _LOG_
             while( g_pTheLog->IsLock() == true ) {
@@ -487,10 +490,17 @@ void CThread::StopThread()
 
             hThread = m_MainThread.m_hThread;
 
-            m_MainThread.m_hThread = NULL;
-            TerminateThread( hThread, 0 ); //DWORD(-1));
-            // ExitThread( 0 );
+            // TerminateThread( m_MainThread.m_hThread, 0 ); //DWORD(-1));
 
+            WaitForSingleObject( hThread, 1000 );
+
+
+
+            CloseHandle( hThread );
+
+            m_MainThread.m_hThread = NULL;
+
+            // ExitThread( 0 );
             -- m_iCoThread;
         }
         else {
@@ -502,7 +512,6 @@ void CThread::StopThread()
 #elif defined(__VXWORKS__)
     -- m_iCoThread;
 
-    m_bThreadLoop = false;
     taskDelete( m_TaskID );
 
 #else
@@ -522,10 +531,7 @@ void CThread::StopThread()
 
     // g_pTheLog->UnLock();
 
-	m_bThreadLoop = false;
-
 }
-
 
 /**
  * @brief CThread::TCleanUpHandler
@@ -667,14 +673,17 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
                 dwRes = ::WaitForSingleObject(m_hEvent, dwMilliSec);
             }
             else {
+#if defined(_DEBUG) && defined(_WIN64)
                 if( strcmp( GetThreadName(), "CCU_O1" ) == 0 ) {
-                    TRACE( "\n m_hEvent[%u]", m_hEvent );
+                    TRACE( "\n m_hEvent[%p]", m_hEvent );
                 }
+#endif
                 dwRes = ::WaitForSingleObject(m_hEvent, INFINITE);
             }
 
-            if( dwRes == WAIT_FAILED ) {
-
+            if( dwRes == WAIT_FAILED || m_bThreadLoop == false ) {
+                iMsgRcv = -1;
+                TRACE( "\nCThread[%s]..ResetEvent..", GetThreadName() );
             }
             else if( dwRes == WAIT_ABANDONED ) {
                 ::ResetEvent( m_hEvent );
@@ -690,12 +699,13 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
 
             }
             else if( dwRes == WAIT_OBJECT_0 ) {
+#if defined(_DEBUG) && defined(_WIN64)
                 if( strcmp( GetThreadName(), "TASKMNGR" ) == 0 ) {
-#ifdef _DEBUG
                     TRACE( "\n TASKMNGR..." );
                     WhereIs;
-#endif
                 }
+
+#endif
                 //TRACE( "\nCThread[%s]..ResetEvent..", GetThreadName() );
 
                 // 처리 한다.
@@ -711,9 +721,11 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
                     if( m_RcvMsg.iArrayIndex != -1 ) {
                         m_pszRecvData = (char *) m_szRecvData;
                         //memcpy( m_szRecvData, m_RcvMsg.szArrayData, m_RcvMsg.uiArrayLength );
+#if defined(_DEBUG) && defined(_WIN64)
                         if( strcmp( GetThreadName(), "MRG" ) == 0 ) {
-                            TRACE( "\n PopLanData=[%d]", m_RcvMsg.iArrayIndex );
+                            TRACE( "PopLanData=[%d]\n", m_RcvMsg.iArrayIndex );
                         }
+#endif
                         PopLanData( m_szRecvData, m_RcvMsg.iArrayIndex, m_RcvMsg.uiArrayLength );
                     }
                     else {
@@ -845,6 +857,7 @@ int CThread::QMsgRcv( ENUM_RCVMSG enFlag, DWORD dwMilliSec )
  */
 void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLength, const char *pszClassName, int iOption )
 {
+
     if( uiDataLength <= sizeof( UNI_MSG_DATA ) ) {
         QMsgSnd( uiOpCode, NULL, 0, 0, pData, uiDataLength, pszClassName, iOption );
     }
@@ -852,6 +865,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLe
         QMsgSnd( uiOpCode, pData, 1, uiDataLength, NULL, 0, pszClassName, iOption );
 
     }
+
 }
 
 /**
@@ -868,6 +882,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pData, unsigned int uiDataLe
 void CThread::QMsgSnd( unsigned int uiOpCode, const char *pszClassName, int iOption )
 {
     QMsgSnd( uiOpCode, NULL, 0, 0, NULL, 0, pszClassName, iOption );
+
 }
 
 /**
@@ -888,6 +903,7 @@ void CThread::QMsgSnd( unsigned int uiOpCode, const char *pszClassName, int iOpt
 void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int uiArrayLength, void *pData, unsigned int uiDataLength, const char *pszClassName, int iOption )
 {
     QMsgSnd( uiOpCode, pArrayMsgData, uiArrayLength, _spOne, pData, uiDataLength, pszClassName, iOption );
+
 }
 
 /**
@@ -935,8 +951,10 @@ void CThread::QMsgSnd( unsigned int uiOpCode, void *pArrayMsgData, unsigned int 
 
         sndMsg.iArrayIndex = PushLanData(pArrayMsgData, sndMsg.uiArrayLength);
         if( strcmp( GetThreadName(), "MRG" ) == 0 ) {
-            TRACE( "\n PushLanData=[%d]", sndMsg.iArrayIndex );
-            PrintDebug( -1 );
+#ifdef _MSC_VER
+            //TRACE( "PushLanData=[%d]\n", sndMsg.iArrayIndex );
+            //PrintDebug( (unsigned int) -1 );
+#endif
         }
     }
     else {
@@ -1130,11 +1148,10 @@ void CThread::msSleep( unsigned int mssleep )
  */
 void CThread::DisplayMsg( bool bSend, const char *pszFromClassName, const char *pszToClassName, STR_MessageData *pInMsg )
 {
-    char buffer[300];
+#if defined(__VXWORKS__) || defined(_WIN64)
     STR_MessageData *pMsg;
 
     if( pszFromClassName != NULL && strcmp( pszFromClassName, PCIISR_NAME ) != 0 ) {
-        std::string strMessage;
 
         if( bSend == true ) {
             if( pInMsg != NULL ) {
@@ -1147,6 +1164,10 @@ void CThread::DisplayMsg( bool bSend, const char *pszFromClassName, const char *
         else {
             pMsg = & m_RcvMsg;
         }
+
+        char buffer[300];
+
+        std::string strMessage;
 
         // opcode 에 따른 명령어 파싱
         CCommonUtils::MakeStringMessage( &strMessage, pMsg->uiOpCode, bSend );
@@ -1172,8 +1193,13 @@ void CThread::DisplayMsg( bool bSend, const char *pszFromClassName, const char *
         TRACE( "%s", buffer );
         //Log( enNormal, "%s", buffer );
     }
+
     else {
     }
+
+#endif
+
+
 
 }
 
@@ -1187,14 +1213,16 @@ void CThread::DisplayMsg( bool bSend, const char *pszFromClassName, const char *
  * @date      2023-03-07 13:35:22
  * @warning
  */
-void CThread::ShowTaskMessae( int iLevel )
+void CThread::ShowTaskMessae( int iLevel, bool bLog )
 {
-    TRACE( "\n[%s]", m_szThreadName );
+    if( bLog == true ) {
+        TRACE( "\n[%s]", m_szThreadName );
+    }
 
 #ifdef _MSC_VER
 
 #elif defined(__VXWORKS__)
-    msgQShow( m_MsgKeyID, iLevel );
+    taskShow( m_TaskID, iLevel );
 
 #elif __linux__
 
@@ -1244,9 +1272,11 @@ int CThread::QMsgRcvSize()
  * @date      2023-03-07 13:35:24
  * @warning
  */
-void CThread::ShowQueueMessae( int iLevel )
+void CThread::ShowQueueMessae( int iLevel, bool bLog )
 {
-    //Log( enNormal, "[%s]", m_szThreadName );
+    if( bLog == true ) {
+        TRACE( "\n[%s]", m_szThreadName );
+    }
 
 #ifdef _MSC_VER
     CLock::Lock();
@@ -1254,7 +1284,7 @@ void CThread::ShowQueueMessae( int iLevel )
     CLock::UnLock();
 
 #elif defined(__VXWORKS__)
-    // msgQShow( m_MsgKeyID, iLevel );
+    msgQShow( m_MsgKeyID, iLevel );
 
 #elif __linux__
 
@@ -1349,6 +1379,21 @@ void CThread::ChangeTaskPriority( int iPriority )
 
 #endif
 
+}
+
+
+/**
+ * @brief     GetCoThread
+ * @return    int
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-02 11:39:44
+ * @warning
+ */
+int CThread::GetCoThread()
+{
+    return (int) g_vecThread.size(); /* m_iCoThread; */
 }
 
 #ifdef _MSC_VER

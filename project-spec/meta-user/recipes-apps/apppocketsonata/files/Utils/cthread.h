@@ -56,6 +56,7 @@ using namespace std;
 #include "../Utils/carraymsgdata.h"
 
 #include "../Utils/clock.h"
+#include "../Utils/clogname.h"
 
 
 #define LENGTH_OF_CLASSNAME                 (10)
@@ -83,11 +84,12 @@ enum TASK_PRIORITY {
     en_RECLAN2_PRIORITY,
     en_BIT_PRIORITY,
     en_EMTMERGE_PRIORITY,
-    en_COLLECT_PRIORITY,
 
     en_DETECT_ANAL_PRIORITY,
     en_TRACK_ANAL_PRIORITY,
     en_SCAN_ANAL_PRIORITY,
+
+    en_COLLECT_PRIORITY,
 
 };
 
@@ -220,7 +222,7 @@ public:
 /**
  * @brief 쓰레드 클래스
  */
-class CThread : public CLock, public CArrayMsgData
+class CThread : public CLock, public CArrayMsgData, public CLogName
 {
 private:
     // 송신할 때 사용하는 메시지 데이터
@@ -300,7 +302,7 @@ private:
 public:
     CThread();
     CThread( int iThreadPriority, const char *pThreadName, bool bArrayLanData=false, bool bCreateOnlyThread=false );
-    ~CThread();
+    virtual ~CThread();
 
     void Init();
 
@@ -310,8 +312,8 @@ public:
     void SendThreadMessage( CThread *pThread, bool bWait=true );
     void SendThreadMessage( CThread *pThread, unsigned int uiOpCode, bool bWait=true );
 
-    void ShowTaskMessae( int iLevel = 0 );
-    void ShowQueueMessae( int iLevel = 0 );
+    void ShowTaskMessae( int iLevel = 0, bool bLog=true );
+    void ShowQueueMessae( int iLevel = 0, bool bLog=true );
 
     void ChangeTaskPriority( int iPriority );
 
@@ -400,6 +402,7 @@ public:
     void SendTaskMngr( unsigned int uiErrorCode, const char *pszThreadName=NULL );
 
     const char *GetThreadName() { return m_szThreadName; }
+    int GetCoThread();
 
 #ifdef _MSC_VER
     inline key_t GetKeyId() { return 0; }
@@ -501,7 +504,6 @@ public:
     inline UNI_LAN_DATA* GeLanData() { return ( UNI_LAN_DATA  * ) &m_RcvMsg.x.szData[0]; }
     inline UNI_MSG_DATA *GeUniMsgData() { return ( UNI_MSG_DATA * ) &m_RcvMsg.x.szData[0]; }
 
-    inline int GetCoThread() { return m_iCoThread; }
     inline int GetCoMsgQueue() { return m_iCoMsgQueue; }
     inline void *GetRecvData() { return m_pszRecvData; }
 

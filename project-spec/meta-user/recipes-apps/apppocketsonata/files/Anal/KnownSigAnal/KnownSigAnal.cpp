@@ -118,7 +118,10 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, 
     CCommonUtils::WallMakePrint( buffer, '-' );
     Log( enNormal, "%s", buffer );
 
-    InsertRAWData( & m_stSavePDWData, _spZero, (int) -1, bDBInsert );
+    // 추적에서 너무 많은 PDW 데이터를 기록하기 때문에,
+    if( pTrkAet->uiCoLOB == 1 || pTrkAet->uiCoLOB % 10 == 0 ) {
+        InsertRAWData( & m_stSavePDWData, _spZero, (int) -1, bDBInsert, pTrkAet->uiAETID, pTrkAet->uiABTID );
+    }
 
 	// 펄스열 인덱스를 참조하여 행렬 값에 저장한다.
 	_PDW *pPDW = pstPDWData->stPDW;
@@ -151,6 +154,8 @@ void CKnownSigAnal::Start( STR_STATIC_PDWDATA *pstPDWData, SRxABTData *pTrkAet, 
 //
 //         SendAllAet();
 #endif
+
+    m_theMakeAET->PrintAllAET( true );
 
     sprintf( buffer, "---------------- 추적 분석 종료[%s] : %d[ns]", CSigAnal::GetRawDataFilename(), ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
     CCommonUtils::WallMakePrint( buffer, '=' );
@@ -186,20 +191,20 @@ void CKnownSigAnal::StartOfTrackSignalAnalysis( bool bDBInsert, ENUM_ROBUST_ANAL
 		// 에미터 분석
 		bRet = m_theMakeAET->KnownMakeAET( bDBInsert );
 
+#ifdef _DEBUG
+        // #디버깅: 확인하기 위한 처리 구문 입니다.
+        if( m_theMakeAET->IsValid() != true ) {
+            m_thePulExt->ClearAllMark();
+            m_thePulExt->KnownPulseExtract();
+        }
+
+#endif
+
 		// 추적 실패하면 마킹된 정보를 해지한다.
 		if (bRet == FALSE) {
 			memset(MARK, 0, sizeof(MARK));
 		}
 	}
-
-// 	int iIdxUpdAet = m_theMakeAET->GetIdxUpdAet();
-// 	if (iIdxUpdAet >= 0) {
-//         //CLogMsg::Log(enNormal, "#### 추적 - 탐지 분석 시작[%dth, Co:%d] ####", GetStep(), m_uiCoPdw - m_theMakeAET->GetPulseCountFromKnownIndex((UINT)iIdxUpdAet));
-// 	}
-// 	else {
-//         //CLogMsg::Log(enError, "에러 발생");
-// 	}
-
 
 }
 
@@ -215,14 +220,17 @@ void CKnownSigAnal::StartOfTrackSignalAnalysis( bool bDBInsert, ENUM_ROBUST_ANAL
 void CKnownSigAnal::StartOfNewSignalAnalysis( bool bDBInsert )
 {
 
+    // 펄스 그룹화 초기화
+    m_theGroup->Init();
+
 	// 펄스열 추출 초기화
-	m_thePulExt->CPulExt::Init();
+	m_thePulExt->Init();
 
 	// PRI 분석 초기화
-	m_theAnalPRI->CAnalPRI::Init();
+	m_theAnalPRI->Init();
 
 	// AET 생성 초기화
-	//m_theMakeAET->CMakeAET::Init();
+	//m_theMakeAET->Init();
 
 	// 탐지 신호 분석을 그대로 분석한다.
 	if (TRUE == m_theGroup->MakeGroup()) {
@@ -235,7 +243,7 @@ void CKnownSigAnal::StartOfNewSignalAnalysis( bool bDBInsert )
 			// 방위/주파수 그룹화에서 결정한 주파수 및 방위 범위에 대해서 필터링해서 PDW 데이터를 정한다.
 			m_theGroup->MakeGrIndex();
 
-			SaveGroupPDWFile(m_pGrPdwIndex, &m_stSavePDWData, GetPLOBIndex(), true);
+			//SaveGroupPDWFile(m_pGrPdwIndex, &m_stSavePDWData, GetPLOBIndex(), true);
 
 			// 규칙성 및 불규칙성 펄스열 추출
 			m_thePulExt->PulseExtract(&m_VecMatchRadarMode);

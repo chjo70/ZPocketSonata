@@ -26,21 +26,24 @@ struct SELINDEX {
 //////////////////////////////////////////////////////////////////////////
 // 위협 관리 관련 정의문
 #ifdef _POCKETSONATA_
-#define TOTAL_ITEMS_OF_THREAT			    (10)						        // 최대 위협 개수
+#define TOTAL_ITEMS_OF_THREAT			    (300)						    // 최대 위협 개수
 #define TOTAL_ITEMS_OF_THREAT_NODE			(2*TOTAL_ITEMS_OF_THREAT)	    // 방사체/빔 개수
 
 #define AETID_OFFSET                        (1000)
+#define MAX_ABTID                           (9999)
 
 #elif _712_
 #define TOTAL_ITEMS_OF_THREAT			    (1000)						    // 최대 위협 개수
 #define TOTAL_ITEMS_OF_THREAT_NODE			(2*TOTAL_ITEMS_OF_THREAT)	    // 방사체/빔 개수
 #define AETID_OFFSET                        (0)
+#define MAX_ABTID                           (9999)
 
 #else
 #define TOTAL_ITEMS_OF_THREAT			    (500)							    // 최대 위협 개수
 #define TOTAL_ITEMS_OF_THREAT_NODE			(2*TOTAL_ITEMS_OF_THREAT)	    // 방사체/빔 개수
 
 #define AETID_OFFSET                        (1000)
+#define MAX_ABTID                           (9999)
 
 #endif
 
@@ -68,45 +71,49 @@ struct SELINDEX {
 class CELThreat
 {
 private:
-	static int m_CoInstance;										///< 객체 총 개수
+	static int m_CoInstance;                                                    //< 객체 총 개수
 
-    static unsigned int m_uiBoardID;										    ///< 보드 ID
+    static unsigned int m_uiBoardID;                                            //< 보드 ID
 
+	static Queue<unsigned int> m_QueIndex;                                      //< 위협의 큐 포인터
+    static Queue<unsigned int> m_QueAETID;                                      //< 방사체 번호의 큐 포인터
+    static Queue<unsigned int> m_QueABTID;                                      //< 방사체 번호의 큐 포인터
 
-	static Queue<unsigned int> m_QueIndex;							///< 위협의 큐 포인터
-    static Queue<unsigned int> m_QueAETID;					///< 방사체 번호의 큐 포인터
+    //static int m_iTotalOfABT;                                                   //< 위협의 큐 포인터
+    //static int m_iTotalOfAET;                                                   //< 위협의 큐 포인터
 
-    static int m_iTotalOfABT;								        ///< 위협의 큐 포인터
-    static int m_iTotalOfAET;								        ///< 위협의 큐 포인터
+    static CELThreat *m_pRootThreat;                                            //< 트리 구조의 좌측 포인터
 
-    static CELThreat *m_pRootThreat;								///< 트리 구조의 좌측 포인터
-
-	CELThreat *m_pLeftChild;										///< 트리 구조의 좌측 포인터
-	CELThreat *m_pRightChild;										///< 트리 구조의 우측 포인터
+	CELThreat *m_pLeftChild;                                                    //< 트리 구조의 좌측 포인터
+	CELThreat *m_pRightChild;                                                   //< 트리 구조의 우측 포인터
 
 
 public:
-	SELINDEX m_Idx;													///< 위협의 방사체/빔/LOB 번호
+	SELINDEX m_Idx;                                                             //< 위협의 방사체/빔/LOB 번호
 
-	unsigned int m_uiIndex;											///< 위협 인덱스
+	unsigned int m_uiIndex;                                                     //< 위협 인덱스
 
-	CELThreat * GetRootThreat() const { return m_pRootThreat; }
-	void SetRootThreat(CELThreat * val) { m_pRootThreat = val; }
 public:
 	CELThreat(unsigned int iBoardID );
+    CELThreat &operator= ( const CELThreat &p );
+
+    CELThreat( UINT uiAET, UINT uiABT, UINT uiLOB );
+    CELThreat( unsigned int *puiAET );
+    CELThreat( unsigned int uiAET, unsigned int *puiABT );
 	~CELThreat(void);
+
 	bool Remove( SELINDEX *pIndex );
 	CELThreat *GetLastThreat( CELThreat *pThreat );
-
-	CELThreat& operator= (const CELThreat& p);
-
-    CELThreat( UINT nAET, UINT nABT, UINT nLOB );
 
 	void RemoveAll();
 	bool RemoveThreat( int nIndex, CELThreat *pPrevThreat );
 	bool RemoveAET( unsigned int uiAETID, CELThreat *pPrevThreat );
 	bool RemoveABT( unsigned int uiAETID, unsigned int uiABTID );
-	void Link( CELThreat *pABTThreat, CELThreat *pAETThreat=NULL );
+
+    static void Move( CELThreat *pMovingThreatAET, CELThreat *pMovingThreatABT, CELThreat *pMergedThreatAET );
+
+    void Link( CELThreat *pAddeThreatABT );
+	//void Link( CELThreat *pABTThreat, CELThreat *pAETThreat=NULL );
 	void UnLink( CELThreat *pUnLinkABT );
 
 	/**
@@ -125,22 +132,18 @@ public:
 
 		if( nDepth <= nLimit ) {
 			if( m_pLeftChild != NULL ) {
-#ifdef _MSC_VER
                 if( m_Idx.uiAETID != 0 ) {
-                    TRACE( "\n---- 방사체 AET[%d]", m_Idx.uiAETID );
+                    TRACE( "---- 방사체 AET[%d]\n", m_Idx.uiAETID );
                 }
-#endif
 				m_pLeftChild->Traverse( nDepth+1, nLimit );
 			}
             else {
-#ifdef _MSC_VER
                 if( m_Idx.uiAETID != 0 ) {
-                    TRACE( "\nAET[%d], ABT[%d]", m_Idx.uiAETID, m_Idx.uiABTID );
+                    TRACE( "AET[%04d], ABT[%04d]\n", m_Idx.uiAETID, m_Idx.uiABTID );
                 }
                 else {
-                    TRACE( "\n위협 노드가 없습니다 !" );
+                    TRACE( "위협 노드가 없습니다 !\n" );
                 }
-#endif
             }
 
 			if( m_pRightChild != NULL ) {
@@ -167,7 +170,7 @@ public:
 			}
 			else {
 				CELThreat *pThreat = m_pLeftChild;
-				while( pThreat->m_pRightChild != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
+				while( pThreat->m_pRightChild != NULL ) {
 					pThreat = pThreat->m_pRightChild;
 				}
 				pThreat->m_pRightChild = pChild;
@@ -232,7 +235,7 @@ public:
 
 		// 1. AET 찾기
 		pThreat = m_pLeftChild;
-		while( pThreat != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
+		while( pThreat != NULL ) {
 			if( pThreat->m_Idx.uiAETID == nAET ) {
 				break;
 			}
@@ -259,7 +262,7 @@ public:
 		pTheAETThreat = Find( nAET );
 		if( pTheAETThreat != NULL ) {
 			pTheABTThreat = pTheAETThreat->m_pLeftChild;
-			while( pTheABTThreat != NULL ) { //#FA_C_PotentialUnboundedLoop_T1
+			while( pTheABTThreat != NULL ) {
 				if( pTheABTThreat->m_Idx.uiABTID == nABT ) {
 					break;
 				}
@@ -272,7 +275,7 @@ public:
 	}
 
 // 	CELThreat *Find( SELINDEX *pIndex )
-// 	{ //#FA_Q_4020_T1 (Multiple exit points found)
+// 	{
 // 		UINT nIdx;
 //
 // 		CELThreat *pThreat=NULL;
@@ -419,6 +422,36 @@ public:
 // 		return bRet;
 // 	}
 
+    /**
+     * @brief     GetRootThreat
+     * @return    CELThreat *
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-02-01 17:55:58
+     * @warning
+     */
+    static CELThreat *GetRootThreat()
+    {
+        return m_pRootThreat;
+    }
+
+    /**
+     * @brief     Traverse
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-02-01 17:55:52
+     * @warning
+     */
+    static void PrintAllThreat()
+    {
+        TRACE( "===== 총 위협 개수[%d/%d] 정보 전시 ===\n" , m_QueAETID.RCount(), m_QueABTID.RCount() );
+        m_pRootThreat->Traverse( 0, 0xffffff );
+        TRACE( "==========================================\n" );
+
+    }
 
     /**
      * @brief     NextAETID
@@ -431,16 +464,42 @@ public:
      */
     static unsigned int NextAETID()
     {
-        unsigned int uiAETID=(unsigned int) -1;
+        unsigned int uiAETID=(unsigned int) INVALID_INDEX;
 
-        if( m_QueAETID.Pop( & uiAETID ) == INVALID_INDEX ) {
-            uiAETID = (unsigned int) -1;
+        if( m_QueAETID.Pop( & uiAETID ) == false ) {
+            uiAETID = (unsigned int) INVALID_INDEX;
         }
         else {
+            //++ m_iTotalOfAET;
             //m_QueAETID.Print();
         }
 
         return uiAETID;
+
+    }
+
+    /**
+     * @brief     NextABTID
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-02-01 14:57:04
+     * @warning
+     */
+    static unsigned int NextABTID()
+    {
+        unsigned int uiABTID = ( unsigned int ) INVALID_INDEX;
+
+        if( m_QueABTID.Pop( & uiABTID ) == false ) {
+            uiABTID = ( unsigned int ) INVALID_INDEX;
+        }
+        else {
+            //++ m_iTotalOfAET;
+            //m_QueAETID.Print();
+        }
+
+        return uiABTID;
 
     }
 
@@ -458,6 +517,24 @@ public:
     {
         bool bRet = m_QueAETID.Push( uiAETID );
         //m_QueAETID.Print();
+        return bRet;
+
+    }
+
+    /**
+     * @brief     PushABTID
+     * @param     unsigned int uiABTID
+     * @return    bool
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-02-01 13:32:01
+     * @warning
+     */
+    static bool PushABTID( unsigned int uiABTID )
+    {
+        bool bRet = m_QueABTID.Push( uiABTID );
+        //m_QueABTID.Print();
         return bRet;
 
     }
@@ -483,7 +560,7 @@ public:
             }
         }
         else {
-            for( ui = 1 + ( AETID_OFFSET * ( m_uiBoardID - 1 ) ); ui < (unsigned int) ( AETID_OFFSET * m_uiBoardID ); ++ui ) {
+            for( ui = ( AETID_OFFSET * ( m_uiBoardID - 1 ) ) ; ui < (unsigned int) ( AETID_OFFSET * m_uiBoardID ); ++ui ) {
                 m_QueAETID.Push( ui );
             }
 
@@ -494,6 +571,95 @@ public:
         return;
 
     }
+
+    /**
+     * @brief     ClearABTID
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-02-01 11:51:29
+     * @warning
+     */
+    static void ClearABTID()
+    {
+        unsigned int ui;
+
+        m_QueABTID.Reset();
+
+        for( ui = 1; ui <= MAX_ABTID ; ++ui ) {
+            m_QueABTID.Push( ui );
+
+        }
+
+        // m_QueABTID.Print();
+
+        return;
+
+    }
+
+    /**
+     * @brief     PrintAETID
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-01-24 10:07:53
+     * @warning
+     */
+    static void PrintAETID()
+    {
+
+        m_QueAETID.Print();
+
+    }
+
+    /**
+     * @brief     PrintABTID
+     * @return    void
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-02-01 13:16:43
+     * @warning
+     */
+    static void PrintABTID()
+    {
+
+        m_QueABTID.Print();
+
+    }
+
+    /**
+     * @brief     SizeOfAETID
+     * @return    unsigned int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-01-24 10:46:53
+     * @warning
+     */
+    static int SizeOfAETID()
+    {
+        return m_QueAETID.Count();
+
+    }
+
+    /**
+     * @brief     SizeOfABTID
+     * @return    int
+     * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+     * @author    조철희 (churlhee.jo@lignex1.com)
+     * @version   1.0.0
+     * @date      2024-02-01 13:17:14
+     * @warning
+     */
+    static int SizeOfABTID()
+    {
+        return m_QueABTID.Count();
+
+    }
+
 
     /**
      * @brief     모든 노드 총 개수를 리턴한다.
@@ -518,7 +684,7 @@ public:
      * @warning
      */
     inline int GetTotalOfAET() {
-        return m_iTotalOfAET;
+        return m_QueAETID.RCount(); /* m_iTotalOfAET;*/
     }
 
     /**
@@ -531,7 +697,7 @@ public:
      * @warning
      */
     inline int GetTotalOfABT() {
-        return m_iTotalOfABT;
+        return m_QueABTID.RCount(); /* m_iTotalOfABT;*/
     }
 
 	inline unsigned int GetAETID() { return m_Idx.uiAETID; }

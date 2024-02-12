@@ -74,6 +74,13 @@ CNewSigAnal::CNewSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pS
     // 클래스 관련 초기화
     Init();
 
+#ifdef __VECTORCAST__
+    //LoadCEDLibrary();
+    //LoadEOBLibrary();
+
+    SaveDebug( NULL, 0 );
+
+#endif
 
 }
 
@@ -118,6 +125,9 @@ void CNewSigAnal::AllocMemory()
     unsigned int uiCoMaxLOB = g_pTheSysConfig->GetMaxCountOfLOB();
 	m_theMakeAET = new CNMakeAET(this, uiCoMaxLOB, GetThreadName() );
 
+    size_t szSize = CCommonUtils::CheckMultiplyOverflow( sizeof( _PDW ), (int) m_uiMaxPDW );
+    m_theLOB2PDWData.pstPDW = ( _PDW * ) malloc( szSize );
+
 }
 
 /**
@@ -140,10 +150,11 @@ CNewSigAnal::~CNewSigAnal()
     _SAFE_DELETE( m_theAnalPRI )
     _SAFE_DELETE( m_theMakeAET )
 
-	//_SAFE_DELETE( m_pTheIntraSigAnal )
+    free( m_theLOB2PDWData.pstPDW );
 
 }
 
+#ifdef _USRDLL
 /**
  * @brief     LoadCEDLibrary
  * @return    void
@@ -172,6 +183,8 @@ bool CNewSigAnal::LoadEOBLibrary()
     return m_pIdentifyAlg->LoadEOBLibrary();
 }
 
+#endif
+
 //////////////////////////////////////////////////////////////////////////
 /*! \brief    CNewSigAnal::Init
     \author   조철희
@@ -196,11 +209,12 @@ void CNewSigAnal::Init( STR_PDWDATA *pPDWData )
         //MakeDebugDirectory( &pPDWData->x, false );
 
         memcpy( & m_stSavePDWData.x, & pPDWData->x, sizeof( UNION_HEADER) );
+        memcpy( & m_theLOB2PDWData.x, & pPDWData->x, sizeof( UNION_HEADER ) );
 
         // PDW 데이터로부터 정보를 신규 분석을 하기 위해 저장한다.
         m_uiColPDW = pPDWData->GetTotalPDW();
 
-		SetPDWID(pPDWData->GetPDWID());
+        SetPDWID( pPDWData->GetPDWID() );
         SetColTime( (time_t) pPDWData->GetColTime());
         SetStorePDW( pPDWData->GetStorePDW() );
         SetBandWidth( pPDWData->GetBandWidth () );
@@ -270,15 +284,31 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
 
     NextStep();
 
+#if 0
+    //! #시험_01 식별 다운로드 충돌
+    while( true ) {
+        CheckKnownByAnalysis();
+        Log( enNormal, "탐지 분석에서 LoadRadara 모드 수행...................................." );
+
+    }
+#endif
+
     // 신호 분석 관련 초기화.
     Init( pPDWData );
+
+#if 0
+    CCommonUtils::Disp_FinePDW( pPDWData );
+#endif
 
     sprintf( buffer, "================ 탐지 분석 시작[%dth, PDWID: %d, 수집 개수:%d/%d]" , GetStep(), GetPDWID(), m_uiCoPDW, m_uiColPDW );
     CCommonUtils::WallMakePrint( buffer, '=' );
     Log( enNormal, "%s", buffer );
 
     if( m_uiCoPDW <= RPC /* || m_uiCoPdw > MAX_PDW */ ) {
+#ifndef __VECTORCAST__
         Log( enNormal, "PDW(%d/%d) 데이터 개수가 부족합니다 !!" , m_uiCoPDW, RPC );
+#endif
+
     }
     else {
         // 수집한 PDW 파일 저장하기...
@@ -292,12 +322,18 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
             //printf(" \n [W] [%d] 싸이트에서 수집한 과제[%s]의 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , m_pPDWData->iCollectorID, m_pPDWData->aucTaskID, m_szPDWFilename );
             Log( enError, "Invalid of PDW Data at the [%s:%d]Site !! Check the file[%s] ..." , m_pPDWData->GetTaskID(), m_pPDWData->GetCollectorID(), m_pMidasBlue->GetRawDataFilename() );
 #elif defined(_POCKETSONATA_) || defined(_712_)
+
+#ifndef __VECTORCAST__
 			unsigned int uiBoardID = m_pPDWData->x.ps.uiBoardID;
-            //printf(" \n [W] [%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요.." , uiBoardID, m_pMidasBlue->GetRawDataFilename() );
+
             Log( enError, "[%d] 보드에서 수집한 PDW 파일[%s]의 TOA 가 어긋났습니다. 확인해보세요..", uiBoardID, m_pMidasBlue->GetRawDataFilename());
+#endif
+
 #else
             Log( enError, "보드에서 수집한 PDW 파일의 TOA 가 어긋났습니다. 확인해보세요.." );
+
 #endif
+
         }
         else {
             // 그룹화가 생성되지 않으면 분석을 수행하지 않는다.
@@ -344,7 +380,7 @@ void CNewSigAnal::StartOfSignalAnalysis( bool bDBInsert )
 
 	m_theGroup->MakeGrIndex();
 
-	SaveGroupPDWFile(m_pGrPdwIndex, m_pPDWData, GetPLOBIndex(), bDBInsert );
+	//SaveGroupPDWFile(m_pGrPdwIndex, m_pPDWData, GetPLOBIndex(), bDBInsert );
 
 	// 위협 라이브러리 기반 펄스열 추출하기 위한 라이브러리 검색
 	CheckKnownByAnalysis();
@@ -442,43 +478,43 @@ void CNewSigAnal::InitAllVar()
  * @date      2009-11-16 11:33:14
  * @warning
  */
-enum FREQ_BAND CNewSigAnal::GetBand( int freq )
-{
-    enum FREQ_BAND enBand;
-
-#if defined(_POCKETSONATA_) || defined(_712_)
-
-    if( freq >= 2000 && freq < 6000 ) {
-        enBand = BAND1;
-    }
-    else if( freq >= 6000 && freq < 10000 ) {
-        enBand = BAND2;
-    }
-    else if( freq >= 10000 && freq < 14000 ) {
-        enBand = BAND3;
-    }
-    else if( freq >= 14000 && freq <= 19000 ) {
-        enBand = BAND4;
-    }
-    else {
-        enBand = BAND0;
-    }
-#else
-    if( freq >= 500 && freq < 2000 ) {
-        enBand = BAND1;
-}
-    else if( freq >= 2000 && freq < 6000 ) {
-        enBand = BAND2;
-    }
-    else {
-        enBand = BAND3;
-    }
-
-#endif
-
-    return enBand;
-
-}
+// enum FREQ_BAND CNewSigAnal::GetBand( int freq )
+// {
+//     enum FREQ_BAND enBand;
+//
+// #if defined(_POCKETSONATA_) || defined(_712_)
+//
+//     if( freq >= 2000 && freq < 6000 ) {
+//         enBand = BAND1;
+//     }
+//     else if( freq >= 6000 && freq < 10000 ) {
+//         enBand = BAND2;
+//     }
+//     else if( freq >= 10000 && freq < 14000 ) {
+//         enBand = BAND3;
+//     }
+//     else if( freq >= 14000 && freq <= 19000 ) {
+//         enBand = BAND4;
+//     }
+//     else {
+//         enBand = BAND0;
+//     }
+// #else
+//     if( freq >= 500 && freq < 2000 ) {
+//         enBand = BAND1;
+// }
+//     else if( freq >= 2000 && freq < 6000 ) {
+//         enBand = BAND2;
+//     }
+//     else {
+//         enBand = BAND3;
+//     }
+//
+// #endif
+//
+//     return enBand;
+//
+// }
 
 /**
  * @brief     하나의 그룹화 내에서 위협 라이브러리 기반 신호 분석 플레그를 반환한다.
@@ -493,13 +529,18 @@ bool CNewSigAnal::CheckKnownByAnalysis()
 {
     UINT i;
     UINT uiFreqMax, uiFreqMin;
-    bool bRet;
+    bool bRet=false;
+
+    m_VecMatchRadarMode.clear();
+
+    //! #시험_01 식별 다운로드 충돌
+#if 0
+    unsigned int uiX;
+    m_pIdentifyAlg->LoadRadarModeData( & uiX );
+
+#else
 
     if( m_theGroup->GetPulseStat() == STAT_CW ) {
-        m_VecMatchRadarMode.clear();
-
-        bRet = false;
-
     }
     else {
         PDWINDEX *pPdwIndex;
@@ -508,15 +549,17 @@ bool CNewSigAnal::CheckKnownByAnalysis()
         uiFreqMin = UINT32_MAX;
         pPdwIndex = m_pGrPdwIndex->pIndex;
         for( i = 0 ; i < m_pGrPdwIndex->uiCount ; i++ ) {
-            uiFreqMax = max( FREQ[*pPdwIndex], uiFreqMax );
+			uiFreqMax = max( FREQ[*pPdwIndex], uiFreqMax );
             uiFreqMin = min( FREQ[*pPdwIndex], uiFreqMin );
 
             ++pPdwIndex;
 
         }
-
         bRet = m_pIdentifyAlg->CheckThereFreqRange( & m_VecMatchRadarMode, I_FRQMhzCNV( 0, uiFreqMin ), I_FRQMhzCNV( 0, uiFreqMax ) );
+
     }
+
+#endif
 
     return bRet;
 }
@@ -556,8 +599,44 @@ void CNewSigAnal::SaveDebug( const char *pSourcefile, int iLines )
 
     Log( enError, "신호 탐지에서 소스[%s], 라인[%d]에 예기치 않은 에러가 발생했습니다 !", pSourcefile, iLines );
 
-    InsertRAWData( m_pPDWData, 0, -1, false );
+    // InsertRAWData( m_pPDWData, 0, -1, false );
     //m_pMidasBlue->SaveRawDataFile( ( const char * ) szRawDataPathname, E_EL_SCDT_PDW, pPDWData->pstPDW, &pPDWData->x, pPDWData->GetTotalPDW() );
 
 }
 
+/**
+ * @brief     GetLOB2PDWData
+ * @param     unsigned int uiLOBIndex
+ * @return    STR_PDWDATA *
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-02-05 17:53:55
+ * @warning
+ */
+STR_PDWDATA *CNewSigAnal::GetLOB2PDWData( unsigned int uiLOBIndex )
+{
+    unsigned int i;
+    PDWINDEX *pIdxPDW;
+    STR_PDWINDEX *pPDWIndex;
+    _PDW *pPDWData;
+
+    pPDWIndex = m_theMakeAET->GetLOB2PDWIndex( uiLOBIndex );
+
+    if( pPDWIndex != NULL ) {
+        m_theLOB2PDWData.SetTotalPDW( pPDWIndex->uiCount );
+
+        pPDWData = m_theLOB2PDWData.pstPDW;
+        pIdxPDW = pPDWIndex->pIndex;
+        for( i = 0; i < pPDWIndex->uiCount; ++i ) {
+            memcpy( pPDWData, & m_pPDWData->pstPDW[*pIdxPDW], sizeof( _PDW ) );
+            ++ pPDWData;
+            ++ pIdxPDW;
+        }
+    }
+    else {
+        m_theLOB2PDWData.SetTotalPDW( 0 );
+    }
+
+    return & m_theLOB2PDWData;
+}

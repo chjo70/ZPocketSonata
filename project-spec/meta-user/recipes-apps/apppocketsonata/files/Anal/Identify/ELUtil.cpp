@@ -367,6 +367,28 @@ UINT ExpectedMissingPulses( int ext_type, _TOA priMean1, STR_MINMAX_TOA *pstPRI,
 
     }
 
-
     return ret;
+}
+
+/**
+ * @brief     ExpectedMissingPulses
+ * @param     int ext_type
+ * @param     _TOA priMean1
+ * @param     STR_LOWHIGH_TOA * pstPRI
+ * @param     _TOA tThreshold
+ * @return    UINT
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-10 09:05:10
+ * @warning
+ */
+UINT ExpectedMissingPulses( int ext_type, _TOA priMean1, STR_LOWHIGH_TOA *pstPRI, _TOA tThreshold )
+{
+    STR_MINMAX_TOA stMinMaxTOA;
+
+    stMinMaxTOA.tMin = pstPRI->tLow;
+    stMinMaxTOA.tMax = pstPRI->tHigh;
+    stMinMaxTOA.tMean = ( pstPRI->tLow + pstPRI->tHigh ) / 2;
+    return ExpectedMissingPulses( ext_type, priMean1, & stMinMaxTOA, tThreshold );
 }

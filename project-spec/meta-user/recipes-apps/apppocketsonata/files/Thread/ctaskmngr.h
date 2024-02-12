@@ -50,6 +50,8 @@ private:
 
     CRawFile m_theRawFile;
 
+    time_t m_tiOPStart;
+
 #ifdef _SQLITE_
     char m_szSQLString[MAX_SQL_SIZE];
     wchar_t m_szSQLString16[MAX_SQL_SIZE];
@@ -103,15 +105,17 @@ private:
 
 public:
 #ifdef _MSSQL_
-    CTaskMngr( int iThreadPriority, const char *pClassName=NULL, bool bArrayLanData=false );
+    CTaskMngr( int iThreadPriority, const char *pClassName=NULL, bool bArrayLanData=false, time_t tiNow=0 );
 #else
-    CTaskMngr( int iThreadPriority, const char *pClassName=NULL, bool bArrayLanData=false, const char *pFileName=NULL );
+    CTaskMngr( int iThreadPriority, const char *pClassName=NULL, bool bArrayLanData=false, const char *pFileName=NULL, time_t tiNow = 0 );
 #endif
 
-    virtual ~CTaskMngr(void);
+    ~CTaskMngr(void);
     virtual void _routine();
     virtual const char *GetThreadName() { return m_szThreadName; }
 
+    time_t OPStartTime() const { return m_tiOPStart; }
+    void OPStartTime( time_t val ) { m_tiOPStart = val; }
 public:
     //void Run( key_t key=IPC_PRIVATE );
     void Run();

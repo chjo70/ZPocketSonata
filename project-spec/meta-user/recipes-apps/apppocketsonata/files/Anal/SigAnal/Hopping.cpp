@@ -30,16 +30,35 @@
  * @date      2005-07-28 13:18:51
  * @warning
  */
-CHopping::CHopping( void *pParent, unsigned int uiCoMaxPdw )
+CHopping::CHopping( void *pParent, ENUM_ANAL_TYPE enAnalType, unsigned int uiCoMaxPdw, const char *pThreadName ) : CLogName( pThreadName )
 {
-    //bool bRet;
     int iValue;
 
-    m_uiMaxPdw = min( uiCoMaxPdw, ( unsigned int ) MAX_PDW );
+    //m_uiMaxPdw = min( uiCoMaxPdw, ( unsigned int ) MAX_PDW );
+    m_uiMaxPdw = min( MAX_PDW, uiCoMaxPdw );
 
-    m_pNewSigAnal = ( CNewSigAnal * ) pParent;
+    m_pTheNewSigAnal = NULL;
+    m_pTheKnownSigAnal = NULL;
+    m_pTheScanSigAnal = NULL;
 
-    INIT_ANAL_VAR_( m_pNewSigAnal )
+#ifdef _DETECT_
+    m_pTheNewSigAnal = ( CNewSigAnal * ) pParent;
+    INIT_ANAL_VAR_( m_pTheNewSigAnal )
+
+#else
+    if( enAnalType == enDET_ANAL ) {
+        m_pTheNewSigAnal = ( CNewSigAnal * ) pParent;
+        INIT_ANAL_VAR_( m_pTheNewSigAnal )
+    }
+    else if( enAnalType == enTRK_ANAL ) {
+        m_pTheKnownSigAnal = ( CKnownSigAnal * ) pParent;
+        INIT_ANAL_VAR_( m_pTheKnownSigAnal )
+    }
+    else {
+        m_pTheScanSigAnal = ( CScanSigAnal * ) pParent;
+        INIT_ANAL_VAR_( m_pTheScanSigAnal )
+    }
+#endif
 
     float *pfValue = g_pTheSysConfig->GetMargin();
     //m_uiFixedFreqMargin = (unsigned int) FFRQMhzCNV( 0, ( unsigned int ) ( pfValue[0] * ( float ) 1000000. ) );
@@ -47,52 +66,68 @@ CHopping::CHopping( void *pParent, unsigned int uiCoMaxPdw )
     m_uiStableMargin = (unsigned int) ITOAusCNV( pfValue[1] );
 
     m_ptDataX = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
+#ifndef __VECTORCAST__
     if( m_ptDataX == NULL ) {
         TRACE( "[W] m_ptDataX's memory allocation error !" );
         WhereIs;
     }
+#endif
 
     m_piDiffY = ( int * ) malloc( sizeof( int ) * m_uiMaxPdw );
+#ifndef __VECTORCAST__
     if( m_piDiffY == NULL ) {
         TRACE( "[W] m_piDataY's memory allocation error !" );
         WhereIs;
     }
+#endif
 
     m_puiDataY = ( unsigned int * ) malloc( sizeof( int ) * m_uiMaxPdw );
+#ifndef __VECTORCAST__
     if( m_puiDataY == NULL ) {
         TRACE( "[W] m_puiDataY's memory allocation error !" );
         WhereIs;
     }
+#endif
 
     m_pCanPeak = ( int * ) malloc( sizeof( int ) * m_uiMaxPdw );
+#ifndef __VECTORCAST__
     if( m_pCanPeak == NULL ) {
         TRACE( "[W] m_pCanPeak's memory allocation error !" );
         WhereIs;
     }
+#endif
 
     m_piSampleData = ( int * ) malloc( sizeof( int ) * m_uiMaxPdw );
+#ifndef __VECTORCAST__
     if( m_piSampleData == NULL ) {
         TRACE( "[W] m_pSampleData's memory allocation error !" );
         WhereIs;
     }
+#endif
 
     m_puiSampleDataY = ( unsigned int * ) malloc( sizeof( int ) * m_uiMaxPdw );
+#ifndef __VECTORCAST__
     if( m_puiSampleDataY == NULL ) {
         TRACE( "[W] m_pSampleDataY's memory allocation error !" );
         WhereIs;
     }
+#endif
 
     m_pSampleToa = ( _TOA * ) malloc( sizeof( _TOA ) * m_uiMaxPdw );
+#ifndef __VECTORCAST__
     if( m_pSampleToa == NULL ) {
         TRACE( "[W] m_pSampleToa's memory allocation error !" );
         WhereIs;
     }
+#endif
 
     m_pAcf = ( float * ) malloc( sizeof( float ) * m_uiMaxPdw );
+#ifndef __VECTORCAST__
     if( m_pAcf == NULL ) {
         TRACE( "[W] m_pAcf's memory allocation error !" );
         WhereIs;
     }
+#endif
 
     iValue = NEW_COLLECT_PDW / _spTwo;
     m_vecHopping.reserve( (size_t) iValue );
@@ -167,6 +202,15 @@ CHopping::CHopping( void *pParent, unsigned int uiCoMaxPdw )
         }
     }
 
+
+#endif
+
+
+#ifdef __VECTORCAST__
+    SHoppingDwell stHopping;
+
+    stHopping.uiCoSteps = MAX_STAGGER_LEVEL_POSITION;
+    RemoveRepeatableDwell( & stHopping );
 
 #endif
 
@@ -437,9 +481,19 @@ void CHopping::HoppingAnalysis( STR_EMITTER *pEmitter )
         }
         else {
             CalcHoppingDwellStepByNonPeriod( pEmitter );
+
             CalcHoppingStep();
 
         }
+
+        //! #디버깅 : 호핑 레벨이 6이 아닐때 확인하기 위함.
+// #ifdef _DEBUG
+//         if( m_uiHoppingLevel != 6 ) {
+//             SamplingFREQProcess( pEmitter, enVALUE );
+//             DifferentialY( pEmitter );
+//             CalcHoppingDwellStepByNonPeriod( pEmitter );
+//         }
+// #endif
 
         MakeHoppingEmitter( pEmitter );
     }
@@ -705,6 +759,10 @@ void CHopping::CalcSamplingTime( STR_EMITTER *pEmitter )
 {
 
     m_SamplingTime = ( UINT ) ( pEmitter->stPRI.tMin + pEmitter->stPRI.tMax ) / 2;
+#ifdef _MSV_VER
+    TRACE( "\n m_SamplingTime[%d]\n", m_SamplingTime );
+
+#endif
 
     return;
 }
@@ -791,7 +849,6 @@ void CHopping::SamplingDTOAProcess( STR_EMITTER *pEmitter, ENUM_SAMPLING_OPTION 
     pstPRI = & pEmitter->stPRI;
 
     m_uiStartSample = UINT_MAX;
-    m_uiCoSample = 0;
 
     for( i = 0; i < m_uiCoData; ++i ) {
         /*! \debug  하모닉 고료해서 최소값은 0 부터 찾는 것으로 합니다.
@@ -866,10 +923,6 @@ void CHopping::SamplingFREQProcess( STR_EMITTER *pEmitter, ENUM_SAMPLING_OPTION 
 
     unsigned int uisx=0, uisy=0, uisyy=0;
 
-    //_TOA /**psx*/ *pSampleToa;
-    //int /* *psy,*/ *piSampleData;
-    //unsigned int /**psyy*/ *puiSampleDataY;
-
     _TOA dShgh;
 
     UINT index=0;
@@ -881,9 +934,6 @@ void CHopping::SamplingFREQProcess( STR_EMITTER *pEmitter, ENUM_SAMPLING_OPTION 
 
     m_uiCoSample = 0;
     m_uiStartSample = 0;
-    //psx = m_pSampleToa;
-    //psy = m_piSampleData;
-    //psyy = m_puiSampleDataY;
 
     _EQUALS3( sumY, maxY, 0 )
 
@@ -1315,45 +1365,45 @@ bool CHopping::IsRepeatable( SHoppingDwell *pstHopping, unsigned int uiStart, un
  * @date      2008-10-30 16:05:13
  * @warning
  */
-void CHopping::CalcHoppingStepByNonPeriod()
-{
-    unsigned int i, j;
-
-    bool bMatch;
-
-    PDWINDEX pPdwIndex;
-    unsigned int *puiSteps;
-
-    m_uiHoppingLevel = 0;
-
-    memset( m_uiSteps, 0, sizeof( m_uiSteps ) );
-
-    pPdwIndex = 0;
-    for( i = 0; i < m_uiCoData; ++i ) {
-        unsigned int uiValue;
-
-        uiValue = m_puiDataY[pPdwIndex++];
-
-        bMatch = false;
-        puiSteps = & m_uiSteps[0];
-        for( j = 0; j < m_uiHoppingLevel; ++j ) {
-            if( true == TCompMeanDiff<UINT>( uiValue, *puiSteps++, m_uiMargin ) ) {
-            //if( 0 != TCheckHarmonic<UINT>( uiValue, *puiSteps++, m_uiMargin ) ) {
-                bMatch = true;
-                break;
-            }
-        }
-        if( bMatch == false ) {
-            m_uiSteps[m_uiHoppingLevel] = uiValue;
-            ++ m_uiHoppingLevel;
-            if( ( UINT ) m_uiHoppingLevel > MAX_FREQ_PRI_STEP ) {
-                Log( enError, "호핑 레벨 값[%d]이 기본 레벨 크기[%d]를 초과했습니다." , m_uiHoppingLevel, MAX_FREQ_PRI_STEP );
-                m_uiHoppingLevel = 0;
-            }
-        }
-    }
-
-}
+// void CHopping::CalcHoppingStepByNonPeriod()
+// {
+//     unsigned int i, j;
+//
+//     bool bMatch;
+//
+//     PDWINDEX pPdwIndex;
+//     unsigned int *puiSteps;
+//
+//     m_uiHoppingLevel = 0;
+//
+//     memset( m_uiSteps, 0, sizeof( m_uiSteps ) );
+//
+//     pPdwIndex = 0;
+//     for( i = 0; i < m_uiCoData; ++i ) {
+//         unsigned int uiValue;
+//
+//         uiValue = m_puiDataY[pPdwIndex++];
+//
+//         bMatch = false;
+//         puiSteps = & m_uiSteps[0];
+//         for( j = 0; j < m_uiHoppingLevel; ++j ) {
+//             if( true == TCompMeanDiff<UINT>( uiValue, *puiSteps++, m_uiMargin ) ) {
+//             //if( 0 != TCheckHarmonic<UINT>( uiValue, *puiSteps++, m_uiMargin ) ) {
+//                 bMatch = true;
+//                 break;
+//             }
+//         }
+//         if( bMatch == false ) {
+//             m_uiSteps[m_uiHoppingLevel] = uiValue;
+//             ++ m_uiHoppingLevel;
+//             if( ( UINT ) m_uiHoppingLevel > MAX_FREQ_PRI_STEP ) {
+//                 Log( enError, "호핑 레벨 값[%d]이 기본 레벨 크기[%d]를 초과했습니다." , m_uiHoppingLevel, MAX_FREQ_PRI_STEP );
+//                 m_uiHoppingLevel = 0;
+//             }
+//         }
+//     }
+//
+// }
 
 /**
  * @brief     DifferentialFreq

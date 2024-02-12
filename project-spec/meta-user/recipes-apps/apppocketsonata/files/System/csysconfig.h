@@ -131,6 +131,11 @@ struct STR_SYSCONFIG {
     int iTFFSBoot;
 
     /**
+     * @brief Local 디버그 설정
+     */
+    int iDevelop;
+
+    /**
      * @brief 장비 모드 상태
      */
     //ENUM_MODE enMode;
@@ -207,9 +212,10 @@ public:
 private:
     void InitVar();
 
-
     void SetNetworkIP();
     bool GetIPAddress( char *pIPAddress, char *pNetworkName );
+
+    ENUM_BoardID CheckBoardID();
 
 public:
     void LoadINI();
@@ -334,15 +340,15 @@ public:
         m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
     };
 
-    unsigned int GetConcalMinPeriod() { return m_strConfig.uiMinConicalPeriod; }
-    void SetConcalMinPeriod( unsigned int uiValue )
+    unsigned int GetConicalMinPeriod() { return m_strConfig.uiMinConicalPeriod; }
+    void SetConicalMinPeriod( unsigned int uiValue )
     {
         m_strConfig.uiMinConicalPeriod = uiValue;
         m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
     };
 
-    unsigned int GetConcalMaxPeriod() { return m_strConfig.uiMaxConicalPeriod; }
-    void SetConcalMaxPeriod( unsigned int uiValue )
+    unsigned int GetConicalMaxPeriod() { return m_strConfig.uiMaxConicalPeriod; }
+    void SetConicalMaxPeriod( unsigned int uiValue )
     {
         m_strConfig.uiMaxConicalPeriod = uiValue;
         m_pSharedMemory->copyToSharedMemroy( &m_strConfig );
@@ -385,13 +391,13 @@ public:
     };
 
     char *GetRecentConnectionOfNetwork() { return & m_strConfig.szRecentServer[0]; };
-    void SetPrimeServerOfNetwork( const char *pPrimeServer, bool bINI=false ) {
-        strcpy( m_strConfig.szRecentServer, pPrimeServer );
+    void SetRecentConnectionOfNetwork( const char *pServer, bool bINI=false ) {
+        strcpy( m_strConfig.szRecentServer, pServer );
         if( bINI == true ) {
 #ifdef _MSC_VER
-            WritePrivateProfileString( "NETWORK" , "PRIME_SERVER", pPrimeServer, m_szIniFileName );
+            WritePrivateProfileString( "NETWORK" , "PRIME_SERVER", pServer, m_szIniFileName );
 #else
-            m_theMinIni.put( "NETWORK" , "PRIME_SERVER" , pPrimeServer );
+            m_theMinIni.put( "NETWORK" , "PRIME_SERVER" , pServer );
 #endif
         }
     };
@@ -451,6 +457,12 @@ public:
     void SetTFFSBoot( const int iValue )
     {
         m_strConfig.iTFFSBoot = iValue;
+    };
+
+    int GetDevelop() { return m_strConfig.iDevelop; };
+    void SetDevelop( const int iValue )
+    {
+        m_strConfig.iDevelop = iValue;
     };
 
     //ENUM_MODE GetMode() { return m_strConfig.enMode; };

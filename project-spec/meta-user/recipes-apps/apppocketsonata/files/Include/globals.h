@@ -65,7 +65,7 @@ CScanAnalysis *g_pTheScanAnalysis;
 CSingleClient *g_pTheCCUSocket;
 CSingleClient *g_pTheCCUDebugSocket;
 
-CClockTimer *g_pTheClockTimer;
+//CClockTimer *g_pTheClockTimer;
 
 #ifdef _SIM_PDW_
 STR_RADAR_PDW g_stRadarPDW;
@@ -220,13 +220,16 @@ public:
 
 #ifdef __VXWORKS__
 #define Log( A, ... )                   if( IsLogAnalType(A) ) g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, GetThreadName(), ##__VA_ARGS__ )
+#define ElseLog( A, B, C, D )           if( ! IsLogAnalType(A) ) { printf( B, C, D ); }
 
 #else
 
 #ifdef _LOG_ANALTYPE_
 #define Log( A, ... )                   if( IsLogAnalType(A) ) g_pTheLog->LogMsg( A, __FUNCTION__, __FILE__, __LINE__, GetThreadName(), ##__VA_ARGS__ )
+#define ElseLog( A, ... )               if( ! IsLogAnalType(A) ) { TRACE( ##__VA_ARGS__ ); }
 #else
 #define Log( A, ... )                   printf( ##__VA_ARGS__ )
+#define ElseLog( A, ... )               if( ! IsLogAnalType(A) ) printf( ##__VA_ARGS__ )
 
 #endif
 

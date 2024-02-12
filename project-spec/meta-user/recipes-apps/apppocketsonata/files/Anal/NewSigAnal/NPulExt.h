@@ -36,7 +36,6 @@ public:
 protected:
 	CNewSigAnal *m_pNewSigAnal;			///< 최상위 분석 클래스의 포인터
 
-	//ENUM_BANDWIDTH m_enBandWidth;
 
 public:
     CNPulExt( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadName=NULL );
@@ -49,7 +48,7 @@ public:
 	inline void CleanPulseTrains() { CPulExt::CleanPulseTrains(); }
 	inline void SetRefStartSeg() { CPulExt::SetRefStartSeg(); }
 	inline void GetStartEndPriLevel() { CPulExt::GetStartEndPriLevel(); }
-	inline void MarkStablePulseTrain() { CPulExt::MarkStablePulseTrain(); }
+	//inline void MarkStablePulseTrain() { CPulExt::MarkStablePulseTrain(); }
 	inline void MakeCWPulseTrain() { CPulExt::MakeCWPulseTrain(); }
 
 	void Init();
@@ -57,7 +56,7 @@ public:
 	STR_DTOA_HISTOGRAM *GetDtoaHist();
 	void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange );
 	void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count );
-	void MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, PULSE_MARK enMarkType);
+    void MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, PULSE_MARK enMarkType );
 
 	STR_PDWINDEX *GetFrqAoaGroupedPdwIndex();
 	UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold );

@@ -28,10 +28,10 @@
 enum ENUM_COLLECT_MODE {
     enUnused=0,
 
-    enCollecting,               // 채널의 기능은 체크하여 해당 펄스를 수집합니다.
+    enCollecting,               // 펄스 수집하는 상태 입니다.
     enCompleteCollection,
 
-    enUpdateCollecting,         // 채널의 기능은 유효하지만 펄스는 수집하지 않는다.
+    enUpdateCollecting,         // 수집 완료가 되어 펄스는 수집하지 않은 상태 이다. (추적 채널)
 
     enCloseCollection,
     enAnalysing,
@@ -111,8 +111,8 @@ typedef struct stSTR_WINDOWCELL {
     //unsigned int uiMode;
 
     // 채널 번호
-    // 탐지 채널은 0번,
-    unsigned int uiCh;
+    // 탐지 채널은 0번, 추적 채널은 1번, 스캔 채널은...
+    unsigned int uiGlobalCh;
 
     /**
      * @brief 수집 완료 상태를 나타낸다.
@@ -160,6 +160,11 @@ typedef struct stSTR_WINDOWCELL {
     //unsigned int uiCollectTimems;
 
     /**
+     * @brief 방사체 번호
+     */
+    unsigned int uiAETID;
+
+    /**
      * @brief 빔 번호
      */
     unsigned int uiABTID;
@@ -172,7 +177,7 @@ typedef struct stSTR_WINDOWCELL {
     /**
      * @brief 누적 시간 [ms]
      */
-    unsigned int uiAccumulatedTime;
+    unsigned int uiAccumulatedTimems;
 
     /**
      * @brief 누적 사용 채널 횟수
@@ -191,19 +196,20 @@ typedef struct stSTR_WINDOWCELL {
     ENUM_ROBUST_ANAL enRobustAnal;          ///< 주파수 및 PRI 정밀 분석 플레그
 
     void Init( unsigned int uiValueCh ) {
-        uiCh = uiValueCh;
+        uiGlobalCh = uiValueCh;
 
         bUse = false;
         enCollectMode = enUnused;
 
         enRobustAnal = enNO_ROBUST_ANALYSIS;
 
+        uiAETID = 0;
         uiABTID = 0;
 
         uiColPDW = 0;
         uiAccumulatedCoPDW = 0;
 
-        uiAccumulatedTime = 0;
+        uiAccumulatedTimems = 0;
 
         uiAccumulatedCoUsed = 0;
 
@@ -214,7 +220,7 @@ typedef struct stSTR_WINDOWCELL {
     }
 
     void SetChannel( unsigned int uiValueCh ) {
-        uiCh = uiValueCh;
+        uiGlobalCh = uiValueCh;
     }
 
     void SetCollectMode( ENUM_COLLECT_MODE enSetCollectMode ) {
@@ -255,6 +261,7 @@ typedef struct stSTR_WINDOWCELL_INFO {
     * @brief 빔 번호
     */
     unsigned int uiABTID;
+    unsigned int uiAETID;
 
     void Init( unsigned int uiValueCh )
     {
@@ -263,6 +270,7 @@ typedef struct stSTR_WINDOWCELL_INFO {
         bUse = false;
         //enCollectMode = enUnused;
 
+        uiAETID = 0;
         uiABTID = 0;
 
     }

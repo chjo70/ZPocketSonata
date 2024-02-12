@@ -78,15 +78,15 @@ private:
 
 public:
     CKnownSigAnal(unsigned int uiCoMaxPdw, bool bDBThread, const char *pFileName = NULL, const char *pThreadName=NULL );
-    virtual ~CKnownSigAnal();
+    ~CKnownSigAnal();
 
     inline void GetCollectTime(struct timespec *pTimeSpec) {
         CCommonUtils::GetCollectTime(pTimeSpec, GetColTime(), GetColTimeMs());
     }
 
-    inline void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
-        return CSigAnal::SaveEmitterPDWFile(pEmitter, m_pstPDWData->stPDW, iPLOBID, bSaveFile);
-    }
+//     inline void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile) {
+//         return CSigAnal::SaveEmitterPDWFile(pEmitter, m_pstPDWData->stPDW, iPLOBID, bSaveFile, m_pTrkAet->uiAETID, m_pTrkAet->uiABTID );
+//     }
 
     void InitOfKnownSigAnal();
 
@@ -148,7 +148,7 @@ public:
     inline unsigned int GetAnalSeg() { return m_thePulExt->m_uiAnalSeg; }
     inline UINT MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount ) { return m_thePulExt->MedianFreq( pMinMax, pPdwIndex, uiCount ); }
     inline bool CheckStablePT( _TOA *pnHarmonic, STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2, int iMaxMiss, bool bForceMerge ) { return m_thePulExt->CheckStablePT( pnHarmonic, pSeg1, pSeg2, iMaxMiss, bForceMerge ); }
-    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, PULSE_MARK enMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex, uiCount, (UINT) enMarkType); }
+    inline void MarkToPDWIndex( PDWINDEX *pPDWIndex, UINT uiCount, PULSE_MARK enMarkType ) { m_thePulExt->MarkToPDWIndex( pPDWIndex, uiCount, enMarkType); }
 	inline UINT CheckHarmonic(_TOA priMean1, _TOA priMean2, _TOA uiThreshold ) { return m_theAnalPRI->CheckHarmonic( priMean1, priMean2, uiThreshold ); }
     inline bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return m_thePulExt->CheckPriInterval( pSeg1, pSeg2 ); }
     inline unsigned int ExtractStagger( _TOA framePri, STR_EMITTER *pEmitter ) { return m_thePulExt->ExtractStagger( framePri, pEmitter ); }
@@ -158,7 +158,7 @@ public:
     inline STR_DTOA_HISTOGRAM *GetDtoaHist() { return m_theAnalPRI->GetDtoaHist(); }
     inline void MakeDtoaHistogram( PDWINDEX *pPdwIndex, unsigned int uiCount, STR_MINMAX_TOA *pRange ) { m_theAnalPRI->MakeDtoaHistogram( pPdwIndex, uiCount, pRange ); }
     inline void CalPRIRange( STR_PULSE_TRAIN_SEG *pSeg, _TOA priMean, UINT dtoa_count ) { m_theAnalPRI->CalPRIRange( pSeg, priMean, dtoa_count ); }
-    inline void DeleteAllSeg( STR_EMITTER *pEmitter ) { m_thePulExt->DeleteAllSeg( pEmitter ); }
+    //inline void DeleteAllSeg( STR_EMITTER *pEmitter ) { m_thePulExt->DeleteAllSeg( pEmitter ); }
     inline void ExtractRefStable() { m_theAnalPRI->ExtractRefStable(); }
     inline bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) { return m_theAnalPRI->ExtractDwellRefPT( pDwlSewg, pExtRange ); }
     //inline UINT ExtractFramePri(STR_PDWINDEX *pPdwIndex, _TOA framePri) { return m_theAnalPRI->ExtractFramePri( pPdwIndex, framePri ); }
@@ -170,9 +170,14 @@ public:
     inline int GetCoNewAet() { return m_CoNewAet; }
     inline SRxLOBData *GetNewAet() { return m_theMakeAET->GetNewLOB(); }
     inline void ClearCoAet() { m_theMakeAET->ClearCoAet(); }
-    inline void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoFromSeg( pPri, pEmitter ); }
+    //inline void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { m_theMakeAET->MakePRIInfoFromSeg( pPri, pEmitter ); }
     inline CKMakeAET* GetMakeAET() { return m_theMakeAET; }
     inline SRxLOBData *GetUpdAet() { return m_theMakeAET->GetUpdLOB(); }
+
+#ifdef _DEBUG
+    inline void KnownMakeAET() { m_theMakeAET->KnownMakeAET(false); }
+
+#endif
 
     /**
      * @brief     GetTrkAET

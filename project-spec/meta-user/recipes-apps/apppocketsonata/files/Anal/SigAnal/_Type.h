@@ -101,7 +101,9 @@ typedef string CString;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MFC 버젼
 #elif _MSC_VER
-#define MSG_DONTWAIT            (0)
+#ifndef	MSG_DONTWAIT
+#define	MSG_DONTWAIT	0
+#endif
 #define IPC_NOWAIT              (04000)
 
 #define IPC_PRIVATE             (0)

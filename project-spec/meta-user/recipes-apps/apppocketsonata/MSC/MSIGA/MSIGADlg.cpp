@@ -13,6 +13,9 @@
 
 #include "../../files/Utils/ccommonutils.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
+#include <crtdbg.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -109,6 +112,8 @@ BEGIN_MESSAGE_MAP(CMSIGADlg, CDialogEx)
     ON_BN_CLICKED( IDOK_SAVE, &CMSIGADlg::OnBnClickedSave )
     //ON_BN_CLICKED( IDOK, &CMSIGADlg::OnBnClickedOk )
     ON_BN_CLICKED( ID_STOPSIGGEN, &CMSIGADlg::OnBnClickedStopSigGen )
+    ON_BN_CLICKED( ID_AUTO_RUN, &CMSIGADlg::OnBnClickedAutoRun )
+    ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -162,9 +167,12 @@ BOOL CMSIGADlg::OnInitDialog()
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+    //_CrtSetBreakAlloc(177335); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
 
     m_bStopSigGen = true;
     OnBnClickedStopSigGen();
+
+    m_bAutoRun = false;
 
     unsigned int i;
     char buffer[100];
@@ -172,6 +180,7 @@ BOOL CMSIGADlg::OnInitDialog()
     m_ComboDOAType.AddString( "고정" );
     m_ComboDOAType.AddString( "멀티" );
     m_ComboDOAType.AddString( "가우시안" );
+    m_ComboDOAType.AddString( "회전" );
 
     m_ComboFreqType.AddString( "고정" );
     m_ComboFreqType.AddString( "호핑" );
@@ -198,6 +207,7 @@ BOOL CMSIGADlg::OnInitDialog()
     m_ComboSignalType.AddString( "SHORT" );
     m_ComboSignalType.AddString( "DOPPLER" );
     m_ComboSignalType.AddString( "HIGHPRF" );
+    m_ComboSignalType.AddString( "*RANDOM*" );
 
     for( i = 2; i <= MAX_STAGGER_LEVEL_POSITION; ++i ) {
         sprintf( buffer, "%d", i );
@@ -233,7 +243,6 @@ BOOL CMSIGADlg::OnInitDialog()
     m_ComboScanType.AddString( "Conical[Hz]" );
     m_ComboScanType.AddString( "Steady" );
 
-    //_CrtSetBreakAlloc(223); // 116 번째 메모리 생성시 프레이크 걸리도록 추가
     strcpy( m_szIniFileName, "./RadarPDW.ini" );
 
     LoadINI( m_szIniFileName );
@@ -1233,4 +1242,128 @@ BOOL CMSIGADlg::PreTranslateMessage( MSG *pMsg )
     }
 
     return bRet;
+}
+
+
+/**
+ * @brief     OnBnClickedAutoRun
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-08 16:48:08
+ * @warning
+ */
+void CMSIGADlg::OnBnClickedAutoRun()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    if( m_bAutoRun == false ) {
+        m_uiTestNumber = 0;
+
+        // 버튼 비활성화
+        GetDlgItem( ID_SIM_START )->EnableWindow( FALSE );
+        GetDlgItem( ID_SIM_LIBRARY )->EnableWindow( FALSE );
+        GetDlgItem( ID_STOPSIGGEN )->EnableWindow( FALSE );
+        GetDlgItem( IDOK_SAVE )->EnableWindow( FALSE );
+
+
+        GetDlgItem( ID_AUTO_RUN )->SetWindowText( "취소" );
+
+        m_bAutoRun = true;
+        m_uiAutoStep = 0;
+
+        SetTimer( 1, 1000, NULL );
+    }
+    else {
+        AutoRunClose();
+
+    }
+
+
+}
+
+/**
+ * @brief     AutoRunClose
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-08 17:09:35
+ * @warning
+ */
+void CMSIGADlg::AutoRunClose()
+{
+    KillTimer( 1 );
+
+    // 버튼 활성화
+    GetDlgItem( ID_SIM_START )->EnableWindow( TRUE );
+    GetDlgItem( ID_SIM_LIBRARY )->EnableWindow( TRUE );
+    GetDlgItem( ID_STOPSIGGEN )->EnableWindow( TRUE );
+    GetDlgItem( IDOK_SAVE )->EnableWindow( TRUE );
+
+    GetDlgItem( ID_AUTO_RUN )->SetWindowText( "자동 수행" );
+
+    m_bAutoRun = false;
+
+}
+
+
+/**
+ * @brief     OnTimer
+ * @param     UINT_PTR nIDEvent
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-08 16:54:26
+ * @warning
+ */
+void CMSIGADlg::OnTimer( UINT_PTR nIDEvent )
+{
+    // TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+    switch( m_uiAutoStep ) {
+        case 0 :
+            ++ m_uiTestNumber;
+
+            // 47번 시험 신호 까지 수행함니다.
+            if( m_uiTestNumber > 47 ) {
+                AutoRunClose();
+                AfxMessageBox( "자동 수행이 정상적으로 종료 됐습니다." );
+
+            }
+            else {
+                m_ComboRadarTest.SetCurSel( (int) m_uiTestNumber );
+
+                OnSelchangeComboRadarTest();
+
+                SetTimer( 1, 1000, NULL );
+            }
+            break;
+
+        case 1 :
+            OnBnClickedSimStart();
+#ifdef __VECTORCAST__
+            SetTimer( 1, 30000, NULL );
+#else
+            SetTimer( 1, 50000, NULL );
+#endif
+            break;
+
+        case 2 :
+            OnBnClickedSimStart();
+            SetTimer( 1, 1000, NULL );
+            break;
+
+        case 3 :
+            m_uiAutoStep = ( unsigned int ) -1;
+            break;
+
+        default:
+            break;
+    }
+
+    ++ m_uiAutoStep;
+
+    CDialogEx::OnTimer( nIDEvent );
 }

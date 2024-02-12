@@ -27,6 +27,9 @@ Build-PocketSonata*/
 *.pro.user
 *.user
 
+#문서
+~*.xlsx
+
 
 apptest*
 *.d
@@ -47,3 +50,7 @@ Release*
 project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace/*
 project-spec/meta-user/recipes-apps/apppocketsonata/VxWorksSpace64/*
 /project-spec/meta-user/recipes-apps/apppocketsonata/MSC/.vs
+
+
+
+/.vs

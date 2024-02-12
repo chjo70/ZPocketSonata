@@ -69,6 +69,9 @@
     <ClInclude Include="ColorListCtrl\ColorListCtrl.h">
       <Filter>소스 파일\ColorListCtrl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\files\Utils\clogname.h">
+      <Filter>소스 파일\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ZCCUSim.cpp">
@@ -106,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="ColorListCtrl\ColorListCtrl.cpp">
       <Filter>소스 파일\ColorListCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\files\Utils\clogname.cpp">
+      <Filter>소스 파일\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

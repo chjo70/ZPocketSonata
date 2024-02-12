@@ -84,7 +84,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_RESET_PDWID_;_MSSQL1_;_712_1;_POCKETSONATA_;_XBAND_1;_701_1;_SONATA1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_RESET_PDWID_;_DETECT_;_MSSQL1_;_712_1;_POCKETSONATA_;_XBAND_1;_701_1;_SONATA1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>
       </AdditionalOptions>
       <DisableSpecificWarnings>4828; 4819</DisableSpecificWarnings>
@@ -250,7 +250,7 @@ REM :END</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>_USRDLL;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_RESET_PDWID_;_ANAL_LOG_;_MSSQL1_;_SQLITE_;SQLITE_ENABLE_COLUMN_METADATA;SQLITE_ENABLE_IOTRACE;SQLITE_SYSTEM_MALLOC;_712_;_POCKETSONATA1_;_XBAND_1;_701_1;_SONATA1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_USRDLL;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_RESET_PDWID_;_ANAL_LOG_;_MSSQL1_;_SQLITE_;SQLITE_ENABLE_COLUMN_METADATA;SQLITE_ENABLE_IOTRACE;SQLITE_SYSTEM_MALLOC;_DETECT_;_712_;_POCKETSONATA1_;_XBAND_1;_701_1;_SONATA1_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
@@ -352,6 +352,7 @@ REM :END</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\files\Utils\clog.cpp" />
+    <ClCompile Include="..\..\files\Utils\clogname.cpp" />
     <ClCompile Include="..\..\files\Utils\programrev.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>

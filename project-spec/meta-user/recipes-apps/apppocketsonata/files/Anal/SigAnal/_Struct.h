@@ -30,6 +30,7 @@ struct FREQ_RESOL {
 enum PULSE_MARK {
     enUnMark=0,
     enSTABLE_MARK,
+
     enREFSTB_MARK,
     enREFJIT_MARK,
 
@@ -292,6 +293,9 @@ struct STR_PULSE_TRAIN_SEG {
 	UINT uiBand;						// 주파수 Band Code
 	UINT peak_idx;					    // peak PA의 펄스 index
 
+    float fKurtosis;
+    float fSkewness;
+
 	SEG_MARK enSegMark;					// 펄스열의 상태
 										// 삭제=0, 정상상태=1, 에미터로 체크된 상태=2
 	UINT uiPRIPatternPeriod;		    // PRI  패턴 주기
@@ -351,16 +355,11 @@ struct STR_EMITTER {
     ENUM_AET_FREQ_PRI_PATTERN_TYPE enPRIPatternType;
 	float fPRIPeriod;
 
-	//unsigned int uiStagDwellElementCount;					// stagger level 수
-	//_TOA tStaggerDwellElement[ MAX_FREQ_PRI_STEP ];		// Stagger level
-
 	unsigned int uiCoStagDwellLevelCount;					// stagger level 수
 	_TOA tStaggerDwellLevel[ MAX_FREQ_PRI_STEP ];		// Stagger level
 
-    //unsigned int uiFreqElementCount;
-    //unsigned int uiFreqElement[MAX_FREQ_PRI_STEP];					// Hopping level
-
 	STR_MINMAX stPW;							// 에미터 펄스열의 PRI 범위
+    STR_MINMAX stPA;							// 에미터 펄스열의 PRI 범위
 
     STR_MINMAX stFMOPFreq;
 
@@ -475,7 +474,6 @@ struct STR_FT {
 
 }  ;
 
-//#ModelId=452B0C4E037D
 struct STR_FG {
     STR_LOWHIGH frq[ ALL_BAND ];
 
@@ -708,7 +706,7 @@ char g_szAetPriType[(int)ENUM_AET_PRI_TYPE::E_AET_MAX_PRI_TYPE][3] = { "ST" , "J
 char g_szAetPatternType[(int)ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_MAX_FREQ_PRI_PATTERN_TYPE][3] = { "UK" , "SI", "S+" , "S-" , "TR" };
 #endif
 char g_szAetScanType[(int)ENUM_AET_SCAN_TYPE::E_AET_MAX_SCAN_TYPE][3] = { "UK" , "CI", "UN" , "BI" , "CO", "ST", "FA", "TF", "DF", "LF" };
-char g_szAetScanStat[( int ) ENUM_AET_SCAN_STAT::E_AET_USER_SCAN_FAIL+1][20] = { "미실시" , "자체성공", "자체실패" , "사용자성공" , "사용자실패" };
+char g_szAetScanStat[( int ) ENUM_AET_SCAN_STAT::E_AET_SCAN_ING +1][20] = { "미실시" , "자체성공", "자체실패" , "사용자성공" , "사용자실패", "분석중" };
 
 FREQ_RESOL gFreqRes[ enMAXPRC ] = {	// min, max, offset, res
         {     0,     0, 0, (float) PDW_FREQ_RES } ,

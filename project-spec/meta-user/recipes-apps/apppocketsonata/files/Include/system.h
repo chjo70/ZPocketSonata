@@ -4,35 +4,38 @@
 
 #pragma once
 
-// #include "struct.h"
 
-// 채널 수 정의
+
+ // 채널 수 정의
 #define CO_DETECT_CHANNEL	(1)                         // 탐지용 채널은 1개로 설정함. 현재 PL 전처리필터의 채널이 1개임.
 
-#ifdef _MSC_VER
 
 #if defined(_POCKETSONATA_) || defined(_SONATA_)
-#define CO_TRACK_CHANNEL	(16)
+#ifdef __VXWORKS__
+#define CO_TRACK_CHANNEL	(14)
 #define CO_SCAN_CHANNEL		(4)
+
+#else
+#define CO_TRACK_CHANNEL	(14)             // 14
+#define CO_SCAN_CHANNEL		(4)
+
+#endif
+
+#define CO_PREFILTER_CHANNEL    (CO_TRACK_CHANNEL)        // 전처리 필터는 추적 필터 개수만큼 적용합니다.
 
 #else
 #define CO_TRACK_CHANNEL	(0)
 #define CO_SCAN_CHANNEL		(0)
 
-#endif
-
-#else
-#define CO_TRACK_CHANNEL	(16)
-#define CO_SCAN_CHANNEL		(4)
-
-#endif
-
 #define CO_PREFILTER_CHANNEL    CO_TRACK_CHANNEL
+
+#endif
+
+
 
 #define APPLIED_DETECT      ( ( 1 << CO_DETECT_CHANNEL) - 1 )
 #define APPLIED_TRACK       ( ( 1 << CO_TRACK_CHANNEL) - 1 )
 #define APPLIED_SCAN        ( ( 1 << CO_SCAN_CHANNEL) - 1 )
-
 
 
 #define CO_USER_CHANNEL		(0)
@@ -216,6 +219,24 @@ struct STR_LOG_INFO {
 
 };
 
+#ifndef SRxScanData_STRUCT
+#define SRxScanData_STRUCT
+struct STR_SCANRESULT {
+    EN_SCANRESULT enResult;
+    unsigned int uiScanPeriod;          //! 스캔 주기
+    ENUM_AET_SCAN_TYPE enScanType;      //! 스캔 형태
+
+    float fCoScanCollectingPDW;
+    float fScanDurationms;      // [ms]
+
+
+    // 신호 세기 관련 정보
+    unsigned int uiMedianPA;
+    STR_MINMAX stPA;
+
+};
+#endif
+
 /**
     @struct STR_COLLECTINFO
     @brief  수집 쓰레드 정보
@@ -238,11 +259,11 @@ typedef struct stSTR_COLLECT_INFO {
     // 채널 번호에 따른 수집 개수
     unsigned int uiCh2TotalPDW[TOTAL_CHANNELS];
 
-    void Set( unsigned int uiReqStatus_0, unsigned int uiReqStatus_1, unsigned int uiReqStatus_2, unsigned int i_uiTotalPDW, unsigned int i_uiAETID, unsigned int i_uiABTID, ENUM_PCI_DRIVER i_enPCIDriver, ENUM_COLLECTBANK i_enCollectBank, unsigned int i_uiABTIndex )
+    void Set( unsigned int uiReqStatus_0, unsigned int uiReqStatus_1, unsigned int i_uiTotalPDW, unsigned int i_uiAETID, unsigned int i_uiABTID, ENUM_PCI_DRIVER i_enPCIDriver, ENUM_COLLECTBANK i_enCollectBank, unsigned int i_uiABTIndex )
     {
         uiReqStatus[0] = uiReqStatus_0;
         uiReqStatus[1] = uiReqStatus_1;
-        uiReqStatus[2] = uiReqStatus_2;
+        uiReqStatus[2] = uiReqStatus_1;
 
         uiTotalPDW = i_uiTotalPDW;
         uiAETID = i_uiAETID;
@@ -439,6 +460,7 @@ typedef struct stSTR_SCANANAL_INFO {
 union UNI_MSG_DATA {
     unsigned int uiData;
     time_t tiNow;
+    __time32_t tiNow32;
 
     SELDELETE stDelete;
     SELLOST stLost;
@@ -465,3 +487,16 @@ union UNI_MSG_DATA {
 
 };
 
+// 로그 타입 사용자가 원하는 대로 정의
+enum LogType {
+    enDebug = 0,
+    enNormal,
+    enLineFeed,
+    enNoLineFeed,
+
+    enWarning,
+    enError,
+    enEnd,
+
+    enNull
+};

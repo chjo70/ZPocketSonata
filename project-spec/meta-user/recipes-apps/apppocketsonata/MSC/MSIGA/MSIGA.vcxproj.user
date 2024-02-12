@@ -5,10 +5,11 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-i2</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-i5</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
     <RESOURCE_FILE>MSIGA.rc</RESOURCE_FILE>
+    <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
 </Project>

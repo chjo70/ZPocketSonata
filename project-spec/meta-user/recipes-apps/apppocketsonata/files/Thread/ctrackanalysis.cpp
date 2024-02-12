@@ -64,6 +64,8 @@ CTrackAnalysis::CTrackAnalysis( int iThreadPriority, const char *pThreadName, bo
  */
 CTrackAnalysis::~CTrackAnalysis(void)
 {
+    StopThread();
+
     _SAFE_DELETE( m_pTheKnownSigAnal )
 
     _SAFE_DELETE( m_pTheSysPara )
@@ -112,39 +114,44 @@ void CTrackAnalysis::_routine()
 
 #endif
         else {
-            switch( m_pMsg->uiOpCode ) {
+            if( m_pMsg != NULL ) {
+                switch( m_pMsg->uiOpCode ) {
 #ifdef _MSC_VER
-                case enTHREAD_TIMER:
-                    break;
+                    case enTHREAD_TIMER:
+                        break;
 
 #endif
-                case enREQ_OP_START:
-                    // QMsgClear();
-                    InitTrackAnalysis();
-                    break;
+                    case enREQ_OP_START:
+                        // QMsgClear();
+                        InitTrackAnalysis();
+                        break;
 
-                case enTHREAD_DISCONNECTED:
-                case enREQ_OP_SHUTDOWN:
-                    //QMsgClear();
-                    //InitTrackAnalysis();
-                    break;
+                    case enTHREAD_DISCONNECTED:
+                    case enREQ_OP_SHUTDOWN:
+                        //QMsgClear();
+                        //InitTrackAnalysis();
+                        break;
 
-				case enREQ_OP_RESTART:
-					//QMsgClear();
-					InitTrackAnalysis();
-					break;
+				    case enREQ_OP_RESTART:
+					    //QMsgClear();
+					    InitTrackAnalysis();
+					    break;
 
-                case enTHREAD_KNOWNANAL_START :
-                    AnalysisStart();
-                    break;
+                    case enTHREAD_KNOWNANAL_START :
+                        AnalysisStart();
+                        break;
 
-                case enTHREAD_REQ_SHUTDOWN :
-                    Log( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
-                    break;
+                    case enTHREAD_REQ_SHUTDOWN :
+                        Log( enDebug, "[%s]를 Shutdown 메시지를 처리합니다...", GetThreadName() );
+                        break;
 
-                default:
-                    Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
-                    break;
+                    default:
+                        Log( enError, "[%s]에서 잘못된 명령(0x%x)을 수신하였습니다 !!", GetThreadName(), m_pMsg->uiOpCode );
+                        break;
+                }
+            }
+            else {
+
             }
 
         }
@@ -180,10 +187,26 @@ void CTrackAnalysis::AnalysisStart()
     iCoLOB = m_pTheKnownSigAnal->GetCoLOB();
 
     pLOBData = m_pTheKnownSigAnal->GetLOBData();
+
+#if 0
+    iCoLOB = 2;
+
+    memcpy( & pLOBData[1], pLOBData, sizeof( SRxLOBData ) );
+    pLOBData[1].vPRIType = ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER;
+    pLOBData[1].fPRIMean = 40000;
+    pLOBData[1].fPRIMax = 41000;
+    pLOBData[1].fPRIMin = 39000;
+
+#endif
+
     if( pLOBData != NULL ) {
         if( m_pTheKnownSigAnal->IsTrackSuccess() ) {
-            pLOBData->uiABTID = m_pRecvTrackAnalInfo->uiABTID;
             pLOBData->uiAETID = m_pRecvTrackAnalInfo->uiAETID;
+            pLOBData->uiABTID = m_pRecvTrackAnalInfo->uiABTID;
+
+        }
+        else {
+            Log( enDebug, "위협[%04d/%04d]에 대해서 추적 실패 !" , m_pRecvTrackAnalInfo->uiAETID, m_pRecvTrackAnalInfo->uiABTID );
 
         }
 
@@ -195,6 +218,8 @@ void CTrackAnalysis::AnalysisStart()
             // QMsgSnd() 함수에서 Array 버퍼 크기 제한으로 상한값을 설정 함.
             iCoLOB = min( (int) (_MAX_LANDATA / sizeof( struct SRxLOBData) - 1), iCoLOB );
 
+            //Log( enDebug, "추적 분석에서 위협[%04d/%04d]을 LOB[%d] 개를 전송합니다.", m_pRecvTrackAnalInfo->uiAETID, m_pRecvTrackAnalInfo->uiABTID, iCoLOB );
+
             g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_START, pLOBData, sizeof( struct SRxLOBData), (unsigned int) iCoLOB, m_pRecvTrackAnalInfo, sizeof( STR_TRKANAL_INFO ), GetThreadName() );
         }
         // 3.2 추적 분석에서 수집이 안되서 분석이 전혀 없거나 수집은 충분히 되었지만 분석이 안 된 경우, 추적 채널을 재할당합니다.
@@ -205,7 +230,8 @@ void CTrackAnalysis::AnalysisStart()
         }
     }
     else {
-
+        m_pstrTrackAnalInfo->Set( m_pRecvTrackAnalInfo->uiGlobalCh, m_pRecvTrackAnalInfo->enPCIDriver, 0, enTrackCollectBank, m_pRecvTrackAnalInfo->uiAETID, m_pRecvTrackAnalInfo->uiABTID, enNO_ROBUST_ANALYSIS );
+        g_pTheEmitterMerge->QMsgSnd( enTHREAD_KNOWNANAL_FAIL, GetUniMessageData(), sizeof( union UNI_MSG_DATA ), GetThreadName() );
     }
 
 }

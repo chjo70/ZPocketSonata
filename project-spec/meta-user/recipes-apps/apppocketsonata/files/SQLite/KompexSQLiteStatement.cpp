@@ -56,15 +56,20 @@ void SQLiteStatement::Prepare(const char *sqlStatement)
 
 	// If the nByte argument is less than zero,
 	// then zSql is read up to the first zero terminator.
+    if( mDatabase != NULL ) {
+	    if(sqlite3_prepare_v2(mDatabase->GetDatabaseHandle(), sqlStatement, -1, &mStatement, NULL ) != SQLITE_OK) {
+            //printf( " m_szSQLString[%s]" , sqlStatement );
+		    KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
+        }
+        if( !mStatement ) {
+            KOMPEX_EXCEPT( "Prepare() SQL statement failed", -1 );
+        }
+    }
+    else {
+        KOMPEX_EXCEPT( "Prepare() SQL statement failed", -1 );
 
-	if(sqlite3_prepare_v2(mDatabase->GetDatabaseHandle(), sqlStatement, -1, &mStatement, NULL ) != SQLITE_OK) {
-        //printf( " m_szSQLString[%s]" , sqlStatement );
-		KOMPEX_EXCEPT(sqlite3_errmsg(mDatabase->GetDatabaseHandle()), sqlite3_errcode(mDatabase->GetDatabaseHandle()));
     }
 
-	if(!mStatement) {
-		KOMPEX_EXCEPT("Prepare() SQL statement failed", -1);
-	}
 }
 
 void SQLiteStatement::Prepare(const wchar_t *sqlStatement)

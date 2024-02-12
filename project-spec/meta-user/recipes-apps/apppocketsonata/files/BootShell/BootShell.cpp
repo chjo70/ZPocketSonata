@@ -146,28 +146,33 @@ void BootShellMain()
 
 #ifdef __VXWORKS__
     // ATA 드라이브, PS 로직 마운트 때문에 지연 추가
-    printf( "\n PS 로직 부팅으로 무려 30초씩이나 대기 합니다...\n" );
-    Sleep( 30 );
-    printf( "\n $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" );
+    printf( "\n ATA 드라이브 접근때문에, 5초 대기 합니다...\n" );
+    Sleep( 5 );
+    printf( "##############################################################\n" );
 
 #endif
 
-    g_theManSbc = new CManSbc;
-    if( g_theManSbc == NULL ) {
-        PrintErr( ( "\n [W] 기본 메모리(theManSbc)가 부족합니다 !" ) );
-        WhereIs;
-    }
-
+    // ATA 드라이브 연결 가능 시간이 필요하기 때문에 CManSBC 를 수행 후 처리
     g_pTheSysConfig = new CSysConfig();
     if( g_pTheSysConfig == NULL ) {
         PrintErr( ( "\n [W] 기본 메모리(g_pTheSysConfig)가 부족합니다 !" ) );
         WhereIs;
     }
     else {
-        g_pTheSysConfig->SetBoardID( g_theManSbc->GetBoardID() );
-
-        g_pTheSysConfig->DisplaySystemVar();
     }
+
+    //
+    g_theManSbc = new CManSbc;
+    if( g_theManSbc == NULL ) {
+        PrintErr( ( "\n [W] 기본 메모리(theManSbc)가 부족합니다 !" ) );
+        WhereIs;
+    }
+
+    // 보드 ID 설정
+    g_pTheSysConfig->SetBoardID( g_theManSbc->GetBoardID() );
+
+    // 환경 변수 전시
+    g_pTheSysConfig->DisplaySystemVar();
 
     // 네트워크 설정
     g_theManSbc->AutoIPAddress();
@@ -288,8 +293,6 @@ void CBootShell::Run()
 
     // 네트워크 메모리 값 전시합니다.
     g_theManSbc->ShowNetMemory();
-
-    printf( "\n g_pTheSysConfig->GetTFFSBoot()=%d", g_pTheSysConfig->GetTFFSBoot() );
 
     if( g_pTheSysConfig->GetTFFSBoot() == 1 ) {
         printf( "\n\n TFTP 디버깅 모드 입니다." );

@@ -30,7 +30,7 @@
 #define IDC_LIST1                       1014
 #define IDC_BUTTON_REQ_RESTART_SCENARIO 1014
 #define IDC_LIST2                       1015
-#define IDC_BUTTON_REQ_OPVAR_SETTING3   1015
+#define IDC_BUTTON_REQ_SCAN_SCENARIO    1015
 #define IDC_LIST3                       1016
 #define IDC_BUTTON_REQ_DELETE_SCENARIO  1016
 #define IDC_STATIC_ERRORMESSAGE         1017
@@ -44,6 +44,8 @@
 #define IDC_SPIN2                       1023
 #define IDC_BUTTON_REQ_DELETE2          1024
 #define IDC_LIST_LOB                    1025
+#define IDC_BUTTON_REQ_DELETE3          1026
+#define IDC_BUTTON_REQ_SBC_REBOOT       1026
 #define IDC_EDIT_ERRORMESSAGE           1028
 #define IDC_EDIT_AETID                  1029
 #define IDC_EDIT_ABTID                  1030

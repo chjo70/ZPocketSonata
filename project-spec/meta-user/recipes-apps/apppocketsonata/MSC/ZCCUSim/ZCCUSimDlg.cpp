@@ -126,6 +126,8 @@ BEGIN_MESSAGE_MAP(CZCCUSimDlg, CDialogEx)
     ON_BN_CLICKED( IDC_BUTTON_REQ_RESTART_SCENARIO, &CZCCUSimDlg::OnBnClickedButtonReqRestartScenario )
     ON_BN_CLICKED( IDC_BUTTON_REQ_DELETE_SCENARIO, &CZCCUSimDlg::OnBnClickedButtonReqDeleteScenario )
     ON_BN_CLICKED( IDC_BUTTON_CANCEL_SCENARIO, &CZCCUSimDlg::OnBnClickedButtonCancelScenario )
+    ON_BN_CLICKED( IDC_BUTTON_REQ_SCAN_SCENARIO, &CZCCUSimDlg::OnBnClickedButtonReqScanScenario )
+    ON_BN_CLICKED( IDC_BUTTON_REQ_SBC_REBOOT, &CZCCUSimDlg::OnBnClickedButtonReqSbcReboot )
 END_MESSAGE_MAP()
 
 
@@ -254,9 +256,9 @@ void CZCCUSimDlg::InitView()
 {
     int i;
 
-    char szAETList[_COLUMNS_OF_LIST_][40] = { "방사체#", "누적LOB", "최근접촉시간    ", "방위[도]          ", "주파수[MHz]           ", "PRI[us]              ", "펄스폭[us]      ", "신호세기[dBm]  ", "레이더명    ", "카테고리   ", "ELNOT   ", "분석/수집", "기타" };
-    char szABTList[_COLUMNS_OF_LIST_][40] = { "방사체/빔#", "신/형", "최근접촉시간    ", "방위[도]          ", "주/형[ms]     ", "주파수[MHz]            ", "P/형[ms]      ", "PRI[us]              ", "펄스폭[us]    ", "MOP[MHz]", "스캔상태 ", "스/형[ms/Hz]   ", "신호세기[dBm] ", "레이더/모드/위협", "분석/수집"  };
-    char szLOBList[_COLUMNS_OF_LIST_][40] = { "방사체/빔#", "LOB #","신/형", "최근접촉시간    ", "방위[도]          ", "주/형[ms]    ", "주파수[MHz]            ", "P/형[ms]      ", "PRI[us]               ", "펄스폭[us]  ", "MOP[MHz]", "신호세기[dBm]", "분석/수집", "호핑/스태거" };
+    char szAETList[_COLUMNS_OF_LIST_][40] = { "방사체#", "누적LOB", "최초접촉시간", "최근접촉시간", "방위[도]          ", "주파수[MHz]           ", "PRI[us]               ", "펄스폭[us]  ", "신호세기[dBm]  ", "레이더명    ", "카테고리   ", "ELNOT   ", "분석/수집", "기타    " };
+    char szABTList[_COLUMNS_OF_LIST_][40] = { "방사체/빔#", "신/형", "최근접촉시간", "방위[도]          ", "주/형[ms]     ", "주파수[MHz]            ", "P/형[ms]            ", "PRI[us]               ", "펄스폭[us]  ", "MOP[MHz]    ", "스캔상태 ", "스/형[ms/Hz]   ", "신호세기[dBm] ", "레이더/모드/위협", "분석/수집"  };
+    char szLOBList[_COLUMNS_OF_LIST_][40] = { "방사체/빔#", "LOB #","신/형", "최근접촉시간", "방위[도]          ", "주/형[ms]     ", "주파수[MHz]            ", "P/형[ms]               ", "PRI[us]               ", "펄스폭[us]  ", "MOP[MHz]      ", "신호세기[dBm]", "분석/수집", "호핑/스태거           " };
 
 	UpdateStaticMessage( NULL, true );
 
@@ -369,9 +371,7 @@ void CZCCUSimDlg::OnDestroy()
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
     delete m_pTheMULSRV;
 
-
 	Free();
-
 
 }
 
@@ -414,7 +414,7 @@ void CZCCUSimDlg::ConnectMessage( STR_CLIENT_SOCKET* pClientSocket )
 
     m_enScenarioMode = enIDLE_SCENARIO;
 
-    SetTimer( 1, 2000, NULL );
+    SetTimer( 1, 4000, NULL );
 
 }
 
@@ -642,6 +642,8 @@ void CZCCUSimDlg::ResultOfThreatData( UNI_LAN_DATA *pLanData )
         m_CListCtrlLOB.SendMessage( WM_VSCROLL, SB_BOTTOM );
     }
 
+    DisplayStatusMessage( "위협[%d/%d] 정보가 수신 했습니다 !", pLanData->stAET.stABTData.uiAETID, pLanData->stAET.stABTData.uiABTID );
+
     UpdateThreatInfo();
 
     UpdateWindow();
@@ -722,8 +724,6 @@ unsigned int CZCCUSimDlg::GetRows( unsigned int i_uiAETID, unsigned int i_uiABTI
 
 }
 
-
-
 /**
  * @brief     UpdateAETList
  * @param     unsigned int uiItems
@@ -750,19 +750,22 @@ void CZCCUSimDlg::UpdateAETList( unsigned int uiItems, UNI_LAN_DATA *pLanData, C
     sprintf_s( buffer, sizeof( buffer ), "%d", pAETData->uiCoLOB );
     m_CListCtrlAET.SetItemText( uiItems, iCol++, buffer );
 
-    CCommonUtils::getStringDesignatedDate( buffer, sizeof( buffer ), pAETData->tiLastSeenTime );
+    CCommonUtils::getStringDesignatedSimpleDate( buffer, sizeof( buffer ), pAETData->tiFirstSeenTime );
+    m_CListCtrlAET.SetItemText( uiItems, iCol++, buffer );
+
+    CCommonUtils::getStringDesignatedSimpleDate( buffer, sizeof( buffer ), pAETData->tiLastSeenTime );
     m_CListCtrlAET.SetItemText( uiItems, iCol++, buffer );
 
     sprintf_s( buffer, sizeof( buffer ), "%06.2f[%06.2f~%06.2f]", pAETData->fDOAMean, pAETData->fDOAMin, pAETData->fDOAMax );
     m_CListCtrlAET.SetItemText( uiItems, iCol++, buffer );
 
-    sprintf_s( buffer, sizeof( buffer ), "%05.2f[%05.2f~%05.2f]", pAETData->fFreqMean, pAETData->fFreqMin, pAETData->fFreqMax );
+    sprintf_s( buffer, sizeof( buffer ), "%07.1f[%07.1f~%07.1f]", pAETData->fFreqMean, pAETData->fFreqMin, pAETData->fFreqMax );
     m_CListCtrlAET.SetItemText( uiItems, iCol++, buffer );
 
-    sprintf_s( buffer, sizeof( buffer ), "%05.2f[%05.2f~%05.2f]", pAETData->fPRIMean, pAETData->fPRIMin, pAETData->fPRIMax );
+    sprintf_s( buffer, sizeof( buffer ), "%08.2f[%08.2f~%08.2f]", pAETData->fPRIMean, pAETData->fPRIMin, pAETData->fPRIMax );
     m_CListCtrlAET.SetItemText( uiItems, iCol++, buffer );
 
-    sprintf_s( buffer, sizeof( buffer ), "%05.2f~%05.2f", pAETData->fPWMin, pAETData->fPWMax );
+    sprintf_s( buffer, sizeof( buffer ), "%06.2f~%06.2f", pAETData->fPWMin, pAETData->fPWMax );
     m_CListCtrlAET.SetItemText( uiItems, iCol++, buffer );
 
     sprintf_s( buffer, sizeof( buffer ), "%05.2f~%05.2f", pAETData->fPAMin, pAETData->fPAMax );
@@ -826,7 +829,7 @@ void CZCCUSimDlg::InsertLOBList( UNI_LAN_DATA *pLanData )
     sprintf_s( buffer, sizeof( buffer ), "%s", g_szAetSignalType[pLOBData->vSignalType] );
     m_CListCtrlLOB.SetItemText( m_uiCoLOBListItems, iCol++, buffer );
 
-    CCommonUtils::getStringDesignatedDate( buffer, sizeof( buffer ), pLOBData->tiContactTime );
+    CCommonUtils::getStringDesignatedSimpleDate( buffer, sizeof( buffer ), pLOBData->tiContactTime );
     m_CListCtrlLOB.SetItemText( m_uiCoLOBListItems, iCol++, buffer );
 
     sprintf_s( buffer, sizeof( buffer ), "%06.2f[%06.2f~%06.2f]", pLOBData->fDOAMean, pLOBData->fDOAMin, pLOBData->fDOAMax );
@@ -845,19 +848,19 @@ void CZCCUSimDlg::InsertLOBList( UNI_LAN_DATA *pLanData )
     }
     m_CListCtrlLOB.SetItemText( m_uiCoLOBListItems, iCol++, buffer );
 
-    sprintf_s( buffer, sizeof( buffer ), "%06.2f[%06.2f~%06.2f]", pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax );
+    sprintf_s( buffer, sizeof( buffer ), "%07.1f[%07.1f~%07.1f]", pLOBData->fFreqMean, pLOBData->fFreqMin, pLOBData->fFreqMax );
     m_CListCtrlLOB.SetItemText( m_uiCoLOBListItems, iCol++, buffer );
 
     switch( pLOBData->vPRIType ) {
         case ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN:
-            sprintf_s( buffer, sizeof( buffer ), "%s/%s[%.1f,%.1f%%]", szAetPriType[( int ) pLOBData->vPRIType], szAetPatternType[( int ) pLOBData->vPRIPatternType], pLOBData->fPRIPatternPeriod, pLOBData->fPRIJitterRatio );
+            sprintf_s( buffer, sizeof( buffer ), "%s/%s[%.3f,%.1f%%]", szAetPriType[( int ) pLOBData->vPRIType], szAetPatternType[( int ) pLOBData->vPRIPatternType], pLOBData->fPRIPatternPeriod/(float) 1000., pLOBData->fPRIJitterRatio );
             break;
         case ENUM_AET_PRI_TYPE::E_AET_PRI_STAGGER:
         case ENUM_AET_PRI_TYPE::E_AET_PRI_DWELL_SWITCH:
             sprintf_s( buffer, sizeof( buffer ), "%s[%0d단,%.1f%%]", szAetPriType[( int ) pLOBData->vPRIType], pLOBData->vPRIPositionCount, pLOBData->fPRIJitterRatio );
             break;
         case ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER:
-            sprintf_s( buffer, sizeof( buffer ), "%s [%.1f%%]", szAetPriType[( int ) pLOBData->vPRIType], pLOBData->fPRIJitterRatio );
+            sprintf_s( buffer, sizeof( buffer ), "%s [%04.1f%%]", szAetPriType[( int ) pLOBData->vPRIType], pLOBData->fPRIJitterRatio );
             break;
         default:
             sprintf_s( buffer, sizeof( buffer ), "%s", szAetPriType[( int ) pLOBData->vPRIType] );
@@ -868,7 +871,7 @@ void CZCCUSimDlg::InsertLOBList( UNI_LAN_DATA *pLanData )
     sprintf_s( buffer, sizeof( buffer ), "%08.2f[%08.2f~%08.2f]", pLOBData->fPRIMean, pLOBData->fPRIMin, pLOBData->fPRIMax );
     m_CListCtrlLOB.SetItemText( m_uiCoLOBListItems, iCol++, buffer );
 
-    sprintf_s( buffer, sizeof( buffer ), "%05.2f~%05.2f", pLOBData->fPWMin, pLOBData->fPWMax );
+    sprintf_s( buffer, sizeof( buffer ), "%06.2f~%06.2f", pLOBData->fPWMin, pLOBData->fPWMax );
     m_CListCtrlLOB.SetItemText( m_uiCoLOBListItems, iCol++, buffer );
 
     switch( pLOBData->enMOPType ) {
@@ -887,7 +890,7 @@ void CZCCUSimDlg::InsertLOBList( UNI_LAN_DATA *pLanData )
     }
     m_CListCtrlLOB.SetItemText( m_uiCoLOBListItems, iCol++, buffer );
 
-    sprintf_s( buffer, sizeof( buffer ), "%05.2f~%05.2f", pLOBData->fPAMin, pLOBData->fPAMax );
+    sprintf_s( buffer, sizeof( buffer ), "%06.2f~%06.2f", pLOBData->fPAMin, pLOBData->fPAMax );
     m_CListCtrlLOB.SetItemText( m_uiCoLOBListItems, iCol++, buffer );
 
     sprintf_s( buffer, sizeof( buffer ), "%3d/%3d", pLOBData->uiNumOfAnalyzedPDW, pLOBData->uiNumOfCollectedPDW );
@@ -947,7 +950,7 @@ void CZCCUSimDlg::UpdateABTList( unsigned int uiItems, UNI_LAN_DATA *pLanData, C
     sprintf_s( buffer, sizeof( buffer ), "%s", g_szAetSignalType[pABTData->vSignalType] );
     m_CListCtrlABT.SetItemText( uiItems, iCol++, buffer );
 
-    CCommonUtils::getStringDesignatedDate( buffer, sizeof( buffer ), pABTData->tiLastSeenTime );
+    CCommonUtils::getStringDesignatedSimpleDate( buffer, sizeof( buffer ), pABTData->tiLastSeenTime );
     m_CListCtrlABT.SetItemText( uiItems, iCol++, buffer );
 
     sprintf_s( buffer, sizeof( buffer ), "%06.2f[%06.2f~%06.2f]", pABTData->fDOAMean, pABTData->fDOAMin, pABTData->fDOAMax );
@@ -966,7 +969,7 @@ void CZCCUSimDlg::UpdateABTList( unsigned int uiItems, UNI_LAN_DATA *pLanData, C
     }
     m_CListCtrlABT.SetItemText( uiItems, iCol++, buffer );
 
-    sprintf_s( buffer, sizeof( buffer ), "%05.2f[%05.2f~%05.2f]", pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax );
+    sprintf_s( buffer, sizeof( buffer ), "%07.1f[%07.1f~%07.1f]", pABTData->fFreqMean, pABTData->fFreqMin, pABTData->fFreqMax );
     m_CListCtrlABT.SetItemText( uiItems, iCol++, buffer );
 
     switch( pABTData->vPRIType ) {
@@ -978,7 +981,7 @@ void CZCCUSimDlg::UpdateABTList( unsigned int uiItems, UNI_LAN_DATA *pLanData, C
             sprintf_s( buffer, sizeof( buffer ), "%s[%d단,%.1f%%]", szAetPriType[( int ) pABTData->vPRIType], pABTData->vPRIPositionCount, pABTData->fPRIJitterPercent );
             break;
         case ENUM_AET_PRI_TYPE::E_AET_PRI_JITTER:
-            sprintf_s( buffer, sizeof( buffer ), "%s [%.1f%%]", szAetPriType[( int ) pABTData->vPRIType], pABTData->fPRIJitterPercent );
+            sprintf_s( buffer, sizeof( buffer ), "%s [%04.1f%%]", szAetPriType[( int ) pABTData->vPRIType], pABTData->fPRIJitterPercent );
             break;
         default :
             sprintf_s( buffer, sizeof( buffer ), "%s", szAetPriType[( int ) pABTData->vPRIType] );
@@ -986,10 +989,10 @@ void CZCCUSimDlg::UpdateABTList( unsigned int uiItems, UNI_LAN_DATA *pLanData, C
     }
     m_CListCtrlABT.SetItemText( uiItems, iCol++, buffer );
 
-    sprintf_s( buffer, sizeof( buffer ), "%05.2f[%05.2f~%05.2f]", pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax );
+    sprintf_s( buffer, sizeof( buffer ), "%08.2f[%08.2f~%08.2f]", pABTData->fPRIMean, pABTData->fPRIMin, pABTData->fPRIMax );
     m_CListCtrlABT.SetItemText( uiItems, iCol++, buffer );
 
-    sprintf_s( buffer, sizeof( buffer ), "%05.2f~%05.2f", pABTData->fPWMin, pABTData->fPWMax );
+    sprintf_s( buffer, sizeof( buffer ), "%06.2f~%06.2f", pABTData->fPWMin, pABTData->fPWMax );
     m_CListCtrlABT.SetItemText( uiItems, iCol++, buffer );
 
     switch( pABTData->enMOPType ) {
@@ -1578,7 +1581,6 @@ void CZCCUSimDlg::ResultOfScanData( UNI_MSG_DATA *pLanData )
     CCommonUtils::AllSwapData32( & pLanData->stUserScanResult.uiAET, sizeof( UINT )*2 );
     CCommonUtils::AllSwapData32( & pLanData->stUserScanResult.fScanPeriod, sizeof( float ) );
 
-
     switch( pLanData->stUserScanResult.enScanStat ) {
         case ENUM_AET_SCAN_STAT::E_AET_SELF_SCAN_SUCCESS:
             DisplayStatusMessage( "자체 스캔 분석 요구한 위협[%d/%d]을 스캔 정보[%s, %.2f ms]로 분석 했습니다.", pLanData->stUserScanResult.uiAET, pLanData->stUserScanResult.uiABT, g_szAetScanType[( int ) pLanData->stUserScanResult.enScanType], pLanData->stUserScanResult.fScanPeriod );
@@ -1594,6 +1596,10 @@ void CZCCUSimDlg::ResultOfScanData( UNI_MSG_DATA *pLanData )
 
         case ENUM_AET_SCAN_STAT::E_AET_USER_SCAN_FAIL:
             DisplayStatusMessage( "사용자 스캔 분석 요구한 위협[%d/%d]을 스캔 실패 분석 했습니다.", pLanData->stUserScanResult.uiAET, pLanData->stUserScanResult.uiABT );
+            break;
+
+        case ENUM_AET_SCAN_STAT::E_AET_SCAN_ING:
+            DisplayStatusMessage( "스캔 분석 요구한 위협[%d/%d]을 스캔 분석 중입니다.", pLanData->stUserScanResult.uiAET, pLanData->stUserScanResult.uiABT );
             break;
 
         default:
@@ -1707,7 +1713,13 @@ void CZCCUSimDlg::DisplayStatusMessage( const char *format, ... )
         vsprintf( & buffer[szLen], format, argptr );
         va_end( argptr );
 
-        m_CStaticError.SetWindowTextA( buffer );
+        if( strlen( buffer ) <= szLen ) {
+            m_CStaticError.SetWindowTextA( "" );
+        }
+        else {
+            m_CStaticError.SetWindowTextA( buffer );
+        }
+        TRACE( "\n %s:", buffer );
     }
     else {
         TRACE( "\n Error Of string message..." );
@@ -1784,7 +1796,7 @@ void CZCCUSimDlg::ResultOfDeleteBeamData( UNI_MSG_DATA *pLanData )
 
     CCommonUtils::AllSwapData32( pLanData, sizeof( SELDELETE ) );
 
-    DisplayStatusMessage( "삭제 요구할 방사체[%d]/빔[%d] 번호를 정상 처리했습니다 !", pLanData->stDelete.uiAETID, pLanData->stDelete.uiABTID );
+    DisplayStatusMessage( "삭제할 위협[%04d/%04d]을 정상 삭제 처리했습니다 !", pLanData->stDelete.uiAETID, pLanData->stDelete.uiABTID );
 
     DeleteThreatData( pLanData->stDelete.uiAETID, pLanData->stDelete.uiABTID );
 
@@ -1931,7 +1943,9 @@ void CZCCUSimDlg::OnBnClickedButtonReqStart()
 	if( m_enMode == enREADY_MODE ) {
 		// 운용 시작 명령을 발사합니다.
 		m_strLanHeader.usOpCode = enREQ_OP_START;
-		m_strLanHeader.uiLength = 0;
+		m_strLanHeader.uiLength = sizeof( m_uniLanData.tTime );
+
+        m_uniLanData.tTime = time( NULL );
 
 	}
 	else {
@@ -2239,12 +2253,13 @@ void CZCCUSimDlg::OnBnClickedButtonReqDelete()
     unsigned int uiAETID = ( unsigned int ) atoi( CStringA( strAETID ) );
     unsigned int uiABTID = ( unsigned int ) atoi( CStringA( strABTID ) );
 
-    if( uiAETID != 0 && uiABTID != 0 ) {
+    if( uiAETID != 0 ) {
         m_uniLanData.stDelete.uiAETID = uiAETID;
         m_uniLanData.stDelete.uiABTID = uiABTID;
 
         Send();
     }
+
     else {
         AfxMessageBox( "삭제 요구할 방사체/빔 번호가 잘못 됐습니다 !" );
     }
@@ -2544,6 +2559,12 @@ void CZCCUSimDlg::OnTimer( UINT_PTR nIDEvent )
                 }
                 break;
 
+            case enSCENARIO_COMMAND_USER_SCAN:
+                if( TRUE == UpdateThreatID() ) {
+                    OnBnClickedButtonReqScan();
+                }
+                break;
+
             default:
                 break;
         }
@@ -2618,6 +2639,7 @@ void CZCCUSimDlg::AllScenarioButtonEanble( BOOL bEnable )
 {
     GetDlgItem( IDC_BUTTON_REQ_RESTART_SCENARIO )->EnableWindow( bEnable );
     GetDlgItem( IDC_BUTTON_REQ_DELETE_SCENARIO )->EnableWindow( bEnable );
+    GetDlgItem( IDC_BUTTON_REQ_SCAN_SCENARIO )->EnableWindow( bEnable );
 
     if( m_enScenarioMode == enREADY_SCENARIO ) {
         BOOL bEanbleInverse = ! bEnable;
@@ -2708,6 +2730,25 @@ BOOL CZCCUSimDlg::UpdateThreatID()
 
 }
 
+/**
+ * @brief     OnBnClickedButtonReqScanScenario
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2023-12-28 15:41:59
+ * @warning
+ */
+void CZCCUSimDlg::OnBnClickedButtonReqScanScenario()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    m_enScenarioCommand = enSCENARIO_COMMAND_USER_SCAN;
+
+    AllScenarioButtonEanble( FALSE );
+
+    SetTimer( 2, 20000, NULL );
+
+}
 
 /**
  * @brief     OnBnClickedButtonCancelScenario
@@ -2726,5 +2767,28 @@ void CZCCUSimDlg::OnBnClickedButtonCancelScenario()
     m_enScenarioCommand = enSCENARIO_COMMAND_NULL;
 
     AllScenarioButtonEanble( TRUE );
+
+}
+
+/**
+ * @brief     OnBnClickedButtonReqSbcReboot
+ * @return    void
+ * @exception 예외사항을 입력해주거나 '해당사항 없음' 으로 해주세요.
+ * @author    조철희 (churlhee.jo@lignex1.com)
+ * @version   1.0.0
+ * @date      2024-01-25 22:27:56
+ * @warning
+ */
+void CZCCUSimDlg::OnBnClickedButtonReqSbcReboot()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    GetDlgItem( IDC_BUTTON_REQ_RESTART )->EnableWindow( FALSE );
+
+    m_strLanHeader.usOpCode = enREQ_OP_REBOOT;
+    m_strLanHeader.uiLength = 0;
+
+    Send();
+
+    //DisplayButtonCount();
 
 }

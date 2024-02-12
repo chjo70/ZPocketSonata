@@ -94,11 +94,18 @@ void SendLan( UINT uiOpCode, void *pData, size_t szDataLength, BOOL bSwap )
  * @date      2023-11-05 19:15:01
  * @warning
  */
-void SendStringLan( UINT uiOpCode, const char *pData )
+void SendStringLan( UINT uiOpCode, const char *pFormat, ... )
 {
-    g_pTheCCUSocket->SendStringLan( uiOpCode, pData );
+    char szLog[200];
+    va_list args;
+
+    va_start( args, pFormat );
+    vsprintf( szLog, pFormat, args );
+    va_end( args );
+
+    g_pTheCCUSocket->SendStringLan( uiOpCode, szLog );
     if( g_pTheCCUDebugSocket != NULL ) {
-        g_pTheCCUDebugSocket->SendStringLan( uiOpCode, pData );
+        g_pTheCCUDebugSocket->SendStringLan( uiOpCode, szLog );
     }
 
 }
@@ -133,20 +140,29 @@ CSingleClient::CSingleClient( int iKeyId, const char *pClassName, COperationCons
 
     m_bServer = false;
 
-    m_bConnected = false;
+    Connected( false );
 
     if( pClientAddress == NULL ) {
 #ifdef __VXWORKS__
-        //m_vecServerAddress.push_back( g_pTheSysConfig->GetRecentConnectionOfNetwork() );
+        if( g_pTheSysConfig->GetDevelop() == 1 ) {
+            m_vecServerAddress.push_back( g_pTheSysConfig->GetDebugServerOfNetwork() );
+            m_vecServerAddress.push_back( g_pTheSysConfig->GetCCUServerOfNetwork() );
+        }
+        else {
+            //printf( "\n연결 등록 [%s]", g_pTheSysConfig->GetDebugServerOfNetwork() );
+            m_vecServerAddress.push_back( g_pTheSysConfig->GetDebugServerOfNetwork() );
+            //printf( "\n연결 등록 [%s]", g_pTheSysConfig->GetCCUServerOfNetwork() );
+            m_vecServerAddress.push_back( g_pTheSysConfig->GetCCUServerOfNetwork() );
+        }
 
-        m_vecServerAddress.push_back( g_pTheSysConfig->GetDebugServerOfNetwork() );
-        m_vecServerAddress.push_back( g_pTheSysConfig->GetCCUServerOfNetwork() );
 #else
+        m_vecServerAddress.push_back( DEV_SERVER );
         m_vecServerAddress.push_back( g_pTheSysConfig->GetDebugServerOfNetwork() );
 #endif
 
     }
     else {
+        WhereIs;
         m_vecServerAddress.push_back( pClientAddress );
     }
 
@@ -197,6 +213,9 @@ CSingleClient::CSingleClient( int iKeyId, const char *pClassName, COperationCons
 CSingleClient::~CSingleClient()
 {
     //LOGMSG1( enDebug, "[%s] 를 종료 처리 합니다...", GetThreadName() );
+    CloseSocket( false );
+
+    StopThread();
 
     Free();
 }
@@ -321,7 +340,6 @@ void CSingleClient::RunClient()
     char *pLanData;
 
     struct sockaddr_in sockAddress;
-    unsigned int uiTryConnect = 0;
 
     m_pMsg = GetRecvDataMessage();
 
@@ -331,7 +349,7 @@ void CSingleClient::RunClient()
 
     m_soSocket = 0;
 
-    m_bConnected = false;
+    Connected( false );
 
     // 10 초 후에 랜 대기를 수행하게 한다.
     while( g_pTheTaskMngr->GetMode() != enREADY_MODE ) {
@@ -340,19 +358,13 @@ void CSingleClient::RunClient()
     }
 
     //size_t uiCoServerList = m_vecServerAddress.size();
+    //unsigned int noTry = 0;
 
     while( m_bThreadLoop ) {
         string strServerIPAdddress;
 
         for( const auto & strServerIPAddress : m_vecServerAddress ) {
-
-#ifdef __VXWORKS__
-            if( uiTryConnect++ % 3000 == 0 ) {
-                TRACE( "\n[클라이언트:%s] [%s/%d] 연결하려 합니다.\n", GetThreadName(), strServerIPAddress.c_str(), m_usPort );
-            }
-#else
-            //TRACE( "\n[클라이언트:%s] [%s/%d] 연결하려 합니다.\n", GetThreadName(), strServerIPAddress.c_str(), m_usPort );
-#endif
+            Log( enNormal, "[클라이언트:%s] [%s/%d] 연결하려 합니다.", GetThreadName(), strServerIPAddress.c_str(), m_usPort );
 
 #ifdef _MSC_VER
             memset( ( char * ) &sockAddress, 0, sizeof( sockAddress ) );
@@ -374,11 +386,9 @@ void CSingleClient::RunClient()
             SetSocketOption();
 
             //LOGMSG2( enDebug, "Try Connection to [%s/%d]...", m_szServerAddress, m_iPort );
-            if( ConnectTimeout( m_soSocket, & sockAddress, 1 ) < 0 ) {
+            if( ConnectTimeout( m_soSocket, & sockAddress, 1000 ) < 0 ) {
                 CloseSocket( false );
-#ifndef _MSC_VER
-                // sleep( 1 );
-#endif
+
             }
             else {
                 if( strcmp( strServerIPAddress.c_str(), g_pTheSysConfig->GetDebugServerOfNetwork() ) == 0 ) {
@@ -525,7 +535,7 @@ void CSingleClient::RunClient()
                                                                 }           */
 
 #if defined(_MSC_VER) || defined(__VXWORKS__)
-                                    TRACE( "\n m_ptheOperationConsole[%p]", m_ptheOperationConsole );
+                                    //TRACE( "\n m_ptheOperationConsole[%p]", m_ptheOperationConsole );
                                     m_ptheOperationConsole->QMsgSnd( & sndMsg, ( void * ) NULL, GetThreadName() );
 
 #elif defined(__linux__)
@@ -564,7 +574,13 @@ void CSingleClient::RunClient()
                 CloseSocket();
             }
 
+            if( m_bThreadLoop == false ) {
+                break;
+            }
+
         }
+
+        // ++ noTry;
 
     }
 
@@ -635,6 +651,8 @@ void CSingleClient::OnDisconnected( const char *pServerIPAddress )
     STR_MessageData sndMsg;
 
     Log( enError, "서버(%s)가 끊겼습니다.", pServerIPAddress );
+
+    m_strConnectedAddress.clear();
 
     CloseSocket();
 
@@ -716,6 +734,7 @@ int CSingleClient::ConnectTimeout( SOCKET soSock, struct sockaddr_in *pAddr, lon
 
         timeout.tv_sec = timeout_milli / ( long ) 1000;
         timeout.tv_usec = ( timeout_milli % 1000 ) * ( long ) 1000;
+        printf( "\n [%d.%d]", timeout.tv_sec, timeout.tv_usec );
 
 #ifdef _MSC_VER
         USR_FD_SET( soSock, &writefds );
@@ -762,7 +781,8 @@ int CSingleClient::ConnectTimeout( SOCKET soSock, struct sockaddr_in *pAddr, lon
             }
         }
 
-        timeout.tv_sec = timeout_milli / 1000;
+        timeout.tv_sec = max( 1, timeout_milli / 1000 );
+        // printf( "\n timeout_milli[%d..%d]" , timeout_milli, timeout.tv_sec );
         timeout.tv_usec = ( timeout_milli % 1000 ) * 1000;
         FD_SET( soSock, &writefds );
         if( select( soSock + 1, NULL, &writefds, NULL, &timeout ) <= 0 ) {
@@ -829,7 +849,6 @@ int CSingleClient::ConnectTimeout( SOCKET soSock, struct sockaddr_in *pAddr, lon
 #endif
 
     if( iRet != -1 ) {
-        m_bConnected = true;
         OnConnect( pAddr );
     }
 
@@ -872,7 +891,7 @@ void CSingleClient::RunServer()
     //initialise all client_socket[] to 0 so not checked
     iClientSocket = 0;
 
-    m_bConnected = false;
+    Connected( false );
 
     //create a master socket
     if( ( iMasterSocket = socket( AF_INET, SOCK_STREAM, 0 ) ) == 0 ) {
@@ -1058,18 +1077,21 @@ void CSingleClient::RunServer()
  */
 void CSingleClient::OnConnect( struct sockaddr_in *pAddr )
 {
-    char *pIPAddress;
 
     if( pAddr != NULL ) {
-        pIPAddress = inet_ntoa( pAddr->sin_addr );
-        g_pTheSysConfig->SetPrimeServerOfNetwork( pIPAddress, true );
-
-        g_pTheSysConfig->WritePrimeServerIPAddress( pIPAddress );
+        Connected( true, pAddr );
 
 #ifdef __VXWORKS__
+        char *pIPAddress;
+
+        pIPAddress = inet_ntoa( pAddr->sin_addr );
+        //g_pTheSysConfig->SetRecentConnectionOfNetwork( pIPAddress );
+
+        // g_pTheSysConfig->WritePrimeServerIPAddress( pIPAddress );
+
         if( strcmp( pIPAddress, g_pTheSysConfig->GetCCUServerOfNetwork() ) == 0 ) {
-            Log( enDebug, "디버그 콘솔을 구동 합니다." );
-            g_pTheCCUDebugSocket->Run( _MSG_CCU_DEBUG_KEY );
+            //Log( enDebug, "디버그 콘솔을 구동 합니다." );
+            //g_pTheCCUDebugSocket->Run( _MSG_CCU_DEBUG_KEY );
             WhereIs;
         }
         else {
@@ -1317,7 +1339,7 @@ void CSingleClient::DisplayMsg( STR_LAN_HEADER *pHeader, const void *pData, bool
  */
 void CSingleClient::CloseSocket( bool bEnableLog )
 {
-    m_bConnected = false;
+    Connected( false );
 
     if( m_soSocket > 0 ) {
         SOCKET soSocket = m_soSocket;
@@ -1336,7 +1358,7 @@ void CSingleClient::CloseSocket( bool bEnableLog )
 #endif
     }
     else {
-        Log( enError, "두번 이상 소켓을 닫았습니다." );
+        // Log( enError, "두번 이상 소켓을 닫았습니다." );
     }
 
     // m_uiSocket = 0;

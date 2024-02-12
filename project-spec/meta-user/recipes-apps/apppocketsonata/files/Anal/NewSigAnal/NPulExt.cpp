@@ -39,7 +39,15 @@ CNPulExt::CNPulExt( void *pParent, unsigned int uiCoMaxPdw, const char *pThreadN
 
     //m_CoPulseTrains = 0;
 
-    INIT_ANAL_VAR_(m_pNewSigAnal)
+    INIT_ANAL_VAR_( m_pNewSigAnal )
+
+#ifdef __VECTORCAST__
+    //! #동적 시험으로 함수를 타기위해서 그냥 호출
+    CheckHarmonic( 0, 0, 0 );
+    MarkToPDWIndex( NULL, 0, enUnMark );
+
+#endif
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -223,7 +231,7 @@ void CNPulExt::PulseExtract( vector<SRadarMode *> *pVecMatchRadarMode )
 #ifdef _MSC_VER
     char buffer[200];
 
-    sprintf( buffer, "---------------- 기준 펄스열 추출 : %d[ns]", ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
+    sprintf( buffer, "---------------- 기준 펄스열 추출 : %2d[ns]", ( int ) ( ( CCommonUtils::GetDiffTime( &nowTime ) ) ) );
     CCommonUtils::WallMakePrint( buffer, '-' );
     Log( enDebug, "%s", buffer );
 
@@ -348,7 +356,7 @@ void CNPulExt::ExtractPulseTrainByLibrary( vector<SRadarMode *> *pVecMatchRadarM
  */
 void CNPulExt::MarkToPDWIndex( PDWINDEX *pPdwIndex, unsigned int uiCount, PULSE_MARK enMarkType)
 {
-    m_pNewSigAnal->MarkToPDWIndex( pPdwIndex, uiCount, enMarkType);
+    CPulExt::MarkToPDWIndex( pPdwIndex, uiCount, enMarkType);
 
 }
 

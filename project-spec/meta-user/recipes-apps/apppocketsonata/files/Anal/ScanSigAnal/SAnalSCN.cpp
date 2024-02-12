@@ -32,14 +32,14 @@
 // 함 수 설 명  :
 // 최 종 변 경  : 조철희, 2006-02-15 16:09:34
 //
-CSAnalScan::CSAnalScan( void *pParent, UINT uiCoMaxPdw, const char *pThreadName ) : CAnalPRI(pParent, uiCoMaxPdw, pThreadName )
+CSAnalScan::CSAnalScan( void *pParent, UINT uiCoMaxPdw, const char *pThreadName ) : CAnalPRI(pParent, enSCN_ANAL, uiCoMaxPdw, pThreadName )
 {
     SetAnalType( enSCN_ANAL );
 
 	m_pScanSigAnal = ( CScanSigAnal * ) pParent;
 
-    m_uiMinConicalPeriod = UMUL( g_pTheSysConfig->GetConcalMinPeriod(), _spOneMilli );
-    m_uiMaxConicalPeriod = UMUL( g_pTheSysConfig->GetConcalMaxPeriod(), _spOneMilli );
+    m_uiMinConicalPeriod = UMUL( g_pTheSysConfig->GetConicalMinPeriod(), _spOneMilli );
+    m_uiMaxConicalPeriod = UMUL( g_pTheSysConfig->GetConicalMaxPeriod(), _spOneMilli );
 
     m_iMinSteadyPAAmplitude = g_pTheSysConfig->GetSteadyMinPA();
     m_iMinSteadyPAAmplitude = (int) IPACNV( (float) m_iMinSteadyPAAmplitude );
@@ -273,22 +273,29 @@ EN_SCANRESULT CSAnalScan::AnalScan( STR_SCANRESULT *pstScanResult )
  */
 void CSAnalScan::SaveScanResult( STR_SCANRESULT *pstScanResult )
 {
-    m_stScanResult.fCoScanCollectingPDW = pstScanResult->fCoScanCollectingPDW;
-    m_stScanResult.fScanDurationms = pstScanResult->fScanDurationms;
-
+    // 정보 저장
     if( m_pEmitter != NULL ) {
         pstScanResult->uiMedianPA = MedianPA( NULL, m_pEmitter->stPDW.pIndex, m_pEmitter->stPDW.uiCount );
+
+        pstScanResult->stPA = m_pEmitter->stPA;
     }
     else {
+        memset( & pstScanResult->stPA, 0, sizeof( pstScanResult->stPA ) ) ;
         // m_stScanResult.uiMedianPA = pstScanResult->uiMedianPA;
     }
 
-    m_stScanResult.uiMedianPA = pstScanResult->uiMedianPA;
-
     pstScanResult->enResult = m_stScanResult.enResult;
-
     pstScanResult->uiScanPeriod = m_stScanResult.uiScanPeriod;
     pstScanResult->enScanType = m_stScanResult.enScanType;
+
+    // 멤버 변수 정보 추가 정보 업데이트
+    m_stScanResult.fCoScanCollectingPDW = pstScanResult->fCoScanCollectingPDW;
+    m_stScanResult.fScanDurationms = pstScanResult->fScanDurationms;
+
+    // 결과 저장
+    m_stScanResult.uiMedianPA = pstScanResult->uiMedianPA;
+
+    m_stScanResult.stPA = pstScanResult->stPA;
 
 }
 
@@ -756,8 +763,9 @@ bool CSAnalScan::CheckSteadySignal()
 	// debug, 99-12-22 19:18:14, debug, 00-04-07 14:51:06
     m_stSample.fSdevY = TSDevInArray<int>( m_stSample.iPA, m_stSample.uiCount, m_stSample.fMeanY );
 
-	// if( ( FDIV( cleanPa, pSample->co ) < 0.01 ) && pSample->sdevY < UDIV( 1.0, _spAMPres ) ||
     unsigned int uiThCleanPA = UDIV( 10 * m_stSample.uiCount, 100 );
+
+    //printf( "\n m_stSample.fSdevY[%f], uiThCleanPA[%d]", m_stSample.fSdevY, uiThCleanPA );
     if( iPAMean >= m_iMinSteadyPAAmplitude && m_stSample.uiCount >= STEADY_MIN_CO_SAMPLING &&
         ( ( ( FDIV( cleanPa, m_stSample.uiCount ) < 0.01 ) && ( m_stSample.fSdevY < UDIV( 1.0, 10 ) ) ) || cleanPa <= uiThCleanPA ) ) {
         bRet = _spTrue;
@@ -1554,28 +1562,28 @@ UINT CSAnalScan::GetFlagControlWc( UINT noEMT )
  */
 // void CSAnalScan::MakeLOBDataFromEmitter( int iLOBData, STR_EMITTER *pEmitter, int idxEmitter )
 // {
-// 
+//
 //     // 기본 LOB 데이터 저장
 //     //CMakeAET::MakeLOBDataFromEmitter(iLOBData, pEmitter, idxEmitter );
-// 
+//
 //     // 스캔 정보 저장
-// 
+//
 // #ifndef _XBAND_
 //     SRxLOBData *pLOBData = GetLOBData();
-// 
+//
 //     if( pLOBData != NULL ) {
 //         pLOBData->vScanType = m_stScanResult.enScanType;
 //         pLOBData->fMeanScanPeriod = ( float ) TOAmsCNV( m_stScanResult.uiScanPeriod );
 //     }
 //     else {
-// 
+//
 //     }
-// 
+//
 // #endif
-// 
+//
 //     // 스캔 정보 저장
 //     SaveEmitterPDWFile( pEmitter, _spOne, true );
-// 
+//
 // }
 
 //////////////////////////////////////////////////////////////////////
@@ -1646,11 +1654,11 @@ int CSAnalScan::FindPeakInHist( unsigned int uiCount, PDWINDEX *pPdwIndex )
  * @param pEmitter
  * @param index
  */
-void CSAnalScan::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
-{
-    m_pScanSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
-
-}
+// void CSAnalScan::SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile )
+// {
+//     m_pScanSigAnal->SaveEmitterPDWFile( pEmitter, iPLOBID, bSaveFile );
+//
+// }
 
 /**
  * @brief CKAnalPRI::GetBand
@@ -1817,7 +1825,7 @@ char *CSAnalScan::GetTaskID()
  * @date      2023-09-19 12:13:32
  * @warning
  */
-ENUM_ANAL_TYPE CSAnalScan::GetAnalType()
-{
-    return m_pScanSigAnal->GetAnalType();
-}
+// ENUM_ANAL_TYPE CSAnalScan::GetAnalType()
+// {
+//     return m_pScanSigAnal->GetAnalType();
+// }

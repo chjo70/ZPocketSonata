@@ -12,36 +12,21 @@
 #pragma once
 
 #include "../Anal/INC/PDW.h"
-#include "../Include/global.h"
 
-#include "cLog.h"
+#include "../Include/system.h"
 
 class CLogName {
 private:
-    const char *m_pThreadName;
+    static char m_szName[enETC_ANAL + 1][10];
 
-    static char m_szName[enETC_ANAL+1][10];
+    const char *m_pThreadName;
 
     ENUM_ANAL_TYPE m_enAnalType;
 
 protected:
-    CLogName()
-    {
-        m_pThreadName = NULL;
-        m_enAnalType = enETC_ANAL;
-
-        strcpy( m_szName[enDET_ANAL], "탐지" );
-        strcpy( m_szName[enTRK_ANAL], "추적" );
-        strcpy( m_szName[enDETTRK_ANAL], "탐지/추적" );
-        strcpy( m_szName[enDETTRK_ANAL], "탐지/추적" );
-        strcpy( m_szName[enSCN_ANAL], "스캔" );
-        strcpy( m_szName[enDETSCN_ANAL], "탐지/스캔" );
-        strcpy( m_szName[enDETTRKSCN_ANAL], "탐지/추적/스캔" );
-
-        strcpy( m_szName[enETC_ANAL], "기타" );
-
-    }
-    virtual ~CLogName() { }
+    CLogName();
+    CLogName( const char *pThreadName );
+    virtual ~CLogName();
 
     /**
      * @brief     GetThreadName
@@ -114,19 +99,20 @@ protected:
     {
         bool bRet = true;
 
-        if( g_enLogAnalType == enALL ) {
+        if( enLogType == enError || enLogType == enNormal || g_enLogAnalType == enALL ) {
         }
         else {
-            if( enLogType != enError ) {
+            if( g_enLogAnalType == enCLEAR_ANAL ) {
+                bRet = false;
+            }
+            else {
                 ENUM_ANAL_TYPE enAnalType = GetAnalType();
 
                 if( enAnalType == enETC_ANAL ) {
                 }
-                else if( enAnalType == g_enLogAnalType ) {
-
-                }
                 else {
-                    bRet = false;
+
+                    bRet = ( enAnalType & g_enLogAnalType ) > 0 ? true : false;
                 }
             }
         }

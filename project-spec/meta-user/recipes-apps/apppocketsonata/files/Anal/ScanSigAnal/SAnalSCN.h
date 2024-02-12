@@ -116,15 +116,15 @@ public:
 
     int FindPeakInHist(unsigned int uiCount, PDWINDEX *pPdwIndex ) override;
     bool CheckPriInterval( STR_PULSE_TRAIN_SEG *pSeg1, STR_PULSE_TRAIN_SEG *pSeg2 ) { return 0; }
-    void DeleteAllSeg( STR_EMITTER *pEmitter )  { }
+    //void DeleteAllSeg( STR_EMITTER *pEmitter )  { }
     void ExtractRefStable() { }
 
     bool ExtractDwellRefPT( STR_PULSE_TRAIN_SEG *pDwlSewg, STR_PRI_RANGE_TABLE *pExtRange ) { return 0; }
     //UINT ExtractFramePri(STR_PDWINDEX *pSrcPdwIndex, _TOA framePri ) { return 0; }
 
-    void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof ) { }
+    //void QSort( unsigned int *pIdx, unsigned int uiCount, unsigned int uiSizeof ) { }
 
-    void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { }
+    //void MakePRIInfoFromSeg( STR_PRI *pPri, STR_EMITTER *pEmitter ) { }
     unsigned int ExtractStagger( _TOA framePri, STR_EMITTER *pEmitter) { return 0; }
     UINT MedianFreq( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
     UINT MedianPA( STR_MINMAX *pMinMax, PDWINDEX *pPdwIndex, unsigned int uiCount );
@@ -132,7 +132,7 @@ public:
     _TOA VerifyPRI( PDWINDEX *pPdwIndex, unsigned int uiCount );
 
     int GetBand() override;
-    void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile ) override;
+    //void SaveEmitterPDWFile(STR_EMITTER *pEmitter, int iPLOBID, bool bSaveFile ) override;
 
     SRxLOBData *GetLOBData( int index=0 );
 

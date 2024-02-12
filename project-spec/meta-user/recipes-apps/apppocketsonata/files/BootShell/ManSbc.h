@@ -117,7 +117,7 @@ private:
 
     //////////////////////////////////////////////////////////////////////////
     //
-	bool CreateRamDisk( char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks );
+	bool CreateRamDisk( const char *szDiskName, int bytesPerBlk, int blksPerTrack, int nBlocks );
     bool CreateTffsDisk( char *szDiskName );
 	bool CreateAtaDisk( char *szDiskName );
 	UCHAR Getche( int sec );

@@ -659,7 +659,7 @@ void CLOBClustering::CalculateIntersectionPoints()
 	n_nTotalOfIntersection = 0;
 	pIntersect = m_pIntersect;
 
-	for( i=0 ; i < m_nLOB ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
+	for( i=0 ; i < m_nLOB ; ++i ) {
 		pLOBData1 = m_pQueLOBData->GetPointerByIndex( (UINT) i );
 		for( j=i+1 ; j < m_nLOB ; ++j ) {
 			pLOBData2 = m_pQueLOBData->GetPointerByIndex( (UINT) j );
@@ -795,7 +795,7 @@ bool CLOBClustering::CalIntersectionBetweenLOB( SELINTERSECTION *pRes, SELLOBDAT
 		dSinOfAlpha1 = sin( dAlpha1 );
 		dSinOfAlpha2 = sin( dAlpha2 );
 		dCosOfAlpha1 = cos( dAlpha1 );
-		dCosOfAlpha2 = cos( dAlpha2 );	//#FA_C_IgnoredReturnValue_T2
+		dCosOfAlpha2 = cos( dAlpha2 );
 		//if( ( fSinOfAlpha1 != 0 || fSinOfAlpha2 != 0 ) || ( fSinOfAlpha1 * fSinOfAlpha2 > 0 ) ) {
 		if( is_not_zero<double>( dSinOfAlpha1 ) == true || is_not_zero<double>( dSinOfAlpha2 ) == true || ( dSinOfAlpha1 * dSinOfAlpha2 > 0 ) ) {
 			dAlpha3 = acos( -dCosOfAlpha1 * dCosOfAlpha2 + dSinOfAlpha1 * dSinOfAlpha2 * cos( dDistAngular12 ) );
@@ -866,7 +866,7 @@ bool CLOBClustering::CalOptimalCluster( STR_CEDEOBID_INFO *pCEDEOBInfo )
 		pCluster = m_pCluster;
 
 		// 1. 최적의 클러스터링 산정 : 최대 방위값으로 설정
-		for( i=0 ; i < m_nClusters ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
+		for( i=0 ; i < m_nClusters ; ++i ) {
 			if( ( pCluster->iCount > iCount ) ||
 				  ( ( pCluster->iCount == iCount ) && ( pCluster->fMaxDiffAoa > fMaxDiffAoa ) ) ) {
 				m_pOptimalCluster[0] = pCluster;
@@ -1114,7 +1114,7 @@ bool CLOBClustering::ReMakeOptimalCluster( STR_POSITION_ESTIMATION *pPEInfo, int
 
 	// 전체 LOB에 대해서 위치 산출을 기준으로 그룹화를 재수행한다.
 	//LogPrint( "\n 최적의 LOB 번호 계산하기"  );
-	for( i=0 ; i < m_pQueLOBData->Count() ; ++i ) { //#FA_C_PotentialUnboundedLoop_T2
+	for( i=0 ; i < m_pQueLOBData->Count() ; ++i ) {
 		pLOBData = m_pQueLOBData->GetPointerByIndex( (UINT) i );
 
         fTheta = (float) m_theInverseMethod.GCAzimuth( pLOBData->fRadarLatitude, pLOBData->fRadarLongitude, (double) pPEInfo->fLatitude, (double) pPEInfo->fLongitude );

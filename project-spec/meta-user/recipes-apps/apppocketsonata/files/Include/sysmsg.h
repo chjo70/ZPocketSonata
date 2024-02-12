@@ -38,11 +38,8 @@ struct SELDELETE {
 
 };
 
-struct SELLOST {
-    UINT uiAETID;
-    UINT uiABTID;
-
-};
+typedef SELDELETE SELLOST;
+typedef SELDELETE SELADDED;
 
 struct SEL_RESULT_DELETE_USERSCAN {
     UINT uiAET;
@@ -110,6 +107,7 @@ enum enREQ_MESSAGE {
     enREQ_OP_START = _START_OPCODE_OF_OPCONTROL_,                 // 시작 요청
     enREQ_OP_SHUTDOWN,                                          // 종료 요청
     enREQ_OP_RESTART,                                           // 재시작 요청
+    enREQ_OP_REBOOT,
 
     enREQ_IBIT = Mbit_ReqIbit,
     enREQ_UBIT = Mbit_ReqUbit,
@@ -211,8 +209,15 @@ enum enRES_MESSAGE {
     enRES_USERSCAN,
     enRES_USER_DELETE_THREAT_DATA,
 
-    enUPD_SCAN_THREAT_DATA,                  // 내부적인 메시지 입니다. 이 코드는 enNUP_THREAT_DATA 코드로 대체하야 랜으로 전송합니다.
-    enNEW_THREAT_DATA,                      // 내부적인 메시지 입니다. 이 코드는 enNUP_THREAT_DATA 코드로 대체하야 랜으로 전송합니다.
+    // 아래는 내부적인 메시지 정의 입니다.
+    enNEWDET_THREAT_DATA,                   // 탐지에서 신규 위협 메시지를 처리할 떄입니다.
+    enNEWTRK_THREAT_DATA,                   // 추적에서 신규 위협 메시지를 처리할 떄입니다.
+    enUPD_SCAN_THREAT_DATA,                 // enNUP_THREAT_DATA 코드로 대체하야 랜으로 전송합니다.
+    enUPDDET_THREAT_DATA,                   // 탐지에서 분석된 LOB가 병합된 경우의 메시지 입니다.
+    enUPDTRKNEW_THREAT_DATA,                // 추적의 신규 LOB가 병합된 메시지 입니다.
+    enUPDTRK_THREAT_DATA,                   // 추적에서 성공 메시지로 위협을 변경하고자 할 때 입니다.
+    enMRGDET_THREAT_DATA,                   // 탐지에서 빔 병합으로 위협 메시지를 처리합니다.
+    enMRGTRK_THREAT_DATA,                   // 추적에서 빔 병합으로 위협 메시지를 처리합니다.
 
     enRES_SYSERROR = _START_OPCODE_OF_SYSERROR_,
 
@@ -378,6 +383,8 @@ union UNI_LAN_DATA {
     // 수신 메시지 구조체 정의
     //STR_REQ_DUMP_LIST strReqDumpList;
     unsigned int uiUnit;
+
+    time_t tTime;
 
     // 송신 메시지 구조체 정의
     //STR_RES_DUMP_LIST strResDumpList;

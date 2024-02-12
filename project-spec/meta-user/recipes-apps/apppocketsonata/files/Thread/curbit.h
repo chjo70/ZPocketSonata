@@ -11,9 +11,14 @@
 
 #define _AXI_DATATEST_          (0xAABBEEF0)
 
+#ifdef _MSC_VER
 #define URBIT_TIMER             (2*60)                  // 2분 마다 자체점검 수행
+#else
 
-#define SNTP_TIMER              (60*60*4)               // 4시간 마다 시간 동기화
+#define URBIT_TIMER             (10*60)                  // 2분 마다 자체점검 수행
+#endif
+
+#define SNTP_TIMER              (4*(60*60))              //(4*(60*60))               // 4시간 마다 시간 동기화
 
 /**
  *
@@ -64,6 +69,11 @@ private:
     void CheckSBCTemp();
     void CheckTasks();
     void CheckDatabase();
+    void CheckLinkStatus();
+
+    void BackupStorage();
+
+    void SyncSNMP();
 
 #ifdef __ZYNQ_BOARD__
     // 모듈 자체점검 함수

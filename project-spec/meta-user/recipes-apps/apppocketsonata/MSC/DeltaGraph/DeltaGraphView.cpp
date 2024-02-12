@@ -173,7 +173,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	if( m_pDoc->GetDataType() == en_PDW_DATA || m_pDoc->GetDataType() == en_PDW_DATA_CSV ) {
 		if( bInit == true ) {
             int i;
-            char szList[_COLUMNS_OF_LIST_][40] = { "순서#", "Normal/CW", " PMOP", "FMOP/Dir/BW[MHz]", "      TOA[s]/TOA[s]", "    DTOA[s]", " DI", "방위[도]  ", "주파수[MHz]    ", "신호세기[dBm]", "펄스폭[ns]", "채널#", "FalsePDW", "  Edge" };
+            char szList[_COLUMNS_OF_LIST_][40] = { "순서#", "Normal/CW", " PMOP", "FMOP/Dir/BW[MHz]", "      TOA[s]/TOA[s]", "    DTOA[us]", " DI", "방위[도]  ", "주파수[MHz]    ", "신호세기[dBm]", "펄스폭[ns]    ", "채널#", "FalsePDW", "Edge    " };
 
             //CFont font;
             //font.CreatePointFont( 70, "D2Coding" );
@@ -292,7 +292,8 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 	STR_IQ_DATA *pIQData=NULL;
 
     char szFmopDir[4][10] = { "삼각", "증가형", "다운형", "모름" };
-    char szSignalType[2][10] = { "Normal", "CW" };
+    char szSignalType[20][20] = { "Normal", "CW", "CHIRP-TRI", "CHIRP-UP", "CHIRP-DN", "CHIRP-UK", "CW[CHIRP-TRI]", "CW[CHIRP-UP]", "CW[CHIRP-UK]", "PMOP", "CW[PMOP]" };
+
     char szOX[2][10] = { "O", "X" };
     char szInBand[2][10] = { "In-Band", "Out-Band" };
 
@@ -337,13 +338,13 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
 					//m_CListPDW.InsertItem( i, strVal );
 					m_CListRawData.AddItem(strVal);
 
-                    strVal.Format( _T( "%s" ), szSignalType[pPDW->GetCWPulse() & 0x01 ] );
+                    strVal.Format( _T( "%s" ), szSignalType[pPDW->GetCWPulse() & 1] );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
                     strVal.Format( _T( "%s" ), szOX[(int)(pPDW->GetPMOP()==0)] );
                     m_CListRawData.SetItemText( i, j++, strVal );
 
-                    strVal.Format( _T( "%s/%s/%.1f" ), szOX[( int ) ( pPDW->GetFMOP() == 0 )], szFmopDir[pPDW->GetFMOPDir() & 0x03 ], CPOCKETSONATAPDW::DecodeFMOPBW( pPDW->GetFMOPBW() ) );
+                    strVal.Format( _T( "%s/%s/%08.1f" ), szOX[( int ) ( pPDW->GetFMOP() == 0 )], szFmopDir[pPDW->GetFMOPDir() & 0x03 ], CPOCKETSONATAPDW::DecodeFMOPBW( pPDW->GetFMOPBW() ) );
                     m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%12.6f/%llu") , *pdTOA*1., *pllTOA );
@@ -355,7 +356,7 @@ void CDeltaGraphView::InitListCtrl( bool bInit )
                     strVal.Format( _T( "%s" ), szOX[pPDW->GetDI() & 0x01] );
                     m_CListRawData.SetItemText( i, j++, strVal );
 
-					strVal.Format( _T("%4.1f/0x%04X") , *pfAOA, pPDW->GetAOA() );
+					strVal.Format( _T("%05.1f/0x%04X") , *pfAOA, pPDW->GetAOA() );
 					m_CListRawData.SetItemText( i, j++, strVal );
 
 					strVal.Format( _T("%8.3f/%8u") , *pfFreq/1000000., pPDW->GetFrequency() );

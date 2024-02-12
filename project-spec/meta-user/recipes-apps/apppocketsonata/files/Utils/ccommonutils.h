@@ -33,7 +33,7 @@
 #include <string>
 
 
-int clock_gettime(int X, struct timeval *tv);
+int clock_gettime_win(int X, struct timeval *tv);
 LARGE_INTEGER getFILETIMEoffset();
 int gettimeofday(struct timeval * tp, struct timezone * tzp);
 #endif
@@ -175,11 +175,13 @@ public:
 
 	// 데이터 관련 출력 함수
     static void Disp_FinePDW( STR_PDWDATA *pPDWData );
+    static void Disp_FinePDW( STR_STATIC_PDWDATA *pPDWData );
 
 	// 시간관련 함수
     static struct tm *GetLocaltime( time_t *ptiTime );
     static void getStringPresentTime( char *pString, size_t szString, bool bASCII =false );
     static void getStringDesignatedDate( char *pString, size_t szString, time_t tiTime );
+    static void getStringDesignatedSimpleDate( char *pString, size_t szString, time_t tiTime );
 	static void getStringDesignatedTime(char *pString, size_t szString, time_t tiTime);
     static void getFileNamingDesignatedTime(char *pString, size_t szString, time_t tiTime);
     static void GetCollectTime(struct timespec *pTimeSpec, time_t tColTime, unsigned int tColTimeMs );
@@ -208,8 +210,10 @@ public:
 
     static float NormalDistribution( float fMean, float fDevi );
 
-    static unsigned long long int GetRawFileSize( char *pPathFileName );
-    static unsigned long long int DiskFreeSpace( char *szDiskName );
+    static unsigned long long int GetRawFileSize( const char *pPathFileName );
+    static unsigned long long int DiskFreeSpace( const char *szDiskName );
+
+    static bool CreateDir( const char *pPath );
 
     // 타입 변환시 사용하는 함수 모음
     //static unsigned int INT2UINT( int iValue );
@@ -231,10 +235,8 @@ public:
     static unsigned int CountSetBits( const unsigned int uiValue );
     static unsigned int GetNoChannel( unsigned int &uiValue );
 
-#ifdef __VXWORKS__
+#if defined(__VXWORKS__) || defined(_WIN64)
     // 랜/타스크 메시지 정의
-    static void MakeStringMessage( std::string *pszString, unsigned int uiOpCode, bool bSend );
-#else
     static void MakeStringMessage( std::string *pszString, unsigned int uiOpCode, bool bSend );
 #endif
 
