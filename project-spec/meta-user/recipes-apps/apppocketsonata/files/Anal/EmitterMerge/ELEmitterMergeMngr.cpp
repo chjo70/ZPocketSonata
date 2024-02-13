@@ -2447,7 +2447,7 @@ bool CELEmitterMergeMngr::CreateThreat( SELLOBDATA_EXT *pThreatDataExt )
 {
     bool bRet = true;
 
-    CELThreat *pAETThreat, *pABTThreat;
+    CELThreat *pAETThreat, *pABTThreat=NULL;
 
     // 1. 방사체 생성
     pAETThreat = new CELThreat( & m_uiAETID );
@@ -2470,7 +2470,7 @@ bool CELEmitterMergeMngr::CreateThreat( SELLOBDATA_EXT *pThreatDataExt )
             \date 	2017-07-07 11:30:45
         */
         delete pAETThreat;
-        delete pABTThreat;
+        _SAFE_DELETE( pABTThreat )
 
         if( m_uiAETID != INVALID_INDEX ) {
             PushAETID( m_uiAETID );
@@ -2603,11 +2603,11 @@ bool CELEmitterMergeMngr::CreateThreat( SELLOBDATA_EXT *pThreatDataExt, bool bCl
  * @date      2017-01-10, 오후 4:45
  * @warning
  */
-void CELEmitterMergeMngr::NextABTID()
-{
-    // ++ m_uiABTID;
-
-}
+// void CELEmitterMergeMngr::NextABTID()
+// {
+//     // ++ m_uiABTID;
+//
+// }
 
 /**
  * @brief     방사체 번호를 증가한다.
@@ -8399,9 +8399,9 @@ bool CELEmitterMergeMngr::CompSeperatedBeam()
                 pABTData = GetABTData( pThreatABT->m_uiIndex );
                 pABTExtData = GetABTExtData( pThreatABT->m_uiIndex );
 #ifdef _DEBUG
-                bRet = CompDOAInfo( pABTData, NULL ) & ( true == IsNotScanning( pABTData, pABTExtData ) );
+                bRet = ( CompDOAInfo( pABTData, NULL ) == true ) && ( true == IsNotScanning( pABTData, pABTExtData ) );
 #else
-                bRet = ! CompDOAInfo( pABTData, NULL ) & ( true == IsNotScanning( pABTData, pABTExtData ) );
+                bRet = ( CompDOAInfo( pABTData, NULL ) == false ) && ( true == IsNotScanning( pABTData, pABTExtData ) );
 #endif
                 if( bRet == true ) {
                     stSELSEPERATE_BEAM.pThreatAET = m_pAETThreat;
@@ -8677,7 +8677,7 @@ bool CELEmitterMergeMngr::MakeSeperatedBeamResult()
     //pMovedAETExtData = GetAETExtData( m_pMovedThreatAET->m_uiIndex );
 
     pMovedABTData = GetABTData( m_pMovedThreatABT->m_uiIndex );
-    pMovedABTExtData = GetABTExtData( m_pMovedThreatABT->m_uiIndex );;
+    pMovedABTExtData = GetABTExtData( m_pMovedThreatABT->m_uiIndex );
 
     // 2. 신규 방사체 및 빔 노트 생성
     bRet = CreateThreat( & m_LOBDataExt );

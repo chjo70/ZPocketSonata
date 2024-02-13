@@ -362,6 +362,10 @@ void CNewSigAnal::Start( STR_PDWDATA *pPDWData, bool bDBInsert )
     CCommonUtils::WallMakePrint( buffer, '=' );
     Log( enNormal, "%s", buffer);
 
+    if( GetStep() > 50 ) {
+        Log( enNormal, "%s", buffer );
+    }
+
 }
 
 /**

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="14" version="2.0">
+<workbench progressCount="15" version="2.0">
 <workbenchAdvisor/>
-<window height="768" maximized="true" minimized="true" width="1024" x="152" y="248">
+<window height="768" maximized="true" width="1024" x="152" y="248">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
@@ -13,10 +13,10 @@
 <coolItem id="com.tomato.devkit.toolbar" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="53" y="22"/>
 <coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="53" y="22"/>
+<coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="group.nav" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="114" y="22"/>
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
-<coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
 </coolbarLayout>
@@ -32,28 +32,13 @@
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="com.tomato.exerd.editor.DiagramEditor" name="위협 라이브러리.exerd" partName="위협 라이브러리.exerd" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/위협 라이브러리.exerd" title="위협 라이브러리.exerd" tooltip="함정용전자전장비(DDH-I)/위협 라이브러리.exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
-</editor>
-<editor id="com.tomato.exerd.editor.DiagramEditor" name="위협 결과.exerd" partName="위협 결과.exerd" path="E:/APECS/Dev/PocketSONATA/dev_/Document/ER 다이어그램/함정용전자전장비(DDH-I)/위협 결과.exerd" title="위협 결과.exerd" tooltip="함정용전자전장비(DDH-I)/위협 결과.exerd" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
-</editor>
 </editors>
 <views>
-<view id="com.tomato.exerd.xscript.ScriptView" partName="XScript">
-<viewState/>
-</view>
 <view id="org.eclipse.ui.views.ResourceNavigator" partName="네비게이터">
 <viewState LINK_NAVIGATOR_TO_EDITOR="0" sorter="1">
 <filters>
 <filter element=".*" isEnabled="false"/>
 </filters>
-<expanded>
-<element path="/함정용전자전장비(DDH-I)"/>
-</expanded>
-<selection>
-<element path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
-</selection>
 </viewState>
 </view>
 <view id="com.tomato.exerd.ui.views.thumbnail" partName="썸네일">
@@ -105,16 +90,10 @@
 <view id="com.tomato.exerd.ui.views.thumbnail"/>
 <view id="com.tomato.exerd.modelview3.ModelView3"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
-<fastViewBars>
-<fastViewBar fastViewLocation="1024" id="bottomFolder" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
-<fastViews>
-<view id="com.tomato.exerd.ui.views.domain" ratio="0.3"/>
-<view id="com.tomato.exerd.validate.ui.ValidateView" ratio="0.3"/>
-<view id="org.eclipse.ui.console.ConsoleView" ratio="0.29978585"/>
-<view id="com.tomato.exerd.xscript.ScriptView" ratio="0.3"/>
-</fastViews>
-</fastViewBar>
-</fastViewBars>
+<view id="com.tomato.exerd.ui.views.domain"/>
+<view id="com.tomato.exerd.validate.ui.ValidateView"/>
+<view id="org.eclipse.ui.console.ConsoleView"/>
+<fastViewBars/>
 <layout>
 <mainWindow>
 <info folder="true" part="leftFolder">
@@ -125,16 +104,15 @@
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@19f1f2a" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="leftFolder">
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1434" ratioRight="478" relationship="2" relative="leftFolder">
 <folder appearance="2" expanded="2">
 <page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.18" ratioLeft="180" ratioRight="820" relationship="2" relative="leftFolder"/>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@4497d1" ratio="0.90983605" ratioLeft="1221" ratioRight="121" relationship="2" relative="org.eclipse.ui.editorss">
+<info part="org.eclipse.ui.editorss" ratio="0.17991632" ratioLeft="344" ratioRight="1568" relationship="2" relative="leftFolder"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@cf91df" ratio="0.77997446" ratioLeft="1223" ratioRight="345" relationship="2" relative="org.eclipse.ui.editorss">
 <folder activePageID="com.tomato.exerd.ui.views.thumbnail" appearance="2" expanded="2">
 <page content="com.tomato.exerd.ui.views.thumbnail" label="썸네일"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
@@ -142,7 +120,7 @@
 </presentation>
 </folder>
 </info>
-<info folder="true" part="rightFolder" ratio="0.249226" ratioLeft="161" ratioRight="485" relationship="4" relative="org.eclipse.ui.internal.ViewStack@4497d1">
+<info folder="true" part="rightFolder" ratio="0.24946466" ratioLeft="233" ratioRight="701" relationship="4" relative="org.eclipse.ui.internal.ViewStack@cf91df">
 <folder activePageID="com.tomato.exerd.modelview3.ModelView3" appearance="2" expanded="2">
 <page content="com.tomato.exerd.modelview3.ModelView3" label="모델"/>
 <page content="org.eclipse.ui.views.ContentOutline" label="아웃라인"/>
@@ -152,16 +130,20 @@
 </presentation>
 </folder>
 </info>
-<info folder="true" part="bottomFolder" ratio="0.6996904" ratioLeft="452" ratioRight="194" relationship="4" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="2">
-<page content="com.tomato.exerd.ui.views.domain" label="LabelNotFound"/>
-<page content="com.tomato.exerd.validate.ui.ValidateView" label="LabelNotFound"/>
-<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
+<info folder="true" part="bottomFolder" ratio="0.69914347" ratioLeft="653" ratioRight="281" relationship="4" relative="org.eclipse.ui.editorss">
+<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
+<page content="com.tomato.exerd.ui.views.domain" label="도메인"/>
+<page content="com.tomato.exerd.validate.ui.ValidateView" label="검토"/>
+<page content="org.eclipse.ui.console.ConsoleView" label="콘솔"/>
 <page content="com.tomato.exerd.xscript.ScriptView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+<part id="1"/>
+<part id="2"/>
+</presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@a36b71" ratio="0.2987616" ratioLeft="193" ratioRight="453" relationship="4" relative="leftFolder">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@196f8f3" ratio="0.29978585" ratioLeft="280" ratioRight="654" relationship="4" relative="leftFolder">
 <folder activePageID="org.eclipse.gef.ui.palette_view" appearance="2" expanded="2">
 <page content="org.eclipse.gef.ui.palette_view" label="Palette"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
@@ -178,7 +160,6 @@
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.term.ui.editor2.TermDictionaryEditor2" path="/함정용전자전장비(DDH-I)/용어 사전.xdic"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
@@ -194,57 +175,58 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 라이브러리.exerd"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.tomato.exerd.editor.DiagramEditor" path="/함정용전자전장비(DDH-I)/위협 결과.exerd"/>
 </editors>
-<item historyLabel="용어 사전.xdic" index="2"/>
 <item historyLabel="위협 결과.exerd" index="1"/>
 <item historyLabel="위협 라이브러리.exerd" index="0"/>
 <item historyLabel="위협 결과.exerd" index="1"/>
 <item historyLabel="위협 라이브러리.exerd" index="0"/>
 <item historyLabel="위협 결과.exerd" index="1"/>
-<item historyLabel="위협 라이브러리.exerd" index="3"/>
+<item historyLabel="위협 라이브러리.exerd" index="2"/>
 <item historyLabel="위협 결과.exerd" index="1"/>
-<item historyLabel="위협 라이브러리.exerd" index="3"/>
+<item historyLabel="위협 라이브러리.exerd" index="2"/>
 <item historyLabel="위협 결과.exerd" index="1"/>
-<item historyLabel="위협 라이브러리.exerd" index="3"/>
-<item historyLabel="위협 결과.exerd" index="4"/>
+<item historyLabel="위협 라이브러리.exerd" index="2"/>
+<item historyLabel="위협 결과.exerd" index="3"/>
+<item historyLabel="위협 라이브러리.exerd" index="4"/>
+<item historyLabel="위협 결과.exerd" index="3"/>
+<item historyLabel="위협 라이브러리.exerd" index="4"/>
+<item historyLabel="위협 결과.exerd" index="3"/>
 <item historyLabel="위협 라이브러리.exerd" index="5"/>
-<item historyLabel="위협 결과.exerd" index="4"/>
-<item historyLabel="위협 라이브러리.exerd" index="5"/>
-<item historyLabel="위협 결과.exerd" index="4"/>
-<item historyLabel="위협 라이브러리.exerd" index="6"/>
-<item historyLabel="위협 결과.exerd" index="7"/>
-<item historyLabel="위협 라이브러리.exerd" index="8"/>
-<item historyLabel="위협 결과.exerd" index="9"/>
-<item historyLabel="위협 라이브러리.exerd" index="8"/>
+<item historyLabel="위협 결과.exerd" index="6"/>
+<item historyLabel="위협 라이브러리.exerd" index="7"/>
+<item historyLabel="위협 결과.exerd" index="8"/>
+<item historyLabel="위협 라이브러리.exerd" index="7"/>
+<item historyLabel="용어 사전.xdic" index="9"/>
+<item historyLabel="위협 결과.exerd" index="8"/>
+<item historyLabel="위협 라이브러리.exerd" index="7"/>
+<item historyLabel="용어 사전.xdic" index="9"/>
+<item historyLabel="위협 결과.exerd" index="8"/>
+<item historyLabel="위협 라이브러리.exerd" index="7"/>
+<item historyLabel="위협 결과.exerd" index="8"/>
 <item historyLabel="용어 사전.xdic" index="10"/>
-<item historyLabel="위협 결과.exerd" index="9"/>
-<item historyLabel="위협 라이브러리.exerd" index="8"/>
+<item historyLabel="위협 라이브러리.exerd" index="11"/>
 <item historyLabel="용어 사전.xdic" index="10"/>
-<item historyLabel="위협 결과.exerd" index="9"/>
-<item historyLabel="위협 라이브러리.exerd" index="8"/>
-<item historyLabel="위협 결과.exerd" index="9"/>
-<item historyLabel="용어 사전.xdic" index="11"/>
-<item historyLabel="위협 라이브러리.exerd" index="12"/>
-<item historyLabel="용어 사전.xdic" index="11"/>
-<item historyLabel="위협 라이브러리.exerd" index="12"/>
-<item historyLabel="용어 사전.xdic" index="11"/>
-<item historyLabel="위협 라이브러리.exerd" index="12"/>
-<item historyLabel="용어 사전.xdic" index="11"/>
-<item historyLabel="위협 라이브러리.exerd" index="12"/>
-<item historyLabel="untitled.exerd" index="13"/>
-<item historyLabel="위협 라이브러리.exerd" index="12"/>
-<item historyLabel="untitled.exerd" index="13"/>
-<item historyLabel="위협 라이브러리.exerd" index="12"/>
-<item historyLabel="위협 결과.exerd" index="14"/>
+<item historyLabel="위협 라이브러리.exerd" index="11"/>
+<item historyLabel="용어 사전.xdic" index="10"/>
+<item historyLabel="위협 라이브러리.exerd" index="11"/>
+<item historyLabel="용어 사전.xdic" index="10"/>
+<item historyLabel="위협 라이브러리.exerd" index="11"/>
+<item historyLabel="untitled.exerd" index="12"/>
+<item historyLabel="위협 라이브러리.exerd" index="11"/>
+<item historyLabel="untitled.exerd" index="12"/>
+<item historyLabel="위협 라이브러리.exerd" index="11"/>
+<item historyLabel="위협 결과.exerd" index="13"/>
+<item historyLabel="위협 라이브러리.exerd" index="14"/>
+<item historyLabel="위협 결과.exerd" index="13"/>
 <item historyLabel="위협 라이브러리.exerd" index="15"/>
-<item historyLabel="위협 결과.exerd" index="14"/>
+<item historyLabel="위협 결과.exerd" index="13"/>
+<item historyLabel="위협 라이브러리.exerd" index="15"/>
+<item historyLabel="위협 결과.exerd" index="13"/>
+<item historyLabel="위협 라이브러리.exerd" index="15"/>
+<item historyLabel="위협 결과.exerd" index="13"/>
 <item historyLabel="위협 라이브러리.exerd" index="16"/>
-<item historyLabel="위협 결과.exerd" index="14"/>
-<item historyLabel="위협 라이브러리.exerd" index="16"/>
-<item historyLabel="위협 결과.exerd" index="14"/>
-<item historyLabel="위협 라이브러리.exerd" index="16"/>
-<item historyLabel="위협 결과.exerd" index="14"/>
-<item active="true" historyLabel="위협 라이브러리.exerd" index="17"/>
+<item active="true" historyLabel="위협 결과.exerd" index="17"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>

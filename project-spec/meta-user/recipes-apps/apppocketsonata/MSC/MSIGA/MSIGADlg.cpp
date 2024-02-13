@@ -621,6 +621,9 @@ void CMSIGADlg::LoadRadarPDW()
     m_CEditPW.GetWindowText( strData );
     g_stRadarPDW.fPW = ( float ) atof( strData );
 
+    m_CEditPulsePerLobe.GetWindowText( strData );
+    g_stRadarPDW.iCoPulsePerLobe = atoi( strData );
+
     m_CEditMissingPercent.GetWindowText( strData );
     g_stRadarPDW.iMissingPercent = atoi( strData );
     m_CEditDDROffset.GetWindowText( strData );

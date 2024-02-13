@@ -5297,7 +5297,7 @@ bool CAnalPRI::FindPeak()
             /*! \bug  ACF에서 최소 피크 개수는 3개 이상으로 한다.
                 \date 2006-05-18 14:26:48, 조철희
             */
-            threshold_peak = _max( 3, UMUL( m_pToaAcf[0], 0.6 ) );
+            threshold_peak = _max( 3, UMUL( m_pToaAcf[0], 0.4 ) );
             k = m_coCanPeak;
             m_coCanPeak = 0;
             pPeak = &m_pCanPeak[0];

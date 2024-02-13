@@ -1445,14 +1445,14 @@ void CSignalCollect::MakeSIMPDWData()
     int iRandomIndex = ( int ) CCommonUtils::Random( ( float ) 0., ( float ) 100. );
 
 
-    if( m_uiIndex % 2 ) {
-        m_stRadarPDW.fFreq = 9300;
-        //m_stRadarPDW.fPRI = 1200;
-    }
-    else {
-        m_stRadarPDW.fFreq = 9000;
-        //m_stRadarPDW.fPRI = 1000;
-    }
+//     if( m_uiIndex % 2 ) {
+//         m_stRadarPDW.fFreq = 9300;
+//         //m_stRadarPDW.fPRI = 1200;
+//     }
+//     else {
+//         m_stRadarPDW.fFreq = 9000;
+//         //m_stRadarPDW.fPRI = 1000;
+//     }
 
 
     for( i = 0; i < uiCoPDW; ) {
@@ -2065,7 +2065,7 @@ unsigned int CSignalCollect::MakeSIMFreq( int iRandomIndex )
                 iFreqPulsePerLobe = IDIV( ( float ) 1000. * m_stRadarPDW.fFreqPeriod, m_stRadarPDW.fPRI );
                 iFreqPulsePerLobe = max( iFreqPulsePerLobe, 1 );
                 fSlope = FDIV( m_stRadarPDW.iFreqBW, iFreqPulsePerLobe - 1 );
-                randomFreq = ( UINT ) ( m_stRadarPDW.fFreq + ( ( int ) m_uiIndex % iFreqPulsePerLobe ) * fSlope );
+                randomFreq = ( UINT ) ( m_stRadarPDW.fFreq + ( ( int ) m_uiIndex % iFreqPulsePerLobe ) * (int) ( fSlope + 0.5 )  );
             }
             else if( m_stRadarPDW.enFreqPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SLIDE_DEC && m_stRadarPDW.iFreqPulsePerLobe != 0 ) {
                 iFreqPulsePerLobe = IDIV( ( float ) 1000. * m_stRadarPDW.fFreqPeriod, m_stRadarPDW.fPRI );
@@ -2131,6 +2131,7 @@ unsigned int CSignalCollect::MakeSIMFreq( int iRandomIndex )
 _TOA CSignalCollect::MakeSIMPRI( int iRandomIndex )
 {
     _TOA tTOA=0, tempTOA;
+    float fTempTOA;
 
     float fAmplitude;
 
@@ -2236,18 +2237,23 @@ _TOA CSignalCollect::MakeSIMPRI( int iRandomIndex )
                 break;
 
             case ENUM_AET_PRI_TYPE::E_AET_PRI_PATTERN:
-                //uiDwell = 40;
+                unsigned uiDwell;
+                uiDwell = 40;
+                float fPulsePerGroup;
 
                 // 패턴 PRI 일때
                 if( m_stRadarPDW.enPRIPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SLIDE_INC ) {
-                    uiSlope = 800;
-                    uiModuler = TModular<unsigned int>( m_uiIndex, ( unsigned int ) m_stRadarPDW.iPRIPulsePerLobe );
-                    tempTOA = ( UINT ) ( 110000. + uiModuler * uiSlope );
+                    fAmplitude = m_stRadarPDW.fPRI * FDIV( m_stRadarPDW.iJitterRatio, 100 );
+                    fPulsePerGroup = FDIV( ( float ) 1000. * m_stRadarPDW.fPRIPeriod, m_stRadarPDW.fPRI );
+                    fModular = ( float ) fmod( m_uiIndex, fPulsePerGroup );
+                    fModular = FDIV( fModular, m_uiIndex );
+                    tempTOA = ( UINT ) ( ( ( fAmplitude * ( fModular ) ) + m_stRadarPDW.fPRI ) + 0.5 );
+                    //tempTOA = ( UINT ) ( ( uiModuler + 1 ) * uiSlope );
                 }
                 else if( m_stRadarPDW.enPRIPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SLIDE_DEC ) {
                     uiSlope = 800;
                     uiModuler = TModular<unsigned int>( m_uiIndex, ( unsigned int ) m_stRadarPDW.iPRIPulsePerLobe );
-                    tempTOA = ( UINT ) ( 150000. - uiModuler * uiSlope );
+                    tempTOA = ( UINT ) ( 150. - uiModuler * uiSlope );
                 }
                 else if( m_stRadarPDW.enPRIPatternType == ENUM_AET_FREQ_PRI_PATTERN_TYPE::E_AET_FREQ_PRI_SAW_TRI ) {
                     uiSlope = 800;
@@ -2265,13 +2271,13 @@ _TOA CSignalCollect::MakeSIMPRI( int iRandomIndex )
                 else {
                     float fPulsePerGroup;
                     fAmplitude = m_stRadarPDW.fPRI * FDIV( m_stRadarPDW.iJitterRatio, 100 );
-                    fPulsePerGroup = FDIV( (float) 1000. * m_stRadarPDW.fPRIPeriod,  m_stRadarPDW.fPRI );
+                    fPulsePerGroup = FDIV( (float) 1000. * m_stRadarPDW.fPRIPeriod, m_stRadarPDW.fPRI );
                     fModular = (float) fmod( m_uiIndex, fPulsePerGroup );
                     fModular = FDIV( fModular, fPulsePerGroup );
                     tempTOA = (UINT) ( ( ( fAmplitude * sin( 2. * M_PI * fModular ) ) + m_stRadarPDW.fPRI ) + 0.5 );
                 }
 
-                tTOA = CPOCKETSONATAPDW::EncodeTOAus( (float) tempTOA );
+                tTOA = CPOCKETSONATAPDW::EncodeTOAus( tempTOA );
                 //tTOA = tempTOA;
                 break;
 

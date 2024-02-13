@@ -509,16 +509,17 @@ void CEmitterMerge::MergeEmitter( ENUM_ANAL_TYPE enAnalType )
  */
 void CEmitterMerge::ManageMergeOrSeperateBeam( ENUM_ANAL_TYPE enAnalType, SRxABTData *pABTData )
 {
+    unsigned int uiAETID, uiABTID;
+
     ENUM_MERGE_SEPERATE_BEAM enManageMergedOrSeperatedBeam;
 
     enManageMergedOrSeperatedBeam = m_pTheEmitterMergeMngr->ManageMergedOrSeperatedBeam();
 
     // 추적 성공 여부
     if( pABTData != NULL ) {
-        switch( enManageMergedOrSeperatedBeam ) {
-            unsigned int uiAETID, uiABTID;
-            SRxABTData *pUpdatedABTData;
+        SRxABTData *pUpdatedABTData;
 
+        switch( enManageMergedOrSeperatedBeam ) {
             case enMERGE_BEAM:
                 pUpdatedABTData = m_pTheEmitterMergeMngr->GetABTData();
 
@@ -564,7 +565,6 @@ void CEmitterMerge::ManageMergeOrSeperateBeam( ENUM_ANAL_TYPE enAnalType, SRxABT
     }
     else {
         switch( enManageMergedOrSeperatedBeam ) {
-            unsigned int uiAETID, uiABTID;
 
             case enMERGE_BEAM:
                 m_pTheEmitterMergeMngr->InsertAETABT();
@@ -1190,7 +1190,7 @@ void CEmitterMerge::SendNewUpd( unsigned int uiOpCode )
             // 추적에서 빔 병합 메시지
             case enMRGTRK_THREAT_DATA:
                 Log( enDebug, "위협[%04d/%04d/%d]는 빔 병합 메시지[%d]를 전송합니다.", stAET.stLOBData.uiAETID, stAET.stLOBData.uiABTID, stAET.stLOBData.uiLOBID, uiOpCode );
-                ElseLog( enDebug, "MD[%04d/%04d]\n", stAET.stLOBData.uiAETID, stAET.stLOBData.uiABTID );
+                ElseLog( enDebug, "MD[%04d/%04d]\n", stAET.stLOBData.uiAETID, stAET.stLOBData.uiABTID )
                 break;
 
             ///////////////////////////////////////////////////////////////////////////////////
@@ -1380,7 +1380,7 @@ void CEmitterMerge::SendLostOrDelete( unsigned int uiOpcode, STR_TRKANAL_INFO *p
         CCommonUtils::AllSwapData32( & stLost, sizeof( SELLOST ) );
 #endif
 
-        SendLan( uiOpcode, & stLost, sizeof( SELLOST), false ); 
+        SendLan( uiOpcode, & stLost, sizeof( SELLOST), false );
 
         pABTExtData->uiOpcode = uiOpcode;
         pABTExtData->tiSendLan = time( NULL );

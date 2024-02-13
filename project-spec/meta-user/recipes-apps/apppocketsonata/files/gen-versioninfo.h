@@ -1,8 +1,8 @@
 //GIT-VS-VERSION-GEN.bat generated resource header.
-#define GEN_VER_VERSION_STRING   "1.1.0.alpha0.39.g02e98.dirty\0" 
-#define GEN_VER_DIGITAL_VERSION  1,1,0,39 
-#define GEN_VER_VERSION_HEX      0x0001000100000027 
-#define GEN_VER_COMMENT_STRING   "Alpha Release 0\0" 
+#define GEN_VER_VERSION_STRING   ".1.0.1.alpha2.168.gb605f.dirty\0" 
+#define GEN_VER_DIGITAL_VERSION  1,0,1,0 
+#define GEN_VER_VERSION_HEX      0x0001000000010000 
+#define GEN_VER_COMMENT_STRING   "Alpha Release 2\0" 
 #define GEN_VER_PRIVATE_FLAG     VS_FF_PRIVATEBUILD 
 #define GEN_VER_PRIVATE_STRING   "Custom Build\0" 
 #define GEN_VER_PATCHED_FLAG     VS_FF_PATCHED 

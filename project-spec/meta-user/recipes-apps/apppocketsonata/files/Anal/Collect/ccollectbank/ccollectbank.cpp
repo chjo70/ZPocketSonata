@@ -497,7 +497,7 @@ void CCollectBank::StartWindowCell( STR_WINDOWCELL *pstWindowCell )
     }
     else {
         if( pstWindowCell->uiGlobalCh == 0 ) {
-            Log( enError, "%s 채널 관리[%d]가 잘못 됐습니다 !" , pstWindowCell->enCollectMode );
+            Log( enError, "%s 채널 관리[%d]가 잘못 됐습니다 !" , g_szCollectBank[( unsigned int ) pSTR_COLLECT_PCIADDRESS->enCollectBank], pstWindowCell->enCollectMode );
         }
         else {
             Log( enError, "위협[%04d/%04d]에 대해서, %s 채널[%2d/%2d] 관리[%d]가 잘못 됐습니다 !", pstWindowCell->uiAETID, pstWindowCell->uiABTID, g_szCollectBank[( unsigned int ) pSTR_COLLECT_PCIADDRESS->enCollectBank], uiCh, pstWindowCell->uiGlobalCh, pstWindowCell->enCollectMode );
@@ -856,18 +856,11 @@ void CCollectBank::StartDetectChannel( unsigned int uiCh )
  */
 void CCollectBank::CalDetectWindowCell( STR_WINDOWCELL *pstWindowCell )
 {
-    // pstWindowCell->enCollectMode = enCollecting;
 
     pstWindowCell->uiCoCollectingPDW = NEW_COLLECT_PDW;
 
     // 수집 시간 [ms]
-#ifdef __TEST__
-    pstWindowCell->uiMaxCollectTimeMssec = 250; //2000;
-
-#else
     pstWindowCell->uiMaxCollectTimeMssec = 250;
-
-#endif
 
     pstWindowCell->uiSignalType = FILTER_SIGNALTYPE_ALL;
     pstWindowCell->uiMOPType = FILTER_NO_MOP; // FILTER_ALL_MOP;

@@ -268,10 +268,6 @@ private:
     void AllocMemory();
     void FreeMemory();
 
- 	// 위협 관리
-    void NextAETID();
-    void NextABTID();
-
     void RecoverThreat();
     //inline void NextSeqNum( bool bLink2=false ) { if( bLink2 == true ) { ++ m_nGetSeqNum; } else { ++ m_uiSeqNum; } }
 

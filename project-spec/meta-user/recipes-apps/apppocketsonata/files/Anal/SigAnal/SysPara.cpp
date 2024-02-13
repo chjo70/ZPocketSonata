@@ -42,7 +42,7 @@ void CSysPara::LoadDefaultSysParameter()
 
 
 	_sp.cm.Rpc = RPC;	// 기준 펄스열의 펄스수 (Reference Pule Count)
-    _sp.cm.RSpc = 3;
+    _sp.cm.RSpc = 2;
 	_sp.cm.Stb_Max_Miss = MAX_STB_MISS;
 	_sp.cm.Jit_Max_Miss = MAX_JIT_MISS;
 

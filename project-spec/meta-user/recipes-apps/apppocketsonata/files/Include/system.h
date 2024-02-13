@@ -16,8 +16,8 @@
 #define CO_SCAN_CHANNEL		(4)
 
 #else
-#define CO_TRACK_CHANNEL	(14)             // 14
-#define CO_SCAN_CHANNEL		(4)
+#define CO_TRACK_CHANNEL	(0)             // 14
+#define CO_SCAN_CHANNEL		(0)
 
 #endif
 

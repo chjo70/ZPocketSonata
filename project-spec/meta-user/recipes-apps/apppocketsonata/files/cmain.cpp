@@ -680,7 +680,7 @@ void CMain::CreateMngrThread()
 #ifdef _LOG_ANALTYPE_
 #ifdef _MSC_VER
 
-    g_enLogAnalType = enDETSCN_ANAL;
+    g_enLogAnalType = enDETTRKSCN_ANAL; // enDETTRKSCN_ANAL; // enDET_ANAL; // enSCN_ANAL; // enDETSCN_ANAL
 
 #else
 
@@ -690,7 +690,7 @@ void CMain::CreateMngrThread()
         g_enLogAnalType = enCLEAR_ANAL;
     }
     else {
-        g_enLogAnalType = enDETSCN_ANAL; // enDETTRKSCN_ANAL; // enDET_ANAL; // enSCN_ANAL;
+        g_enLogAnalType = enDETSCN_ANAL;
     }
 
 #endif
